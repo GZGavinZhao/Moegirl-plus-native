@@ -32,9 +32,14 @@ data class RecentChangesSettings(
   var isWatchListMode: Boolean = false
 ) : Settings()
 
+data class OtherSettings(
+  var rejectedVersionName: String = ""
+) : Settings()
+
 object SettingsStore {
   val common = SettingsStoreClient(CommonSettings::class.java)
   val recentChanges = SettingsStoreClient(RecentChangesSettings::class.java)
+  val otherSettings = SettingsStoreClient(OtherSettings::class.java)
 }
 
 enum class SupportedLanguage {

@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -34,6 +35,8 @@ fun isMoegirl() = Constants.source == DataSource.MOEGIRL
 fun <T> isMoegirl(ifIsTrue: T, ifIsFalse: T): T {
   return if (isMoegirl()) ifIsTrue else ifIsFalse
 }
+
+fun isDebugEnv() = (Globals.context.applicationInfo.flags or ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
 fun openHttpUrl(url: String) {
   val intent = Intent(Intent.ACTION_VIEW);

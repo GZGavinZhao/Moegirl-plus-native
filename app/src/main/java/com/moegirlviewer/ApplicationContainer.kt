@@ -1,8 +1,13 @@
 package com.moegirlviewer
 
 import android.app.Application
+import androidx.compose.material.Text
 import com.github.piasy.biv.BigImageViewer
 import com.github.piasy.biv.loader.fresco.FrescoImageLoader
+import com.moegirlviewer.api.app.AppApi
+import com.moegirlviewer.component.commonDialog.ButtonConfig
+import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.initialization.initializeOnCreate
 import com.moegirlviewer.store.AccountStore
 import dagger.hilt.android.HiltAndroidApp
 import com.moegirlviewer.room.initRoom
@@ -21,46 +26,7 @@ class ApplicationContainer : Application() {
 
   override fun onCreate() {
     super.onCreate()
-    initialize()
-    registerTasks()
-  }
-
-  private fun initialize() {
-    Globals.context = applicationContext
-    Globals.room = initRoom(applicationContext)
-    BigImageViewer.initialize(FrescoImageLoader.with(applicationContext))
-
-    coroutineScope.launch {
-      if (AccountStore.isLoggedIn.first()) {
-        val isValidLogin = AccountStore.checkAccount()
-        if (isValidLogin) {
-          initUserInfo()
-        } else {
-          AccountStore.logout()
-          toast(Globals.context.getString(R.string.invalidLoginStatusHint))
-        }
-      }
-    }
-  }
-
-  private fun registerTasks() {
-    registerTask(30_1000) {
-      coroutineScope.launch {
-        try {
-          AccountStore.checkWaitingNotificationTotal()
-        } catch (e: Exception) {
-          printRequestErr(e, "检查用户等待通知失败")
-        }
-      }
-    }
+    initializeOnCreate()
   }
 }
 
-private fun registerTask(period: Long, delay: Long = period, execute: () -> Unit): Timer {
-  val taskTimer = Timer(true)
-  taskTimer.schedule(object : TimerTask() {
-    override fun run() { execute() }
-  }, delay, period)
-
-  return taskTimer
-}

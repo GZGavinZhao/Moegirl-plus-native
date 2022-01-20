@@ -26,10 +26,6 @@ fun SettingsScreen() {
   val model: SettingsScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
   val commonSettings by SettingsStore.common.getValue { this }.collectAsState(initial = CommonSettings())
-//  val heimu by SettingsStore.heimu.collectAsState(initial = false)
-//  val stopAudioOnLeave by SettingsStore.stopMediaOnLeave.collectAsState(initial = false)
-//  val language by SettingsStore.language.collectAsState(initial = SupportedLanguage.ZH_HANS)
-//  val syntaxHighlight by SettingsStore.syntaxHighlight.collectAsState(initial = true)
   val isLoggedIn by AccountStore.isLoggedIn.collectAsState(initial = false)
   val themeColors = MaterialTheme.colors
 
@@ -122,6 +118,14 @@ fun SettingsScreen() {
         ),
         onClick = {
           scope.launch { model.toggleLoginStatus() }
+        }
+      )
+
+      Title(R.string.other)
+      SettingsScreenItem(
+        title = stringResource(id = R.string.checkNewVersion),
+        onClick = {
+          scope.launch { model.checkNewVersion() }
         }
       )
 

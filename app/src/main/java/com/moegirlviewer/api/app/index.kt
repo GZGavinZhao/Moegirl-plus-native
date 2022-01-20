@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.Request
 
 object AppApi {
-  suspend fun getLastVersion() {
+  suspend fun getLastVersion(): AppLastVersion {
     val request = Request.Builder()
       .url("https://api.github.com/repos/koharubiyori/Moegirl-plus-native/releases/latest")
       .build()
