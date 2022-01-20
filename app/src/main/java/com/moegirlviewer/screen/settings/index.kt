@@ -18,13 +18,12 @@ import com.moegirlviewer.screen.settings.component.SettingsScreenItem
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommonSettings
 import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.store.SupportedLanguage
 import com.moegirlviewer.util.gotoUserPage
 import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen() {
-  val model: SettingsScreenModal = hiltViewModel()
+  val model: SettingsScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
   val commonSettings by SettingsStore.common.getValue { this }.collectAsState(initial = CommonSettings())
 //  val heimu by SettingsStore.heimu.collectAsState(initial = false)

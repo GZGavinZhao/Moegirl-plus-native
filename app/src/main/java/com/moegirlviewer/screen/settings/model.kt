@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsScreenModal @Inject constructor(): ViewModel() {
+class SettingsScreenModel @Inject constructor(): ViewModel() {
   val coroutineScope = CoroutineScope(Dispatchers.Main)
 
   suspend fun toggleLoginStatus() {
