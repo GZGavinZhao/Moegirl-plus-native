@@ -1,0 +1,174 @@
+package com.moegirlviewer.component
+
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.moegirlviewer.ui.theme.background2
+import com.moegirlviewer.ui.theme.text
+
+@Composable
+fun PlainTextField(
+  modifier: Modifier = Modifier,
+  value: String,
+  onValueChange: (String) -> Unit,
+  placeholder: String? = null,
+  enabled: Boolean = true,
+  readOnly: Boolean = false,
+  textStyle: TextStyle = TextStyle.Default,
+  placeholderStyle: TextStyle = textStyle.copy(color = MaterialTheme.colors.text.tertiary),
+  keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  keyboardActions: KeyboardActions = KeyboardActions.Default,
+  singleLine: Boolean = false,
+  maxLines: Int = Int.MAX_VALUE,
+  underline: Boolean = false,
+  maxLength: Int? = null,
+  lengthIndicator: Boolean = false,
+  visualTransformation: VisualTransformation = VisualTransformation.None,
+  onTextLayout: (TextLayoutResult) -> Unit = {},
+  interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+  cursorBrush: Brush = SolidColor(MaterialTheme.colors.secondary),
+  decorationBox: (@Composable (@Composable () -> Unit) -> Unit) = { it() }
+) {
+  val themeColors = MaterialTheme.colors
+  var focused by remember { mutableStateOf(false) }
+  val underlineHeight by animateDpAsState(if (focused) 2.dp else 1.dp)
+  val underlineColor by animateColorAsState(if (focused) themeColors.secondary else themeColors.onSurface)
+
+  BasicTextField(
+    value = value,
+    modifier = Modifier
+      .onFocusChanged {
+        if (underline) focused = it.isFocused
+      }
+      .then(modifier),
+    enabled = enabled,
+    readOnly = readOnly,
+    textStyle = textStyle,
+    keyboardOptions = keyboardOptions,
+    keyboardActions = keyboardActions,
+    singleLine = singleLine,
+    maxLines = maxLines,
+    visualTransformation = visualTransformation,
+    interactionSource = interactionSource,
+    cursorBrush = cursorBrush,
+    onTextLayout = onTextLayout,
+    onValueChange = {
+      if (maxLength != null) {
+        if (it.length <= maxLength) onValueChange(it)
+      } else {
+        onValueChange(it)
+      }
+    },
+    decorationBox = @Composable { self ->
+      decorationBox {
+        Column() {
+          Box() {
+            self()
+            if (value.isEmpty() && placeholder != null) {
+              Text(
+                text = placeholder,
+                style = placeholderStyle
+              )
+            }
+          }
+
+          if (underline) {
+            Spacer(modifier = Modifier
+              .padding(top = 10.dp)
+              .fillMaxWidth()
+              .height(underlineHeight)
+              .onFocusChanged { focused = it.isFocused }
+              .background(underlineColor)
+            )
+          }
+
+          if (maxLength != null && lengthIndicator) {
+            Box(
+              modifier = Modifier
+                .fillMaxWidth(),
+              contentAlignment = Alignment.BottomEnd
+            ) {
+              Text(
+                text = "${value.length}/${maxLength}",
+                fontSize = 12.sp,
+                color = underlineColor
+              )
+            }
+          }
+        }
+      }
+    }
+  )
+}
+
+@Composable
+fun PlainTextField(
+  modifier: Modifier = Modifier,
+  value: TextFieldValue,
+  onValueChange: (TextFieldValue) -> Unit,
+  placeholder: String? = null,
+  enabled: Boolean = true,
+  readOnly: Boolean = false,
+  textStyle: TextStyle = TextStyle.Default,
+  placeholderStyle: TextStyle = textStyle.copy(color = MaterialTheme.colors.text.tertiary),
+  keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  keyboardActions: KeyboardActions = KeyboardActions.Default,
+  singleLine: Boolean = false,
+  maxLines: Int = Int.MAX_VALUE,
+  visualTransformation: VisualTransformation = VisualTransformation.None,
+  onTextLayout: (TextLayoutResult) -> Unit = {},
+  interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+  cursorBrush: Brush = SolidColor(MaterialTheme.colors.secondary),
+  decorationBox: (@Composable (@Composable () -> Unit) -> Unit) = { it() }
+) {
+  BasicTextField(
+    value = value,
+    modifier = modifier,
+    enabled = enabled,
+    readOnly = readOnly,
+    textStyle = textStyle,
+    keyboardOptions = keyboardOptions,
+    keyboardActions = keyboardActions,
+    singleLine = singleLine,
+    maxLines = maxLines,
+    visualTransformation = visualTransformation,
+    interactionSource = interactionSource,
+    cursorBrush = cursorBrush,
+    onTextLayout = onTextLayout,
+    onValueChange = onValueChange,
+    decorationBox = { self ->
+      decorationBox {
+        Box() {
+          self()
+          if (value.annotatedString.isEmpty() && placeholder != null) {
+            Text(
+              text = placeholder,
+              style = placeholderStyle
+            )
+          }
+        }
+      }
+    }
+  )
+}

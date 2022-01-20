@@ -1,0 +1,9 @@
+<resources>
+    <string name="siteName">萌娘百科</string>
+
+    <string name="moegirlShare">萌娘百科分享</string>
+    <string name="loginOrJoinMoegirl">登入/加入萌娘百科</string>
+
+    <string name="noAccountHint">還沒有萌百帳號？點選前往官網註冊</string>
+    <string name="moegirlSloganText">萌娘百科，萬物皆可萌的百科全書！</string>
+</resources>
