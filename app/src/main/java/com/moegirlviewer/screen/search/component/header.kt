@@ -3,6 +3,7 @@ package com.moegirlviewer.screen.search.component
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.component.BackButton
+import com.moegirlviewer.component.PlainTextField
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.search.SearchScreenModel
 import com.moegirlviewer.store.SearchRecord
@@ -47,19 +49,10 @@ fun SearchScreenHeader() {
     },
     elevation = 3.dp,
     title = {
-      TextField(
+      PlainTextField(
         modifier = Modifier
-          .focusable()
-          .absoluteOffset((-10).dp, 0.dp),
+          .fillMaxWidth(),
         value = model.keywordInputValue,
-        colors = TextFieldDefaults.textFieldColors(
-          textColor = themeColors.text.secondary,
-          cursorColor = themeColors.secondary,
-          unfocusedIndicatorColor = Color.Transparent,
-          backgroundColor = Color.Transparent,
-          focusedIndicatorColor = Color.Transparent,
-          placeholderColor = themeColors.text.tertiary
-        ),
         singleLine = true,
         textStyle = TextStyle(
           fontSize = 16.sp,
@@ -77,9 +70,7 @@ fun SearchScreenHeader() {
           }
         ),
         onValueChange = { model.keywordInputValue = it },
-        placeholder = {
-          Text(stringResource(id = R.string.searchInMoegirl))
-        },
+        placeholder = stringResource(id = R.string.searchInMoegirl),
       )
     },
     actions = {
