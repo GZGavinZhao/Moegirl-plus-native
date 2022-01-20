@@ -46,6 +46,7 @@ fun SettingsScreenItem(
           text = title,
           color = themeColors.text.primary,
           style = titleStyle,
+          fontSize = 15.sp
         )
         if (subtext != null) {
           Text(

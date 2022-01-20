@@ -28,12 +28,12 @@ class NotificationScreenModel @Inject constructor() : ViewModel() {
   val lazyListState = LazyListState()
 
   suspend fun loadList(refresh: Boolean = false) {
-    if (LoadStatus.isCannotLoad(status)) return
+    if (LoadStatus.isCannotLoad(status) && !refresh) return
     status = if (refresh) LoadStatus.INIT_LOADING else LoadStatus.LOADING
-    if (refresh) notificationList = emptyList()
+    if (refresh) continueKey = null
 
     try {
-      val res = NotificationApi.getList(if (refresh) null else continueKey)
+      val res = NotificationApi.getList(continueKey)
       val notificationData = res.query.notifications
       val nextStatus = when {
         notificationData.`continue` == null && notificationData.list.isNotEmpty() -> LoadStatus.ALL_LOADED
@@ -41,7 +41,7 @@ class NotificationScreenModel @Inject constructor() : ViewModel() {
         else -> LoadStatus.SUCCESS
       }
 
-      notificationList = notificationList + notificationData.list.reversed()
+      notificationList = if (refresh) notificationData.list.reversed() else notificationList + notificationData.list.reversed()
       status = nextStatus
       continueKey = notificationData.`continue`
     } catch (e: Exception) {
