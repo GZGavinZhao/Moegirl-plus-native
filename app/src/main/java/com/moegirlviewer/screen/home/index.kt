@@ -63,7 +63,6 @@ fun HomeScreen() {
           ArticleView(
             props = ArticleViewProps(
               pageName = "Mainpage",
-              renderDelay = 1000,
               ref = model.articleViewRef,
             )
           )

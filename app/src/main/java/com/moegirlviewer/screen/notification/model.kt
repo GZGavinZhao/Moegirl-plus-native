@@ -56,7 +56,7 @@ class NotificationScreenModel @Inject constructor() : ViewModel() {
       AccountStore.markAllNotificationAsRead()
       notificationList = notificationList.map {
         it.read = ""
-        it
+        it.copy()
       }
       toast(Globals.context.getString(R.string.markAllAsReaded))
     } catch (e: Exception) {

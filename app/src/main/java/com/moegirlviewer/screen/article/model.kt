@@ -53,11 +53,13 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   // 真实页面名
   val truePageName get() = articleData?.parse?.title ?: routeArguments.pageName
   // 要显示的页面名(受萌百标题格式化模板的影响)
-  val displayPageName get() = (
-    articleData?.parse?.displaytitle ?:
-    routeArguments.displayName ?:
-    routeArguments.pageName!!
-  ).replace("_", " ")
+  val displayPageName get() = getTextFromHtml(
+    (
+      articleData?.parse?.displaytitle ?:
+      routeArguments.displayName ?:
+      routeArguments.pageName!!
+      ).replace("_", " ")
+  )
   val pageId get() = articleData?.parse?.pageid
 
   // 是否允许编辑全文，讨论页默认不允许

@@ -24,13 +24,12 @@ import com.moegirlviewer.util.toEpochMilli
 import kotlinx.coroutines.CompletableDeferred
 import java.time.LocalDate
 
-class CommonDatePickerDialogState(
-  val datePickerRef: Ref<DatePicker> = Ref()
-) {
+class CommonDatePickerDialogState() {
   internal var visible by mutableStateOf(false)
   internal var onCheck: (() -> Unit)? = null
   internal var onHide: (() -> Unit)? = null
-  internal var deferredRefReady: CompletableDeferred<Boolean>? = null
+  internal var deferredRefReady: CompletableDeferred<DatePicker>? = null
+//  internal val datePickerRef: Ref<DatePicker> = Ref()
 
   suspend fun show(
     initialValue: LocalDate = LocalDate.now(),
@@ -39,24 +38,25 @@ class CommonDatePickerDialogState(
     onValueChange: ((LocalDate) -> Unit)? = null,
   ): LocalDate? {
     val completableDeferred = CompletableDeferred<LocalDate?>()
-      visible = true
-      var currentValue = initialValue
-      onCheck = { completableDeferred.complete(currentValue) }
-      onHide = { completableDeferred.complete(null) }
-      // 因为DatePicker在Dialog里，DatePicker实例必须在dialog显示后才能初始化，这里用一个deferred来等待实例创建完成
-      deferredRefReady = CompletableDeferred()
-      deferredRefReady!!.await()
+    visible = true
+    var currentValue = initialValue
+    onCheck = { completableDeferred.complete(currentValue) }
+    onHide = { completableDeferred.complete(null) }
+    // 因为DatePicker在Dialog里，DatePicker实例必须在dialog显示后才能初始化，这里用一个deferred来等待实例创建完成
+    deferredRefReady = CompletableDeferred()
 
-    datePickerRef.value!!.let {
-      it.updateDate(initialValue.year, initialValue.monthValue - 1, initialValue.dayOfMonth)
-      it.setOnDateChangedListener { _, year, month, date ->
-        val newValue = LocalDate.of(year, month + 1, date)
-        onValueChange?.invoke(newValue)
-        currentValue = newValue
-      }
-      if (minDate != null) it.minDate = minDate.toEpochMilli()
-      if (maxDate != null) it.maxDate = maxDate.toEpochMilli()
+    val datePicker = deferredRefReady!!.await()
+
+    if (minDate != null) datePicker.minDate = minDate.toEpochMilli()
+    if (maxDate != null) datePicker.maxDate = maxDate.toEpochMilli()
+    datePicker.setOnDateChangedListener { _, year, month, date ->
+      var newValue = LocalDate.of(year, month + 1, date)
+      if (newValue.isBefore(minDate)) newValue = minDate
+      if (newValue.isAfter(maxDate)) newValue = maxDate
+      onValueChange?.invoke(newValue)
+      currentValue = newValue
     }
+    datePicker.updateDate(initialValue.year, initialValue.monthValue - 1, initialValue.dayOfMonth)
 
     return completableDeferred.await()
   }
@@ -85,12 +85,9 @@ fun CommonDatePickerDialog(
           modifier = Modifier
             .background(themeColors.surface),
           factory = {
-            if (state.datePickerRef.value == null) {
-              state.datePickerRef.value = DatePicker(it)
+            DatePicker(it).also {
+              state.deferredRefReady!!.complete(it)
             }
-
-            state.deferredRefReady!!.complete(true)
-            state.datePickerRef.value!!
           }
         )
 

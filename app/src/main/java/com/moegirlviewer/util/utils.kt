@@ -73,7 +73,7 @@ fun Float.toDp(): Dp {
 
 class InitRef<T>(var value: T)
 
-fun trimCommentHtml(html: String): String {
+fun getTextFromHtml(html: String): String {
   return html
     .replace(Regex("""(<.+?>|<\\/.+?>)"""), "")
     .replace(Regex("&(.+?);")) {

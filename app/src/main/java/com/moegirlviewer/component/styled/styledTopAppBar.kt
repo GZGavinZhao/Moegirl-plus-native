@@ -1,11 +1,11 @@
 package com.moegirlviewer.component.styled
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.contentColorFor
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
@@ -15,6 +15,7 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.statusBarsPadding
 import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.component.BackButton
+import com.moegirlviewer.extants.toCssRgbaString
 import com.moegirlviewer.util.Globals
 
 @Composable
@@ -53,7 +54,13 @@ fun StyledTopAppBar(
       contentColor = contentColor,
       elevation = elevation,
       title = title,
-      navigationIcon = navigationIcon,
+      navigationIcon = {
+        CompositionLocalProvider(
+          LocalContentAlpha provides ContentAlpha.medium
+        ) {
+          navigationIcon()
+        }
+      },
       actions = {
         actions?.invoke(this)
       },

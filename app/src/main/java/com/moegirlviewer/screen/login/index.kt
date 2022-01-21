@@ -47,6 +47,8 @@ fun LoginScreen() {
         contentAlignment = Alignment.Center
       ) {
         Image(
+          modifier = Modifier
+            .fillMaxSize(),
           painter = painterResource(R.drawable.login_bg),
           contentDescription = null,
           contentScale = ContentScale.Crop,

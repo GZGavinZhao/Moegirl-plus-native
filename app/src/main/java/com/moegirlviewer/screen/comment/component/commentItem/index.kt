@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.node.Ref
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -52,9 +51,7 @@ import com.moegirlviewer.util.*
 import com.moegirlviewer.util.CommentTree.Companion.replyList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 
 class CommentScreenCommentItemRef(
   val show: suspend () -> Unit
@@ -178,7 +175,7 @@ fun CommentScreenCommentItem(
         enabled = true,
         onClick = {},
         onLongClick = {
-          copyContentToClipboard(trimCommentHtml(commentData.text.eraseTargetUserName()))
+          copyContentToClipboard(getTextFromHtml(commentData.text.eraseTargetUserName()))
           vibrate()
           toast(Globals.context.getString(R.string.commentContentCopiedHint))
         }
@@ -504,7 +501,7 @@ private fun ComposedCommentReply(
           }
 
           append("：")
-          append(trimCommentHtml(item.text))
+          append(getTextFromHtml(item.text))
         }
       )
     }

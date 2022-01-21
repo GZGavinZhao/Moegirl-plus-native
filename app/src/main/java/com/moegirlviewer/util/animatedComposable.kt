@@ -1,7 +1,7 @@
 package com.moegirlviewer.util
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.IntOffset
 import androidx.constraintlayout.compose.Transition

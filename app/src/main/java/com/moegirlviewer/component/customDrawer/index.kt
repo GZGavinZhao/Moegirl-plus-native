@@ -35,7 +35,7 @@ class CustomDrawerRef(
 fun CustomDrawer(
   width: Dp = (LocalConfiguration.current.screenWidthDp * 0.6).dp,
   gestureWidth: Dp = 20.dp,
-  alwaysDelayInitialize: Boolean = false,   // 因为每次初始化渲染时立刻渲染总会闪现一下，有时需要延迟渲染避免这个问题，延迟酌情使用这个选项
+  alwaysDelayInitialize: Boolean = false,   // 因为每次初始化渲染时立刻渲染总会闪现一下，有时需要延迟渲染避免这个问题，酌情使用这个选项
   side: CustomDrawerSide = CustomDrawerSide.LEFT,
   drawerContent: @Composable (ref: CustomDrawerRef) -> Unit,
   ref: Ref<CustomDrawerRef>? = null,
@@ -123,7 +123,7 @@ fun CustomDrawer(
         .width(width + gestureWidth)
         .fillMaxHeight()
         .offset(x = swipeOffset)
-        .visibility(displayFlag)
+        .visibility(animationProgress != 0f && displayFlag)
     ) {
       Box(
         modifier = Modifier
