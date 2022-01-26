@@ -43,7 +43,7 @@ fun SearchResultScreen(
   val model: SearchResultScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
   val themeColors = MaterialTheme.colors
-//  val bgColor = if (themeColors.isLight) Color.White else themeColors.primary
+  val bgColor = if (themeColors.isLight) Color.White else themeColors.primary
 
   LaunchedEffect(true) {
     model.routeArguments = arguments
@@ -57,11 +57,9 @@ fun SearchResultScreen(
   Scaffold(
     topBar = {
       StyledTopAppBar(
-//        backgroundColor = bgColor,
-        backgroundColor = Color.White,
+        backgroundColor = bgColor,
         elevation = 3.dp,
-        statusBarDarkIcons = true,
-//        statusBarDarkIcons = !isSystemInDarkTheme(),
+        statusBarDarkIcons = themeColors.isLight,
         title = {
           Text(
             text = stringResource(id = R.string.search) + "：" + arguments.keyword,

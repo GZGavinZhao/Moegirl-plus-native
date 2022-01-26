@@ -10,6 +10,7 @@ import com.google.gson.Gson
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.watchList.WatchListApi
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.room.watchingPage.WatchingPage
 import com.moegirlviewer.screen.recentChanges.util.RawRecentChanges
 import com.moegirlviewer.screen.recentChanges.util.RecentChanges
@@ -72,7 +73,7 @@ class RecentChangesScreenModel @Inject constructor() : ViewModel() {
 
       changesList = changeListOfDays
       status = LoadStatus.SUCCESS
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "加载最近更改列表失败")
       status = LoadStatus.FAIL
     }

@@ -1,5 +1,7 @@
 package com.moegirlviewer.component.commonDialog
 
+import android.app.Dialog
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -127,79 +129,82 @@ fun CommonAlertDialogUI(
     onDismissRequest = onDismiss,
     properties = DialogProperties(usePlatformDefaultWidth = false)
   ) {
-    Column(
-      modifier = Modifier
-        .width((configuration.screenWidthDp * 0.85).dp)
-        .clip(RoundedCornerShape(5.dp))
-        .background(themeColors.surface)
+    Surface(
+      shape = RoundedCornerShape(5.dp)
     ) {
       Column(
         modifier = Modifier
-          .padding(horizontal = 20.dp)
+          .width((configuration.screenWidthDp * 0.85).dp)
+          .background(themeColors.surface)
       ) {
-        Text(
+        Column(
           modifier = Modifier
-            .padding(vertical = 18.dp),
-          text = title ?: stringResource(id = R.string.alert),
-          fontWeight = FontWeight.Bold,
-          fontSize = 18.sp
-        )
-
-        CompositionLocalProvider(
-          LocalTextStyle provides defaultTextStyle
-        ) {
-          content?.invoke()
-        }
-      }
-
-      Row(
-        modifier = Modifier
-          .padding(horizontal = 10.dp)
-          .padding(top = 15.dp, bottom = 5.dp)
-          .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-      ) {
-        TextButton(
-          modifier = Modifier
-            .visibility(leftButton != null),
-          enabled = leftButton != null,
-          onClick = {
-            leftButton?.onClick?.invoke()
-            if (closeOnAction) onRequestClose?.invoke()
-          },
+            .padding(horizontal = 20.dp)
         ) {
           Text(
-            text = leftButton?.text ?: "",
+            modifier = Modifier
+              .padding(vertical = 18.dp),
+            text = title ?: stringResource(id = R.string.alert),
             fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
           )
+
+          CompositionLocalProvider(
+            LocalTextStyle provides defaultTextStyle
+          ) {
+            content?.invoke()
+          }
         }
 
-        Row() {
-          if (secondaryButton != null) {
-            TextButton(
-              modifier = Modifier
-                .padding(end = 5.dp),
-              onClick = {
-                secondaryButton.onClick?.invoke()
-                if (closeOnAction) onRequestClose?.invoke()
-              }
-            ) {
-              Text(
-                text = secondaryButton.text,
-                fontWeight = FontWeight.Bold,
-                color = themeColors.text.secondary
-              )
-            }
-          }
-
+        Row(
+          modifier = Modifier
+            .padding(horizontal = 10.dp)
+            .padding(top = 15.dp, bottom = 5.dp)
+            .fillMaxWidth(),
+          horizontalArrangement = Arrangement.SpaceBetween
+        ) {
           TextButton(
-            onClick = onPrimaryButtonClick
+            modifier = Modifier
+              .visibility(leftButton != null),
+            enabled = leftButton != null,
+            onClick = {
+              leftButton?.onClick?.invoke()
+              if (closeOnAction) onRequestClose?.invoke()
+            },
           ) {
             Text(
-              text = primaryButtonText ?: stringResource(R.string.check),
+              text = leftButton?.text ?: "",
               fontWeight = FontWeight.Bold,
-              color = themeColors.secondary
             )
+          }
+
+          Row() {
+            if (secondaryButton != null) {
+              TextButton(
+                modifier = Modifier
+                  .padding(end = 5.dp),
+                onClick = {
+                  secondaryButton.onClick?.invoke()
+                  if (closeOnAction) onRequestClose?.invoke()
+                }
+              ) {
+                Text(
+                  text = secondaryButton.text,
+                  fontWeight = FontWeight.Bold,
+                  color = themeColors.text.secondary
+                )
+              }
+            }
+
+            TextButton(
+              onClick = onPrimaryButtonClick
+            ) {
+              Text(
+                text = primaryButtonText ?: stringResource(R.string.check),
+                fontWeight = FontWeight.Bold,
+                color = themeColors.secondary
+              )
+            }
           }
         }
       }

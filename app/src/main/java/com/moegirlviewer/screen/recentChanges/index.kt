@@ -138,9 +138,12 @@ fun RecentChangesScreen() {
           }
         }
 
-        if (model.status == LoadStatus.SUCCESS) {
+        if (model.status == LoadStatus.SUCCESS || model.status == LoadStatus.FAIL) {
           item(key = "footer") {
-            ScrollLoadListFooter(status = LoadStatus.SUCCESS)
+            ScrollLoadListFooter(
+              status = model.status,
+              errorText = stringResource(id = R.string.loadErrToSwipeRetry)
+            )
           }
         }
       }

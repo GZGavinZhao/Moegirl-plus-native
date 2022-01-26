@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.SearchApi
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.sideBorder
 import com.moegirlviewer.screen.search.SearchScreenModel
@@ -41,7 +42,7 @@ fun ColumnScope.SearchScreenHintList() {
       status = LoadStatus.LOADING
       list = SearchApi.getHint(model.keywordInputValue).query.search.map { it.title }
       status = if (list.isEmpty()) LoadStatus.EMPTY else LoadStatus.SUCCESS
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       status = LoadStatus.FAIL
       printRequestErr(e, "加载搜索提示失败")
     }
@@ -84,7 +85,7 @@ private fun Item(
       modifier = Modifier
         .height(42.dp)
         .fillMaxWidth()
-        .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.onSurface)
+        .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.text.tertiary)
         .clickable { onClick?.invoke() }
         .padding(horizontal = 10.dp),
       contentAlignment = Alignment.CenterStart

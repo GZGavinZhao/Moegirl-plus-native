@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.editingRecord.bean.UserContributionBean
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -50,7 +51,7 @@ class ContributionScreenModel @Inject constructor() : ViewModel() {
       contributionList = if (refresh) list else contributionList + list
       status = nexStatus
       continueKey = nextContinueKey
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "加载用户贡献列表失败")
       status = LoadStatus.FAIL
     }

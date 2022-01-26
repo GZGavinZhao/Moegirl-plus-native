@@ -2,7 +2,7 @@ package com.moegirlviewer.request.util
 
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
-import com.moegirlviewer.request.MoeRequestException
+import com.moegirlviewer.request.MoeRequestWikiException
 import okhttp3.Response
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
@@ -25,10 +25,10 @@ fun Response.probeMoeResponseType(bodyContent: String): MoeResponseType {
   }
 }
 
-fun ResponseBody.toMoeRequestError(bodyContent: String): MoeRequestException {
+fun ResponseBody.toMoeRequestError(bodyContent: String): MoeRequestWikiException {
   val errJsonObject = JsonParser.parseString(bodyContent).asJsonObject
       .get("error").asJsonObject
-  return MoeRequestException(
+  return MoeRequestWikiException(
     code = errJsonObject.get("code").asString,
     message = errJsonObject.get("info").asString
   )

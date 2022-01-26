@@ -6,6 +6,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -18,13 +20,17 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.component.PlainTextField
+import com.moegirlviewer.store.SearchRecord
 import com.moegirlviewer.ui.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.autoFocus
+import com.moegirlviewer.util.toast
 
 @Composable
 fun ArticleScreenFindBar(
@@ -75,17 +81,22 @@ fun ArticleScreenFindBar(
             )
           }
 
-          BasicTextField(
+          PlainTextField(
             modifier = Modifier
               .weight(1f)
               .autoFocus(300),
             value = inputValue,
             singleLine = true,
-            cursorBrush = SolidColor(themeColors.secondary),
             onValueChange = {
               inputValue = it
               onFindAll(it)
             },
+            keyboardOptions = KeyboardOptions.Default.copy(
+              imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+              onAny = { onFindNext() }
+            )
           )
 
           TextButton(

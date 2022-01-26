@@ -8,7 +8,8 @@ import com.moegirlviewer.api.account.AccountApi
 import com.moegirlviewer.api.account.bean.UserInfoBean
 import com.moegirlviewer.api.edit.EditApi
 import com.moegirlviewer.api.notification.NotificationApi
-import com.moegirlviewer.request.MoeTimeoutException
+import com.moegirlviewer.request.MoeRequestException
+import com.moegirlviewer.request.MoeRequestTimeoutException
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.initUserInfo
 import com.moegirlviewer.util.printRequestErr
@@ -58,7 +59,7 @@ object AccountStore {
     userInfo.value = null
     try {
       coroutineScope.launch { AccountApi.logout() }
-    } catch (e: Exception) {}
+    } catch (e: MoeRequestException) {}
     coroutineScope.launch {
       dataStore.updateData {
         it.toMutablePreferences().apply { this.remove(dataStoreKeys.userName) }
@@ -70,7 +71,7 @@ object AccountStore {
     return try {
       val csrfToken = EditApi.getCsrfToken()
       csrfToken != "+\\"
-    } catch (e: MoeTimeoutException) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "检查账户有效性失败")
       true // 因为萌百服务器不稳定，所以将网络超时认定为有效
     }
@@ -91,13 +92,9 @@ object AccountStore {
    */
   suspend fun loadUserInfo(): UserInfo {
     if (userInfo.value != null) return userInfo.value!!
-    try {
-      val userInfoRes = AccountApi.getInfo()
-      userInfo.value = userInfoRes.query.userinfo
-      return userInfo.value!!
-    } catch (e: Exception) {
-      throw LoadUserInfoException(e.toString())
-    }
+    val userInfoRes = AccountApi.getInfo()
+    userInfo.value = userInfoRes.query.userinfo
+    return userInfo.value!!
   }
 
   suspend fun isInUserGroup(userGroup: UserGroup): Boolean {
@@ -118,5 +115,3 @@ enum class UserGroup(
   GOOD_EDITOR("goodeditor"),
   PATROLLER("patroller")
 }
-
-class LoadUserInfoException(message: String?) : Exception(message)

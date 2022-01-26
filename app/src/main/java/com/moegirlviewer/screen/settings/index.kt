@@ -18,6 +18,7 @@ import com.moegirlviewer.screen.settings.component.SettingsScreenItem
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommonSettings
 import com.moegirlviewer.store.SettingsStore
+import com.moegirlviewer.ui.theme.text
 import com.moegirlviewer.util.gotoUserPage
 import kotlinx.coroutines.launch
 
@@ -31,7 +32,8 @@ fun SettingsScreen() {
 
   val switchColors = SwitchDefaults.colors(
     checkedThumbColor = themeColors.secondary,
-    uncheckedTrackAlpha = 0.54f
+    uncheckedTrackAlpha = 0.54f,
+    uncheckedTrackColor = themeColors.text.tertiary
   )
 
   fun setSettingItem(setter: CommonSettings.() -> Unit) {
@@ -84,6 +86,23 @@ fun SettingsScreen() {
           }
         )
       }
+
+//      Title(R.string._interface)
+//      SettingsScreenItem(
+//        title = stringResource(id = R.string.darkThemeBySystem),
+//        subtext = stringResource(id = R.string.darkThemeBySystemHelpText),
+//        onClick = {
+//          setSettingItem { this.darkThemeBySystem = !this.darkThemeBySystem }
+//        }
+//      ) {
+//        Switch(
+//          checked = commonSettings.darkThemeBySystem,
+//          colors = switchColors,
+//          onCheckedChange = {
+//            setSettingItem { this.darkThemeBySystem = it }
+//          }
+//        )
+//      }
 
       // 跟随系统，暂时不开放手动设置语言了
 //      Title(R.string._interface)

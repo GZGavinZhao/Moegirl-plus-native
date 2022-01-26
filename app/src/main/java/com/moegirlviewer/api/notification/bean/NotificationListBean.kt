@@ -21,7 +21,7 @@ data class NotificationListBean(
         val agent: Agent,
         val category: String,
         val id: String,
-        var read: String? = null,
+        val read: String? = null,
         val targetpages: List<Any>,
         val timestamp: Timestamp,
         val title: Title? = null,

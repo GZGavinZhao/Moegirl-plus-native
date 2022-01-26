@@ -20,7 +20,8 @@ data class CommonSettings(
   var heimu: Boolean = true,
   var stopMediaOnLeave: Boolean = false,
   var language: SupportedLanguage = SupportedLanguage.ZH_HANS,
-  var syntaxHighlight: Boolean = true
+  var syntaxHighlight: Boolean = true,
+  var darkThemeBySystem: Boolean = false
 ) : Settings()
 
 data class RecentChangesSettings(
@@ -33,7 +34,7 @@ data class RecentChangesSettings(
 ) : Settings()
 
 data class OtherSettings(
-  var rejectedVersionName: String = ""
+  var rejectedVersionName: String = "",
 ) : Settings()
 
 object SettingsStore {

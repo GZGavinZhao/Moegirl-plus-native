@@ -130,7 +130,8 @@ fun CategoryScreen(
           CategoryScreenItem(
             pageName = item.title,
             thumbnail = item.thumbnail,
-            categories = item.categories.map { it.title.replaceFirst("Category:", "") },
+            // 貌似是mw的bug，有时获取到的分类下页面的数据，页面的所有分类居然是null
+            categories = (item.categories ?: emptyList()).map { it.title.replaceFirst("Category:", "") },
             onClick = {
               Globals.navController.navigate(ArticleRouteArguments(
                 pageName = item.title

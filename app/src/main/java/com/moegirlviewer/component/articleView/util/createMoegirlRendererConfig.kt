@@ -16,7 +16,7 @@ fun createMoegirlRendererConfig(
   val categoriesStr = Gson().toJson(categories)
   val heightObserverCodes = """
     moegirl.config.hostScrollMode.enabled = true
-    moegirl.config.hostScrollMode.onResize = height => _postMessage('pageHeightChange', height)
+    moegirl.config.hostScrollMode.onResize = height => _postMessage('pageHeightChange', { value: height })
   """.trimIndent()
 
   return """

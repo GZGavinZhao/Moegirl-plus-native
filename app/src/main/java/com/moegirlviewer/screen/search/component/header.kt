@@ -35,13 +35,11 @@ fun SearchScreenHeader() {
   val model: SearchScreenModel = hiltViewModel()
   val themeColors = MaterialTheme.colors
   val context = LocalContext.current
-//  val bgColor = if (themeColors.isLight) Color.White else themeColors.primary
+  val bgColor = if (themeColors.isLight) Color.White else themeColors.primary
 
   StyledTopAppBar(
-//    backgroundColor = bgColor,
-//    statusBarDarkIcons = !isSystemInDarkTheme(),
-    backgroundColor = Color.White,
-    statusBarDarkIcons = true,
+    backgroundColor = bgColor,
+    statusBarDarkIcons = themeColors.isLight,
     navigationIcon = {
       BackButton(
         iconColor = themeColors.text.secondary

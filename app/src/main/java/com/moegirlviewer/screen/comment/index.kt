@@ -3,7 +3,9 @@ package com.moegirlviewer.screen.comment
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -78,7 +80,7 @@ fun CommentScreen(
     model.swipeRefreshState.isRefreshing = comments.status == LoadStatus.INIT_LOADING
   }
 
-  model.lazyListState.RetainScroll(comments.commentList.isNotEmpty())
+//  model.lazyListState.RetainScroll(comments.commentList.isNotEmpty())
 
   model.lazyListState.OnSwipeLoading {
     scope.launch {
@@ -110,7 +112,7 @@ fun CommentScreen(
         LazyColumn(
           modifier = Modifier
             .fillMaxSize(),
-          state = model.lazyListState
+          state = if (comments.commentList.isNotEmpty()) model.lazyListState else rememberLazyListState()
         ) {
           if (comments.status != LoadStatus.EMPTY) {
             if (comments.popularList.isNotEmpty()) {
@@ -167,7 +169,6 @@ fun CommentScreen(
                       pageId = arguments.pageId
                     )
                   },
-                  onTargetUserNameClick = {}
                 )
               }
 

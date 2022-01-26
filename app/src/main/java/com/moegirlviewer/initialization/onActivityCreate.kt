@@ -1,6 +1,6 @@
 package com.moegirlviewer.initialization
 
-import android.app.Activity
+import android.os.Build
 import android.view.View
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
@@ -10,6 +10,10 @@ import com.moegirlviewer.util.isDebugEnv
 fun ComponentActivity.initializeOnCreate() {
   WebView.setWebContentsDebuggingEnabled(isDebugEnv())
   WebView.enableSlowWholeDocumentDraw()
+
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    window.decorView.isForceDarkAllowed = false
+  }
 
   // 删除默认的顶部状态栏高度偏移
   window.decorView.systemUiVisibility =

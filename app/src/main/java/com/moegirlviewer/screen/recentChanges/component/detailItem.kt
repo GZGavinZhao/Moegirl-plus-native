@@ -164,7 +164,7 @@ private fun SummaryContent(
         append(summary.body)
       } else {
         withStyle(SpanStyle(color = themeColors.text.secondary)) {
-          append(stringResource(id = R.string.noSummaryOnCurrentEdit))
+          append(Globals.context.getString(R.string.noSummaryOnCurrentEdit))
         }
       }
     }

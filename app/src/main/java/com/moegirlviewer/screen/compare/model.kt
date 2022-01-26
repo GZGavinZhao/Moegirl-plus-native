@@ -10,6 +10,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.api.edit.EditApi
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.editingRecord.bean.ComparePageResult
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.compare.util.DiffLine
 import com.moegirlviewer.screen.compare.util.collectDiffBlocksFormHtml
 import com.moegirlviewer.util.Globals
@@ -64,7 +65,7 @@ class CompareScreenModel @Inject constructor() : ViewModel() {
       leftLines = diffBlocks.map { it.left }
       rightLines = diffBlocks.map { it.right }
       status = LoadStatus.SUCCESS
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "加载页面差异数据失败")
       status = LoadStatus.FAIL
     }
@@ -88,9 +89,9 @@ class CompareScreenModel @Inject constructor() : ViewModel() {
       )
       toast(Globals.context.getString(R.string.undid))
       true
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "执行撤销失败")
-      toast(e.toString())
+      toast(e.message)
       false
     } finally {
       Globals.commonLoadingDialog.hide()

@@ -1,13 +1,11 @@
 package com.moegirlviewer.component.htmlWebView
 
 import android.annotation.SuppressLint
-import android.os.Parcelable
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.viewinterop.AndroidView
@@ -16,14 +14,11 @@ import com.google.gson.JsonParser
 import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.component.htmlWebView.utils.createHtmlDocument
 import com.moegirlviewer.util.LocalCachedWebViews
-import com.moegirlviewer.util.ParcelableRef
 import com.moegirlviewer.util.toUnicodeForInjectScriptInWebView
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.parcelize.Parcelize
-import okhttp3.internal.toHexString
 
 private const val assetsBaseUrl = "file:///android_asset/"
 
@@ -153,7 +148,7 @@ fun HtmlWebView(
 
   AndroidView(
     modifier = Modifier
-      .fillMaxHeight()
+      .fillMaxSize()
       .then(modifier)
     ,
     factory = {

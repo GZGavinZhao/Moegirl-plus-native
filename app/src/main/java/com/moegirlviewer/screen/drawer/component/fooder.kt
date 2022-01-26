@@ -18,12 +18,15 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.R
+import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.ui.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.noRippleClickable
 
 @Composable
-fun CommonDrawerFooter() {
+fun CommonDrawerFooter(
+  drawerRef: CustomDrawerRef
+) {
   val themeColors = MaterialTheme.colors
   val density = LocalDensity.current.density
 
@@ -37,7 +40,8 @@ fun CommonDrawerFooter() {
         .weight(1f)
         .fillMaxHeight()
         .noRippleClickable {
-           Globals.navController.navigate("settings")
+          drawerRef.close()
+          Globals.navController.navigate("settings")
         },
       horizontalArrangement = Arrangement.Center,
       verticalAlignment = Alignment.CenterVertically

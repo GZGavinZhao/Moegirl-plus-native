@@ -22,13 +22,10 @@ import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.linearTintWikitext
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.withContext
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 @InternalCoroutinesApi
@@ -38,6 +35,7 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 @Composable
 fun EditScreenWikitextEditor() {
   val model: EditScreenModel = hiltViewModel()
+  val scope = rememberCoroutineScope()
   var textFieldValue by remember(model.wikitextTextFieldValue) { mutableStateOf(model.wikitextTextFieldValue) }
   var visibleQuickInsertBar by remember { mutableStateOf(false) }
   val syntaxHighlight by SettingsStore.common.getValue { this.syntaxHighlight }.collectAsState(
@@ -111,7 +109,9 @@ fun EditScreenWikitextEditor() {
 
       LoadStatus.FAIL -> {
         TextButton(
-          onClick = {}
+          onClick = {
+            scope.launch { model.loadWikitext() }
+          }
         ) {
           Text(stringResource(id = R.string.reload))
         }

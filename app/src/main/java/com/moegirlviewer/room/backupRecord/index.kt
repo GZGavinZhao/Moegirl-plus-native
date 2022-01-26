@@ -1,6 +1,7 @@
 package com.moegirlviewer.room.backupRecord
 
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 @Entity(primaryKeys = ["type", "backupId"])
@@ -14,7 +15,7 @@ class BackupRecord(
 @Dao
 interface BackupRecordDao {
   @Query("SELECT * FROM BackupRecord WHERE type = :type AND backupId = :backupId")
-  suspend fun getItem(type: BackupRecordType, backupId: String): List<BackupRecord>
+  fun getItem(type: BackupRecordType, backupId: String): Flow<BackupRecord?>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertItem(record: BackupRecord)

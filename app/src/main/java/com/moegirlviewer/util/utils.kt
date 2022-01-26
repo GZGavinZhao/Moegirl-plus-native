@@ -28,7 +28,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Target(AnnotationTarget.CLASS)
-annotation class ProguardIgnore()
+annotation class ProguardIgnore
 
 fun isMoegirl() = Constants.source == DataSource.MOEGIRL
 
@@ -127,14 +127,17 @@ fun LocalDate.toEpochMilli(): Long {
   return this.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 }
 
-fun isSimplifiedChineseEnv() = listOf("zh-CN", "zh-SG").contains(Locale.getDefault().toLanguageTag())
+// 有的手机返回的语言代码不规范，只好这么判断
+fun isSimplifiedChineseEnv() = listOf("zh-CN", "zh-SG", "zh-Hans-CN", "zh-Hans-SG").contains(Locale.getDefault().toLanguageTag()) ||
+  Locale.getDefault().displayCountry == "中国"
 
 fun computeMd5(content: String): String {
   val md = MessageDigest.getInstance("MD5")
   return BigInteger(1, md.digest(content.toByteArray())).toString(16).padStart(32, '0')
 }
 
-val moegirlNormalTimestampDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")!!
+val moegirlNormalTimestampDateFormatter: DateTimeFormatter =
+  DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
 // 萌百通常api返回这种格式的时间戳，评论api返回秒数时间戳(注意不是毫秒)
 fun parseMoegirlNormalTimestamp(timestamp: String): LocalDateTime {

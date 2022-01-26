@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -12,8 +13,12 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
@@ -21,14 +26,17 @@ import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
+import com.moegirlviewer.component.articleView.MoegirlImage
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.drawer.CommonDrawer
+import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.navigate
+import com.moegirlviewer.util.noRippleClickable
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.ZoneId
 
 
 @ExperimentalMaterialApi
@@ -38,7 +46,7 @@ fun HomeScreen() {
   val drawerRef = Ref<CustomDrawerRef>()
 
   LaunchedEffect(true) {
-    if (HomeScreenModel.needReload) {
+    if (HomeScreenModel.needReload && model.articleViewRef.value!!.loadStatus == LoadStatus.LOADING) {
       model.articleViewRef.value!!.reload(true)
       HomeScreenModel.needReload = false
     }

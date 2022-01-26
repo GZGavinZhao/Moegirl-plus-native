@@ -18,13 +18,13 @@ import com.moegirlviewer.component.articleView.ArticleInfo
 import com.moegirlviewer.component.articleView.ArticleViewRef
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
 import com.moegirlviewer.room.watchingPage.WatchingPage
 import com.moegirlviewer.screen.edit.EditRouteArguments
 import com.moegirlviewer.screen.edit.EditType
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommentStore
-import com.moegirlviewer.store.LoadUserInfoException
 import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -57,8 +57,9 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     (
       articleData?.parse?.displaytitle ?:
       routeArguments.displayName ?:
-      routeArguments.pageName!!
-      ).replace("_", " ")
+      routeArguments.pageName ?:
+      Globals.context.getString(R.string.app_name)
+    ).replace("_", " ")
   )
   val pageId get() = articleData?.parse?.pageid
 
@@ -98,8 +99,8 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
     coroutineScope.launch {
       val mainPageUrl = try {
-        PageApi.getMainImage(truePageName!!, 250).source
-      } catch (e: Exception) { null }
+        PageApi.getMainImage(truePageName!!, 250)?.source
+      } catch (e: MoeRequestException) { null }
 
       Globals.room.browsingRecord().insertItem(BrowsingRecord(
         pageName = truePageName!!,
@@ -210,7 +211,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
         isSysop ||
         // 是巡查员，且当前页面的保护等级允许巡查员编辑
         (isPatroller && articleInfo!!.protection.first { it.type == "edit" }.level == "patrolleredit")
-    } catch (e: LoadUserInfoException) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "检查页面是否可编辑失败")
     }
   }
@@ -230,9 +231,9 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
       } else {
         Globals.room.watchingPage().deleteItem(WatchingPage(truePageName!!))
       }
-    } catch(e: Exception) {
+    } catch(e: MoeRequestException) {
       printRequestErr(e, "修改监视状态失败")
-      toast(e.toString())
+      toast(e.message)
     }
   }
 

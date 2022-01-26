@@ -24,8 +24,8 @@ object CategoryApi {
       this["pithumbsize"] = thumbSize
       this["clshow"] = "!hidden"
       if (continueKey != null) {
-        this["continue"] = continueKey.`continue`
-        this["gcmcontinue"] = continueKey.gcmcontinue
+        if (continueKey.`continue` != null) this["continue"] = continueKey.`continue`
+        if (continueKey.gcmcontinue != null) this["gcmcontinue"] = continueKey.gcmcontinue
       }
     }
   )

@@ -50,8 +50,11 @@ fun CommonDrawer(
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
             colorFilter = ColorFilter.tint(
-              color = Color(1f, 1f, 1f, 0.8f),
-              blendMode = BlendMode.Lighten
+              color = if (themeColors.isLight)
+                Color.White.copy(alpha = 0.8f) else
+                Color.Black.copy(alpha = 0.7f)
+              ,
+              blendMode = if (themeColors.isLight) BlendMode.Lighten else BlendMode.Darken
             )
           )
 
@@ -64,7 +67,9 @@ fun CommonDrawer(
                 .weight(1f),
               drawerRef = it
             )
-            CommonDrawerFooter()
+            CommonDrawerFooter(
+              drawerRef = it
+            )
           }
         }
       }

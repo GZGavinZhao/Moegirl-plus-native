@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -50,10 +52,7 @@ fun PlainTextField(
   cursorBrush: Brush = SolidColor(MaterialTheme.colors.secondary),
   decorationBox: (@Composable (@Composable () -> Unit) -> Unit) = { it() }
 ) {
-  val themeColors = MaterialTheme.colors
   var focused by remember { mutableStateOf(false) }
-  val underlineHeight by animateDpAsState(if (focused) 2.dp else 1.dp)
-  val underlineColor by animateColorAsState(if (focused) themeColors.secondary else themeColors.onSurface)
 
   BasicTextField(
     value = value,
@@ -82,41 +81,16 @@ fun PlainTextField(
     },
     decorationBox = @Composable { self ->
       decorationBox {
-        Column() {
-          Box() {
-            self()
-            if (value.isEmpty() && placeholder != null) {
-              Text(
-                text = placeholder,
-                style = placeholderStyle
-              )
-            }
-          }
-
-          if (underline) {
-            Spacer(modifier = Modifier
-              .padding(top = 10.dp)
-              .fillMaxWidth()
-              .height(underlineHeight)
-              .onFocusChanged { focused = it.isFocused }
-              .background(underlineColor)
-            )
-          }
-
-          if (maxLength != null && lengthIndicator) {
-            Box(
-              modifier = Modifier
-                .fillMaxWidth(),
-              contentAlignment = Alignment.BottomEnd
-            ) {
-              Text(
-                text = "${value.length}/${maxLength}",
-                fontSize = 12.sp,
-                color = underlineColor
-              )
-            }
-          }
-        }
+        TextFieldDecoration(
+          placeholder = placeholder,
+          placeholderStyle = placeholderStyle,
+          content = self,
+          textLength = value.length,
+          focused = focused,
+          underline = underline,
+          lengthIndicator = lengthIndicator,
+          maxLength = maxLength
+        )
       }
     }
   )
@@ -135,6 +109,9 @@ fun PlainTextField(
   keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
   keyboardActions: KeyboardActions = KeyboardActions.Default,
   singleLine: Boolean = false,
+  underline: Boolean = false,
+  maxLength: Int? = null,
+  lengthIndicator: Boolean = false,
   maxLines: Int = Int.MAX_VALUE,
   visualTransformation: VisualTransformation = VisualTransformation.None,
   onTextLayout: (TextLayoutResult) -> Unit = {},
@@ -142,9 +119,15 @@ fun PlainTextField(
   cursorBrush: Brush = SolidColor(MaterialTheme.colors.secondary),
   decorationBox: (@Composable (@Composable () -> Unit) -> Unit) = { it() }
 ) {
+  var focused by remember { mutableStateOf(false) }
+
   BasicTextField(
     value = value,
-    modifier = modifier,
+    modifier = modifier
+      .onFocusChanged {
+        if (underline) focused = it.isFocused
+      }
+      .then(modifier),
     enabled = enabled,
     readOnly = readOnly,
     textStyle = textStyle,
@@ -156,19 +139,77 @@ fun PlainTextField(
     interactionSource = interactionSource,
     cursorBrush = cursorBrush,
     onTextLayout = onTextLayout,
-    onValueChange = onValueChange,
+    onValueChange = {
+      if (maxLength != null) {
+        if (it.text.length <= maxLength) onValueChange(it)
+      } else {
+        onValueChange(it)
+      }
+    },
     decorationBox = { self ->
       decorationBox {
-        Box() {
-          self()
-          if (value.annotatedString.isEmpty() && placeholder != null) {
-            Text(
-              text = placeholder,
-              style = placeholderStyle
-            )
-          }
-        }
+        TextFieldDecoration(
+          placeholder = placeholder,
+          placeholderStyle = placeholderStyle,
+          content = self,
+          textLength = value.text.length,
+          focused = focused,
+          underline = underline,
+          lengthIndicator = lengthIndicator,
+          maxLength = maxLength
+        )
       }
     }
   )
+}
+
+@Composable
+private fun TextFieldDecoration(
+  placeholder: String?,
+  placeholderStyle: TextStyle,
+  textLength: Int,
+  focused: Boolean,
+  underline: Boolean,
+  lengthIndicator: Boolean,
+  maxLength: Int?,
+  content: @Composable () -> Unit
+) {
+  val themeColors = MaterialTheme.colors
+  val underlineHeight by animateDpAsState(if (focused) 2.dp else 1.dp)
+  val underlineColor by animateColorAsState(if (focused) themeColors.secondary else themeColors.text.tertiary)
+
+  Column() {
+    Box() {
+      content()
+      if (textLength == 0 && placeholder != null) {
+        Text(
+          text = placeholder,
+          style = placeholderStyle
+        )
+      }
+    }
+
+    if (underline) {
+      Spacer(modifier = Modifier
+        .padding(top = 10.dp)
+        .fillMaxWidth()
+        .height(underlineHeight)
+        .background(underlineColor)
+      )
+    }
+
+    if (maxLength != null && lengthIndicator) {
+      Box(
+        modifier = Modifier
+          .fillMaxWidth(),
+        contentAlignment = Alignment.BottomEnd
+      ) {
+        Text(
+          text = "${textLength}/${maxLength}",
+          fontSize = 12.sp,
+          color = underlineColor
+        )
+      }
+    }
+  }
 }

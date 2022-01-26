@@ -1,7 +1,8 @@
+package com.moegirlviewer.util
+
 import com.moegirlviewer.api.watchList.WatchListApi
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.room.watchingPage.WatchingPage
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.printRequestErr
 
 suspend fun refreshWatchList(): Boolean {
   var continueKey: String? = null
@@ -20,7 +21,7 @@ suspend fun refreshWatchList(): Boolean {
       loadList()
       retryFlag = 0
       if (continueKey == null) retryFlag = 5
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       retryFlag++
       printRequestErr(e)
     }

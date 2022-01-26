@@ -1,6 +1,7 @@
 package com.moegirlviewer.screen.comment.component.commentEditor
 
 import com.moegirlviewer.R
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.store.CommentStore
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.*
@@ -14,18 +15,22 @@ fun CommentEditorController.showCommentEditor(
     checkIsLoggedIn(Globals.context.getString(R.string.commentLoginHint))
     this@showCommentEditor.show(
       targetName = pageName,
-      onSubmit = { inputVal ->
+      onSubmit = { inputVal, useWikitext ->
         coroutineScope.launch {
           if (inputVal.trim().isEmpty()) { return@launch }
           Globals.commonLoadingDialog.showText(Globals.context.getString(R.string.submitting))
           try {
-            CommentStore.addComment(pageId, inputVal)
+            CommentStore.addComment(
+              pageId = pageId,
+              content = inputVal,
+              useWikitext = useWikitext
+            )
             toast(Globals.context.getString(R.string.published))
             this@showCommentEditor.hide()
             this@showCommentEditor.clearInputVal()
-          } catch (e: Exception) {
+          } catch (e: MoeRequestException) {
             printRequestErr(e, "提交评论失败")
-            toast(e.toString())
+            toast(e.message)
           } finally {
             Globals.commonLoadingDialog.hide()
           }
@@ -48,18 +53,23 @@ fun CommentEditorController.showReplyEditor(
     this@showReplyEditor.show(
       isReply = true,
       targetName = targetUserName,
-      onSubmit = { inputVal ->
+      onSubmit = { inputVal, useWikitext ->
         coroutineScope.launch {
           if (inputVal.trim().isEmpty()) { return@launch }
           Globals.commonLoadingDialog.showText(Globals.context.getString(R.string.submitting))
           try {
-            CommentStore.addComment(pageId, inputVal, targetCommentId)
+            CommentStore.addComment(
+              pageId = pageId,
+              content = inputVal,
+              commentId = targetCommentId,
+              useWikitext = useWikitext
+            )
             toast(Globals.context.getString(R.string.published))
             this@showReplyEditor.hide()
             this@showReplyEditor.clearInputVal()
-          } catch (e: Exception) {
+          } catch (e: MoeRequestException) {
             printRequestErr(e, "提交回复失败")
-            toast(e.toString())
+            toast(e.message)
           } finally {
             Globals.commonLoadingDialog.hide()
           }

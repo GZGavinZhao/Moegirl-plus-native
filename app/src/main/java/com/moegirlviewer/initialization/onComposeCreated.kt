@@ -2,11 +2,14 @@ package com.moegirlviewer.initialization
 
 import android.util.Log
 import androidx.compose.material.Text
+import androidx.core.net.toUri
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.app.AppApi
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.request.MoeRequestException
+import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.*
@@ -23,6 +26,26 @@ fun onComposeCreated() {
   coroutineScope.launch { initAccount() }
   coroutineScope.launch { checkNewVersion() }
   registerTasks()
+  checkDeepLink()
+}
+
+private fun checkDeepLink() {
+  val deepLink = Globals.activity.intent.dataString ?: return
+  val plainRegex = Regex(""".+/(.+)$""")
+  val pageIdRegex = Regex("""curid=\d+""")
+
+  when {
+    deepLink.contains(pageIdRegex) -> {
+      val pageId = deepLink.toUri().getQueryParameter("curid")!!.toInt()
+      Globals.navController.navigate(ArticleRouteArguments(
+        pageId = pageId
+      ))
+    }
+    deepLink.contains(plainRegex) -> {
+      val pageName = plainRegex.find(deepLink)!!.groupValues[1]
+      if (pageName.contains("""^[Mm]ainpage$""").not()) gotoArticlePage(pageName)
+    }
+  }
 }
 
 private suspend fun initAccount() {
@@ -48,7 +71,7 @@ private suspend fun checkNewVersion() = coroutineScope {
       content = { Text(res.desc) },
       secondaryButton = ButtonConfig.cancelButton(
         onClick = {
-          launch {
+          coroutineScope.launch {
             SettingsStore.otherSettings.setValue {
               rejectedVersionName = res.version
             }
@@ -69,7 +92,7 @@ fun registerTasks()  {
       if (!isLoggedIn) return@launch
       try {
         AccountStore.checkWaitingNotificationTotal()
-      } catch (e: Exception) {
+      } catch (e: MoeRequestException) {
         printRequestErr(e, "检查用户等待通知失败")
       }
     }

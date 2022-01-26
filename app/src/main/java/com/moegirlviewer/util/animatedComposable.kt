@@ -3,14 +3,15 @@ package com.moegirlviewer.util
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntOffset
-import androidx.constraintlayout.compose.Transition
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import com.moegirlviewer.util.Animation.*
+import kotlinx.coroutines.delay
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.animatedComposable(
@@ -60,53 +61,76 @@ private fun getTransitions(animation: Animation): Transitions = when(animation) 
       }
     )
   }
-  // 暂时没研究出来如何添加非slide类型的动画，PUSH不可用，FADE使用默认效果
-  PUSH -> {
-    val animationSpec = tween<IntOffset>(2000)
 
-    Transitions(
+  PUSH -> {
+    val durationMillis = 350
+    val enterEasing = CubicBezierEasing(0.25f,0.1f,0.25f,1f)
+    val exitEasing = CubicBezierEasing(1f,0f,0.54f,0.97f)
+    val fadeAnimationSpec = { easing: Easing ->
+      TweenSpec<Float>(
+        durationMillis = durationMillis,
+        easing = easing
+      )
+    }
+    val slideAnimationSpec = { easing: Easing ->
+      TweenSpec<IntOffset>(
+        durationMillis = durationMillis,
+        easing = easing
+      )
+    }
+
+    Transitions.helpful(
       enterTransition = {
-        slideIntoContainer(AnimatedContentScope.SlideDirection.Up, animationSpec)
-      },
-      exitTransition = {
-        getTransitions(targetRouteMeta.animation).assistExitTransition(this)
-      },
-      popEnterTransition = {
-        getTransitions(initialRouteMeta.animation).assistPopEnterTransition(this)
+        fadeIn(fadeAnimationSpec(enterEasing)) +
+          slideInVertically(
+            animationSpec = slideAnimationSpec(enterEasing),
+            initialOffsetY = { fullHeight -> fullHeight }
+          )
       },
       popExitTransition = {
-        slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec)
+        fadeOut(fadeAnimationSpec(exitEasing)) +
+          slideOutVertically(
+            animationSpec = slideAnimationSpec(exitEasing),
+            targetOffsetY = { fullHeight -> fullHeight }
+          )
       },
       assistExitTransition = {
-        null
+        fadeOut(TweenSpec(
+          durationMillis = 1,
+          delay = durationMillis,
+        ))
       },
       assistPopEnterTransition = {
-        null
+        fadeIn(TweenSpec(
+          durationMillis = durationMillis,
+        ))
+      }
+    )
+  }
+
+  FADE -> {
+    val animationSpec = TweenSpec<Float>(
+      durationMillis = 350,
+    )
+
+    Transitions.helpful(
+      enterTransition = {
+        fadeIn(animationSpec)
+      },
+      popExitTransition = {
+        fadeOut(animationSpec)
+      },
+      assistExitTransition = {
+        fadeOut(animationSpec)
+      },
+      assistPopEnterTransition = {
+        fadeIn(animationSpec)
       },
     )
   }
-  FADE -> Transitions.helpful(
+
+  NONE -> Transitions.helpful(
     enterTransition = {
-      null
-    },
-    popExitTransition = {
-      null
-    },
-    assistExitTransition = {
-      null
-    },
-    assistPopEnterTransition = {
-      null
-    },
-  )
-  NONE -> Transitions(
-    enterTransition = {
-      EnterTransition.None
-    },
-    exitTransition = {
-      ExitTransition.None
-    },
-    popEnterTransition = {
       EnterTransition.None
     },
     popExitTransition = {

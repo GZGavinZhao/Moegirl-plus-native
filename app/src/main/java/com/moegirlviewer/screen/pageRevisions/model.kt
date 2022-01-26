@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.editingRecord.bean.PageRevisionsBean
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.printRequestErr
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,7 +49,7 @@ class PageRevisionsScreenModel @Inject constructor() : ViewModel() {
       revisionList = if (refresh) list else revisionList + list
       status = nexStatus
       continueKey = nextContinueKey
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "加载页面修订列表失败")
       status = LoadStatus.FAIL
     }

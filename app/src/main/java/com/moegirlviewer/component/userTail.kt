@@ -12,8 +12,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
+import com.moegirlviewer.screen.contribution.ContributionRouteArguments
 import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.gotoArticlePage
+import com.moegirlviewer.util.navigate
 import com.moegirlviewer.util.noRippleClickable
 
 @Composable
@@ -46,7 +49,9 @@ fun UserTail(
       )
       Text(
         modifier = Modifier
-          .noRippleClickable { /* 前往贡献 */ },
+          .noRippleClickable {
+            Globals.navController.navigate(ContributionRouteArguments(userName = userName))
+          },
         text = stringResource(id = R.string.contribution),
         color = themeColors.secondary
       )

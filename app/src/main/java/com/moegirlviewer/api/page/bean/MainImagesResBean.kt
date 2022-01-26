@@ -10,8 +10,8 @@ data class MainImagesResBean(
     data class MapValue(
       val ns: Int,
       val pageid: Int,
-      val pageimage: String,
-      val thumbnail: Thumbnail,
+      val pageimage: String? = null,
+      val thumbnail: Thumbnail? = null,
       val title: String
     ) {
       data class Thumbnail(

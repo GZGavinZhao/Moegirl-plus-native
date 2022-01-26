@@ -10,8 +10,8 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.moegirlviewer.util.Globals
@@ -21,6 +21,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
+import java.net.URLDecoder
 
 fun parseCommentHtml(
   html: String,
@@ -48,6 +49,8 @@ fun parseCommentHtml(
                 )
               ))
             }
+
+            item.tagName() == "a" -> commentElements.add(aTagParser(item))
 
             item.tagName() == "img" -> {
               var widthAttr = item.attr("width")
@@ -115,10 +118,55 @@ class CommentInlineContent(
   val content: InlineTextContent
 ) : CommentElement()
 
+class CommentLinkedText(
+  val text: String,
+  val target: String,
+  val type: CommentLinkType
+) : CommentElement()
+
+class CommentCustomAnnotatedText(
+  val text: String,
+  val tag: String,
+  val annotation: String,
+  val textStyle: SpanStyle? = null
+) : CommentElement()
+
+enum class CommentLinkType(val textAnnoTag: String) {
+  INTERNAL("__INTERNAL"),
+  EXTERNAL("__EXTERNAL"),
+  NEW("__NEW"),
+}
+
 private class ImageSize(
   val width: Int = 0,
   val height: Int = 0
 )
+
+private fun aTagParser(tagElement: Element): CommentLinkedText {
+  val href = URLDecoder.decode(tagElement.attr("href"), "utf-8")
+  val text = tagElement.text()
+  return when {
+    tagElement.hasClass("new") -> {
+      CommentLinkedText(
+        text = text,
+        target = href.toUri().getQueryParameter("title")!!,
+        type = CommentLinkType.NEW
+      )
+    }
+    href[0] == '/' -> {
+      CommentLinkedText(
+        text = text,
+        target = href.substring(1),
+        type = CommentLinkType.INTERNAL
+      )
+    }
+    else -> CommentLinkedText(
+      text = text,
+      target = href,
+      type = CommentLinkType.EXTERNAL
+    )
+  }
+}
 
 private fun probeImageSize(imageUrl: String): ImageSize {
   val completableDeferred = CompletableDeferred<ImageSize>()

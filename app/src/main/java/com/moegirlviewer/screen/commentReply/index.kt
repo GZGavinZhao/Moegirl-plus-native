@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -71,8 +72,6 @@ fun CommentReplyScreen(
     for (item in replyList) model.itemRefs[item.id] = Ref()
   }
 
-  model.lazyListState.RetainScroll(flowReady = replyList.isNotEmpty())
-
   model.memoryStore.Provider {
     Scaffold(
       backgroundColor = themeColors.background2,
@@ -92,7 +91,7 @@ fun CommentReplyScreen(
       LazyColumn(
         modifier = Modifier
           .fillMaxSize(),
-        state = model.lazyListState
+        state = if (replyList.isNotEmpty()) model.lazyListState else rememberLazyListState()
       ) {
         if (comment != null) {
           item {

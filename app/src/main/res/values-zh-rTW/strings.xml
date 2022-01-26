@@ -171,6 +171,8 @@
     <string name="diffCompare">差異對比</string>
     <string name="noDiff">沒有差異</string>
     <string name="reasonNoFilled">未填寫原因</string>
+    <string name="useWikitext">使用維基文字</string>
+    <string name="previewResult">預覽效果</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>
@@ -181,6 +183,7 @@
     <string name="pageNameMissing">該條目還未建立</string>
     <string name="insufficientPermissions">沒有許可權編輯該頁面</string>
     <string name="loadErrToClickRetry">載入失敗，點選重試</string>
+    <string name="loadErrToSwipeRetry">載入失敗，下拉重試</string>
     <string name="doubleBackToExit">再次按下退出程式</string>
     <string name="articleMissedHint">該頁面還未建立</string>
     <string name="netErrToRetry">請求超時，請重試</string>
@@ -207,6 +210,8 @@
     <string name="emptyContnet">還沒有任何內容_(:з」∠)_</string>
     <string name="searchInBrowsingHistory">搜尋瀏覽歷史...</string>
     <string name="noSearchingResult">什麼也沒搜到_(:з」∠)_</string>
+    <string name="darkThemeBySystem">適配深色模式(實驗性)</string>
+    <string name="darkThemeBySystemHelpText">部分條目會有文字看不清的情況</string>
 
     <!-- 長提示（基本上只會在一個地方使用） -->
     <string name="noSummaryOnCurrentEdit">該編輯未填寫摘要</string>

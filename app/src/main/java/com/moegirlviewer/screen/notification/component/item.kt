@@ -27,10 +27,7 @@ import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
 import com.moegirlviewer.screen.notification.Notification
 import com.moegirlviewer.ui.theme.text
-import com.moegirlviewer.util.diffNowDate
-import com.moegirlviewer.util.gotoUserPage
-import com.moegirlviewer.util.noRippleClickable
-import com.moegirlviewer.util.toLocalDateTime
+import com.moegirlviewer.util.*
 
 @Composable
 fun NotificationScreenItem(
@@ -92,7 +89,7 @@ fun NotificationScreenItem(
       Text(
         modifier = Modifier
           .fillMaxWidth(),
-        text = diffNowDate((notification.timestamp.unix.toLong() * 1000).toLocalDateTime()),
+        text = diffNowDate(parseMoegirlNormalTimestamp(notification.timestamp.utciso8601)),
         fontSize = 14.sp,
         textAlign = TextAlign.End,
         color = themeColors.text.secondary

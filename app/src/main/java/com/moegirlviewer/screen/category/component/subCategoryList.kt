@@ -71,7 +71,7 @@ fun SubCategoryList() {
       if (isExpanded) {
         Column(
           modifier = Modifier
-            .sideBorder(BorderSide.TOP, 1.dp, themeColors.onSurface)
+            .sideBorder(BorderSide.TOP, 1.dp, themeColors.text.tertiary)
             .fillMaxWidth()
             .padding(vertical = 5.dp, horizontal = 10.dp)
         ) {

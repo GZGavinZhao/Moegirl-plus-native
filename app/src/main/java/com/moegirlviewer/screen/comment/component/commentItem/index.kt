@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.comment.component.commentItem
 
+import android.widget.Space
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -41,8 +43,10 @@ import com.moegirlviewer.api.comment.CommentApi
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.component.nativeCommentContent.NativeCommentContent
+import com.moegirlviewer.component.nativeCommentContent.util.CommentCustomAnnotatedText
 import com.moegirlviewer.component.nativeCommentContent.util.CommentInlineContent
 import com.moegirlviewer.component.nativeCommentContent.util.CommentText
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.commentReply.CommentReplyRouteArguments
 import com.moegirlviewer.store.CommentStore
 import com.moegirlviewer.store.PageComments
@@ -97,9 +101,9 @@ fun CommentScreenCommentItem(
       val isLiked = commentData.myatt == 1
       Globals.commonLoadingDialog.show()
       CommentStore.setLike(pageId, commentData.id, !isLiked)
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "点赞操作失败")
-      toast(e.toString())
+      toast(e.message)
     } finally {
       Globals.commonLoadingDialog.hide()
     }
@@ -122,9 +126,9 @@ fun CommentScreenCommentItem(
             CommentStore.removeComment(pageId, commentData.id, parentCommentId)
             toast(Globals.context.getString(if (isReply) R.string.replyDeleted else R.string.commentDeleted))
           }
-        } catch (e: Exception) {
+        } catch (e: MoeRequestException) {
           printRequestErr(e, "删除评论失败")
-          toast(e.toString())
+          toast(e.message)
         } finally {
           Globals.commonLoadingDialog.hide()
         }
@@ -150,7 +154,7 @@ fun CommentScreenCommentItem(
             Globals.commonAlertDialog.hide()
             Globals.commonAlertDialog.showText(Globals.context.getString(R.string.reoprtedHint))
           }
-        } catch (e: Exception) {
+        } catch (e: MoeRequestException) {
           printRequestErr(e, "举报评论失败")
           toast(Globals.context.getString(R.string.netErr))
         } finally {
@@ -226,7 +230,7 @@ fun CommentScreenCommentItem(
         Box(
           modifier = Modifier
             .fillMaxWidth()
-            .offset(x = (-5).dp, 5.dp)
+            .offset(x = (-10).dp, 10.dp)
             .zIndex(1f),
           contentAlignment = Alignment.TopEnd
         ) {
@@ -294,9 +298,7 @@ private fun ComposedCommentContent(
   onTargetUserNameClick: ((targetCommentId: String) -> Unit)?
 ) {
   val themeColors = MaterialTheme.colors
-  val density = LocalDensity.current
   val currentPageCommentsFlow = remember { CommentStore.getCommentsByPageId(pageId) }
-  var targetUserNameTextWidth by rememberSaveable { mutableStateOf(0f) }
   val likeNumber = currentPageCommentsFlow.selector(
     initialFlowValue = remember { PageComments() },
     selector = { it.getCommentById(commentData.id, isPopular)?.like ?: 0 }
@@ -308,31 +310,20 @@ private fun ComposedCommentContent(
     }
   )
 
-  val replyTargetContent = remember(commentData, targetUserNameTextWidth) {
+  val annotationTagNameOfTargetUserName = "targetUserName"
+  val replyTargetContent = remember(commentData) {
     if (visibleReplyTarget)  {
       val replyCommentData = commentData as ReplyCommentNode
 
       listOf(
         CommentText("回复 "),
-        CommentInlineContent(
-          id = "targetUserName",
-          content = InlineTextContent(
-            placeholder = Placeholder(
-              // 这里有问题，由于用户名文字需要点击，评论内容又需要显示图片，但是clickableText又不支持inlineContent
-              // 导致只能用inlineContent的形式显示文字，这样就需要手动设置文字宽度，而不同手机不同字体等情况比较复杂，这里使用一个透明组件在渲染完成后取值再赋给这里的方式
-              // 缺点是还是没法用户名超过一行后不换行的问题，而且做法太不优雅
-              width = targetUserNameTextWidth.sp,
-              height = 1.25.em,
-              placeholderVerticalAlign = PlaceholderVerticalAlign.Top
-            )
-          ) {
-            Text(
-              modifier = Modifier
-                .noRippleClickable { onTargetUserNameClick?.invoke(replyCommentData.target.id) },
-              text = replyCommentData.target.username,
-              color = themeColors.secondary,
-            )
-          }
+        CommentCustomAnnotatedText(
+          text = replyCommentData.target.username,
+          tag = annotationTagNameOfTargetUserName,
+          annotation = replyCommentData.target.id,
+          textStyle = SpanStyle(
+            color = themeColors.secondary
+          )
         ),
         CommentText("：")
       )
@@ -340,19 +331,6 @@ private fun ComposedCommentContent(
   }
 
   Box() {
-    // 用于计算回复目标用户名文字宽度的组件，获取到宽度后就隐藏
-    if (visibleReplyTarget && targetUserNameTextWidth == 0f) {
-      Text(
-        modifier = Modifier
-          .visibility(false)
-          .onGloballyPositioned {
-            targetUserNameTextWidth = density.run { it.size.width.toSp().value }
-          },
-        fontSize = 15.sp,
-        text = (commentData as ReplyCommentNode).target.username,
-      )
-    }
-
     Column(
       modifier = Modifier
         .padding(start = 50.dp)
@@ -361,7 +339,14 @@ private fun ComposedCommentContent(
         modifier = Modifier
           .padding(top = 5.dp),
         commentElements = commentData.parsedText,
-        prefixContents = replyTargetContent ?: emptyList()
+        prefixContents = replyTargetContent ?: emptyList(),
+        linkedTextStyle = SpanStyle(
+          color = themeColors.secondary,
+          textDecoration = TextDecoration.Underline
+        ),
+        onAnnotatedTextClick = {
+          if (it.tag == annotationTagNameOfTargetUserName) onTargetUserNameClick?.invoke(it.item)
+        }
       )
 
       Row(
@@ -472,9 +457,8 @@ private fun ComposedCommentReply(
   commentData: CommentNode,
   replyList: List<ReplyCommentNode>,
 ) {
-//  val isDarkTheme = isSystemInDarkTheme()
-  val isDarkTheme = false
   val themeColors = MaterialTheme.colors
+  val isDarkTheme = !themeColors.isLight
 
   Column(
     modifier = Modifier

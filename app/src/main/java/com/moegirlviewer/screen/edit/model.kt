@@ -16,7 +16,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.moegirlviewer.R
 import com.moegirlviewer.api.edit.EditApi
-import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.compable.remember.MemoryStore
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
@@ -24,7 +23,8 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebView
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewContent
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
 import com.moegirlviewer.request.MoeRequestException
-import com.moegirlviewer.request.MoeTimeoutException
+import com.moegirlviewer.request.MoeRequestWikiException
+import com.moegirlviewer.request.MoeRequestTimeoutException
 import com.moegirlviewer.room.backupRecord.BackupRecord
 import com.moegirlviewer.room.backupRecord.BackupRecordType
 import com.moegirlviewer.screen.article.ArticleScreenModel
@@ -34,6 +34,7 @@ import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -73,7 +74,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
 
     try {
       baseDateISOForEdit = EditApi.getTimestampOfLastEdit(routeArguments.pageName)
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "编辑前获取最后编辑时间失败")
       wikitextStatus = LoadStatus.FAIL
     }
@@ -127,9 +128,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
 
   suspend fun checkBackup() {
     val backupRoom = Globals.room.backupRecord()
-    val backupRecord = try {
-      backupRoom.getItem(BackupRecordType.EDIT_CONTENT, backupId).first()
-    } catch (e: NoSuchElementException) { return }
+    val backupRecord = backupRoom.getItem(BackupRecordType.EDIT_CONTENT, backupId).first() ?: return
 
     val lastEditDateTimestamp = EditApi.getTimestampOfLastEdit(routeArguments.pageName)
     val lastEditDate = if (lastEditDateTimestamp != null) {
@@ -296,7 +295,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
 
       Globals.commonAlertDialog2.showText(message)
       return true
-    } catch (e: MoeTimeoutException) {
+    } catch (e: MoeRequestTimeoutException) {
       toast(Globals.context.getString(R.string.netErrToRetry))
       return false
     } finally {

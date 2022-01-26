@@ -6,15 +6,15 @@ data class CategorySearchResultBean(
   val query: Query?
 ) {
   data class Continue(
-    val `continue`: String,
-    val gcmcontinue: String
+    val `continue`: String?,
+    val gcmcontinue: String?
   )
 
   data class Query(
     val pages: Map<Int,MapValue>
   ) {
     data class MapValue(
-      val categories: List<Category>,
+      val categories: List<Category>? = null,
       val ns: Int,
       val pageid: Int,
       val pageimage: String,

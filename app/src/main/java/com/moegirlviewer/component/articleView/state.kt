@@ -28,7 +28,10 @@ import com.moegirlviewer.extants.darken
 import com.moegirlviewer.extants.lighten
 import com.moegirlviewer.extants.toCssRgbaString
 import com.moegirlviewer.request.MoeRequestException
+import com.moegirlviewer.request.MoeRequestWikiException
 import com.moegirlviewer.request.commonOkHttpClient
+import com.moegirlviewer.room.pageContentCache.PageContentCache
+import com.moegirlviewer.room.pageNameRedirect.PageNameRedirect
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.category.CategoryRouteArguments
 import com.moegirlviewer.screen.edit.EditRouteArguments
@@ -44,16 +47,18 @@ import kotlinx.parcelize.Parcelize
 import okhttp3.FormBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
+import java.time.LocalDate
 import java.util.*
 
 val defaultInjectedFiles = listOf("main.css", "main.js")
 
 class ArticleViewState(
-  val context: ComposableContext,
+  var context: ComposableContext,
   var props: ArticleViewProps,
 ) {
   var articleData by mutableStateOf<ArticleData?>(null)
   var status by mutableStateOf(LoadStatus.INITIAL)
+  var contentHeight by mutableStateOf(0f)
 
   var imgOriginalUrls = mapOf<String, String>()
   var isInitialized = false
@@ -87,8 +92,21 @@ class ArticleViewState(
       body {
         padding-top: ${props.contentTopPadding.value}px;
         word-break: ${if (props.inDialogMode) "break-all" else "initial"};
-        ${if (props.inDialogMode) "margin-top: 0;" else ""}
+        ${if (props.inDialogMode) """
+          margin: 0 !important;
+          padding: 0;
+          width: 100% !important;
+        """.trimIndent() else ""}
+        ${if (props.inDialogMode && context.isDarkTheme) 
+          "background-color: ${context.themeColors.surface.toCssRgbaString()} !important" 
+        else ""}
       }
+      
+      ${if (props.inDialogMode) """
+        p {
+          margin: 0;
+        }
+      """.trimIndent() else ""}
       
       :root {
         --color-primary: ${context.themeColors.primary.toCssRgbaString()};
@@ -124,7 +142,7 @@ class ArticleViewState(
   suspend fun loadImgOriginalUrls() {
     try {
       imgOriginalUrls = PageApi.getImagesUrl(articleData!!.parse.images)
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "获取条目内全部图片原始链接失败")
     }
   }
@@ -146,7 +164,38 @@ class ArticleViewState(
 
     launch {
       try {
+        // 为主页添加缓存，最长有效期为当天，每次加载缓存后，后台请求最新内容更新缓存
+        if (pageName == "Mainpage") {
+          val cache = Globals.room.pageContentCache().getCache(pageName).first()
+          if (cache != null) {
+            if (cache.date.toLocalDate() == LocalDate.now()) {
+              consumeArticleData(cache.content, cache.pageInfo)
+              try {
+                val articleData = PageApi.getPageContent(pageName)
+                val pageInfo = PageApi.getPageInfo(pageName)
+                Globals.room.pageContentCache().insertItem(PageContentCache(
+                  pageName = pageName,
+                  content = articleData,
+                  pageInfo = pageInfo
+                ))
+              } catch (e: MoeRequestException) {
+                printRequestErr(e, "后台更新首页缓存失败")
+              }
+
+              return@launch
+            } else {
+              Globals.room.pageContentCache().removeItem(cache)
+            }
+          }
+        }
+
+
         val truePageName = PageApi.getTruePageName(pageName, pageId)
+        if (truePageName == null) {
+          props.onArticleMissed?.invoke()
+          return@launch
+        }
+
         val pageInfo = PageApi.getPageInfo(truePageName)
         val isCategoryPage = MediaWikiNamespace.CATEGORY.code == pageInfo.ns
 
@@ -167,9 +216,21 @@ class ArticleViewState(
         }
 
         consumeArticleData(articleData, pageInfo)
-      } catch (e: Exception) {
+
+        Globals.room.pageContentCache().insertItem(PageContentCache(
+          pageName = truePageName,
+          content = articleData,
+          pageInfo = pageInfo
+        ))
+        if (pageName != null && pageName != truePageName) {
+          Globals.room.pageNameRedirect().insertItem(PageNameRedirect(
+            redirectName = pageName,
+            pageName = truePageName
+          ))
+        }
+      } catch (e: MoeRequestException) {
         printRequestErr(e, "加载文章失败")
-        if (e is MoeRequestException && e.code == "missingtitle") {
+        if (e is MoeRequestWikiException && e.code == "missingtitle") {
           props.onArticleMissed?.invoke()
         } else {
           props.onArticleError?.invoke()
@@ -248,7 +309,7 @@ class ArticleViewState(
               images = images.toList(),
               initialIndex = clickedIndex
             ))
-          } catch (e: Exception) {
+          } catch (e: MoeRequestException) {
             printRequestErr(e, "用户触发获取图片原始链接失败")
             toast(Globals.context.getString(R.string.getImageUrlFail))
           } finally {
@@ -280,10 +341,6 @@ class ArticleViewState(
         val pageName = linkData.get("pageName").asString
 
         if (props.linkDisabled) return@to
-        if (!props.editAllowed) {
-          Globals.commonAlertDialog.showText(Globals.context.getString(R.string.insufficientPermissions))
-          return@to
-        }
 
         scope.launch {
           val isLoggedIn = AccountStore.isLoggedIn.first()
@@ -297,6 +354,12 @@ class ArticleViewState(
                 Text(Globals.context.getString(R.string.notLoggedInHint))
               }
             ))
+            return@launch
+          }
+
+          if (!props.editAllowed) {
+            Globals.commonAlertDialog.showText(Globals.context.getString(R.string.insufficientPermissions))
+            return@launch
           }
 
           val isNonAutoConfirmed = checkIfNonAutoConfirmedToShowEditAlert(pageName, section)
@@ -385,7 +448,7 @@ class ArticleViewState(
           }
         } catch (e: Exception) {
           printRequestErr(e, "webView代理请求失败")
-          val errorJson = "{ info: \"$e\" }"
+          val errorJson = "{ info: \"${e.message}\" }"
           htmlWebViewRef.value!!.injectScript(
             "moegirl.config.request.callbacks['$callbackId'].reject($errorJson)\""
           )
@@ -395,6 +458,11 @@ class ArticleViewState(
 
     "vibrate" to {
 
+    },
+
+    "pageHeightChange" to {
+      val height = it!!.get("value").asFloat
+      contentHeight = height
     },
 
     "poll" to {
@@ -409,7 +477,7 @@ class ArticleViewState(
             "moegirl.method.poll.updatePollContent('$pollId', '$willUpdateContent')"
           )
         }
-      } catch (e: Exception) {
+      } catch (e: MoeRequestException) {
         printRequestErr(e, "投票失败")
       }
     }
@@ -418,8 +486,6 @@ class ArticleViewState(
   companion object {
     @Composable
     fun remember(props: ArticleViewProps): ArticleViewState {
-//      val isDarkTheme = isSystemInDarkTheme()
-      val isDarkTheme = false
       val themeColors = MaterialTheme.colors
       val density = LocalDensity.current
       val userConfig = rememberSaveable { ArticleViewUserConfig() }
@@ -428,7 +494,7 @@ class ArticleViewState(
         ArticleViewState(
           props = props,
           context = ComposableContext(
-            isDarkTheme = isDarkTheme,
+            isDarkTheme = !themeColors.isLight,
             themeColors = themeColors,
             density = density,
             userConfig = userConfig
@@ -438,6 +504,12 @@ class ArticleViewState(
 
       SideEffect {
         state.props = props
+        state.context = ComposableContext(
+          isDarkTheme = !themeColors.isLight,
+          themeColors = themeColors,
+          density = density,
+          userConfig = userConfig
+        )
       }
 
       return state
@@ -456,9 +528,8 @@ class ArticleViewState(
 class MoegirlImage(
   val fileName: String,
   val title: String,
-) {
   var fileUrl: String = ""
-}
+)
 
 @Parcelize
 class ArticleViewUserConfig(

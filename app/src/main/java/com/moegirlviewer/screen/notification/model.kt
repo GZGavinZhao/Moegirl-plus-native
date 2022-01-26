@@ -9,6 +9,7 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.R
 import com.moegirlviewer.api.notification.NotificationApi
 import com.moegirlviewer.api.notification.bean.NotificationListBean
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
@@ -44,7 +45,7 @@ class NotificationScreenModel @Inject constructor() : ViewModel() {
       notificationList = if (refresh) notificationData.list.reversed() else notificationList + notificationData.list.reversed()
       status = nextStatus
       continueKey = notificationData.`continue`
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "加载通知列表失败")
       status = LoadStatus.FAIL
     }
@@ -54,14 +55,11 @@ class NotificationScreenModel @Inject constructor() : ViewModel() {
     Globals.commonLoadingDialog.showText(Globals.context.getString(R.string.submitting))
     try {
       AccountStore.markAllNotificationAsRead()
-      notificationList = notificationList.map {
-        it.read = ""
-        it.copy()
-      }
+      notificationList = notificationList.map { it.copy(read = "1") }
       toast(Globals.context.getString(R.string.markAllAsReaded))
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "标记全部通知为已读失败")
-      toast(e.toString())
+      toast(e.message)
     } finally {
       Globals.commonLoadingDialog.hide()
     }

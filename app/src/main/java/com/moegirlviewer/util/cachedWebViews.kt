@@ -1,10 +1,7 @@
 package com.moegirlviewer.util
 
 import android.webkit.WebView
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.currentCompositeKeyHash
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.*
 
 private typealias CachedWebViewMapContainer = MutableMap<String, WebView>
 
@@ -64,4 +61,13 @@ class SingleCachedWebViewConsumer(
 
   val existsInstance: Boolean
     get() = container.contains(cachedWebViewId)
+}
+
+@Composable
+fun rememberCachedWebViews(): CachedWebViews {
+  val cachedWebViews = remember { CachedWebViews() }
+
+  DisposableEffect(true) { onDispose { cachedWebViews.destroyAllInstance() } }
+
+  return cachedWebViews
 }

@@ -36,6 +36,7 @@ import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.screen.compare.ComparePageRouteArguments
+import com.moegirlviewer.screen.contribution.ContributionRouteArguments
 import com.moegirlviewer.screen.pageRevisions.PageRevisionsRouteArguments
 import com.moegirlviewer.screen.recentChanges.util.EditUserOfChanges
 import com.moegirlviewer.screen.recentChanges.util.RawRecentChanges
@@ -255,7 +256,7 @@ private fun SummaryContent(
           append(summary.body)
         } else {
           withStyle(SpanStyle(color = themeColors.text.secondary)) {
-            append(stringResource(id = R.string.noSummaryOnCurrentEdit))
+            append(Globals.context.getString(R.string.noSummaryOnCurrentEdit))
           }
         }
       }
@@ -384,7 +385,9 @@ private fun ComposedFooter(
             )
             Text(
               modifier = Modifier
-                .noRippleClickable { /* 前往贡献 */ },
+                .noRippleClickable {
+                   Globals.navController.navigate(ContributionRouteArguments(userName = firstUserName))
+                },
               text = stringResource(id = R.string.contribution),
               fontSize = 11.sp,
               color = themeColors.secondary

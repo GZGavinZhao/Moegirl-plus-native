@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import com.moegirlviewer.R
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.Globals.navController
@@ -26,7 +27,7 @@ class LoginScreenModel @Inject constructor() : ViewModel() {
       if (userName.isEmpty()) return toast(getString(R.string.userNameEmptyHint))
       if (password.isEmpty()) return toast(getString(R.string.passwordEmptyHint))
 
-      Globals.commonLoadingDialog.show()
+      Globals.commonLoadingDialog.showText(Globals.context.getString(R.string.submitting))
       try {
         val result = AccountStore.login(userName, password)
         if (result.success) {
@@ -35,8 +36,9 @@ class LoginScreenModel @Inject constructor() : ViewModel() {
         } else {
           toast(result.message!!)
         }
-      } catch(e: Exception) {
+      } catch(e: MoeRequestException) {
         printRequestErr(e, "登录错误")
+        toast(e.message)
       } finally {
         Globals.commonLoadingDialog.hide()
       }

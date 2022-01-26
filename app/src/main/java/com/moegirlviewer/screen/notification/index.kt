@@ -68,7 +68,7 @@ fun NotificationScreen() {
       ) {
         itemsIndexed(
           items = model.notificationList,
-          key = { _, item -> item.id }
+          key = { _, item -> item.id + (item.read ?: "") }
         ) { _, item ->
           NotificationScreenItem(
             notification = item,

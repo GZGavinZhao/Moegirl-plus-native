@@ -18,7 +18,7 @@ data class PageInfoResBean(
       val pagelanguagehtmlcode: String,
       val protection: List<Protection>,
       val restrictiontypes: List<String>,
-      val title: String,
+      val title: String?,
       val touched: String,
       val watched: String? = null,
       val talkid: Int? = null

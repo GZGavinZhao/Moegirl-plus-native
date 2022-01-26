@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.moegirlviewer.ui.theme.text
 
 @Composable
 fun CapsuleCheckbox(
@@ -25,9 +26,9 @@ fun CapsuleCheckbox(
     Row(
       modifier = Modifier
         .height(34.dp)
-        .clickable { onCheckedChange(!checked) }
         .clip(CircleShape)
-        .background(themeColors.primary)
+        .clickable { onCheckedChange(!checked) }
+        .background(if (themeColors.isLight) themeColors.primary else themeColors.background)
         .padding(horizontal = 3.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
@@ -39,8 +40,8 @@ fun CapsuleCheckbox(
         Checkbox(
           checked = checked,
           colors = CheckboxDefaults.colors(
-            checkedColor = themeColors.onPrimary,
-            uncheckedColor = themeColors.onPrimary,
+            checkedColor = if (themeColors.isLight) themeColors.onPrimary else themeColors.surface,
+            uncheckedColor = if (themeColors.isLight) themeColors.onPrimary else themeColors.surface,
             checkmarkColor = themeColors.secondary
           ),
           onCheckedChange = onCheckedChange

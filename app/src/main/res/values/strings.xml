@@ -171,6 +171,8 @@
     <string name="diffCompare">差异对比</string>
     <string name="noDiff">没有差异</string>
     <string name="reasonNoFilled">未填写原因</string>
+    <string name="useWikitext">使用维基文本</string>
+    <string name="previewResult">预览效果</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>
@@ -181,6 +183,7 @@
     <string name="pageNameMissing">该条目还未创建</string>
     <string name="insufficientPermissions">没有权限编辑该页面</string>
     <string name="loadErrToClickRetry">加载失败，点击重试</string>
+    <string name="loadErrToSwipeRetry">加载失败，下拉重试</string>
     <string name="doubleBackToExit">再次按下退出程序</string>
     <string name="articleMissedHint">该页面还未创建</string>
     <string name="netErrToRetry">请求超时，请重试</string>
@@ -259,6 +262,8 @@
     <string name="invalidLoginStatusHint">登录状态已失效</string>
     <string name="editFailedHint">提交编辑失败，以下是萌百API返回的提示信息：</string>
     <string name="syntaxHighlightHelpText">目前只支持部分语法</string>
+    <string name="darkThemeBySystem">适配深色模式(实验性)</string>
+    <string name="darkThemeBySystemHelpText">部分条目会有文字看不清的情况</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤销[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|讨论]]）的版本%2$s</string>

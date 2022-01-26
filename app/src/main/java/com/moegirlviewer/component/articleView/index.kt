@@ -2,10 +2,7 @@ package com.moegirlviewer.component.articleView
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.absoluteOffset
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -14,10 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.node.Ref
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.page.bean.PageContentResBean
 import com.moegirlviewer.api.page.bean.PageInfoResBean
@@ -26,17 +25,22 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
+import com.moegirlviewer.extants.darken
+import com.moegirlviewer.extants.lighten
+import com.moegirlviewer.extants.toCssRgbaString
+import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.ProguardIgnore
 import com.moegirlviewer.util.noRippleClickable
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 typealias ArticleData = PageContentResBean
 typealias ArticleInfo = PageInfoResBean.Query.MapValue
 
 class ArticleViewProps(
   val modifier: Modifier = Modifier,
-  val pageName: String? = null,
+  val pageName: String? = null,   // 不传html时，pageName和pageId之中必须传一个
   val pageId: Int? = null,
   val html: String? = null,
   val revId: Int? = null,
@@ -48,6 +52,7 @@ class ArticleViewProps(
   val editAllowed: Boolean = false,
   val addCopyright: Boolean = false,
   val addCategories: Boolean = true,
+  val cacheEnabled: Boolean = false,
   val contentTopPadding: Dp = 0.dp,
   val renderDelay: Long = 0,
   val messageHandlers: HtmlWebViewMessageHandlers? = null,
@@ -59,12 +64,13 @@ class ArticleViewProps(
   val onArticleLoaded: ((articleData: ArticleData, articleInfo: ArticleInfo) -> Unit)? = null,
   val onArticleMissed: (() -> Unit)? = null,
   val onArticleError: (() -> Unit)? = null,
+  val onStatusChanged: ((LoadStatus) -> Unit)? = null,
 
   val ref: Ref<ArticleViewRef>? = null
 )
 
 class ArticleViewRef(
-  val restoredStatus: LoadStatus,
+  val loadStatus: LoadStatus,
   val reload: suspend (force: Boolean) -> Unit,
   val updateView: suspend () -> Unit,
   val htmlWebViewRef: HtmlWebViewRef?,
@@ -79,16 +85,23 @@ fun ArticleView(
   val scope = rememberCoroutineScope()
   val themeColors = MaterialTheme.colors
   val state = ArticleViewState.remember(props)
+  val minContentHeightOfFullHeightMode = LocalConfiguration.current.screenHeightDp -
+    Constants.topAppBarHeight -
+    Globals.statusBarHeight
 
   SideEffect {
     props.ref?.value = ArticleViewRef(
-      restoredStatus = state.status,
+      loadStatus = state.status,
       reload = { state.loadArticleContent(forceLoad = it) },
       updateView = { state.updateHtmlView(true) },
       htmlWebViewRef = state.htmlWebViewRef.value,
       enableAllMedia = { state.enableAllMedia() },
       disableAllMedia = { state.disableAllMedia() }
     )
+  }
+
+  LaunchedEffect(state.status) {
+    props.onStatusChanged?.invoke(state.status)
   }
 
   // 这段逻辑只能用来初始化，初始化之后再要更新需要手动调用loadArticleContent或updateHtmlView
@@ -111,13 +124,30 @@ fun ArticleView(
     state.checkUserConfig()
   }
 
+  LaunchedEffect(themeColors.isLight) {
+    if (state.status == LoadStatus.SUCCESS) {
+      state.htmlWebViewRef.value!!.injectScript("""
+        moegirl.config.nightTheme.${'$'}enabled = ${!themeColors.isLight}
+        document.querySelector('html').style.cssText = `
+          --color-primary: ${themeColors.primary.toCssRgbaString()};
+          --color-dark: ${themeColors.primary.darken(0.3F).toCssRgbaString()};
+          --color-light: ${themeColors.primary.lighten(0.3F).toCssRgbaString()};
+        `
+        ${if (props.inDialogMode && !themeColors.isLight)
+          "document.body.style.backgroundColor = '${themeColors.surface.toCssRgbaString()}'"
+        else ""}
+      """.trimIndent())
+    }
+  }
+
   fun reloadContent() = scope.launch {
     state.loadArticleContent(forceLoad = true)
   }
 
   Box(
     modifier = Modifier
-      .fillMaxSize()
+      .fillMaxWidth()
+      .then(if (props.fullHeight) Modifier.height(max(minContentHeightOfFullHeightMode, state.contentHeight).dp) else Modifier.fillMaxHeight())
   ) {
     HtmlWebView(
       messageHandlers = state.defaultMessageHandlers + (props.messageHandlers ?: emptyMap()),
@@ -128,7 +158,7 @@ fun ArticleView(
     if (state.status != LoadStatus.SUCCESS) {
       Box(
         modifier = Modifier
-          .noRippleClickable {  }
+          .noRippleClickable { }
           .absoluteOffset(0.dp, 0.dp)
           .matchParentSize()
           .background(themeColors.background)
@@ -138,6 +168,8 @@ fun ArticleView(
         if (state.status == LoadStatus.LOADING) StyledCircularProgressIndicator()
         if (state.status == LoadStatus.FAIL) {
           TextButton(
+            modifier = Modifier
+              .matchParentSize(),
             border = BorderStroke(0.dp, Color.Transparent),
             onClick = { reloadContent() }
           ) {

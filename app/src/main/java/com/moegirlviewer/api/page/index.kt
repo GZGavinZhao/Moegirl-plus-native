@@ -11,7 +11,7 @@ object PageApi {
   suspend fun getTruePageName(
     pageName: String? = null,
     pageId: Int? = null)
-  : String {
+  : String? {
     val res = moeRequest(
       entity = PageInfoResBean::class.java,
       params = mutableMapOf<String, Any>().apply {
@@ -42,7 +42,7 @@ object PageApi {
   suspend fun getMainImage(
     pageName: String,
     size: Int = 500
-  ): MainImagesResBean.Query.MapValue.Thumbnail {
+  ): MainImagesResBean.Query.MapValue.Thumbnail? {
     val res = moeRequest(
       entity = MainImagesResBean::class.java,
       params = mutableMapOf<String, Any>().apply {
@@ -75,7 +75,7 @@ object PageApi {
       defers
         .map { it.await() }
         .flatMap { (it.query?.pages?.values) ?: emptyList() }
-        .fold(mutableMapOf<String, String>()) { result, item ->
+        .fold(mutableMapOf()) { result, item ->
           val fileName = item.title.replaceFirst(Constants.filePrefix, "")
           val fileUrl = item.imageinfo[0].url
           result[fileName] = fileUrl

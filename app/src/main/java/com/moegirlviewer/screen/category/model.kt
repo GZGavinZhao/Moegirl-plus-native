@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.moegirlviewer.api.category.CategoryApi
 import com.moegirlviewer.api.category.bean.CategorySearchResultBean
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.printRequestErr
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,14 +46,14 @@ class CategoryScreenModal @Inject constructor() : ViewModel() {
 
       val nextStatus = when {
         pages.isEmpty() && res.query.pages.isEmpty() -> LoadStatus.EMPTY
-        res.`continue` == null && resList.isNotEmpty() -> LoadStatus.ALL_LOADED
+        res.`continue`?.gcmcontinue == null && resList.isNotEmpty() -> LoadStatus.ALL_LOADED
         else -> LoadStatus.SUCCESS
       }
 
       pages = pages + resList
       statusOfPages = nextStatus
       continueKeyOfPages = res.`continue`
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "获取分类下页面列表失败")
       statusOfPages = LoadStatus.FAIL
     }
@@ -83,7 +84,7 @@ class CategoryScreenModal @Inject constructor() : ViewModel() {
       subCategories = subCategories + categories
       continueKeyOfSubCategories = continueKey
       statusOfSubCategories = nextStatus
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       printRequestErr(e, "加载子分类失败")
       statusOfSubCategories = LoadStatus.FAIL
     }

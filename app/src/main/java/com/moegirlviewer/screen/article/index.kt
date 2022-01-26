@@ -16,6 +16,7 @@ import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.article.component.catalog.ArticleScreenCatalog
 import com.moegirlviewer.screen.article.component.commentButton.CommentButton
 import com.moegirlviewer.screen.article.component.findBar.ArticleScreenFindBar
@@ -24,7 +25,6 @@ import com.moegirlviewer.screen.article.component.header.MoreMenuAction.*
 import com.moegirlviewer.screen.drawer.CommonDrawer
 import com.moegirlviewer.screen.pageRevisions.PageRevisionsRouteArguments
 import com.moegirlviewer.store.AccountStore
-import com.moegirlviewer.store.LoadUserInfoException
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.imeBottomPadding
@@ -64,7 +64,7 @@ fun ArticleScreen(
     if (isLoggedIn && userInfo == null) {
       try {
         AccountStore.loadUserInfo()
-      } catch(e: LoadUserInfoException) {
+      } catch(e: MoeRequestException) {
         printRequestErr(e, "获取用户信息失败")
       }
     }

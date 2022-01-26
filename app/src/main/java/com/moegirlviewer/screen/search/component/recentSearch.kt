@@ -144,7 +144,7 @@ private fun RecordItem(
     modifier = Modifier
       .fillMaxWidth()
       .height(42.dp)
-      .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.onSurface)
+      .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.text.tertiary)
       .combinedClickable(
         onClick = onClick,
         onLongClick = onRemove

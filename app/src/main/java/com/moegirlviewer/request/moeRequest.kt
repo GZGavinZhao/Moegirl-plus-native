@@ -1,5 +1,6 @@
 package com.moegirlviewer.request
 
+import android.util.Log
 import com.google.gson.Gson
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
@@ -29,10 +30,6 @@ val moeOkHttpClient = OkHttpClient.Builder()
   })
   .build()
 
-/**
- * @throws [MoeRequestException] 萌百返回mediawiki错误
- * @throws [MoeTimeoutException] 请求超时
- */
 suspend fun <T> moeRequest(
   params: Map<String, Any>,
   method: MoeRequestMethod = MoeRequestMethod.GET,
@@ -68,7 +65,17 @@ suspend fun <T> moeRequest(
 
   try {
     val response = moeOkHttpClient.newCall(request).execute()
-    if (!response.isSuccessful) throw Exception(response.body?.string())
+    if (!response.isSuccessful) {
+      if (response.code == 404) {
+        throw MoeRequestTimeoutException()
+      } else {
+        Log.e("[MoeRequestHttpException]", response.body?.string() ?: "body不存在")
+        throw MoeRequestHttpException(
+          code = response.code,
+          message = response.message
+        )
+      }
+    }
 
     val bodyContent = response.body!!.string()
 
@@ -94,27 +101,20 @@ suspend fun <T> moeRequest(
           }
         }
 
-        throw MoeRequestException("被腾讯captcha拦截")
-
-  //      val result = validateResult.await()
-  //      if (result) {
-  //        moeRequest(params, method, baseUrl, entity)
-  //      } else {
-  //        throw MoeRequestError("captcha验证失败")
-  //      }
+        throw MoeRequestWikiException("被腾讯captcha拦截")
       }
 
       TX_BLOCKED -> {
         toast(Globals.context.getString(R.string.txBlocked))
-        throw MoeRequestException("被腾讯防火墙拦截")
+        throw MoeRequestWikiException("被腾讯防火墙拦截")
       }
 
       UNKNOWN -> {
-        throw MoeRequestException("未知错误")
+        throw MoeRequestWikiException("未知错误")
       }
     }
   } catch (e: SocketTimeoutException) {
-    throw MoeTimeoutException().also { it.addSuppressed(e) }
+    throw MoeRequestTimeoutException(e)
   }
 }
 
@@ -124,16 +124,35 @@ enum class MoeRequestMethod {
 }
 
 open class MoeRequestException(
-  message: String,
-  val code: String = "customError",
-) : Exception(message) {
-  override fun toString(): String {
-    return "[MoeRequestError] $code: $message"
-  }
-}
+  override val message: String,
+  val code: String,
+  cause: Throwable? = null,
+) : Exception(message, cause)
 
-class MoeTimeoutException :
-  MoeRequestException(
-    message = Globals.context.getString(R.string.netErr),
-    code = "timeout"
-  )
+open class MoeRequestWikiException(
+  message: String,
+  code: String = "customError",
+  cause: Throwable? = null
+) : MoeRequestException(
+  message = "[MoeRequestWikiException] $code: $message",
+  code = code,
+  cause = cause
+)
+
+open class MoeRequestHttpException(
+  message: String,
+  code: Int,
+  cause: Throwable? = null
+) : MoeRequestException(
+  message = message,
+  code = "http:$code",
+  cause = cause
+)
+
+class MoeRequestTimeoutException(
+  cause: Throwable? = null
+) : MoeRequestHttpException(
+  message = Globals.context.getString(R.string.netErr),
+  code = 404,
+  cause = cause
+)

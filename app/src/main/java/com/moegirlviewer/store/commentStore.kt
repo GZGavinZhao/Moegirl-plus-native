@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import com.moegirlviewer.api.comment.CommentApi
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.util.CommentNode
 import com.moegirlviewer.util.CommentTree
 import com.moegirlviewer.util.LoadStatus
@@ -98,7 +99,7 @@ object CommentStore {
            )
          }
        }
-     } catch (e: Exception) {
+     } catch (e: MoeRequestException) {
         e.printStackTrace()
         store[pageId]!!.update {
           it.copy(status = LoadStatus.FAIL)
@@ -130,9 +131,10 @@ object CommentStore {
   suspend fun addComment(
     pageId: Int,
     content: String,
-    commentId: String? = null
+    commentId: String? = null,
+    useWikitext: Boolean = false
   ) {
-    CommentApi.postComment(pageId, content, commentId)
+    CommentApi.postComment(pageId, content, commentId, useWikitext)
     val currentPageComments = getCommentsByPageId(pageId).first()
 
     // 因为萌百的评论api没返回评论id，这里只好手动去查

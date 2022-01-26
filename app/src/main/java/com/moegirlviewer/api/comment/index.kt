@@ -62,7 +62,12 @@ object CommentApi {
     if (res.error != null) throw Exception()
   }
 
-  suspend fun postComment(pageId: Int, content: String, postId: String? = null) {
+  suspend fun postComment(
+    pageId: Int,
+    content: String,
+    postId: String? = null,
+    useWikitext: Boolean = false,
+  ) {
     val res = moeRequest(
       entity = ResultOfEditCommentBean::class.java,
       method = MoeRequestMethod.POST,
@@ -72,6 +77,7 @@ object CommentApi {
         this["pageid"] = pageId
         this["content"] = content
         if (postId != null) this["postid"] = postId
+        if (useWikitext) this["wikitext"] = 1
       }
     )
 

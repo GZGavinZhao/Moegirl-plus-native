@@ -94,7 +94,7 @@ private fun ComposedHeader(
       UserTail(userName)
     }
 
-    Center(
+    Box(
       modifier = Modifier
         .padding(10.dp)
     ) {
@@ -131,10 +131,7 @@ private fun ColumnScope.DiffContentBody(
       )
     }
   }
-  Column(
-    modifier = Modifier
-      .weight(1f)
-  ) {
+  Column() {
     diffLines.forEachIndexed { _, line ->
       Column() {
         Text(

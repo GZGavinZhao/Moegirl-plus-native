@@ -1,14 +1,14 @@
 package com.moegirlviewer.screen.settings
 
 import androidx.compose.material.Text
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.app.AppApi
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
-import com.moegirlviewer.request.MoeTimeoutException
+import com.moegirlviewer.request.MoeRequestException
+import com.moegirlviewer.request.MoeRequestTimeoutException
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.openHttpUrl
@@ -35,8 +35,8 @@ class SettingsScreenModel @Inject constructor(): ViewModel() {
         onPrimaryButtonClick = {
           try {
             AccountStore.logout()
-          } catch (e: MoeTimeoutException) {
-            printRequestErr(e, "调用登出接口超时")
+          } catch (e: MoeRequestException) {
+            printRequestErr(e, "调用登出接口失败")
           }
 
           toast(Globals.context.getString(R.string.logouted))
@@ -64,7 +64,7 @@ class SettingsScreenModel @Inject constructor(): ViewModel() {
       } else {
         toast(Globals.context.getString(R.string.currentIsVersion))
       }
-    } catch (e: Exception) {
+    } catch (e: MoeRequestException) {
       toast(Globals.context.getString(R.string.netErr))
     } finally {
       Globals.commonLoadingDialog.hide()

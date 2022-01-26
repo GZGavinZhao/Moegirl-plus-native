@@ -1,5 +1,6 @@
 package com.moegirlviewer
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -65,13 +66,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
+@InternalCoroutinesApi
+@ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
-  @InternalCoroutinesApi
-  @ExperimentalComposeUiApi
-  @ExperimentalPagerApi
-  @ExperimentalMaterialApi
-  @ExperimentalFoundationApi
-  @ExperimentalAnimationApi
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     initializeOnCreate()

@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
 import androidx.compose.foundation.gestures.OverScrollConfiguration
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -27,6 +28,7 @@ fun OnComposeCreate(
   content: @Composable (NavHostController) -> Unit
 ) {
   val themeColors = MaterialTheme.colors
+//  val defaultTextStyle = LocalTextStyle.current
   val defaultImageLoader = LocalImageLoader.current
   val navController = rememberAnimatedNavController()
   val overScrollConfig = remember {

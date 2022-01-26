@@ -53,13 +53,17 @@ fun StyledTopAppBar(
       backgroundColor = backgroundColor,
       contentColor = contentColor,
       elevation = elevation,
-      title = title,
+      title = {
+        CompositionLocalProvider(
+          LocalTextStyle provides LocalTextStyle.current.copy(color = themeColor.onPrimary),
+          content = title
+        )
+      },
       navigationIcon = {
         CompositionLocalProvider(
-          LocalContentAlpha provides ContentAlpha.medium
-        ) {
-          navigationIcon()
-        }
+          LocalContentAlpha provides ContentAlpha.medium,
+          content = navigationIcon
+        )
       },
       actions = {
         actions?.invoke(this)
