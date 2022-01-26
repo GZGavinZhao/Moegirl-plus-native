@@ -1,5 +1,6 @@
 package com.moegirlviewer.component.nativeCommentContent.util
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -143,13 +144,13 @@ private class ImageSize(
 )
 
 private fun aTagParser(tagElement: Element): CommentLinkedText {
-  val href = URLDecoder.decode(tagElement.attr("href"), "utf-8")
+  val href = tagElement.attr("href")
   val text = tagElement.text()
   return when {
     tagElement.hasClass("new") -> {
       CommentLinkedText(
         text = text,
-        target = href.toUri().getQueryParameter("title")!!,
+        target = "https://zh.moegirl.org.cn$href".toUri().getQueryParameter("title")!!,
         type = CommentLinkType.NEW
       )
     }

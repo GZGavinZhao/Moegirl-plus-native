@@ -143,12 +143,18 @@ fun CustomDrawer(
             .fillMaxHeight()
             .background(themeColors.background)
         ) {
-          drawerContent(
-            CustomDrawerRef(
-              open = { open() },
-              close = { close() }
+          Surface(
+            modifier = Modifier
+              .matchParentSize(),
+            elevation = (20 * animationProgress).dp
+          ) {
+            drawerContent(
+              CustomDrawerRef(
+                open = { open() },
+                close = { close() }
+              )
             )
-          )
+          }
         }
       }
     }
