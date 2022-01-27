@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
 import com.moegirlviewer.component.nativeCommentContent.util.*
@@ -46,9 +47,13 @@ fun NativeCommentContent(
       when(item) {
         is CommentText -> withStyle(item.spanStyle) { append(item.text) }
         is CommentLinkedText -> {
-          pushStringAnnotation(item.type.textAnnoTag, item.target)
-          withStyle(linkedTextStyle) { append(item.text) }
-          pop()
+          if (item.type != CommentLinkType.INVALID) {
+            pushStringAnnotation(item.type.textAnnoTag, item.target)
+            withStyle(linkedTextStyle) { append(item.text) }
+            pop()
+          } else {
+            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(item.text) }
+          }
         }
         is CommentCustomAnnotatedText -> {
           pushStringAnnotation(item.tag, item.annotation)

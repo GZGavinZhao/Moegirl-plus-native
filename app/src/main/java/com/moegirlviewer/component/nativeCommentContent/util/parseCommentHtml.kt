@@ -136,6 +136,7 @@ enum class CommentLinkType(val textAnnoTag: String) {
   INTERNAL("__INTERNAL"),
   EXTERNAL("__EXTERNAL"),
   NEW("__NEW"),
+  INVALID("__INVALID")
 }
 
 private class ImageSize(
@@ -147,6 +148,13 @@ private fun aTagParser(tagElement: Element): CommentLinkedText {
   val href = tagElement.attr("href")
   val text = tagElement.text()
   return when {
+    href == "" -> {
+      CommentLinkedText(
+        text = text,
+        target = "",
+        type = CommentLinkType.INVALID
+      )
+    }
     tagElement.hasClass("new") -> {
       CommentLinkedText(
         text = text,
@@ -157,7 +165,7 @@ private fun aTagParser(tagElement: Element): CommentLinkedText {
     href[0] == '/' -> {
       CommentLinkedText(
         text = text,
-        target = href.substring(1),
+        target = URLDecoder.decode(href.substring(1), "utf8"),
         type = CommentLinkType.INTERNAL
       )
     }

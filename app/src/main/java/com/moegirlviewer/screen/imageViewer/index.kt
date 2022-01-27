@@ -60,29 +60,35 @@ fun ImageViewerScreen(
     model.currentImgIndex = arguments.initialIndex
   }
 
-  ComposePagedBigImageViews(
+  Box(
     modifier = Modifier
-      .fillMaxSize()
-      .background(Color.Black),
-    images = arguments.images,
-    initialIndex = arguments.initialIndex,
-    onPageChange = { model.currentImgIndex = it }
-  )
-
-  if (arguments.images.size > 1) {
-    Column(
+      .fillMaxSize(),
+    contentAlignment = Alignment.BottomStart
+  ) {
+    ComposePagedBigImageViews(
       modifier = Modifier
-        .offset(20.dp, (-20).dp)
-        .width((configuration.screenWidthDp * 0.6).dp),
-    ) {
-      Text(
-        text = stringResource(id = R.string.gallery) + "：${model.currentImgIndex + 1} / ${arguments.images.size}",
-        color = Color(0xffcccccc)
-      )
-      Text(
-       text = arguments.images[model.currentImgIndex].title,
-       color = Color(0xffcccccc)
-      )
+        .fillMaxSize()
+        .background(Color.Black),
+      images = arguments.images,
+      initialIndex = arguments.initialIndex,
+      onPageChange = { model.currentImgIndex = it }
+    )
+
+    if (arguments.images.size > 1) {
+      Column(
+        modifier = Modifier
+          .offset(20.dp, (-20).dp)
+          .width((configuration.screenWidthDp * 0.6).dp),
+      ) {
+        Text(
+          text = stringResource(id = R.string.gallery) + "：${model.currentImgIndex + 1} / ${arguments.images.size}",
+          color = Color(0xffcccccc)
+        )
+        Text(
+          text = arguments.images[model.currentImgIndex].title,
+          color = Color(0xffcccccc)
+        )
+      }
     }
   }
 }

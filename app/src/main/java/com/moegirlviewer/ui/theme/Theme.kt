@@ -1,23 +1,19 @@
 package com.moegirlviewer.ui.theme
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import com.moegirlviewer.extants.darken
-import com.moegirlviewer.extants.lighten
-import com.moegirlviewer.extants.toCssRgbaString
-import com.moegirlviewer.store.SettingsStore
+import com.moegirlviewer.util.darken
+import com.moegirlviewer.util.lighten
+import com.moegirlviewer.util.isMoegirl
 
 @SuppressLint("ConflictingOnColor")
-private val LightColorPalette = lightColors(
+private val MoegirlLightColorPalette = lightColors(
   primary = GreenPrimary,
   primaryVariant = GreenLight,
   secondary = GreenPrimary,
@@ -34,10 +30,41 @@ private val LightColorPalette = lightColors(
 )
 
 @SuppressLint("ConflictingOnColor")
-private val DarkColorPalette = darkColors(
+private val MoegirlDarkColorPalette = darkColors(
   primary = Color(0xff3A3A3B),
   primaryVariant = Color(0xff3A3A3B).lighten(0.2f),
   secondary = GreenSecondary,
+  secondaryVariant = GreenSecondary.darken(0.2f),
+  background = Color(0xff252526),
+  surface = Color(0xff3A3A3B),
+
+  onPrimary = Color(0xffBFBFBF),
+  onSurface = Color(0xffBFBFBF)
+)
+
+
+@SuppressLint("ConflictingOnColor")
+private val HmoeLightColorPalette = lightColors(
+  primary = OrangePrimary,
+  primaryVariant = Color(0xffC9E7CA),
+  secondary = OrangeLight,
+  secondaryVariant = Color(0xffB9D5BA),
+  background = Color.White,
+  error = RedAccent,
+
+  onPrimary = Color.White,
+//  onSurface = Color(0xff323232),
+
+//  onSecondary = Color.White,
+  surface = Color.White,
+//  onBackground = Color.Black,
+)
+
+@SuppressLint("ConflictingOnColor")
+private val HmoeDarkColorPalette = darkColors(
+  primary = Color(0xff3A3A3B),
+  primaryVariant = Color(0xff3A3A3B).lighten(0.2f),
+  secondary = OrangeLight,
   secondaryVariant = GreenSecondary.darken(0.2f),
   background = Color(0xff252526),
   surface = Color(0xff3A3A3B),
@@ -76,11 +103,10 @@ fun MoegirlPlusTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit
 ) {
-  val colors = if (isUseDarkMode()) {
-    DarkColorPalette
-  } else {
-    LightColorPalette
-  }
+  val colors = isMoegirl(
+    if (isUseDarkMode()) MoegirlDarkColorPalette else MoegirlLightColorPalette,
+    if (isUseDarkMode()) HmoeDarkColorPalette else HmoeLightColorPalette
+  )
   
   val textSelectionColors = TextSelectionColors(
     backgroundColor = colors.secondary.copy(alpha = 0.5f),

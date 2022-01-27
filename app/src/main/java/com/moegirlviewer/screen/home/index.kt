@@ -127,6 +127,7 @@ fun ComposedTopAppBar(
         image = Icons.Filled.Search,
         onClick = {
           Globals.navController.navigate("search")
+          throw Exception("aaa")
         }
       )
     },

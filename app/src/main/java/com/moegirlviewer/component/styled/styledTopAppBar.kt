@@ -1,6 +1,5 @@
 package com.moegirlviewer.component.styled
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,12 +10,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.statusBarsPadding
 import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.component.BackButton
-import com.moegirlviewer.extants.toCssRgbaString
-import com.moegirlviewer.util.Globals
 
 @Composable
 fun StyledTopAppBar(

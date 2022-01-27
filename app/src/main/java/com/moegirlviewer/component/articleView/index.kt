@@ -25,9 +25,9 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
-import com.moegirlviewer.extants.darken
-import com.moegirlviewer.extants.lighten
-import com.moegirlviewer.extants.toCssRgbaString
+import com.moegirlviewer.util.darken
+import com.moegirlviewer.util.lighten
+import com.moegirlviewer.util.toCssRgbaString
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.ProguardIgnore

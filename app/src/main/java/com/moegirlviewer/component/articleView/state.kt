@@ -24,9 +24,9 @@ import com.moegirlviewer.component.commonDialog.CommonLoadingDialogProps
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewContent
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
-import com.moegirlviewer.extants.darken
-import com.moegirlviewer.extants.lighten
-import com.moegirlviewer.extants.toCssRgbaString
+import com.moegirlviewer.util.darken
+import com.moegirlviewer.util.lighten
+import com.moegirlviewer.util.toCssRgbaString
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.request.MoeRequestWikiException
 import com.moegirlviewer.request.commonOkHttpClient
@@ -95,7 +95,7 @@ class ArticleViewState(
         ${if (props.inDialogMode) """
           margin: 0 !important;
           padding: 0;
-          width: 100% !important;
+          max-width: auto !important;
         """.trimIndent() else ""}
         ${if (props.inDialogMode && context.isDarkTheme) 
           "background-color: ${context.themeColors.surface.toCssRgbaString()} !important" 
