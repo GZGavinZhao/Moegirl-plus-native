@@ -200,7 +200,7 @@ private fun ComposedHeader(
             modifier = Modifier
               .clickable {
                 if (item != categories.last()) Globals.navController.navigate(
-                  "article", ArticleRouteArguments(
+                  ArticleRouteArguments(
                     pageName = "Category:$item",
                     displayName = Globals.context.getString(R.string.category) + "：$item"
                   )

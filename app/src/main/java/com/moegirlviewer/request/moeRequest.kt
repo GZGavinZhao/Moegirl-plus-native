@@ -4,13 +4,13 @@ import android.util.Log
 import com.google.gson.Gson
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
-import com.moegirlviewer.util.navigate
 import com.moegirlviewer.request.util.MoeResponseType.*
 import com.moegirlviewer.request.util.probeMoeResponseType
 import com.moegirlviewer.request.util.toMoeRequestError
 import com.moegirlviewer.request.util.toQueryStringParams
 import com.moegirlviewer.screen.captcha.CaptchaRouteArguments
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.navigate
 import com.moegirlviewer.util.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -65,6 +65,7 @@ suspend fun <T> moeRequest(
 
   try {
     val response = moeOkHttpClient.newCall(request).execute()
+
     if (!response.isSuccessful) {
       if (response.code == 404) {
         throw MoeRequestTimeoutException()

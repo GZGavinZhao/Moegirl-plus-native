@@ -2,6 +2,7 @@ package com.moegirlviewer.api.page
 
 import com.moegirlviewer.Constants
 import com.moegirlviewer.api.page.bean.*
+import com.moegirlviewer.request.MoeRequestMethod
 import com.moegirlviewer.request.moeRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -62,6 +63,7 @@ object PageApi {
         async {
           moeRequest(
             entity = ImageInfoResBean::class.java,
+            method = MoeRequestMethod.POST,
             params = mutableMapOf<String, Any>().apply {
               this["action"] = "query"
               this["prop"] = "imageinfo"

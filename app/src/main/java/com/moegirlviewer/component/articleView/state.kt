@@ -89,7 +89,13 @@ class ArticleViewState(
     )
 
     val styles = """
+      @font-face {
+        font-family: "NospzGothicMoe";
+        src: url("file:///android_res/font/fonts/nospz_gothic_moe.ttf");
+      }
+
       body {
+        font-family: "NospzGothicMoe";
         padding-top: ${props.contentTopPadding.value}px;
         word-break: ${if (props.inDialogMode) "break-all" else "initial"};
         ${if (props.inDialogMode) """
@@ -203,14 +209,11 @@ class ArticleViewState(
 
         if (isCategoryPage) {
           val collectedCategoryData = collectCategoryDataFromHtml(articleData.parse.text._asterisk)
-          val currentRouteId = Globals.navController.currentBackStackEntry!!.id
-          Globals.navController.navigate(CategoryRouteArguments(
+          Globals.navController.replace(CategoryRouteArguments(
             categoryName = truePageName.replaceFirst(Regex("(Category|分类|分類):"), ""),
             parentCategories = collectedCategoryData.parentCategories,
             categoryExplainPageName = collectedCategoryData.categoryExplainPageName
           ))
-
-          Globals.navController.backQueue.removeIf { it.id == currentRouteId }
 
           return@launch
         }

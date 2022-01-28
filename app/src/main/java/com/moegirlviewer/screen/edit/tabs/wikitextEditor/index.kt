@@ -1,11 +1,15 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -22,6 +26,7 @@ import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.linearTintWikitext
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.NospzGothicMoeFamily
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -35,6 +40,7 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 @Composable
 fun EditScreenWikitextEditor() {
   val model: EditScreenModel = hiltViewModel()
+  val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
   var textFieldValue by remember(model.wikitextTextFieldValue) { mutableStateOf(model.wikitextTextFieldValue) }
   var visibleQuickInsertBar by remember { mutableStateOf(false) }
@@ -73,53 +79,62 @@ fun EditScreenWikitextEditor() {
     }
   }
 
-  Center {
-    when(model.wikitextStatus) {
-      LoadStatus.SUCCESS -> {
-        Column(
-          modifier = Modifier
-            .fillMaxHeight()
-        ) {
-          PlainTextField(
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+  ) {
+    Column(
+      modifier = Modifier
+        .fillMaxHeight()
+    ) {
+      PlainTextField(
+        modifier = Modifier
+          .fillMaxWidth()
+          .weight(1f)
+          .focusRequester(model.focusRequester),
+        value = if (syntaxHighlight) textFieldValue else model.wikitextTextFieldValue,
+        textStyle = TextStyle.Default.copy(
+          fontSize = 16.sp,
+          fontFamily = NospzGothicMoeFamily
+        ),
+        onValueChange = {
+          model.wikitextTextFieldValue = it
+        },
+        decorationBox = { self ->
+          Box(
             modifier = Modifier
-              .fillMaxWidth()
-              .weight(1f),
-            value = if (syntaxHighlight) textFieldValue else model.wikitextTextFieldValue,
-            textStyle = TextStyle.Default.copy(
-              fontSize = 16.sp,
-            ),
-            onValueChange = {
-              model.wikitextTextFieldValue = it
-            },
-            decorationBox = { self ->
-              Box(
-                modifier = Modifier
-                  .padding(horizontal = 3.dp)
-              ) { self() }
-            }
-          )
-
-          if (visibleQuickInsertBar && model.quickInsertBarVisibleAllowed) {
-            QuickInsertBar(
-              onClickItem = { model.insertWikitext(it) }
-            )
-          }
+              .padding(horizontal = 3.dp)
+          ) { self() }
         }
-      }
+      )
 
-      LoadStatus.FAIL -> {
-        TextButton(
-          onClick = {
-            scope.launch { model.loadWikitext() }
-          }
-        ) {
-          Text(stringResource(id = R.string.reload))
-        }
+      if (visibleQuickInsertBar && model.quickInsertBarVisibleAllowed) {
+        QuickInsertBar(
+          onClickItem = { model.insertWikitext(it) }
+        )
       }
-
-      else -> StyledCircularProgressIndicator()
     }
 
+    if (model.wikitextStatus != LoadStatus.SUCCESS) {
+      Center(
+        modifier = Modifier
+          .background(themeColors.background)
+      ) {
+        when(model.wikitextStatus) {
+          LoadStatus.FAIL -> {
+            TextButton(
+              onClick = {
+                scope.launch { model.loadWikitext() }
+              }
+            ) {
+              Text(stringResource(id = R.string.reload))
+            }
+          }
+
+          else -> StyledCircularProgressIndicator()
+        }
+      }
+    }
   }
 }
 

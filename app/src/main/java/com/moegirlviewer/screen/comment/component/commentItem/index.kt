@@ -494,12 +494,10 @@ private fun ComposedCommentReply(
       modifier = Modifier
         .padding(top = 3.dp)
         .noRippleClickable {
-          Globals.navController.navigate(
-            "commentReply", CommentReplyRouteArguments(
-              pageId = pageId,
-              commentId = commentData.id
-            )
-          )
+          Globals.navController.navigate(CommentReplyRouteArguments(
+            pageId = pageId,
+            commentId = commentData.id
+          ))
         },
       text = stringResource(id = R.string.replyTotal, replyList.size) + " >",
       color = themeColors.secondary,

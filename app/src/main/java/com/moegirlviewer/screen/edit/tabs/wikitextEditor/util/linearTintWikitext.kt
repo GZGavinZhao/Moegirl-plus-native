@@ -189,6 +189,13 @@ private val markupList = listOf(
       color = Color(0xff38AD6C)
     ),
   ),
+  PairWikitextMarkup(
+    startText = "<!--",
+    endText = "-->",
+    style = SpanStyle(
+      color = Color(0xffBEF781)
+    )
+  ),
   EqualWikitextMarkup(
     text = "'''",
     style = SpanStyle(

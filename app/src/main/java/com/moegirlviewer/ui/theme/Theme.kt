@@ -109,7 +109,7 @@ fun MoegirlPlusTheme(
   )
   
   val textSelectionColors = TextSelectionColors(
-    backgroundColor = colors.secondary.copy(alpha = 0.5f),
+    backgroundColor = colors.secondary.copy(alpha = 0.3f),
     handleColor = colors.secondary,
   )
 

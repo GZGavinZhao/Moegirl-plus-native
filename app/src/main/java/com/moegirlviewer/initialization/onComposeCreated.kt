@@ -1,6 +1,5 @@
 package com.moegirlviewer.initialization
 
-import android.util.Log
 import androidx.compose.material.Text
 import androidx.core.net.toUri
 import com.moegirlviewer.Constants
@@ -43,7 +42,7 @@ private fun checkDeepLink() {
     }
     deepLink.contains(plainRegex) -> {
       val pageName = plainRegex.find(deepLink)!!.groupValues[1]
-      if (pageName.contains("""^[Mm]ainpage$""").not()) gotoArticlePage(pageName)
+      if (pageName.contains(Regex("""^[Mm]ainpage$""")).not()) gotoArticlePage(pageName)
     }
   }
 }

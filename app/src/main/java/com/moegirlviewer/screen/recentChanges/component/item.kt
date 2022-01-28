@@ -424,13 +424,11 @@ private fun RightFloatedButtons(
         modifier = Modifier
           .size(25.dp)
           .noRippleClickable {
-            Globals.navController.navigate(
-              "comparePage", ComparePageRouteArguments(
-                fromRevId = oldRevId,
-                toRevId = revId,
-                pageName = pageName
-              )
-            )
+            Globals.navController.navigate(ComparePageRouteArguments(
+              fromRevId = oldRevId,
+              toRevId = revId,
+              pageName = pageName
+            ))
           },
         imageVector = Icons.Filled.CompareArrows,
         contentDescription = null,

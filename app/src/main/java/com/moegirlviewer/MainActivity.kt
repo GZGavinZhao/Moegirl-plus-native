@@ -1,28 +1,15 @@
 package com.moegirlviewer
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
-import androidx.compose.foundation.gestures.OverScrollConfiguration
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.node.Ref
 import androidx.navigation.NavHostController
-import coil.compose.LocalImageLoader
-import coil.decode.GifDecoder
-import coil.decode.SvgDecoder
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.moegirlviewer.component.commonDialog.*
 import com.moegirlviewer.initialization.OnComposeCreate
@@ -47,6 +34,7 @@ import com.moegirlviewer.screen.contribution.ContributionScreen
 import com.moegirlviewer.screen.edit.EditRouteArguments
 import com.moegirlviewer.screen.edit.EditScreen
 import com.moegirlviewer.screen.home.HomeScreen
+import com.moegirlviewer.screen.home.homeScreenReady
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.screen.imageViewer.ImageViewerScreen
 import com.moegirlviewer.screen.login.LoginScreen
@@ -62,8 +50,13 @@ import com.moegirlviewer.ui.theme.MoegirlPlusTheme
 import com.moegirlviewer.util.*
 import com.moegirlviewer.util.RouteArguments.Companion.formattedArguments
 import com.moegirlviewer.util.RouteArguments.Companion.formattedRouteName
+import com.moegirlviewer.view.ComposeWithSplashScreenView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import java.util.*
 
 @AndroidEntryPoint
 @ExperimentalMaterialApi
@@ -73,11 +66,44 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @InternalCoroutinesApi
 @ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
+  val coroutineScope = CoroutineScope(Dispatchers.Main)
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    val hasDeepLink = intent.dataString != null
+    val isShowSplashScreen = !hasDeepLink && homeScreenReady.isActive
+    val mainWithSplashView = ComposeWithSplashScreenView(this, isShowSplashScreen)
+    setContentView(mainWithSplashView)
+
+    if (isShowSplashScreen) {
+      coroutineScope.launch {
+        suspend fun complete() {
+          mainWithSplashView.hideSplashScreen()
+          useFreeStatusBarLayout()
+        }
+
+        launch {
+          mainWithSplashView.appearSplashScreen()
+        }
+
+        launch {
+          delay(3000)
+          complete()
+        }
+
+        launch {
+          homeScreenReady.await()
+          complete()
+        }
+      }
+    }
+
+    application.initializeOnCreate()
     initializeOnCreate()
 
-    setContent {
+    if (isShowSplashScreen) useFullScreenLayout()
+
+    mainWithSplashView.setContent {
       MoegirlPlusTheme {
         ProvideWindowInsets {
           OnComposeCreate {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -27,6 +28,7 @@ import com.moegirlviewer.request.MoeRequestWikiException
 import com.moegirlviewer.request.MoeRequestTimeoutException
 import com.moegirlviewer.room.backupRecord.BackupRecord
 import com.moegirlviewer.room.backupRecord.BackupRecordType
+import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.article.ArticleScreenModel
 import com.moegirlviewer.screen.compare.CompareTextRouteArguments
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.component.QuickInsertText
@@ -53,6 +55,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
   var wikitextTextFieldValue by mutableStateOf(TextFieldValue())
   var originalWikiText = ""
   var wikitextStatus by mutableStateOf(LoadStatus.INITIAL)
+  val focusRequester = FocusRequester()
 
   var previewHtml by mutableStateOf("")
   var previewStatus by mutableStateOf(LoadStatus.INITIAL)
@@ -66,6 +69,13 @@ class EditScreenModel @Inject constructor() : ViewModel() {
 
   suspend fun loadWikitext() {
     if (routeArguments.type == EditType.NEW_PAGE || isNewSection) {
+      focusRequester.requestFocus()
+      insertWikitext(QuickInsertText(
+        text = "== ${Globals.context.getString(R.string.title)} ==",
+        minusOffset = 3,
+        selectionMinusOffset = 2
+      ))
+
       wikitextStatus = LoadStatus.SUCCESS
       return
     }
@@ -282,9 +292,17 @@ class EditScreenModel @Inject constructor() : ViewModel() {
         backupId = backupId,
         content = ""
       ))
+
+      if (res.edit.new == null) {
+        ArticleScreenModel.needReload = true
+        Globals.navController.popBackStack()
+      } else {
+        Globals.navController.replace(ArticleRouteArguments(
+          pageName = routeArguments.pageName
+        ))
+      }
+
       toast(Globals.context.getString(R.string.edited))
-      ArticleScreenModel.needReload = true
-      Globals.navController.popBackStack()
       return true
     } catch(e: MoeRequestException) {
       val message = mapOf(

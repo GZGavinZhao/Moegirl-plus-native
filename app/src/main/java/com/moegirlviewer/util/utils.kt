@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalDensity
@@ -39,8 +40,8 @@ fun <T> isMoegirl(ifIsTrue: T, ifIsFalse: T): T {
 fun isDebugEnv() = (Globals.context.applicationInfo.flags or ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
 fun openHttpUrl(url: String) {
-  val intent = Intent(Intent.ACTION_VIEW);
-  intent.data = Uri.parse(url);
+  val intent = Intent(Intent.ACTION_VIEW)
+  intent.data = Uri.parse(url)
   Globals.activity.startActivity(intent)
 }
 

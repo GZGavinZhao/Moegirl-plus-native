@@ -131,19 +131,28 @@ object RouteArgumentsPool {
 }
 
 fun NavHostController.navigate(
-  route: String,
-  arguments: RouteArguments,
-  builder: (NavOptionsBuilder.() -> Unit) = {}
-) {
-  val routeNameWithArguments = "$route?${arguments.argumentQueryStr}"
-  this.navigate(routeNameWithArguments, builder)
-}
-
-fun NavHostController.navigate(
   arguments: RouteArguments,
   builder: (NavOptionsBuilder.() -> Unit) = {}
 ) {
   val routeName = arguments::class.java.declaredAnnotations.filterIsInstance<RouteName>()[0].name
   val routeNameWithArguments = "${routeName}?${arguments.argumentQueryStr}"
   this.navigate(routeNameWithArguments, builder)
+}
+
+fun NavHostController.replace(
+  route: String,
+  builder: (NavOptionsBuilder.() -> Unit) = {}
+) {
+  val currentRouteId = this.currentBackStackEntry!!.id
+  this.navigate(route, builder)
+  this.backQueue.removeIf { it.id == currentRouteId }
+}
+
+fun NavHostController.replace(
+  arguments: RouteArguments,
+  builder: (NavOptionsBuilder.() -> Unit) = {}
+) {
+  val currentRouteId = this.currentBackStackEntry!!.id
+  this.navigate(arguments, builder)
+  this.backQueue.removeIf { it.id == currentRouteId }
 }

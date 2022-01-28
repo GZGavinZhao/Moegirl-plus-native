@@ -13,6 +13,7 @@ data class EditResultBean(
     val oldrevid: Int? = null,
     val pageid: Int? = null,
     val title: String? = null,
+    val new: String? = null,
 
     // 被拦截器拦截会有这些字段
     val abusefilter: Abusefilter? = null,

@@ -50,12 +50,10 @@ fun ContributionItem(
       .padding(bottom = 1.dp)
       .background(themeColors.surface)
       .clickable {
-        Globals.navController.navigate(
-          "article", ArticleRouteArguments(
-            pageName = pageName,
-            revId = revId
-          )
-        )
+        Globals.navController.navigate(ArticleRouteArguments(
+          pageName = pageName,
+          revId = revId
+        ))
       }
       .padding(horizontal = 10.dp, vertical = 5.dp)
   ) {

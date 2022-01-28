@@ -1,11 +1,11 @@
 package com.moegirlviewer.initialization
 
 import android.os.Build
-import android.view.View
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.isDebugEnv
+import com.moegirlviewer.util.useFreeStatusBarLayout
 
 fun ComponentActivity.initializeOnCreate() {
   WebView.setWebContentsDebuggingEnabled(isDebugEnv())
@@ -15,10 +15,7 @@ fun ComponentActivity.initializeOnCreate() {
     window.decorView.isForceDarkAllowed = false
   }
 
-  // 删除默认的顶部状态栏高度偏移
-  window.decorView.systemUiVisibility =
-    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-      View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+  useFreeStatusBarLayout()
 
   val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
   val scale = resources.displayMetrics.density

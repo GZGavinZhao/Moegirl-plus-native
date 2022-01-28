@@ -158,7 +158,7 @@ private fun aTagParser(tagElement: Element): CommentLinkedText {
     tagElement.hasClass("new") -> {
       CommentLinkedText(
         text = text,
-        target = "https://zh.moegirl.org.cn$href".toUri().getQueryParameter("title")!!,
+        target = "https://xx.xx$href".toUri().getQueryParameter("title")!!,
         type = CommentLinkType.NEW
       )
     }
