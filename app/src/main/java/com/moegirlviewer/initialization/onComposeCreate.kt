@@ -19,6 +19,7 @@ import coil.decode.SvgDecoder
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.moegirlviewer.component.commonDialog.*
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.NospzGothicMoeFamily
 
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
@@ -28,8 +29,8 @@ fun OnComposeCreate(
   content: @Composable (NavHostController) -> Unit
 ) {
   val themeColors = MaterialTheme.colors
-//  val defaultTextStyle = LocalTextStyle.current
   val defaultImageLoader = LocalImageLoader.current
+  val defaultTextStyle = LocalTextStyle.current
   val navController = rememberAnimatedNavController()
   val overScrollConfig = remember {
     OverScrollConfiguration(
@@ -44,6 +45,9 @@ fun OnComposeCreate(
       }
       .build()
   }
+  val textStyle = defaultTextStyle.copy(
+    fontFamily = NospzGothicMoeFamily
+  )
   val commonAlertDialogRef = remember { Ref<CommonAlertDialogRef>() }
   val commonAlertDialog2Ref = remember { Ref<CommonAlertDialogRef>() }  // 这里为了能显示最多两个全局共用Dialog所以弄成这样了，虽然有点丑
   val commonLoadingDialogRef = remember { Ref<CommonLoadingDialogRef>() }
@@ -62,6 +66,7 @@ fun OnComposeCreate(
   CompositionLocalProvider(
     LocalImageLoader provides imageLoader,
     LocalOverScrollConfiguration provides overScrollConfig,
+    LocalTextStyle provides textStyle
   ) {
     content(navController)
     CommonDatePickerDialog(state = commonDatePickerDialogState)

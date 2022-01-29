@@ -91,7 +91,7 @@ class ArticleViewState(
     val styles = """
       @font-face {
         font-family: "NospzGothicMoe";
-        src: url("file:///android_res/font/fonts/nospz_gothic_moe.ttf");
+        src: url("file:///android_res/font/nospz_gothic_moe.ttf");
       }
 
       body {

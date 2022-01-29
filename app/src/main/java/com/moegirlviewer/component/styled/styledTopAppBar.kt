@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -51,7 +52,10 @@ fun StyledTopAppBar(
       elevation = elevation,
       title = {
         CompositionLocalProvider(
-          LocalTextStyle provides LocalTextStyle.current.copy(color = themeColor.onPrimary),
+          LocalTextStyle provides LocalTextStyle.current.copy(
+            color = themeColor.onPrimary,
+            fontWeight = FontWeight.Bold,
+          ),
           content = title
         )
       },

@@ -81,22 +81,24 @@ class TextColors(
 )
 
 // 文字主题正确方式是应该用Material.Typography和LocalTextStyle的，刚开始没搞懂，现在要改工作量太大，就这样吧_(:з」∠)_
-val Colors.text @Composable get() =
-  if (!isUseDarkMode()) TextColors(
-    primary = Color(0xff323232),
-    secondary = Color(0xff797979),
-    tertiary = Color(0xffD0D0D0)
-  ) else TextColors(
-    primary = Color(0xffBFBFBF),
-    secondary = Color(0xFFA2A2A2),
-    tertiary = Color(0xFF615F5F)
-  )
+val Colors.text
+  @Composable get() =
+    if (!isUseDarkMode()) TextColors(
+      primary = Color(0xff323232),
+      secondary = Color(0xff797979),
+      tertiary = Color(0xffD0D0D0)
+    ) else TextColors(
+      primary = Color(0xffBFBFBF),
+      secondary = Color(0xFFA2A2A2),
+      tertiary = Color(0xFF615F5F)
+    )
 
 // 用于列表页面的灰色背景
-val Colors.background2 @Composable get() =
-  if (!isUseDarkMode())
-    Color(0xffeeeeee) else
-    this.background
+val Colors.background2
+  @Composable get() =
+    if (!isUseDarkMode())
+      Color(0xffeeeeee) else
+      this.background
 
 @Composable
 fun MoegirlPlusTheme(
@@ -107,7 +109,7 @@ fun MoegirlPlusTheme(
     if (isUseDarkMode()) MoegirlDarkColorPalette else MoegirlLightColorPalette,
     if (isUseDarkMode()) HmoeDarkColorPalette else HmoeLightColorPalette
   )
-  
+
   val textSelectionColors = TextSelectionColors(
     backgroundColor = colors.secondary.copy(alpha = 0.3f),
     handleColor = colors.secondary,
