@@ -1,32 +1,32 @@
 package com.moegirlviewer.screen.searchResult.component
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.background
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.bean.SearchResultBean
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.sideBorder
-import com.moegirlviewer.ui.theme.text
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
@@ -112,13 +112,13 @@ private fun ComposedHeader(
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Text(
+    StyledText(
       text = title,
       fontSize = 16.sp,
       fontWeight = FontWeight.Bold
     )
 
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(start = 5.dp, end = 3.dp)
         .weight(1f),
@@ -144,7 +144,7 @@ private fun SearchContent(
     val htmlDoc = Jsoup.parse(html)
     val elements = htmlDoc.body().childNodes()
 
-    Text(
+    StyledText(
       buildAnnotatedString {
         elements.forEach {
           withStyle(
@@ -184,7 +184,7 @@ private fun ComposedFooter(
       .fillMaxWidth(),
     contentAlignment = Alignment.CenterEnd
   ) {
-    Text(
+    StyledText(
       color = themeColors.text.secondary,
       text = date.format(formatter),
       fontSize = 15.sp

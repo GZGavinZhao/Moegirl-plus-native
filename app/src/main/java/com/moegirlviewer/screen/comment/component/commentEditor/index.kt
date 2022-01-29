@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
@@ -43,11 +42,10 @@ import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
 import com.moegirlviewer.component.articleView.ArticleViewRef
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
-import com.moegirlviewer.request.MoeRequestWikiException
 import com.moegirlviewer.screen.edit.EditScreenModel
-import com.moegirlviewer.ui.theme.background2
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
@@ -214,7 +212,7 @@ fun CommentEditor(
                 .noRippleClickable { onSubmit() },
               contentAlignment = Alignment.Center
             ) {
-              Text(
+              StyledText(
                 text = stringResource(id = R.string.publish),
                 color = themeColors.secondary
               )
@@ -268,7 +266,7 @@ fun CommentEditor(
                                 .matchParentSize(),
                               onClick = { loadCommentPreviewHtml() }
                             ) {
-                              Text(
+                              StyledText(
                                 text = stringResource(id = R.string.reload),
                               )
                             }

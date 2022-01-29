@@ -1,6 +1,5 @@
 package com.moegirlviewer.screen.article
 
-import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,6 +17,7 @@ import com.moegirlviewer.component.articleView.ArticleInfo
 import com.moegirlviewer.component.articleView.ArticleViewRef
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
 import com.moegirlviewer.room.watchingPage.WatchingPage
@@ -115,7 +115,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   fun handleOnArticleMissed() {
     Globals.commonAlertDialog.show(CommonAlertDialogProps(
       content = {
-        Text(
+        StyledText(
           text = stringResource(id = R.string.articleMissedHint)
         )
       },
@@ -170,7 +170,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
       gotoArticlePage(talkPageName)
     } else {
       Globals.commonAlertDialog.show(CommonAlertDialogProps(
-        content = { Text(Globals.context.getString(R.string.talkPageMissedHint)) },
+        content = { StyledText(Globals.context.getString(R.string.talkPageMissedHint)) },
         secondaryButton = ButtonConfig.cancelButton(),
         onPrimaryButtonClick = {
           coroutineScope.launch {

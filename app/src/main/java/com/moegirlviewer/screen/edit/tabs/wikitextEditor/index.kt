@@ -3,12 +3,10 @@ package com.moegirlviewer.screen.edit.tabs.wikitextEditor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -20,6 +18,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.PlainTextField
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.edit.EditScreenModel
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.component.QuickInsertBar
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.linearTintWikitext
@@ -127,7 +126,7 @@ fun EditScreenWikitextEditor() {
                 scope.launch { model.loadWikitext() }
               }
             ) {
-              Text(stringResource(id = R.string.reload))
+              StyledText(stringResource(id = R.string.reload))
             }
           }
 

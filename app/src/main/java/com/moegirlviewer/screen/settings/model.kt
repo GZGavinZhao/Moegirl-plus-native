@@ -1,14 +1,13 @@
 package com.moegirlviewer.screen.settings
 
-import androidx.compose.material.Text
 import androidx.lifecycle.ViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.app.AppApi
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
-import com.moegirlviewer.request.MoeRequestTimeoutException
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.openHttpUrl
@@ -29,7 +28,7 @@ class SettingsScreenModel @Inject constructor(): ViewModel() {
     if (AccountStore.isLoggedIn.first()) {
       Globals.commonAlertDialog.show(CommonAlertDialogProps(
         content = {
-          Text(Globals.context.getString(R.string.logoutHint))
+         StyledText(Globals.context.getString(R.string.logoutHint))
         },
         secondaryButton = ButtonConfig.cancelButton(),
         onPrimaryButtonClick = {
@@ -55,7 +54,7 @@ class SettingsScreenModel @Inject constructor(): ViewModel() {
       if (res.version != currentVersion) {
         Globals.commonAlertDialog.show(CommonAlertDialogProps(
           title = Globals.context.getString(R.string.hasNewVersionHint),
-          content = { Text(res.desc) },
+          content = { StyledText(res.desc) },
           secondaryButton = ButtonConfig.cancelButton(),
           onPrimaryButtonClick = {
             openHttpUrl(Constants.appDownloadUrl)

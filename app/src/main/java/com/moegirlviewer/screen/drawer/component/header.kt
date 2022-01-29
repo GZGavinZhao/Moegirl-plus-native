@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
@@ -16,7 +15,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,6 +23,7 @@ import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
@@ -83,7 +82,7 @@ fun CommonDrawerHeader(
 
   @Composable
   fun ComposedHintText() {
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(top = 20.dp)
         .noRippleClickable { handleOnClickAvatarOrHintText() }

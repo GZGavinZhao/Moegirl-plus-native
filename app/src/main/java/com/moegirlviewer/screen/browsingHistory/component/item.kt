@@ -1,26 +1,27 @@
 package com.moegirlviewer.screen.browsingHistory.component
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.moegirlviewer.R
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
-import com.moegirlviewer.ui.theme.background2
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.background2
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.diffNowDate
 import com.moegirlviewer.util.sideBorder
@@ -74,7 +75,7 @@ fun BrowsingHistoryScreenItem(
         }
       }
 
-      Text(
+      StyledText(
         modifier = Modifier
           .padding(start = 5.dp)
           .width((14 * 15).dp),
@@ -90,7 +91,7 @@ fun BrowsingHistoryScreenItem(
           .absoluteOffset(x = (-5).dp, y = (-5).dp),
         contentAlignment = Alignment.BottomEnd,
       ) {
-        Text(
+        StyledText(
           text = diffNowDate(record.date),
           color = themeColors.text.secondary,
           fontSize = 13.sp

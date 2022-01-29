@@ -24,6 +24,7 @@ import com.moegirlviewer.component.commonDialog.CommonLoadingDialogProps
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewContent
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.util.darken
 import com.moegirlviewer.util.lighten
 import com.moegirlviewer.util.toCssRgbaString
@@ -354,7 +355,7 @@ class ArticleViewState(
                  Globals.navController.navigate("login")
               },
               content = {
-                Text(Globals.context.getString(R.string.notLoggedInHint))
+                StyledText(Globals.context.getString(R.string.notLoggedInHint))
               }
             ))
             return@launch

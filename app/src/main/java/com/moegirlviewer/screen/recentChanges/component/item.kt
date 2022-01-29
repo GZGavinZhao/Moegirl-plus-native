@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowRight
@@ -35,14 +34,15 @@ import androidx.compose.ui.zIndex
 import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.compare.ComparePageRouteArguments
 import com.moegirlviewer.screen.contribution.ContributionRouteArguments
 import com.moegirlviewer.screen.pageRevisions.PageRevisionsRouteArguments
 import com.moegirlviewer.screen.recentChanges.util.EditUserOfChanges
 import com.moegirlviewer.screen.recentChanges.util.RawRecentChanges
-import com.moegirlviewer.ui.theme.GreenPrimary
-import com.moegirlviewer.ui.theme.RedAccent
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.GreenPrimary
+import com.moegirlviewer.theme.RedAccent
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import java.time.format.DateTimeFormatter
 
@@ -175,7 +175,7 @@ private fun ComposedTitle(
     verticalAlignment = Alignment.CenterVertically
   ) {
     if (type != "log") {
-      Text(
+      StyledText(
         text = (if (totalDiffSize > 0) "+" else "") + totalDiffSize,
         color = if (totalDiffSize >= 0) GreenPrimary else RedAccent,
         fontSize = 16.sp,
@@ -183,7 +183,7 @@ private fun ComposedTitle(
       )
     }
 
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(end = 5.dp),
       text = titlePrefix,
@@ -197,7 +197,7 @@ private fun ComposedTitle(
         .weight(1f)
         .offset(y = (-1).dp)
     ) {
-      Text(
+      StyledText(
         modifier = Modifier
           .noRippleClickable { gotoArticlePage(pageName) }
           .onGloballyPositioned { textWidth = density.run { it.size.width.toDp().value } }
@@ -238,7 +238,7 @@ private fun SummaryContent(
       .fillMaxWidth(),
     contentAlignment = Alignment.Center
   ) {
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(top = 5.dp, start = 10.dp, end = 25.dp, bottom = 5.dp),
       fontSize = 14.sp,
@@ -290,7 +290,7 @@ private fun UsersBar(
           painter = rememberImagePainter(Constants.avatarUrl + item.name),
           contentDescription = null
         )
-        Text(
+        StyledText(
           text = "${item.name} (×${item.total})",
           color = themeColors.text.secondary,
           fontSize = 13.sp,
@@ -298,7 +298,7 @@ private fun UsersBar(
       }
 
       if (index != users.size - 1) {
-        Text(
+        StyledText(
           text = "、",
           color = themeColors.text.secondary
         )
@@ -338,7 +338,7 @@ private fun ComposedFooter(
           contentDescription = null,
           tint = themeColors.secondary
         )
-        Text(
+        StyledText(
           text = stringResource(id = R.string.toggleRecentChangeDetail,
             stringResource(id = if (visibleDetails) R.string.collapse else R.string.expand),
             totalNumberOfEdit
@@ -365,25 +365,25 @@ private fun ComposedFooter(
           modifier = Modifier
             .padding(start = 5.dp)
         ) {
-          Text(
+          StyledText(
             text = firstUserName,
             fontSize = 13.sp,
             color = themeColors.text.secondary
           )
           Row() {
-            Text(
+            StyledText(
               modifier = Modifier
                 .noRippleClickable { gotoUserPage(firstUserName) },
               text = stringResource(id = R.string.talk),
               fontSize = 11.sp,
               color = themeColors.secondary
             )
-            Text(
+            StyledText(
               text = " | ",
               fontSize = 11.sp,
               color = themeColors.text.tertiary
             )
-            Text(
+            StyledText(
               modifier = Modifier
                 .noRippleClickable {
                    Globals.navController.navigate(ContributionRouteArguments(userName = firstUserName))
@@ -397,7 +397,7 @@ private fun ComposedFooter(
       }
     }
 
-    Text(
+    StyledText(
       text = remember(dateISO) {
         parseMoegirlNormalTimestamp(dateISO).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
       },

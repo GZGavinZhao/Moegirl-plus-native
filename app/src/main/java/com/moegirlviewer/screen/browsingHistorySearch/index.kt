@@ -5,7 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
@@ -16,16 +19,15 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.insets.imePadding
 import com.moegirlviewer.R
 import com.moegirlviewer.component.PlainTextField
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.browsingHistory.component.BrowsingHistoryScreenItem
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.autoFocus
 import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.imeBottomPadding
@@ -68,7 +70,7 @@ fun BrowsingHistorySearchScreen() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
       ) {
-        Text(
+        StyledText(
           text = stringResource(id = R.string.noSearchingResult),
           color = themeColors.text.tertiary,
           fontSize = 18.sp

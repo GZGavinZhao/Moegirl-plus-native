@@ -1,26 +1,20 @@
 package com.moegirlviewer.screen.imageViewer
 
 import android.content.Context
-import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.*
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.Text
-import androidx.compose.material.swipeable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -38,11 +32,9 @@ import com.github.piasy.biv.loader.ImageLoader
 import com.github.piasy.biv.view.BigImageView
 import com.github.piasy.biv.view.FrescoImageViewFactory
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
 import com.moegirlviewer.R
 import com.moegirlviewer.component.articleView.MoegirlImage
-import com.moegirlviewer.util.noRippleClickable
+import com.moegirlviewer.component.styled.StyledText
 import java.io.File
 
 @ExperimentalComposeUiApi
@@ -80,11 +72,11 @@ fun ImageViewerScreen(
           .offset(20.dp, (-20).dp)
           .width((configuration.screenWidthDp * 0.6).dp),
       ) {
-        Text(
+        StyledText(
           text = stringResource(id = R.string.gallery) + "：${model.currentImgIndex + 1} / ${arguments.images.size}",
           color = Color(0xffcccccc)
         )
-        Text(
+        StyledText(
           text = arguments.images[model.currentImgIndex].title,
           color = Color(0xffcccccc)
         )

@@ -34,26 +34,27 @@ data class NotificationListBean(
           val header: String,
           val icon: String,
           val iconUrl: String,
-          val links: Links
+          // 这个links的primary属性，有时是数组有时是对象，现在暂时也用不到，先注释掉
+//          val links: Links
         ) {
-          data class Links(
-            val primary: Primary,
-            val secondary: List<Secondary>
-          ) {
-            data class Primary(
-              val label: String,
-              val url: String
-            )
-
-            data class Secondary(
-              val description: String,
-              val icon: String,
-              val label: String,
-              val prioritized: Boolean,
-              val tooltip: String,
-              val url: String
-            )
-          }
+//          data class Links(
+//            val primary: Primary,
+//            val secondary: List<Secondary>
+//          ) {
+//            data class Primary(
+//              val label: String,
+//              val url: String
+//            )
+//
+//            data class Secondary(
+//              val description: String,
+//              val icon: String,
+//              val label: String,
+//              val prioritized: Boolean,
+//              val tooltip: String,
+//              val url: String
+//            )
+//          }
         }
 
         data class Agent(

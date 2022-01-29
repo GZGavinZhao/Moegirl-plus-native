@@ -5,7 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.runtime.Composable
@@ -24,7 +27,8 @@ import com.moegirlviewer.component.articleView.ArticleCatalog
 import com.moegirlviewer.component.customDrawer.CustomDrawer
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.customDrawer.CustomDrawerSide
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.sideBorder
@@ -101,7 +105,7 @@ private fun ComposedHeader(
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically
   ) {
-    Text(
+    StyledText(
       text = stringResource(id = R.string.contents),
       color = themeColors.onPrimary,
       fontSize = 20.sp
@@ -141,7 +145,7 @@ private fun SectionItem(
       .clickable { onClick() },
     contentAlignment = Alignment.CenterStart,
   ) {
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(start = 3.dp + paddingLeft.dp),
       text = (if (level >= 3) "- " else "") + name,

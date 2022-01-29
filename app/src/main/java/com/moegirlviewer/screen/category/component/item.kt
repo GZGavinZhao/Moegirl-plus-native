@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,7 +19,8 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.moegirlviewer.R
 import com.moegirlviewer.api.category.bean.CategorySearchResultBean
 import com.moegirlviewer.component.RippleColorScope
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.text
 import java.lang.Float.max
 
 @Composable
@@ -48,7 +47,7 @@ fun CategoryScreenItem(
           .padding(10.dp),
         verticalArrangement = Arrangement.SpaceBetween
       ) {
-        Text(
+        StyledText(
           text = pageName,
           fontSize = 17.sp
         )
@@ -59,7 +58,7 @@ fun CategoryScreenItem(
               .padding(top = 10.dp)
           ) {
             for (item in categories) {
-              Text(
+              StyledText(
                 modifier = Modifier
                   .padding(end = 5.dp, bottom = 5.dp)
                   .clickable { onCategoryClick(item) }
@@ -92,7 +91,7 @@ fun CategoryScreenItem(
             .background(Color(0xffe2e2e2)),
           contentAlignment = Alignment.Center
         ) {
-          Text(
+          StyledText(
             text = stringResource(id = R.string.noImage),
             color = themeColors.text.secondary,
             fontSize = 18.sp

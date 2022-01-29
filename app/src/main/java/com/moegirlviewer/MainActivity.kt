@@ -11,7 +11,6 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.moegirlviewer.component.commonDialog.*
 import com.moegirlviewer.initialization.OnComposeCreate
 import com.moegirlviewer.initialization.initializeOnCreate
 import com.moegirlviewer.screen.article.ArticleRouteArguments
@@ -46,17 +45,13 @@ import com.moegirlviewer.screen.search.SearchScreen
 import com.moegirlviewer.screen.searchResult.SearchResultRouteArguments
 import com.moegirlviewer.screen.searchResult.SearchResultScreen
 import com.moegirlviewer.screen.settings.SettingsScreen
-import com.moegirlviewer.ui.theme.MoegirlPlusTheme
+import com.moegirlviewer.theme.MoegirlPlusTheme
 import com.moegirlviewer.util.*
 import com.moegirlviewer.util.RouteArguments.Companion.formattedArguments
 import com.moegirlviewer.util.RouteArguments.Companion.formattedRouteName
 import com.moegirlviewer.view.ComposeWithSplashScreenView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
-import java.util.*
 
 @AndroidEntryPoint
 @ExperimentalMaterialApi

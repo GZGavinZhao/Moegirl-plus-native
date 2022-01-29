@@ -5,7 +5,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -15,10 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -26,11 +21,10 @@ import androidx.compose.ui.unit.sp
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.PlainTextField
-import com.moegirlviewer.store.SearchRecord
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.autoFocus
-import com.moegirlviewer.util.toast
 
 @Composable
 fun ArticleScreenFindBar(
@@ -104,7 +98,7 @@ fun ArticleScreenFindBar(
               .padding(end = 2.dp),
             onClick = { onFindNext() }
           ) {
-            Text(
+            StyledText(
               text = stringResource(id = R.string.findNext),
               fontSize = 13.sp
             )

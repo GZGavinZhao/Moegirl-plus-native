@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
@@ -20,9 +19,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.category.CategoryScreenModal
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
@@ -52,7 +52,7 @@ fun SubCategoryList() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
       ) {
-        Text(
+        StyledText(
           text = stringResource(id = R.string.subCategoryList),
           color = themeColors.text.secondary
         )
@@ -88,7 +88,7 @@ fun SubCategoryList() {
                 contentDescription = null,
                 tint = themeColors.text.tertiary
               )
-              Text(
+              StyledText(
                 modifier = Modifier
                   .padding(start = 5.dp)
                   .noRippleClickable {
@@ -116,7 +116,7 @@ fun SubCategoryList() {
             ,
             contentAlignment = Alignment.Center
           ) {
-            Text(
+            StyledText(
               text = stringResource(id = R.string.loadMore),
               color = themeColors.secondary,
               fontSize = 15.sp

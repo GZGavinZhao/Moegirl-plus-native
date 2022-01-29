@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
@@ -64,7 +65,7 @@ class BrowsingHistoryScreenModel @Inject constructor() : ViewModel() {
   fun deleteRecord(record: BrowsingRecord) {
     Globals.commonAlertDialog.show(CommonAlertDialogProps(
       content = {
-        Text(
+        StyledText(
           text = Globals.context.getString(R.string.deleteBrowsingRecordHint)
         )
       },

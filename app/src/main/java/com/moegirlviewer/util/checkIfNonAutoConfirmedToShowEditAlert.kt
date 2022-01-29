@@ -1,9 +1,9 @@
 package com.moegirlviewer.util
 
-import androidx.compose.material.Text
 import com.moegirlviewer.R
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.UserGroup
 import kotlinx.coroutines.CompletableDeferred
@@ -23,7 +23,7 @@ suspend fun checkIfNonAutoConfirmedToShowEditAlert(
           onClick = { this.complete(false) }
         ),
         content = {
-          Text(Globals.context.getString(R.string.nonAutoConfirmedHint))
+          StyledText(Globals.context.getString(R.string.nonAutoConfirmedHint))
         }
       ))
     }.await()

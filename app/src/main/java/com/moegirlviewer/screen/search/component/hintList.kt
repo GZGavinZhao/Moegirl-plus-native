@@ -6,7 +6,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -18,14 +17,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.SearchApi
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
-import com.moegirlviewer.util.BorderSide
-import com.moegirlviewer.util.sideBorder
 import com.moegirlviewer.screen.search.SearchScreenModel
 import com.moegirlviewer.store.SearchRecord
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.printRequestErr
+import com.moegirlviewer.util.sideBorder
 import kotlinx.coroutines.launch
 
 @Composable
@@ -90,7 +90,7 @@ private fun Item(
         .padding(horizontal = 10.dp),
       contentAlignment = Alignment.CenterStart
     ) {
-      Text(
+      StyledText(
         text = text,
         color = themeColors.text.secondary,
         maxLines = 1,

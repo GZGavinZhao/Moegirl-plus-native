@@ -1,7 +1,6 @@
-package com.moegirlviewer.ui.theme
+package com.moegirlviewer.theme
 
 import androidx.compose.ui.graphics.Color
-import com.moegirlviewer.R
 
 val GreenPrimary = Color(0xFF4CAF50)
 val GreenLight = Color(0xffB9D5BA)

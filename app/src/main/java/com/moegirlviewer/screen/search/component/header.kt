@@ -1,8 +1,5 @@
 package com.moegirlviewer.screen.search.component
 
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -27,7 +24,7 @@ import com.moegirlviewer.component.PlainTextField
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.search.SearchScreenModel
 import com.moegirlviewer.store.SearchRecord
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.toast
 
 @Composable

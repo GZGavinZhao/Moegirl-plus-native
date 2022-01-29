@@ -5,7 +5,10 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Colors
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
@@ -21,11 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
-import com.moegirlviewer.util.BorderSide
-import com.moegirlviewer.util.sideBorder
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.search.SearchScreenModel
 import com.moegirlviewer.store.SearchRecordsStore
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.BorderSide
+import com.moegirlviewer.util.sideBorder
 import com.moegirlviewer.util.vibrate
 import kotlinx.coroutines.launch
 
@@ -57,7 +61,7 @@ private fun ColumnScope.ComposedEmpty() {
       .weight(1f),
     contentAlignment = Alignment.Center
   ) {
-    Text(
+    StyledText(
       text= stringResource(id = R.string.noSearchRecord),
       fontSize = 18.sp,
       color = themeColors.text.tertiary,
@@ -79,7 +83,7 @@ private fun ComposedHeader() {
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically
   ) {
-    Text(
+    StyledText(
       text = stringResource(id = R.string.recentSearch),
       color = themeColors.text.secondary,
       maxLines = 1,
@@ -153,7 +157,7 @@ private fun RecordItem(
     ,
     contentAlignment = Alignment.CenterStart
   ) {
-    Text(
+    StyledText(
       text = keyword,
       color = themeColors.text.secondary,
       maxLines = 1,

@@ -4,9 +4,11 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,13 +27,8 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
-import com.moegirlviewer.util.darken
-import com.moegirlviewer.util.lighten
-import com.moegirlviewer.util.toCssRgbaString
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.ProguardIgnore
-import com.moegirlviewer.util.noRippleClickable
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -173,7 +170,7 @@ fun ArticleView(
             border = BorderStroke(0.dp, Color.Transparent),
             onClick = { reloadContent() }
           ) {
-            Text(
+            StyledText(
               text = stringResource(R.string.reload),
               fontSize = 15.sp
             )

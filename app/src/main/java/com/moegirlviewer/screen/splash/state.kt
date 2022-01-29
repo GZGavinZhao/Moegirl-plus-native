@@ -1,16 +1,13 @@
 package com.moegirlviewer.screen.splash
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.withContext
 
 class SplashScreenState(
   // compose的动画需要compose的协程上下文
-  val composeCoroutineScope: CoroutineScope
+  private val composeCoroutineScope: CoroutineScope
 ) {
   internal val contentAlpha = Animatable(1f)
   internal val imageScale = Animatable(1.2f)

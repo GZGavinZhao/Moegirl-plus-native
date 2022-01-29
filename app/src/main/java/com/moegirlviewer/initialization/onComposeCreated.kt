@@ -1,12 +1,12 @@
 package com.moegirlviewer.initialization
 
-import androidx.compose.material.Text
 import androidx.core.net.toUri
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.app.AppApi
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.store.AccountStore
@@ -67,7 +67,7 @@ private suspend fun checkNewVersion() = coroutineScope {
   if (res.version != currentVersion && res.version != rejectedVersion) {
     Globals.commonAlertDialog.show(CommonAlertDialogProps(
       title = Globals.context.getString(R.string.hasNewVersionHint),
-      content = { Text(res.desc) },
+      content = { StyledText(res.desc) },
       secondaryButton = ButtonConfig.cancelButton(
         onClick = {
           coroutineScope.launch {

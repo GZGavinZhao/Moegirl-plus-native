@@ -3,6 +3,7 @@ package com.moegirlviewer.util
 import com.moegirlviewer.api.watchList.WatchListApi
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.room.watchingPage.WatchingPage
+import kotlinx.coroutines.delay
 
 suspend fun refreshWatchList(): Boolean {
   var continueKey: String? = null
@@ -21,6 +22,7 @@ suspend fun refreshWatchList(): Boolean {
       loadList()
       retryFlag = 0
       if (continueKey == null) retryFlag = 5
+      delay(3000)   // 手动间隔3秒，太快会被萌百block
     } catch (e: MoeRequestException) {
       retryFlag++
       printRequestErr(e)

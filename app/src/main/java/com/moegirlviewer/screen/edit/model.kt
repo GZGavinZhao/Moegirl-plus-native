@@ -2,7 +2,6 @@ package com.moegirlviewer.screen.edit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -23,8 +22,8 @@ import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.component.htmlWebView.HtmlWebView
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewContent
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
-import com.moegirlviewer.request.MoeRequestWikiException
 import com.moegirlviewer.request.MoeRequestTimeoutException
 import com.moegirlviewer.room.backupRecord.BackupRecord
 import com.moegirlviewer.room.backupRecord.BackupRecordType
@@ -167,7 +166,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
       Globals.commonAlertDialog2.show(CommonAlertDialogProps(
         title = Globals.context.getString(R.string.attention),
         closeOnDismiss = false,
-        content = { Text(stringResource(id = R.string.expiredBackupHint)) },
+        content = { StyledText(stringResource(id = R.string.expiredBackupHint)) },
         primaryButtonText = Globals.context.getString(R.string.confirmRecovery),
         secondaryButton = ButtonConfig(Globals.context.getString(R.string.back)),
         onPrimaryButtonClick = { restoreBackup() },
@@ -193,7 +192,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
       closeOnDismiss = false,
       closeOnAction = false,
       content = {
-        Text(stringResource(id = R.string.hasBackupHint, backupDateStr))
+        StyledText(stringResource(id = R.string.hasBackupHint, backupDateStr))
       },
       primaryButtonText = Globals.context.getString(R.string.recovery),
       secondaryButton = ButtonConfig(
@@ -274,7 +273,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
                   modifier = Modifier
                     .height((configuration.screenHeightDp * 0.6).dp),
                 ) {
-                  Text(stringResource(id = R.string.editFailedHint))
+                  StyledText(stringResource(id = R.string.editFailedHint))
                   HtmlWebView(
                     ref = htmlWebViewRef
                   )

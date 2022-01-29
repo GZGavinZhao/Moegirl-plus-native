@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,7 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.noRippleClickable
 
@@ -53,7 +53,7 @@ fun ScrollLoadListFooter(
     }
     LoadStatus.ALL_LOADED -> {
       Container {
-        Text(
+        StyledText(
           text = allLoadedText,
           color = themeColors.text.secondary,
           fontSize = fontSize
@@ -62,7 +62,7 @@ fun ScrollLoadListFooter(
     }
     LoadStatus.EMPTY -> {
       Container {
-        Text(
+        StyledText(
           text = emptyText,
           color = themeColors.text.secondary,
           fontSize = fontSize
@@ -71,7 +71,7 @@ fun ScrollLoadListFooter(
     }
     LoadStatus.FAIL -> {
       Container {
-        Text(
+        StyledText(
           modifier = Modifier
             .noRippleClickable { onReload?.invoke() },
           text = errorText,

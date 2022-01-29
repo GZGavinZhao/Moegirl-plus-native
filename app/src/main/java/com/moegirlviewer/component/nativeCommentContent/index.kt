@@ -1,20 +1,22 @@
 package com.moegirlviewer.component.nativeCommentContent
 
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
 import com.moegirlviewer.component.nativeCommentContent.util.*
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.navigate
 import com.moegirlviewer.util.openHttpUrl
 
@@ -89,24 +91,17 @@ fun NativeCommentContent(
     }
   }
 
-  var layoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
-  val pressIndicator = Modifier.pointerInput(textOnClickHandler) {
-    detectTapGestures { pos ->
-      textOnClickHandler(layoutResult!!.getOffsetForPosition(pos))
-    }
-  }
-
-
   CompositionLocalProvider(
     LocalTextStyle provides LocalTextStyle.current.copy(
       fontSize = 15.sp
     )
   ) {
-    Text(
-      modifier = modifier.then(pressIndicator),
+    StyledText(
       inlineContent = inlineContentMap,
       text = annotatedString,
-      onTextLayout = { layoutResult = it }
+      onClick = {
+        textOnClickHandler(it)
+      }
     )
   }
 }

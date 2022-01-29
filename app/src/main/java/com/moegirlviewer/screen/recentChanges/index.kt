@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatIndentDecrease
 import androidx.compose.material.icons.filled.Tune
@@ -24,11 +23,12 @@ import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.recentChanges.component.RecentChangesItem
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.ui.theme.background2
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import kotlinx.coroutines.delay
@@ -64,10 +64,11 @@ fun RecentChangesScreen() {
           BackButton()
         },
         title = {
-          Text(
+          StyledText(
             text = stringResource(id = R.string.recentChanges),
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            color = themeColors.onPrimary
           )
         },
         actions = {
@@ -112,7 +113,7 @@ fun RecentChangesScreen() {
         ) { _, adapter ->
           when(adapter) {
             is DateTitleItemAdapter -> {
-              Text(
+              StyledText(
                 modifier = Modifier
                   .padding(top = 7.dp, bottom = 8.dp, start = 10.dp),
                 text = adapter.dateTitle,

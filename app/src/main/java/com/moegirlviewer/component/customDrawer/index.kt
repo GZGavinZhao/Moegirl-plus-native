@@ -1,6 +1,5 @@
 package com.moegirlviewer.component.customDrawer
 
-import android.util.Log
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -141,7 +140,6 @@ fun CustomDrawer(
           modifier = Modifier
             .width(width)
             .fillMaxHeight()
-            .background(themeColors.background)
         ) {
           Surface(
             modifier = Modifier

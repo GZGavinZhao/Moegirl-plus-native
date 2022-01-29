@@ -1,6 +1,7 @@
 package com.moegirlviewer.api.edit.bean
 
 import com.google.gson.annotations.SerializedName
+import org.w3c.dom.Text
 
 data class EditPreviewBean(
   val parse: Parse

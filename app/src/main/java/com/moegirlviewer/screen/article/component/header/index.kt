@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Text
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
@@ -20,6 +20,7 @@ import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.article.ArticleScreenModel
 import com.moegirlviewer.store.AccountStore
@@ -33,6 +34,7 @@ fun ArticleScreenHeader(
   visible: Boolean,
   onAction: (action: MoreMenuAction) -> Unit,
 ) {
+  val themeColors = MaterialTheme.colors
   val transition = updateTransition(visible)
   var visibleMoreMenu by remember { mutableStateOf(false) }
   
@@ -64,12 +66,13 @@ fun ArticleScreenHeader(
         )
       },
       title = {
-        Text(
+        StyledText(
           modifier = Modifier
             .alpha(contentAlpha),
           text = title,
           overflow = TextOverflow.Ellipsis,
-          maxLines = 1
+          maxLines = 1,
+          color = themeColors.onPrimary
         )
       },
       actions = {
@@ -111,6 +114,7 @@ private fun MoreMenu(
   onDismiss: () -> Unit,
 ) {
   val model: ArticleScreenModel = hiltViewModel()
+  val themeColors = MaterialTheme.colors
   val isLoggedIn by AccountStore.isLoggedIn.collectAsState(initial = false)
 
   @Composable
@@ -123,7 +127,7 @@ private fun MoreMenu(
       enabled = enabled,
       onClick = { onAction(action) }
     ) {
-      Text(text)
+      StyledText(text)
     }
   }
 

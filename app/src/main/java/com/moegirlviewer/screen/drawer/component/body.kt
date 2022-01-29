@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatIndentDecrease
 import androidx.compose.material.icons.filled.Forum
@@ -24,10 +23,11 @@ import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.contribution.ContributionRouteArguments
 import com.moegirlviewer.store.AccountStore
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.isMoegirl
 import com.moegirlviewer.util.navigate
@@ -126,7 +126,7 @@ private fun Item(
       tint = themeColors.secondary
     )
 
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(start = 20.dp),
       text = text,

@@ -1,6 +1,5 @@
 package com.moegirlviewer.screen.captcha
 
-import androidx.compose.material.Text
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
@@ -11,6 +10,7 @@ import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewContent
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.commonOkHttpClient
 import com.moegirlviewer.screen.home.HomeScreenModel
 import com.moegirlviewer.util.CachedWebViews
@@ -98,7 +98,7 @@ class CaptchaScreenModel @Inject constructor() : ViewModel() {
             refreshCaptcha()
           },
           content = {
-            Text(stringResource(id = R.string.txCaptchaExitHint))
+            StyledText(stringResource(id = R.string.txCaptchaExitHint))
           }
         )
       )

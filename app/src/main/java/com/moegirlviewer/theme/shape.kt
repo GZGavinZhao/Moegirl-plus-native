@@ -1,4 +1,4 @@
-package com.moegirlviewer.ui.theme
+package com.moegirlviewer.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

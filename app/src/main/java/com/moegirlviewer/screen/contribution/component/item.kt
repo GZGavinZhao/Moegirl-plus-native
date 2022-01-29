@@ -1,35 +1,29 @@
 package com.moegirlviewer.screen.contribution.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
-import com.moegirlviewer.Constants
 import com.moegirlviewer.R
-import com.moegirlviewer.component.UserTail
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.compare.ComparePageRouteArguments
 import com.moegirlviewer.screen.pageRevisions.PageRevisionsRouteArguments
-import com.moegirlviewer.ui.theme.GreenPrimary
-import com.moegirlviewer.ui.theme.RedAccent
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.GreenPrimary
+import com.moegirlviewer.theme.RedAccent
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import java.time.format.DateTimeFormatter
 
@@ -86,14 +80,14 @@ private fun ComposedTitle(
     verticalAlignment = Alignment.CenterVertically
   ) {
     if (diffSize != null) {
-      Text(
+      StyledText(
         text = (if (diffSize > 0) "+" else "") + diffSize,
         color = if (diffSize >= 0) GreenPrimary else RedAccent,
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold
       )
     } else {
-      Text(
+      StyledText(
         text = "?",
         color = themeColors.text.secondary,
         fontSize = 16.sp,
@@ -101,7 +95,7 @@ private fun ComposedTitle(
       )
     }
 
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(start = 5.dp)
         .noRippleClickable { gotoArticlePage(pageName) },
@@ -123,7 +117,7 @@ private fun SummaryContent(
       .fillMaxWidth(),
     contentAlignment = Alignment.Center
   ) {
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(top = 5.dp, start = 10.dp, end = 25.dp),
       fontSize = 14.sp,
@@ -169,7 +163,7 @@ private fun ComposedFooter(
     Row(
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Text(
+      StyledText(
         modifier = Modifier
           .noRippleClickable {
             Globals.navController.navigate(ComparePageRouteArguments(
@@ -183,13 +177,13 @@ private fun ComposedFooter(
         color = themeColors.secondary
       )
 
-      Text(
+      StyledText(
         text = " | ",
         color = themeColors.text.tertiary,
         fontSize = 13.sp,
       )
 
-      Text(
+      StyledText(
         modifier = Modifier
           .noRippleClickable {
             Globals.navController.navigate(PageRevisionsRouteArguments(
@@ -202,7 +196,7 @@ private fun ComposedFooter(
       )
     }
 
-    Text(
+    StyledText(
       text = remember(dateISO) {
         parseMoegirlNormalTimestamp(dateISO).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
       },

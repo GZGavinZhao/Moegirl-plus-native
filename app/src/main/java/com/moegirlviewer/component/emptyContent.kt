@@ -1,11 +1,8 @@
 package com.moegirlviewer.component
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,8 +13,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
-import com.moegirlviewer.ui.theme.text
-import com.moegirlviewer.util.Globals
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.text
 
 @Composable
 private fun defaultEmptyContentHeight() = LocalConfiguration.current.screenHeightDp - 56
@@ -45,7 +42,7 @@ fun EmptyContent(
       contentDescription = null,
     )
 
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(top = 20.dp),
       text = message,

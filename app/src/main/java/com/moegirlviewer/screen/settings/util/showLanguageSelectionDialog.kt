@@ -54,7 +54,7 @@ import kotlinx.coroutines.launch
 //              coroutineScope.launch { selectedLanguage = value }
 //            }
 //          )
-//          Text(
+//          StyledText(
 //            text = title
 //          )
 //        }

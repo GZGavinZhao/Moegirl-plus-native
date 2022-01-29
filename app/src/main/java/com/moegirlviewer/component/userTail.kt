@@ -3,7 +3,6 @@ package com.moegirlviewer.component
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -12,8 +11,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.contribution.ContributionRouteArguments
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.navigate
@@ -33,21 +33,21 @@ fun UserTail(
     CompositionLocalProvider(
       LocalTextStyle provides textStyle
     ) {
-      Text(
+      StyledText(
         text = " (",
         color = themeColors.text.secondary
       )
-      Text(
+      StyledText(
         modifier = Modifier
           .noRippleClickable { gotoArticlePage("User_talk:$userName") },
         text = stringResource(id = R.string.talk),
         color = themeColors.secondary
       )
-      Text(
+      StyledText(
         text = " | ",
         color = themeColors.text.tertiary
       )
-      Text(
+      StyledText(
         modifier = Modifier
           .noRippleClickable {
             Globals.navController.navigate(ContributionRouteArguments(userName = userName))
@@ -55,7 +55,7 @@ fun UserTail(
         text = stringResource(id = R.string.contribution),
         color = themeColors.secondary
       )
-      Text(
+      StyledText(
         text = ")",
         color = themeColors.text.secondary
       )

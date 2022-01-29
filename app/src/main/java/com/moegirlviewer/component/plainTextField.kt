@@ -2,23 +2,18 @@ package com.moegirlviewer.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.LocalTextSelectionColors
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -26,8 +21,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.moegirlviewer.ui.theme.background2
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.text
 
 @Composable
 fun PlainTextField(
@@ -179,12 +174,15 @@ private fun TextFieldDecoration(
   val underlineColor by animateColorAsState(if (focused) themeColors.secondary else themeColors.text.tertiary)
 
   Column() {
-    Box() {
+    Box(
+      contentAlignment = Alignment.CenterStart
+    ) {
       content()
       if (textLength == 0 && placeholder != null) {
-        Text(
+        StyledText(
           text = placeholder,
-          style = placeholderStyle
+          style = placeholderStyle,
+          color = themeColors.text.tertiary,
         )
       }
     }
@@ -204,7 +202,7 @@ private fun TextFieldDecoration(
           .fillMaxWidth(),
         contentAlignment = Alignment.BottomEnd
       ) {
-        Text(
+        StyledText(
           text = "${textLength}/${maxLength}",
           fontSize = 12.sp,
           color = underlineColor

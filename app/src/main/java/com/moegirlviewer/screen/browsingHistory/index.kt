@@ -7,9 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddComment
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,7 +15,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,17 +22,15 @@ import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
 import com.moegirlviewer.screen.browsingHistory.component.BrowsingHistoryScreenItem
-import com.moegirlviewer.ui.theme.background2
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.vibrate
-import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 @ExperimentalFoundationApi
 @Composable
@@ -93,7 +88,7 @@ fun BrowsingHistoryScreen() {
           modifier = Modifier.fillMaxSize(),
           contentAlignment = Alignment.Center
         ) {
-          Text(
+          StyledText(
             text = stringResource(id = R.string.noRecord),
             fontSize = 18.sp,
             color = themeColors.text.tertiary
@@ -116,13 +111,16 @@ fun BrowsingHistoryScreen() {
 
 @Composable
 private fun ComposedHeader() {
+  val themeColors = MaterialTheme.colors
+
   StyledTopAppBar(
     navigationIcon = {
       BackButton()
     },
     title = {
-      Text(
+      StyledText(
         text = stringResource(id = R.string.browseHistory),
+        color = themeColors.onPrimary
       )
     },
     actions = {
@@ -147,7 +145,7 @@ private fun Title(
       .fillMaxWidth()
       .padding(bottom = 10.dp, top = 5.dp)
   ) {
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(start = 5.dp),
       text = text,

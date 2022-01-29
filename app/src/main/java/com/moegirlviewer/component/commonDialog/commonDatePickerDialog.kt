@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,12 +13,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import com.moegirlviewer.R
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.util.toEpochMilli
 import kotlinx.coroutines.CompletableDeferred
 import java.time.LocalDate
@@ -102,7 +101,7 @@ fun CommonDatePickerDialog(
               state.onCheck?.invoke()
             }
           ) {
-            Text(
+            StyledText(
               text = stringResource(id = R.string.check),
               color = themeColors.onPrimary
             )

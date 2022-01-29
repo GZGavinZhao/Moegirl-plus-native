@@ -4,8 +4,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
@@ -13,12 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.settings.component.SettingsScreenItem
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommonSettings
 import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.gotoUserPage
 import kotlinx.coroutines.launch
 
@@ -46,7 +53,10 @@ fun SettingsScreen() {
     topBar = {
       StyledTopAppBar(
         title = {
-          Text(stringResource(id = R.string.settings))
+          StyledText(
+            text = stringResource(id = R.string.settings),
+            color = themeColors.onPrimary
+          )
         }
       )
     }
@@ -155,7 +165,7 @@ fun SettingsScreen() {
           gotoUserPage("東東君")
         }
       ) {
-        Text(
+        StyledText(
           text = "User:東東君",
           fontSize = 14.sp,
           color = themeColors.secondary,
@@ -170,7 +180,7 @@ fun SettingsScreen() {
 private fun Title(stringResourceId: Int) {
   val themeColors = MaterialTheme.colors
 
-  Text(
+  StyledText(
     modifier = Modifier
       .padding(top = 10.dp, start = 10.dp, bottom = 5.dp),
     text = stringResource(id = stringResourceId),

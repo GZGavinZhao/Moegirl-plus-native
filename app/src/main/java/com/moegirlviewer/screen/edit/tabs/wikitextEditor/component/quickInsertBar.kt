@@ -6,8 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -17,7 +16,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.sideBorder
@@ -115,7 +115,7 @@ private fun Item(
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       if (title != null) {
-        Text(
+        StyledText(
           text = title,
           color = themeColors.text.secondary,
         )
@@ -130,7 +130,7 @@ private fun Item(
       }
 
       if (subtitle != null) {
-        Text(
+        StyledText(
           text = subtitle,
           fontSize = 9.sp,
           color = themeColors.text.secondary,

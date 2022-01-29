@@ -14,8 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.insets.imePadding
-import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.moegirlviewer.R
@@ -23,6 +21,7 @@ import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.edit.tabs.preview.EditScreenPreview
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.EditScreenWikitextEditor
@@ -68,7 +67,7 @@ fun EditScreen(arguments: EditRouteArguments) {
   
   BackHandler(model.wikitextTextFieldValue.text != model.originalWikiText) {
     Globals.commonAlertDialog.show(CommonAlertDialogProps(
-      content = { Text(stringResource(id = R.string.editleaveHint)) },
+      content = { StyledText(stringResource(id = R.string.editleaveHint)) },
       secondaryButton = ButtonConfig.cancelButton(),
       onPrimaryButtonClick = {
         Globals.navController.popBackStack()
@@ -111,6 +110,7 @@ private fun ComposedHeader(
   editType: EditType
 ) {
   val model: EditScreenModel = hiltViewModel()
+  val themeColors = MaterialTheme.colors
 
   LaunchedEffect(model.selectedTabIndex) {
     model.pagerState.animateScrollToPage(model.selectedTabIndex)
@@ -133,10 +133,11 @@ private fun ComposedHeader(
     Column() {
       StyledTopAppBar(
         title = {
-          Text(
+          StyledText(
             text = "$actionName：$pageName",
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            color = themeColors.onPrimary
           )
         },
         actions = {

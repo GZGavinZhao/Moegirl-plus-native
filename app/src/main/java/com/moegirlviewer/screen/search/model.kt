@@ -1,6 +1,5 @@
 package com.moegirlviewer.screen.search
 
-import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,12 +8,13 @@ import androidx.lifecycle.ViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
-import com.moegirlviewer.util.navigate
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.searchResult.SearchResultRouteArguments
 import com.moegirlviewer.store.SearchRecord
 import com.moegirlviewer.store.SearchRecordsStore
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -49,7 +49,7 @@ class SearchScreenModel @Inject constructor() : ViewModel()  {
         coroutineScope.launch { SearchRecordsStore.clearRecord() }
       }
     ) {
-      Text(stringResource(id = R.string.delAllSearchRecordHint))
+      StyledText(stringResource(id = R.string.delAllSearchRecordHint))
     })
   }
 
@@ -60,7 +60,7 @@ class SearchScreenModel @Inject constructor() : ViewModel()  {
         coroutineScope.launch { SearchRecordsStore.removeRecord(keyword) }
       }
     ) {
-      Text(stringResource(id = R.string.delSingleSearchRecordHint))
+      StyledText(stringResource(id = R.string.delSingleSearchRecordHint))
     })
   }
 

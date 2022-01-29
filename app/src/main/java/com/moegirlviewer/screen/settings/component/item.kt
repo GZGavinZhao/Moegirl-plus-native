@@ -4,15 +4,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.moegirlviewer.ui.theme.background2
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.background2
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.sideBorder
 
@@ -42,14 +42,14 @@ fun SettingsScreenItem(
         modifier = Modifier
           .weight(1f),
       ) {
-        Text(
+        StyledText(
           text = title,
           color = themeColors.text.primary,
           style = titleStyle,
           fontSize = 15.sp
         )
         if (subtext != null) {
-          Text(
+          StyledText(
             modifier = Modifier
               .padding(top = 3.dp),
             text = subtext,

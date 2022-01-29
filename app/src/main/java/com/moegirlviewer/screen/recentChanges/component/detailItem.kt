@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,10 +23,11 @@ import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.UserTail
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.compare.ComparePageRouteArguments
-import com.moegirlviewer.ui.theme.GreenPrimary
-import com.moegirlviewer.ui.theme.RedAccent
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.GreenPrimary
+import com.moegirlviewer.theme.RedAccent
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import java.time.format.DateTimeFormatter
 
@@ -96,7 +96,7 @@ fun ComposedHeader(
     verticalAlignment = Alignment.CenterVertically
   ) {
     if (type != "log") {
-      Text(
+      StyledText(
         text = (if (diffSize > 0) "+" else "") + diffSize,
         color = if (diffSize >= 0) GreenPrimary else RedAccent,
         fontWeight = FontWeight.Bold,
@@ -104,7 +104,7 @@ fun ComposedHeader(
       )
     }
 
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(end = 5.dp),
       text = titlePrefix,
@@ -126,7 +126,7 @@ fun ComposedHeader(
         painter = rememberImagePainter(Constants.avatarUrl + userName),
         contentDescription = null
       )
-      Text(
+      StyledText(
         text = userName,
         color = themeColors.text.secondary,
         fontSize = 13.sp,
@@ -144,7 +144,7 @@ private fun SummaryContent(
 ) {
   val themeColors = MaterialTheme.colors
 
-  Text(
+  StyledText(
     modifier = Modifier
       .padding(top = 5.dp, start = 10.dp, end = 25.dp),
     fontSize = 14.sp,
@@ -192,7 +192,7 @@ private fun ComposedFooter(
       verticalAlignment = Alignment.CenterVertically
     ) {
       if (visibleCurrentCompareButton) {
-        Text(
+        StyledText(
           modifier = Modifier
             .noRippleClickable {
               Globals.navController.navigate(ComparePageRouteArguments(
@@ -207,7 +207,7 @@ private fun ComposedFooter(
       }
 
       if (visibleCurrentCompareButton && visiblePrevCompareButton) {
-        Text(
+        StyledText(
           text = " | ",
           color = themeColors.text.tertiary,
           fontSize = 13.sp,
@@ -215,7 +215,7 @@ private fun ComposedFooter(
       }
 
       if (visiblePrevCompareButton) {
-        Text(
+        StyledText(
           modifier = Modifier
             .noRippleClickable {
               Globals.navController.navigate(ComparePageRouteArguments(
@@ -231,7 +231,7 @@ private fun ComposedFooter(
       }
     }
 
-    Text(
+    StyledText(
       text = remember(dateISO) {
         parseMoegirlNormalTimestamp(dateISO).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
       },

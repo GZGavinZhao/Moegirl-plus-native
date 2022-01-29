@@ -1,25 +1,22 @@
 package com.moegirlviewer.screen.drawer.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SubdirectoryArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.R
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.noRippleClickable
 
@@ -56,7 +53,7 @@ fun CommonDrawerFooter(
         tint = themeColors.text.secondary
       )
 
-      Text(
+      StyledText(
         text = stringResource(R.string.settings),
         color = themeColors.text.secondary
       )
@@ -88,7 +85,7 @@ fun CommonDrawerFooter(
         tint = themeColors.text.secondary
       )
 
-      Text(
+      StyledText(
         text = stringResource(R.string.exitApp),
         color = themeColors.text.secondary
       )

@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.runtime.Composable
@@ -20,9 +19,10 @@ import com.moegirlviewer.compable.OnSwipeLoading
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.notification.component.NotificationScreenItem
-import com.moegirlviewer.ui.theme.background2
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.gotoArticlePage
 import kotlinx.coroutines.launch
@@ -97,10 +97,14 @@ fun NotificationScreen() {
 private fun ComposedHeader() {
   val model: NotificationScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
+  val themeColors = MaterialTheme.colors
 
   StyledTopAppBar(
     title = {
-      Text(stringResource(id = R.string.notification))
+      StyledText(
+        text = stringResource(id = R.string.notification),
+        color = themeColors.onPrimary
+      )
     },
     actions = {
       AppHeaderIcon(

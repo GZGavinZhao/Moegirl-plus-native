@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,12 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.OnSwipeLoading
-import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.RippleColorScope
+import com.moegirlviewer.component.ScrollLoadListFooter
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.searchResult.component.SearchResultItem
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.navigate
@@ -61,7 +61,7 @@ fun SearchResultScreen(
         elevation = 3.dp,
         statusBarDarkIcons = themeColors.isLight,
         title = {
-          Text(
+          StyledText(
             text = stringResource(id = R.string.search) + "：" + arguments.keyword,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -82,7 +82,7 @@ fun SearchResultScreen(
             enter = fadeIn(),
             exit = fadeOut()
           ) {
-            Text(
+            StyledText(
               modifier = Modifier
                 .padding(top = 10.dp, bottom = 3.dp, start = 10.dp, end = 10.dp),
               text = stringResource(id = R.string.searchResultTotal, model.resultTotal),

@@ -9,11 +9,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -22,9 +20,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.comment.CommentRouteArguments
 import com.moegirlviewer.store.CommentStore
-import com.moegirlviewer.store.PageComments
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
@@ -119,7 +117,7 @@ private fun ButtonBody(
         modifier = Modifier
           .offset(0.dp, 15.dp)
       ) {
-        Text(
+        StyledText(
           text = text,
           color = themeColors.onPrimary,
           fontSize = 13.sp,

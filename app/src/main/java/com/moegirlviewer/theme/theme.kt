@@ -1,16 +1,19 @@
-package com.moegirlviewer.ui.theme
+package com.moegirlviewer.theme
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.*
+import androidx.compose.material.Colors
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import com.moegirlviewer.util.darken
-import com.moegirlviewer.util.lighten
 import com.moegirlviewer.util.isMoegirl
+import com.moegirlviewer.util.lighten
 
 @SuppressLint("ConflictingOnColor")
 private val MoegirlLightColorPalette = lightColors(
@@ -105,6 +108,7 @@ fun MoegirlPlusTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit
 ) {
+  val themeColors = MaterialTheme.colors
   val colors = isMoegirl(
     if (isUseDarkMode()) MoegirlDarkColorPalette else MoegirlLightColorPalette,
     if (isUseDarkMode()) HmoeDarkColorPalette else HmoeLightColorPalette
@@ -134,7 +138,7 @@ enum class ColorThemes {
 
 @Composable
 private fun isUseDarkMode(): Boolean {
-// 目前compose的text组件对于黑暗模式下仍旧使用浅色主题的适配好像有问题，设置的黑色会被处理得很浅，这里先注释
+// 目前compose的text组件对于黑暗模式下仍旧使用浅色主题的适配好像有问题，无论主题是否是light类型，文字都会被强制反转色相，这里先注释
 //  val darkThemeBySystem by SettingsStore.common.getValue { this.darkThemeBySystem }.collectAsState(initial = false)
 //  return isSystemInDarkTheme() && darkThemeBySystem
   return isSystemInDarkTheme()

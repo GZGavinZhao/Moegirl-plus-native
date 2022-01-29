@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -21,6 +20,7 @@ import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
 import com.moegirlviewer.component.articleView.ArticleViewRef
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.article.component.catalog.ArticleScreenCatalog
 import com.moegirlviewer.screen.edit.EditScreenModel
 import com.moegirlviewer.util.LoadStatus
@@ -76,7 +76,7 @@ fun EditScreenPreview() {
           TextButton(
             onClick = {}
           ) {
-            Text(stringResource(id = R.string.reload))
+            StyledText(stringResource(id = R.string.reload))
           }
         } else {
           StyledCircularProgressIndicator()

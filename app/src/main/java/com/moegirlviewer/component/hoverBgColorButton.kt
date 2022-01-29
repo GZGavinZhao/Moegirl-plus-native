@@ -1,6 +1,5 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor.component
 
-import android.view.MotionEvent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -10,10 +9,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.pointerInteropFilter
-import com.moegirlviewer.ui.theme.background2
+import com.moegirlviewer.theme.background2
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable

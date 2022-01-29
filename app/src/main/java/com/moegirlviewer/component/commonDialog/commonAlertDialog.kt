@@ -1,16 +1,15 @@
 package com.moegirlviewer.component.commonDialog
 
-import android.app.Dialog
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -21,7 +20,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.moegirlviewer.R
 import com.moegirlviewer.component.BackHandler
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.visibility
 
@@ -65,7 +65,7 @@ fun CommonAlertDialog(
       show = { show(it) },
       showText = {
         show(CommonAlertDialogProps(
-          content = { Text(it) }
+          content = { StyledText(it) }
         ))
       },
       hide = { hide() }
@@ -141,7 +141,7 @@ fun CommonAlertDialogUI(
           modifier = Modifier
             .padding(horizontal = 20.dp)
         ) {
-          Text(
+          StyledText(
             modifier = Modifier
               .padding(vertical = 18.dp),
             text = title ?: stringResource(id = R.string.alert),
@@ -172,7 +172,7 @@ fun CommonAlertDialogUI(
               if (closeOnAction) onRequestClose?.invoke()
             },
           ) {
-            Text(
+            StyledText(
               text = leftButton?.text ?: "",
               fontWeight = FontWeight.Bold,
             )
@@ -188,7 +188,7 @@ fun CommonAlertDialogUI(
                   if (closeOnAction) onRequestClose?.invoke()
                 }
               ) {
-                Text(
+                StyledText(
                   text = secondaryButton.text,
                   fontWeight = FontWeight.Bold,
                   color = themeColors.text.secondary
@@ -199,7 +199,7 @@ fun CommonAlertDialogUI(
             TextButton(
               onClick = onPrimaryButtonClick
             ) {
-              Text(
+              StyledText(
                 text = primaryButtonText ?: stringResource(R.string.check),
                 fontWeight = FontWeight.Bold,
                 color = themeColors.secondary

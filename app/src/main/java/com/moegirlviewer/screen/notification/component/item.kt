@@ -8,13 +8,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Badge
 import androidx.compose.material.BadgedBox
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -25,9 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.notification.Notification
-import com.moegirlviewer.ui.theme.text
-import com.moegirlviewer.util.*
+import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.diffNowDate
+import com.moegirlviewer.util.gotoUserPage
+import com.moegirlviewer.util.noRippleClickable
+import com.moegirlviewer.util.parseMoegirlNormalTimestamp
 
 @Composable
 fun NotificationScreenItem(
@@ -75,18 +75,18 @@ fun NotificationScreenItem(
         .padding(start = 5.dp)
         .weight(1f)
     ) {
-      Text(
+      StyledText(
         text = notification._asterisk.header.toAnnotatedStringOfNotification(),
         fontSize = 14.sp
       )
-      Text(
+      StyledText(
         modifier = Modifier
           .padding(top = 5.dp),
         text = bodyText,
         fontSize = 13.sp,
         color = themeColors.text.secondary
       )
-      Text(
+      StyledText(
         modifier = Modifier
           .fillMaxWidth(),
         text = diffNowDate(parseMoegirlNormalTimestamp(notification.timestamp.utciso8601)),

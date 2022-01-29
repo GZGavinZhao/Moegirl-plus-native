@@ -1,9 +1,14 @@
 package com.moegirlviewer.screen.compare.component
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
@@ -23,10 +28,11 @@ import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.UserTail
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.compare.util.DiffLine
 import com.moegirlviewer.screen.compare.util.DiffRowContentType
 import com.moegirlviewer.screen.compare.util.DiffRowMarker
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.gotoUserPage
 import com.moegirlviewer.util.noRippleClickable
@@ -82,7 +88,7 @@ private fun ComposedHeader(
         contentDescription = null
       )
 
-      Text(
+      StyledText(
         modifier = Modifier
           .padding(start = 5.dp)
           .noRippleClickable { gotoUserPage(userName) },
@@ -98,7 +104,7 @@ private fun ComposedHeader(
       modifier = Modifier
         .padding(10.dp)
     ) {
-      Text(
+      StyledText(
         text = if (comment != null)
           "${stringResource(id = R.string.summary)}：$comment" else
           "（${stringResource(id = R.string.noSummary)}）",
@@ -124,7 +130,7 @@ private fun ColumnScope.DiffContentBody(
       modifier = Modifier
         .weight(1f)
     ) {
-      Text(
+      StyledText(
         text = stringResource(id = R.string.noDiff),
         fontSize = 18.sp,
         color = themeColors.text.tertiary
@@ -134,7 +140,7 @@ private fun ColumnScope.DiffContentBody(
   Column() {
     diffLines.forEachIndexed { _, line ->
       Column() {
-        Text(
+        StyledText(
           text = line.lineHint
         )
         Spacer(modifier = Modifier
@@ -174,7 +180,7 @@ private fun ColumnScope.DiffContentBody(
                 .sideBorder(BorderSide.LEFT, 5.dp, usingBorderColors[row.marker]!!)
                 .padding(start = 5.dp, top = 3.dp, bottom = 3.dp)
             ) {
-              Text(
+              StyledText(
                 fontSize = 14.sp,
                 text = buildAnnotatedString {
                   for (content in row.content) {

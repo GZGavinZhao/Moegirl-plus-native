@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -19,9 +18,10 @@ import com.moegirlviewer.compable.OnSwipeLoading
 import com.moegirlviewer.component.EmptyContent
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.pageRevisions.component.RevisionItem
-import com.moegirlviewer.ui.theme.background2
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.LoadStatus
 import kotlinx.coroutines.launch
 
@@ -49,10 +49,11 @@ fun PageVersionHistoryScreen(arguments: PageRevisionsRouteArguments) {
     topBar = {
       StyledTopAppBar(
         title = {
-          Text(
+          StyledText(
             text = stringResource(id = R.string.versionHistory) + "：" + arguments.pageName,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            color = themeColors.onPrimary
           )
         }
       )

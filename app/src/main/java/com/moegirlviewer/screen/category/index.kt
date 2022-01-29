@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.runtime.Composable
@@ -32,14 +30,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.OnSwipeLoading
 import com.moegirlviewer.component.BackButton
-import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.ListWithMovableHeader
 import com.moegirlviewer.component.RippleColorScope
+import com.moegirlviewer.component.ScrollLoadListFooter
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.category.component.CategoryScreenItem
 import com.moegirlviewer.screen.category.component.SubCategoryList
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.navigate
@@ -100,7 +99,7 @@ fun CategoryScreen(
               }
             }
 
-            ClickableText(
+            StyledText(
               modifier = Modifier
                 .padding(top = 5.dp, start = 10.dp),
               style = TextStyle(
@@ -178,10 +177,11 @@ private fun ComposedHeader(
         BackButton()
       },
       title = {
-        Text(
+        StyledText(
           text = "${stringResource(id = R.string.category)}：${categoryName}",
           maxLines = 1,
-          overflow = TextOverflow.Ellipsis
+          overflow = TextOverflow.Ellipsis,
+          color = themeColors.onPrimary
         )
       },
     )
@@ -210,7 +210,7 @@ private fun ComposedHeader(
               .padding(horizontal = 17.dp),
             contentAlignment = Alignment.Center
           ) {
-            Text(
+            StyledText(
               text = item,
               color = themeColors.onPrimary
             )

@@ -1,17 +1,13 @@
 package com.moegirlviewer.screen.recentChanges.util
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -25,10 +21,11 @@ import com.moegirlviewer.component.CapsuleCheckbox
 import com.moegirlviewer.component.ComposeSlider
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.RecentChangesSettings
 import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.first
@@ -44,7 +41,7 @@ suspend fun showRecentChangesOptionsDialog(): RecentChangesSettings? {
       val isLoggedIn by AccountStore.isLoggedIn.collectAsState(initial = false)
 
       Column() {
-        Text(
+        StyledText(
           fontSize = 16.sp,
           color = themeColors.text.secondary,
           text = buildAnnotatedString {
@@ -68,7 +65,7 @@ suspend fun showRecentChangesOptionsDialog(): RecentChangesSettings? {
           }
         )
 
-        Text(
+        StyledText(
           fontSize = 16.sp,
           color = themeColors.text.secondary,
           text = buildAnnotatedString {
@@ -92,7 +89,7 @@ suspend fun showRecentChangesOptionsDialog(): RecentChangesSettings? {
           }
         )
 
-        Text(
+        StyledText(
           text = stringResource(id = R.string.changeType),
           color = themeColors.text.secondary
         )

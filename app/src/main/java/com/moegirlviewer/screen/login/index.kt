@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -25,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.RippleColorScope
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.login.component.LoginScreenTextField
 import com.moegirlviewer.util.imeBottomPadding
 import com.moegirlviewer.util.isMoegirl
@@ -38,7 +38,6 @@ fun LoginScreen() {
   val scope = rememberCoroutineScope()
 
   Scaffold() {
-
     RippleColorScope(Color.White) {
       Box(
         modifier = Modifier
@@ -60,7 +59,7 @@ fun LoginScreen() {
 
         Column(
           modifier = Modifier
-            .width(300.dp),
+            .width(280.dp),
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
           Image(
@@ -71,7 +70,7 @@ fun LoginScreen() {
             contentDescription = null,
           )
 
-          Text(
+          StyledText(
             modifier = Modifier
               .padding(vertical = 10.dp),
             text = stringResource(R.string.moegirlSloganText),
@@ -81,7 +80,8 @@ fun LoginScreen() {
 
           LoginScreenTextField(
             modifier = Modifier
-              .padding(vertical = 8.dp),
+              .padding(vertical = 8.dp)
+              .fillMaxWidth(),
             value = model.userName,
             label = stringResource(R.string.userName),
             onValueChange = { model.userName = it }
@@ -89,7 +89,8 @@ fun LoginScreen() {
 
           LoginScreenTextField(
             modifier = Modifier
-              .padding(top = 10.dp),
+              .padding(top = 10.dp)
+              .fillMaxWidth(),
             value = model.password,
             label = stringResource(R.string.password),
             password = true,
@@ -108,13 +109,13 @@ fun LoginScreen() {
             ,
             contentAlignment = Alignment.Center
           ) {
-            Text(
+            StyledText(
               text = stringResource(R.string.login),
               color = Color.White,
             )
           }
 
-          Text(
+          StyledText(
             modifier = Modifier
               .padding(top = 10.dp)
               .noRippleClickable { openHttpUrl(Constants.registerUrl) },

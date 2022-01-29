@@ -1,15 +1,15 @@
 package com.moegirlviewer.screen.comment
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddComment
 import androidx.compose.runtime.*
@@ -24,12 +24,12 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.OnSwipeLoading
-import com.moegirlviewer.compable.RetainScroll
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.EmptyContent
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.comment.component.commentEditor.showCommentEditor
 import com.moegirlviewer.screen.comment.component.commentEditor.showReplyEditor
@@ -38,9 +38,10 @@ import com.moegirlviewer.screen.comment.component.commentItem.CommentScreenComme
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommentStore
 import com.moegirlviewer.store.PageComments
-import com.moegirlviewer.ui.theme.background2
-import com.moegirlviewer.ui.theme.text
-import com.moegirlviewer.util.*
+import com.moegirlviewer.theme.background2
+import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.selector
 import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
@@ -117,7 +118,7 @@ fun CommentScreen(
           if (comments.status != LoadStatus.EMPTY) {
             if (comments.popularList.isNotEmpty()) {
               item {
-                Text(
+                StyledText(
                   modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp),
@@ -142,7 +143,7 @@ fun CommentScreen(
 
             if (comments.commentList.isNotEmpty()) {
               item {
-                Text(
+                StyledText(
                   modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp),
@@ -198,6 +199,7 @@ private fun ComposedHeader(
   onShowCommentEditor: () -> Unit
 ) {
   val model: CommentScreenModel = hiltViewModel()
+  val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
 
   StyledTopAppBar(
@@ -205,10 +207,11 @@ private fun ComposedHeader(
       BackButton()
     },
     title = {
-      Text(
+      StyledText(
         text = "${stringResource(id = R.string.talk)}：${title}",
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+        overflow = TextOverflow.Ellipsis,
+        color = themeColors.onPrimary,
       )
     },
     actions = {

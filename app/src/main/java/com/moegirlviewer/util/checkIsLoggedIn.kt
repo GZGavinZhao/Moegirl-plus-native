@@ -1,8 +1,8 @@
 package com.moegirlviewer.util
 
-import androidx.compose.material.Text
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.store.AccountStore
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.first
@@ -16,7 +16,7 @@ suspend fun checkIsLoggedIn(message: String) {
     val deferred = CompletableDeferred<Boolean>()
     Globals.commonAlertDialog.show(CommonAlertDialogProps(
       content = {
-        Text(message)
+        StyledText(message)
       },
       secondaryButton = ButtonConfig.cancelButton {
         deferred.complete(false)

@@ -1,6 +1,5 @@
 package com.moegirlviewer.screen.comment.component.commentItem
 
-import android.widget.Space
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -9,31 +8,31 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AssistantPhoto
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.node.Ref
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil.compose.rememberImagePainter
@@ -44,13 +43,13 @@ import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.component.nativeCommentContent.NativeCommentContent
 import com.moegirlviewer.component.nativeCommentContent.util.CommentCustomAnnotatedText
-import com.moegirlviewer.component.nativeCommentContent.util.CommentInlineContent
 import com.moegirlviewer.component.nativeCommentContent.util.CommentText
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.commentReply.CommentReplyRouteArguments
 import com.moegirlviewer.store.CommentStore
 import com.moegirlviewer.store.PageComments
-import com.moegirlviewer.ui.theme.text
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import com.moegirlviewer.util.CommentTree.Companion.replyList
 import kotlinx.coroutines.delay
@@ -116,7 +115,7 @@ fun CommentScreenCommentItem(
 
     Globals.commonAlertDialog.show(CommonAlertDialogProps(
       content = {
-        Text(message)
+        StyledText(message)
       },
       secondaryButton = ButtonConfig.cancelButton(),
       onPrimaryButtonClick = {
@@ -143,7 +142,7 @@ fun CommentScreenCommentItem(
 
     Globals.commonAlertDialog.show(CommonAlertDialogProps(
       content = {
-        Text(message)
+        StyledText(message)
       },
       secondaryButton = ButtonConfig.cancelButton(),
       onPrimaryButtonClick = {
@@ -267,7 +266,7 @@ private fun ComposedHeader(
     )
 
     Column() {
-      Text(
+      StyledText(
         modifier = Modifier
           .noRippleClickable { gotoUserPage(userName) },
         text = userName,
@@ -276,7 +275,7 @@ private fun ComposedHeader(
         fontSize = 15.sp
       )
 
-      Text(
+      StyledText(
         text = diffNowDate(dateTime),
         color = themeColors.text.secondary,
         fontSize = 13.sp
@@ -386,7 +385,7 @@ private fun ComposedCommentContent(
             )
           }
 
-          Text(
+          StyledText(
             modifier = Modifier
               .padding(start = 5.dp, top = 2.5.dp),
             text = likeNumber.toString(),
@@ -413,7 +412,7 @@ private fun ComposedCommentContent(
               tint = themeColors.secondary
             )
 
-            Text(
+            StyledText(
               modifier = Modifier
                 .padding(start = 2.dp),
               text = stringResource(id = R.string.reply),
@@ -438,7 +437,7 @@ private fun ComposedCommentContent(
             contentDescription = null
           )
 
-          Text(
+          StyledText(
             modifier = Modifier
               .padding(start = 3.dp),
             text = stringResource(id = R.string.report),
@@ -468,7 +467,7 @@ private fun ComposedCommentReply(
       .padding(10.dp)
   ) {
     for (item in replyList.take(3)) {
-      Text(
+      StyledText(
         modifier = Modifier
           .padding(bottom = 2.dp),
         fontSize = 13.sp,
@@ -490,7 +489,7 @@ private fun ComposedCommentReply(
       )
     }
 
-    Text(
+    StyledText(
       modifier = Modifier
         .padding(top = 3.dp)
         .noRippleClickable {

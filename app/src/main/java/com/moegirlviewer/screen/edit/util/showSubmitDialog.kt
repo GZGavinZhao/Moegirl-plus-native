@@ -7,15 +7,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -27,14 +24,12 @@ import com.moegirlviewer.R
 import com.moegirlviewer.component.PlainTextField
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.edit.EditScreenModel
-import com.moegirlviewer.ui.theme.background2
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.noRippleClickable
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
@@ -87,7 +82,7 @@ fun showSubmitDialogOfEdit(model: EditScreenModel) {
           }
         )
 
-        Text(
+        StyledText(
           text = stringResource(id = R.string.quickInsert),
           fontSize = 16.sp
         )
@@ -97,7 +92,7 @@ fun showSubmitDialogOfEdit(model: EditScreenModel) {
             .horizontalScroll(rememberScrollState())
         ) {
           for (item in quickInsertList) {
-            Text(
+            StyledText(
               modifier = Modifier
                 .padding(top = 10.dp, end = 5.dp)
                 .clip(CircleShape)
@@ -123,7 +118,7 @@ fun showSubmitDialogOfEdit(model: EditScreenModel) {
               onCheckedChange = { isMinor = it }
             )
 
-            Text(
+            StyledText(
               text = stringResource(id = R.string.markAsMinorEdit),
             )
           }

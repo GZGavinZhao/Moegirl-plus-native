@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Reply
 import androidx.compose.runtime.*
@@ -23,10 +22,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.moegirlviewer.R
-import com.moegirlviewer.compable.RetainScroll
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.ScrollLoadListFooter
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.comment.component.commentEditor.showReplyEditor
 import com.moegirlviewer.screen.comment.component.commentEditor.useCommentEditor
@@ -34,10 +33,11 @@ import com.moegirlviewer.screen.comment.component.commentItem.CommentScreenComme
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommentStore
 import com.moegirlviewer.store.PageComments
-import com.moegirlviewer.ui.theme.background2
-import com.moegirlviewer.ui.theme.text
-import com.moegirlviewer.util.*
+import com.moegirlviewer.theme.background2
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.CommentTree.Companion.replyList
+import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.selector
 import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
@@ -105,7 +105,7 @@ fun CommentReplyScreen(
 
         if (replyList.isNotEmpty()) {
           item {
-            Text(
+            StyledText(
               modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp),
@@ -161,15 +161,18 @@ private fun ComposedHeader(
   userName: String,
   onReply: () -> Unit,
 ) {
+  val themeColors = MaterialTheme.colors
+
   StyledTopAppBar(
     navigationIcon = {
       BackButton()
     },
     title = {
-      Text(
+      StyledText(
         text = "${stringResource(id = R.string.reply)}：$userName",
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+        overflow = TextOverflow.Ellipsis,
+        color = themeColors.onPrimary
       )
     },
     actions = {
