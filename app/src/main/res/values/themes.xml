@@ -8,7 +8,7 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@drawable/pre_splash_screen</item>
 <!--        <item name="android:background">@drawable/launch_background</item>-->
         <!-- Customize your theme here. -->
     </style>

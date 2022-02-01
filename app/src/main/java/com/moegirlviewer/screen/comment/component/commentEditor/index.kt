@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.CodeOff
@@ -38,6 +37,7 @@ import com.moegirlviewer.api.edit.EditApi
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.PlainTextField
+import com.moegirlviewer.component.ReloadButton
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
 import com.moegirlviewer.component.articleView.ArticleViewRef
@@ -70,7 +70,7 @@ fun CommentEditor(
 
   val cachedWebViews = rememberCachedWebViews()
   val articleViewRef = remember { Ref<ArticleViewRef>() }
-  val pagerState = rememberPagerState(pageCount = 2)
+  val pagerState = rememberPagerState(2)
   var statusOfCommentPreview by remember { mutableStateOf(LoadStatus.INITIAL) }
   var commentPreviewHtml by remember { mutableStateOf("") }
 
@@ -109,9 +109,7 @@ fun CommentEditor(
     if (!useWikitext) pagerState.animateScrollToPage(0)
   }
 
-  // 这里很坑，因为伴奏库的pager 0.18版本会缓存内容，导致commentEditor即使已经关闭，还是不能正确收起输入法
-  // 虽然pager 0.21已经修复了这个问题，但是这个版本又将关闭滑动手势的参数去掉了，说是未来会加上
-  // 这里只能先用0.18版本，通过判断commentEditor是否收起，手动关闭输入法
+  // 通过判断commentEditor是否收起，手动关闭输入法
   val composeBaseView = LocalView.current
   LaunchedEffect(topOffset == height.dp) {
     if (topOffset == height.dp) {
@@ -228,6 +226,8 @@ fun CommentEditor(
               HorizontalPager(
                 state = pagerState,
                 dragEnabled = false
+//                count = 2,
+//                userScrollEnabled = false
               ) { currentPage ->
                 if (currentPage == 0) {
                   PlainTextField(
@@ -261,15 +261,11 @@ fun CommentEditor(
                         when(statusOfCommentPreview) {
                           LoadStatus.LOADING -> StyledCircularProgressIndicator()
                           LoadStatus.FAIL -> {
-                            TextButton(
+                            ReloadButton(
                               modifier = Modifier
                                 .matchParentSize(),
                               onClick = { loadCommentPreviewHtml() }
-                            ) {
-                              StyledText(
-                                text = stringResource(id = R.string.reload),
-                              )
-                            }
+                            )
                           }
                           else -> {}
                         }

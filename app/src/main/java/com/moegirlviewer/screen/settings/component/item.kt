@@ -21,6 +21,8 @@ fun SettingsScreenItem(
   title: String,
   titleStyle: TextStyle = TextStyle(),
   subtext: String? = null,
+  innerVerticalPadding: Boolean = true,
+  visibleBorder: Boolean = true,
   onClick: (() -> Unit)? = null,
   rightContent: (@Composable () -> Unit)? = null,
 ) {
@@ -28,13 +30,18 @@ fun SettingsScreenItem(
 
   Surface(
     modifier = Modifier
-      .sideBorder(BorderSide.BOTTOM, 1.dp, themeColors.background2)
+      .then(if (visibleBorder) Modifier
+        .sideBorder(BorderSide.BOTTOM, 1.dp, themeColors.background2)
+      else Modifier)
   ) {
     Row(
       modifier = Modifier
         .fillMaxWidth()
         .clickable { onClick?.invoke() }
-        .padding(vertical = 10.dp, horizontal = 15.dp),
+        .padding(
+          vertical = if (innerVerticalPadding) 10.dp else 0.dp,
+          horizontal = 15.dp
+        ),
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
     ) {

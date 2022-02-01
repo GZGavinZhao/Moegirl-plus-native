@@ -3,7 +3,10 @@ package com.moegirlviewer.screen.login.component
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -14,6 +17,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.util.isMoegirl
 
 @Composable
@@ -45,7 +49,10 @@ fun LoginScreenTextField(
       onAny = onAction,
     ) else KeyboardActions(),
     label = {
-      Text(text = label)
+      StyledText(
+        text = label,
+        color = Color.Unspecified
+      )
     },
     colors = TextFieldDefaults.outlinedTextFieldColors(
       unfocusedBorderColor = unfocusedColor,

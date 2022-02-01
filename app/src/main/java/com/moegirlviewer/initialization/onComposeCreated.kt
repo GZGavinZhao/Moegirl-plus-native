@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 import java.util.*
 
 private val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -60,27 +61,31 @@ private suspend fun initAccount() {
 }
 
 private suspend fun checkNewVersion() = coroutineScope {
-  val res = AppApi.getLastVersion()
-  val currentVersion = Globals.context.packageManager.getPackageInfo(Globals.context.packageName, 0).versionName
-  val rejectedVersion = SettingsStore.otherSettings.getValue { this.rejectedVersionName }.first()
+  try {
+    val res = AppApi.getLastVersion()
+    val currentVersion = Globals.context.packageManager.getPackageInfo(Globals.context.packageName, 0).versionName
+    val rejectedVersion = SettingsStore.otherSettings.getValue { this.rejectedVersionName }.first()
 
-  if (res.version != currentVersion && res.version != rejectedVersion) {
-    Globals.commonAlertDialog.show(CommonAlertDialogProps(
-      title = Globals.context.getString(R.string.hasNewVersionHint),
-      content = { StyledText(res.desc) },
-      secondaryButton = ButtonConfig.cancelButton(
-        onClick = {
-          coroutineScope.launch {
-            SettingsStore.otherSettings.setValue {
-              rejectedVersionName = res.version
+    if (res.version != currentVersion && res.version != rejectedVersion) {
+      Globals.commonAlertDialog.show(CommonAlertDialogProps(
+        title = Globals.context.getString(R.string.hasNewVersionHint),
+        content = { StyledText(res.desc) },
+        secondaryButton = ButtonConfig.cancelButton(
+          onClick = {
+            coroutineScope.launch {
+              SettingsStore.otherSettings.setValue {
+                rejectedVersionName = res.version
+              }
             }
           }
+        ),
+        onPrimaryButtonClick = {
+          openHttpUrl(Constants.appDownloadUrl)
         }
-      ),
-      onPrimaryButtonClick = {
-        openHttpUrl(Constants.appDownloadUrl)
-      }
-    ))
+      ))
+    }
+  } catch (e: SocketTimeoutException) {
+    printRequestErr(e, "初始化检查新版本失败")
   }
 }
 

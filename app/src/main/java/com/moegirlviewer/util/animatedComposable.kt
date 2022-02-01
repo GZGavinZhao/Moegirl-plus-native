@@ -54,7 +54,7 @@ private fun getTransitions(animation: Animation): Transitions = when(animation) 
         slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec)
       },
       assistExitTransition = {
-        slideOutOfContainer(AnimatedContentScope.SlideDirection.Left, animationSpec)
+        slideOutOfContainer(towards = AnimatedContentScope.SlideDirection.Left, animationSpec)
       },
       assistPopEnterTransition = {
         slideIntoContainer(AnimatedContentScope.SlideDirection.Right, animationSpec)

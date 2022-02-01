@@ -3,7 +3,6 @@ package com.moegirlviewer.component.articleView
 import android.os.Parcelable
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.node.Ref
@@ -25,9 +24,6 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebViewContent
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
 import com.moegirlviewer.component.styled.StyledText
-import com.moegirlviewer.util.darken
-import com.moegirlviewer.util.lighten
-import com.moegirlviewer.util.toCssRgbaString
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.request.MoeRequestWikiException
 import com.moegirlviewer.request.commonOkHttpClient
@@ -89,14 +85,18 @@ class ArticleViewState(
         ?.map { it._asterisk } ?: emptyList()
     )
 
+    val useSpecialCharSupportedFont = SettingsStore.common.getValue { this.useSpecialCharSupportedFontInArticle }.first()
+
     val styles = """
       @font-face {
         font-family: "NospzGothicMoe";
         src: url("file:///android_res/font/nospz_gothic_moe.ttf");
-      }
+      }     
 
       body {
-        font-family: "NospzGothicMoe";
+        ${if (useSpecialCharSupportedFont) """
+          font-family: sans-serif, "NospzGothicMoe";
+        """ else ""}
         padding-top: ${props.contentTopPadding.value}px;
         word-break: ${if (props.inDialogMode) "break-all" else "initial"};
         ${if (props.inDialogMode) """
@@ -246,12 +246,20 @@ class ArticleViewState(
 
   suspend fun checkUserConfig() {
     val heimu = SettingsStore.common.getValue { this.heimu }.first()
+    val useSpecialCharSupportedFont = SettingsStore.common.getValue { this.useSpecialCharSupportedFontInArticle }.first()
     // stopMediaOnLeave没法在这里处理，articleView不知道什么时候离开页面，这部分逻辑写在了articleScreen
 //    val stopMediaOnLeave = SettingsStore.stopAudioOnLeave.first()
 
     if (heimu != context.userConfig.heimu) {
       htmlWebViewRef.value!!.injectScript("moegirl.config.heimu.\$enabled = $heimu")
       context.userConfig.heimu = heimu
+    }
+
+    if (useSpecialCharSupportedFont != context.userConfig.useSpecialCharSupportedFont) {
+      if (useSpecialCharSupportedFont)
+        enableSpecialCharSupportedFont() else
+        disableSpecialCharSupportedFont()
+      context.userConfig.useSpecialCharSupportedFont = useSpecialCharSupportedFont
     }
   }
 
@@ -264,6 +272,18 @@ class ArticleViewState(
 
   suspend fun enableAllMedia() {
     htmlWebViewRef.value!!.injectScript(enableAllIframeJsStr)
+  }
+
+  suspend fun enableSpecialCharSupportedFont() {
+    htmlWebViewRef.value!!.injectScript("""
+      document.body.style.fontFamily = 'sans-serif, "NospzGothicMoe"'
+    """.trimIndent())
+  }
+
+  suspend fun disableSpecialCharSupportedFont() {
+    htmlWebViewRef.value!!.injectScript("""
+      document.body.style.fontFamily = 'initial'
+    """.trimIndent())
   }
 
   val defaultMessageHandlers: HtmlWebViewMessageHandlers = mapOf(
@@ -538,6 +558,7 @@ class MoegirlImage(
 @Parcelize
 class ArticleViewUserConfig(
   var heimu: Boolean = CommonSettings().heimu,
+  var useSpecialCharSupportedFont: Boolean = CommonSettings().useSpecialCharSupportedFontInArticle
 ) : Parcelable
 
 const val disableAllIframeJsStr = """

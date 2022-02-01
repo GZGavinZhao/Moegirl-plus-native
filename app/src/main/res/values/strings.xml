@@ -74,6 +74,11 @@
     <string name="ago">前</string>
     <string name="earlier">更早</string>
     <string name="deleted">已删除</string>
+    <string name="latest">最新</string>
+    <string name="random">随机</string>
+    <string name="_off">关闭</string>
+    <string name="author">作者</string>
+    <string name="selected">已选择</string>
 
     <string name="year">年</string>
     <string name="month">月</string>
@@ -173,7 +178,7 @@
     <string name="reasonNoFilled">未填写原因</string>
     <string name="useWikitext">使用维基文本</string>
     <string name="previewResult">预览效果</string>
-    <string name="useRarelyUsedWordSupportedFontInArticle">在条目中使用</string>
+    <string name="customRandom">自定义随机</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>
@@ -211,6 +216,7 @@
     <string name="emptyContnet">还没有任何内容_(:з」∠)_</string>
     <string name="searchInBrowsingHistory">搜索浏览历史...</string>
     <string name="noSearchingResult">什么也没搜到_(:з」∠)_</string>
+    <string name="selectSplashScreenImage">启动屏设置</string>
 
     <!-- 长提示（基本上只会在一个地方使用） -->
     <string name="noSummaryOnCurrentEdit">该编辑未填写摘要</string>
@@ -265,6 +271,12 @@
     <string name="syntaxHighlightHelpText">目前只支持部分语法</string>
     <string name="darkThemeBySystem">适配深色模式(实验性)</string>
     <string name="darkThemeBySystemHelpText">部分条目会有文字看不清的情况</string>
+    <string name="useSpecialCharSupportedFontInArticle">在条目中使用支持特殊字符的字体</string>
+    <string name="useSpecialCharSupportedFontInArticleHelpText">有些条目中存在生僻字、中文不使用的日文汉字等，开启此选项可修复</string>
+    <string name="useSpecialCharSupportedFontInApp">在应用中使用支持特殊字符的字体</string>
+    <string name="useSpecialCharSupportedFontInAppHelpText">开启后将覆盖系统字体</string>
+    <string name="splashImageUnselectedHint">未选择任何启动屏图片，将自动转换为完全随机模式，确定要返回吗？</string>
+
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤销[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|讨论]]）的版本%2$s</string>
@@ -278,4 +290,35 @@
         "2. 条目页右滑开启目录",
     ]</string>
     <string name="jsonArray_quickSummaryListOfEdit">["修饰语句", "修正笔误", "内容扩充", "排版"]</string>
+
+    <string name="splashImageTitle_2015_4">萌娘のクリスマス</string>
+
+    <string name="splashImageTitle_2016_1">樱花</string>
+    <string name="splashImageTitle_2016_2">条纹泳装</string>
+    <string name="splashImageTitle_2016_3">巫女之秋</string>
+    <string name="splashImageTitle_2016_4">舞狮</string>
+
+    <string name="splashImageTitle_2017_1">春季校服</string>
+    <string name="splashImageTitle_2017_2">跳高</string>
+    <string name="splashImageTitle_2017_3">秋季私服</string>
+    <string name="splashImageTitle_2017_4">雪萌娘</string>
+
+    <string name="splashImageTitle_2018_1">春季制服</string>
+    <string name="splashImageTitle_2018_2">披纱泳装</string>
+    <string name="splashImageTitle_2018_3">食欲之秋</string>
+    <string name="splashImageTitle_2018_4">雪人</string>
+
+    <string name="splashImageTitle_2019_1">抹茶蛋糕</string>
+    <string name="splashImageTitle_2019_2">单车</string>
+    <string name="splashImageTitle_2019_3">秋杏</string>
+    <string name="splashImageTitle_2019_4">雪狐</string>
+
+    <string name="splashImageTitle_2020_1">疫情医生</string>
+    <string name="splashImageTitle_2020_3">十周年-秋夜花火</string>
+    <string name="splashImageTitle_2020_3_10th_anniversary">十周年-庆生</string>
+
+    <string name="splashImageTitle_2021_2">校园</string>
+    <string name="splashImageTitle_2021_3">猫猫时光</string>
+
+    <string name="splashImageTitle_2022_1">“虎”的祝福</string>
 </resources>

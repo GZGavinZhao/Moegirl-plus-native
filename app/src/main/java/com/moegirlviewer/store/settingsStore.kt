@@ -1,16 +1,15 @@
 package com.moegirlviewer.store
 
 import android.content.Context
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.moegirlviewer.DataStoreName
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.SplashImage
+import com.moegirlviewer.util.SplashImageKey
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.reduce
 
 // 这里保存的是app中所有的设置项，不仅仅是settings页面中的设置
 // 每个设置项组应该继承Settings，所有成员使用var声明，带有默认值，之后在SettingsStore中声明client
@@ -19,10 +18,20 @@ sealed class Settings
 data class CommonSettings(
   var heimu: Boolean = true,
   var stopMediaOnLeave: Boolean = false,
-  var language: SupportedLanguage = SupportedLanguage.ZH_HANS,
   var syntaxHighlight: Boolean = true,
-  var darkThemeBySystem: Boolean = false
+  var darkThemeBySystem: Boolean = false,
+  var useSpecialCharSupportedFontInApp: Boolean = false,
+  var useSpecialCharSupportedFontInArticle: Boolean = false,
+  var splashImageMode: SplashImageMode = SplashImageMode.NEW,
+  var selectedSplashImages: List<SplashImageKey> = listOf(SplashImageKey.values().last())
 ) : Settings()
+
+enum class SplashImageMode {
+  NEW,
+  OFF,
+  RANDOM,
+  CUSTOM_RANDOM
+}
 
 data class RecentChangesSettings(
   var daysAgo: Int = 7,
@@ -43,10 +52,7 @@ object SettingsStore {
   val otherSettings = SettingsStoreClient(OtherSettings::class.java)
 }
 
-enum class SupportedLanguage {
-  ZH_HANS,
-  ZH_HANT
-}
+
 
 private val Context.dataStore by preferencesDataStore(DataStoreName.SETTINGS.name)
 private val dataStore get() = Globals.context.dataStore

@@ -74,6 +74,11 @@
     <string name="ago">前</string>
     <string name="earlier">更早</string>
     <string name="deleted">已刪除</string>
+    <string name="latest">最新</string>
+    <string name="random">隨機</string>
+    <string name="_off">關閉</string>
+    <string name="author">作者</string>
+    <string name="selected">已選擇</string>
 
     <string name="year">年</string>
     <string name="month">月</string>
@@ -173,6 +178,7 @@
     <string name="reasonNoFilled">未填寫原因</string>
     <string name="useWikitext">使用維基文字</string>
     <string name="previewResult">預覽效果</string>
+    <string name="customRandom">自定義隨機</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>
@@ -212,6 +218,7 @@
     <string name="noSearchingResult">什麼也沒搜到_(:з」∠)_</string>
     <string name="darkThemeBySystem">適配深色模式(實驗性)</string>
     <string name="darkThemeBySystemHelpText">部分條目會有文字看不清的情況</string>
+    <string name="selectSplashScreenImage">啟動屏設定</string>
 
     <!-- 長提示（基本上只會在一個地方使用） -->
     <string name="noSummaryOnCurrentEdit">該編輯未填寫摘要</string>
@@ -264,6 +271,11 @@
     <string name="invalidLoginStatusHint">登入狀態已失效</string>
     <string name="editFailedHint">提交編輯失敗，以下是萌百API返回的提示資訊：</string>
     <string name="syntaxHighlightHelpText">目前只支援部分語法</string>
+    <string name="useSpecialCharSupportedFontInArticle">在條目中使用支援特殊字元的字型</string>
+    <string name="useSpecialCharSupportedFontInArticleHelpText">有些條目中存在生僻字、中文不使用的日文漢字等，開啟此選項可修復</string>
+    <string name="useSpecialCharSupportedFontInApp">在應用中使用支援特殊字元的字型</string>
+    <string name="useSpecialCharSupportedFontInAppHelpText">開啟後將覆蓋系統字型</string>
+    <string name="splashImageUnselectedHint">未選擇任何啟動屏圖片，將自動轉換為完全隨機模式，確定要返回嗎？</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤銷[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|討論]]）的版本%2$s</string>
@@ -277,4 +289,35 @@
         "2. 條目頁右滑開啟目錄",
     ]</string>
     <string name="jsonArray_quickSummaryListOfEdit">["修飾語句", "修正筆誤", "內容擴充", "排版"]</string>
+
+    <string name="splashImageTitle_2015_4">萌娘のクリスマス</string>
+
+    <string name="splashImageTitle_2016_1">櫻花</string>
+    <string name="splashImageTitle_2016_2">條紋泳裝</string>
+    <string name="splashImageTitle_2016_3">巫女之秋</string>
+    <string name="splashImageTitle_2016_4">舞獅</string>
+
+    <string name="splashImageTitle_2017_1">春季校服</string>
+    <string name="splashImageTitle_2017_2">跳高</string>
+    <string name="splashImageTitle_2017_3">秋季私服</string>
+    <string name="splashImageTitle_2017_4">雪萌娘</string>
+
+    <string name="splashImageTitle_2018_1">春季制服</string>
+    <string name="splashImageTitle_2018_2">披紗泳裝</string>
+    <string name="splashImageTitle_2018_3">食慾之秋</string>
+    <string name="splashImageTitle_2018_4">雪人</string>
+
+    <string name="splashImageTitle_2019_1">抹茶蛋糕</string>
+    <string name="splashImageTitle_2019_2">單車</string>
+    <string name="splashImageTitle_2019_3">秋杏</string>
+    <string name="splashImageTitle_2019_4">雪狐</string>
+
+    <string name="splashImageTitle_2020_1">疫情醫生</string>
+    <string name="splashImageTitle_2020_3">十週年-秋夜花火</string>
+    <string name="splashImageTitle_2020_3_10th_anniversary">十週年-慶生</string>
+
+    <string name="splashImageTitle_2021_2">校園</string>
+    <string name="splashImageTitle_2021_3">貓貓時光</string>
+
+    <string name="splashImageTitle_2022_1">“虎”的祝福</string>
 </resources>

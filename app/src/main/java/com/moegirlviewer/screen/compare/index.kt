@@ -8,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -16,6 +15,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.Center
+import com.moegirlviewer.component.ReloadButton
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
@@ -92,16 +92,11 @@ fun CompareScreen(
 
       LoadStatus.FAIL -> {
         Center {
-          TextButton(
+          ReloadButton(
             onClick = {
               scope.launch { model.loadCompareData() }
             }
-          ) {
-            StyledText(
-              text = stringResource(id = R.string.reload),
-              fontSize = 15.sp
-            )
-          }
+          )
         }
       }
       else -> {}

@@ -2,6 +2,7 @@ package com.moegirlviewer
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
@@ -45,13 +46,21 @@ import com.moegirlviewer.screen.search.SearchScreen
 import com.moegirlviewer.screen.searchResult.SearchResultRouteArguments
 import com.moegirlviewer.screen.searchResult.SearchResultScreen
 import com.moegirlviewer.screen.settings.SettingsScreen
+import com.moegirlviewer.screen.splashPreview.SplashPreviewRouteArguments
+import com.moegirlviewer.screen.splashPreview.SplashPreviewScreen
+import com.moegirlviewer.screen.splashSetting.SplashSettingScreen
+import com.moegirlviewer.store.SettingsStore
+import com.moegirlviewer.store.SplashImageMode
 import com.moegirlviewer.theme.MoegirlPlusTheme
 import com.moegirlviewer.util.*
 import com.moegirlviewer.util.RouteArguments.Companion.formattedArguments
 import com.moegirlviewer.util.RouteArguments.Companion.formattedRouteName
+import com.moegirlviewer.util.SplashImageKey.Companion.toSplashImage
 import com.moegirlviewer.view.ComposeWithSplashScreenView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
 @ExperimentalMaterialApi
@@ -65,46 +74,37 @@ class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val hasDeepLink = intent.dataString != null
-    val isShowSplashScreen = !hasDeepLink && homeScreenReady.isActive
-    val mainWithSplashView = ComposeWithSplashScreenView(this, isShowSplashScreen)
-    setContentView(mainWithSplashView)
+    Globals.context = applicationContext
+    Globals.activity = this
 
-    if (isShowSplashScreen) {
-      coroutineScope.launch {
-        suspend fun complete() {
-          mainWithSplashView.hideSplashScreen()
-          useFreeStatusBarLayout()
-        }
-
-        launch {
-          mainWithSplashView.appearSplashScreen()
-        }
-
-        launch {
-          delay(3000)
-          complete()
-        }
-
-        launch {
-          homeScreenReady.await()
-          complete()
-        }
-      }
-    }
-
-    application.initializeOnCreate()
-    initializeOnCreate()
-
-    if (isShowSplashScreen) useFullScreenLayout()
-
-    mainWithSplashView.setContent {
+    @Composable
+    fun ContentBody() {
       MoegirlPlusTheme {
         ProvideWindowInsets {
           OnComposeCreate {
             Routes(it)
           }
         }
+      }
+    }
+
+    coroutineScope.launch {
+      val hasDeepLink = intent.dataString != null
+      val splashImageMode = SettingsStore.common.getValue { this.splashImageMode }.first()
+      val isShowSplashScreen = !hasDeepLink &&
+        homeScreenReady.isActive &&
+        splashImageMode != SplashImageMode.OFF
+
+      if (isShowSplashScreen) {
+        withSplashScreen(
+          splashImageMode = splashImageMode,
+          content = { ContentBody() }
+        )
+      } else {
+        application.initializeOnCreate()
+        initializeOnCreate()
+        useFreeStatusBarLayout()
+        setContent { ContentBody() }
       }
     }
   }
@@ -176,6 +176,15 @@ private fun Routes(navController: NavHostController) {
     ) { SettingsScreen() }
 
     animatedComposable(
+      route = "splashSetting"
+    ) { SplashSettingScreen() }
+
+    animatedComposable(
+      route = SplashPreviewRouteArguments::class.java.formattedRouteName,
+      arguments = SplashPreviewRouteArguments::class.java.formattedArguments,
+    ) { SplashPreviewScreen(it.arguments!!.toRouteArguments()) }
+
+    animatedComposable(
       route = "browsingHistory",
     ) { BrowsingHistoryScreen() }
 
@@ -216,4 +225,53 @@ private fun Routes(navController: NavHostController) {
       arguments = ContributionRouteArguments::class.java.formattedArguments,
     ) { ContributionScreen(it.arguments!!.toRouteArguments()) }
   }
+}
+
+private suspend fun ComponentActivity.withSplashScreen(
+  splashImageMode: SplashImageMode,
+  content: @Composable () -> Unit
+) = coroutineScope {
+  useFullScreenLayout()
+
+  val usingSplashImage = when(splashImageMode) {
+    SplashImageMode.NEW -> SplashImageKey.values().last().toSplashImage()
+    SplashImageMode.RANDOM -> SplashImageKey.getSplashImages().random()
+    SplashImageMode.CUSTOM_RANDOM -> SettingsStore.common.getValue { this.selectedSplashImages }
+      .map { it.ifEmpty { SplashImageKey.values().toList() } }
+      .first()
+      .map { it.toSplashImage() }
+      .random()
+    else -> null
+  }!!
+
+  val mainWithSplashView = ComposeWithSplashScreenView(
+    context = this@withSplashScreen,
+    splashImage = usingSplashImage
+  )
+
+  setContentView(mainWithSplashView)
+
+  suspend fun complete() {
+    mainWithSplashView.hideSplashScreen()
+    useFreeStatusBarLayout()
+  }
+
+  launch {
+    mainWithSplashView.appearSplashScreen()
+  }
+
+  launch {
+    delay(3000)
+    complete()
+  }
+
+  launch {
+    homeScreenReady.await()
+    complete()
+  }
+
+  application.initializeOnCreate()
+  initializeOnCreate()
+
+  mainWithSplashView.setContent(content)
 }

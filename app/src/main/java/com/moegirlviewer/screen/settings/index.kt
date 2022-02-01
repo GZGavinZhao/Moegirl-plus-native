@@ -26,6 +26,7 @@ import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommonSettings
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.gotoUserPage
 import kotlinx.coroutines.launch
 
@@ -96,8 +97,44 @@ fun SettingsScreen() {
           }
         )
       }
+      SettingsScreenItem(
+        title = stringResource(id = R.string.useSpecialCharSupportedFontInArticle),
+        subtext = stringResource(id = R.string.useSpecialCharSupportedFontInArticleHelpText),
+        onClick = {
+          setSettingItem { this.useSpecialCharSupportedFontInArticle = !this.useSpecialCharSupportedFontInArticle }
+        }
+      ) {
+        Switch(
+          checked = commonSettings.useSpecialCharSupportedFontInArticle,
+          colors = switchColors,
+          onCheckedChange = {
+            setSettingItem { this.useSpecialCharSupportedFontInArticle = it }
+          }
+        )
+      }
 
-//      Title(R.string._interface)
+      Title(R.string._interface)
+      SettingsScreenItem(
+        title = stringResource(id = R.string.useSpecialCharSupportedFontInApp),
+        subtext = stringResource(id = R.string.useSpecialCharSupportedFontInAppHelpText),
+        onClick = {
+          setSettingItem { this.useSpecialCharSupportedFontInApp = !this.useSpecialCharSupportedFontInApp }
+        }
+      ) {
+        Switch(
+          checked = commonSettings.useSpecialCharSupportedFontInApp,
+          colors = switchColors,
+          onCheckedChange = {
+            setSettingItem { this.useSpecialCharSupportedFontInApp = it }
+          }
+        )
+      }
+      SettingsScreenItem(
+        title = stringResource(id = R.string.selectSplashScreenImage),
+        onClick = {
+          Globals.navController.navigate("splashSetting")
+        }
+      )
 //      SettingsScreenItem(
 //        title = stringResource(id = R.string.darkThemeBySystem),
 //        subtext = stringResource(id = R.string.darkThemeBySystemHelpText),
@@ -113,15 +150,6 @@ fun SettingsScreen() {
 //          }
 //        )
 //      }
-
-      // 跟随系统，暂时不开放手动设置语言了
-//      Title(R.string._interface)
-//      SettingsScreenItem(
-//        title = stringResource(id = R.string.changeLanguage),
-//        onClick = {
-//          showLanguageSelectionDialog(model.coroutineScope)
-//        }
-//      )
 
       Title(R.string.edit)
       SettingsScreenItem(

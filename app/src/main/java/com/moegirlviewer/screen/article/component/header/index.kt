@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -127,7 +128,10 @@ private fun MoreMenu(
       enabled = enabled,
       onClick = { onAction(action) }
     ) {
-      StyledText(text)
+      StyledText(
+        text = text,
+        color = Color.Unspecified
+      )
     }
   }
 

@@ -1,33 +1,27 @@
 package com.moegirlviewer.component.articleView
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.moegirlviewer.Constants
-import com.moegirlviewer.R
 import com.moegirlviewer.api.page.bean.PageContentResBean
 import com.moegirlviewer.api.page.bean.PageInfoResBean
+import com.moegirlviewer.component.ReloadButton
 import com.moegirlviewer.component.htmlWebView.HtmlWebView
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
-import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 import kotlin.math.max
@@ -72,7 +66,9 @@ class ArticleViewRef(
   val updateView: suspend () -> Unit,
   val htmlWebViewRef: HtmlWebViewRef?,
   val enableAllMedia: suspend () -> Unit,
-  val disableAllMedia: suspend () -> Unit
+  val disableAllMedia: suspend () -> Unit,
+  val enableSpecialCharSupportedFont: suspend () -> Unit,
+  val disableSpecialCharSupportedFont: suspend () -> Unit,
 )
 
 @Composable
@@ -93,7 +89,9 @@ fun ArticleView(
       updateView = { state.updateHtmlView(true) },
       htmlWebViewRef = state.htmlWebViewRef.value,
       enableAllMedia = { state.enableAllMedia() },
-      disableAllMedia = { state.disableAllMedia() }
+      disableAllMedia = { state.disableAllMedia() },
+      enableSpecialCharSupportedFont = { state.enableSpecialCharSupportedFont() },
+      disableSpecialCharSupportedFont = { state.disableSpecialCharSupportedFont() }
     )
   }
 
@@ -164,17 +162,11 @@ fun ArticleView(
       ) {
         if (state.status == LoadStatus.LOADING) StyledCircularProgressIndicator()
         if (state.status == LoadStatus.FAIL) {
-          TextButton(
+          ReloadButton(
             modifier = Modifier
               .matchParentSize(),
-            border = BorderStroke(0.dp, Color.Transparent),
             onClick = { reloadContent() }
-          ) {
-            StyledText(
-              text = stringResource(R.string.reload),
-              fontSize = 15.sp
-            )
-          }
+          )
         }
       }
     }

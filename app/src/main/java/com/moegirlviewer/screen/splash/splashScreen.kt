@@ -2,13 +2,8 @@ package com.moegirlviewer.screen.splash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -17,11 +12,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
 
 // 这个页面本身不在路由中
@@ -29,6 +22,9 @@ import com.moegirlviewer.R
 fun SplashScreen(
   state: SplashScreenState
 ) {
+  val density = LocalDensity.current
+  val localConfiguration = LocalConfiguration.current
+
   Box(
     modifier = Modifier
       .fillMaxSize()
@@ -39,15 +35,15 @@ fun SplashScreen(
       modifier = Modifier
         .fillMaxSize()
         .scale(state.imageScale.value),
-      painter = painterResource(R.drawable.splash_image),
+      painter = painterResource(state.splashImage.resId),
       contentDescription = null,
       contentScale = ContentScale.Crop
     )
 
-    Box(
+    Spacer(
       modifier = Modifier
         .fillMaxWidth()
-        .height((LocalConfiguration.current.screenHeightDp * 0.15).dp)
+        .fillMaxHeight(0.2f)
         .background(
           brush = remember {
             Brush.verticalGradient(
@@ -58,13 +54,20 @@ fun SplashScreen(
             )
           }
         ),
-      contentAlignment = Alignment.Center
+    )
+
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .offset(y = (-70).dp),
+      contentAlignment = Alignment.BottomCenter
     ) {
-      Text(
-        text = stringResource(id = R.string.app_name),
-        fontSize = 24.sp,
-        color = Color.White,
-        fontWeight = FontWeight.Bold
+      Image(
+        modifier = Modifier
+          .width(174.dp)
+          .height(55.dp),
+        painter = painterResource(id = R.drawable.site_name),
+        contentDescription = null
       )
     }
   }

@@ -3,22 +3,19 @@ package com.moegirlviewer.screen.edit.tabs.wikitextEditor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.moegirlviewer.R
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.PlainTextField
+import com.moegirlviewer.component.ReloadButton
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
-import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.edit.EditScreenModel
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.component.QuickInsertBar
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.linearTintWikitext
@@ -121,13 +118,11 @@ fun EditScreenWikitextEditor() {
       ) {
         when(model.wikitextStatus) {
           LoadStatus.FAIL -> {
-            TextButton(
+            ReloadButton(
               onClick = {
                 scope.launch { model.loadWikitext() }
               }
-            ) {
-              StyledText(stringResource(id = R.string.reload))
-            }
+            )
           }
 
           else -> StyledCircularProgressIndicator()

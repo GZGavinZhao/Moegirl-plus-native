@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.NospzGothicMoeFamily
 
@@ -42,7 +43,10 @@ fun StyledText(
   style: TextStyle = LocalTextStyle.current,
 ) {
   val themeColors = MaterialTheme.colors
-  val finalFontFamily = fontFamily ?: NospzGothicMoeFamily
+  val useSpecialCharSupportedFont by SettingsStore.common.getValue { this.useSpecialCharSupportedFontInApp }.collectAsState(
+    initial = false
+  )
+  val finalFontFamily = fontFamily ?: if (useSpecialCharSupportedFont) NospzGothicMoeFamily else FontFamily.Default
 
   Text(
     text = text,
@@ -69,7 +73,7 @@ fun StyledText(
 fun StyledText(
   text: AnnotatedString,
   modifier: Modifier = Modifier,
-  color: Color = Color.Unspecified,
+  color: Color = MaterialTheme.colors.text.primary,
   fontSize: TextUnit = TextUnit.Unspecified,
   fontStyle: FontStyle? = null,
   fontWeight: FontWeight? = null,
@@ -88,7 +92,10 @@ fun StyledText(
 ) {
   val themeColors = MaterialTheme.colors
   val finalColor = if (color == Color.Unspecified) themeColors.text.primary else color
-  val finalFontFamily = fontFamily ?: NospzGothicMoeFamily
+  val useSpecialCharSupportedFont by SettingsStore.common.getValue { this.useSpecialCharSupportedFontInApp }.collectAsState(
+    initial = false
+  )
+  val finalFontFamily = fontFamily ?: if (useSpecialCharSupportedFont) NospzGothicMoeFamily else FontFamily.Default
 
   var layoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
   val pressIndicator = Modifier.pointerInput(onClick) {

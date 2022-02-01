@@ -10,6 +10,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -30,8 +31,10 @@ import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.computeMd5
 import com.moegirlviewer.util.imeBottomPadding
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.InternalCoroutinesApi
 
+@OptIn(FlowPreview::class)
 @InternalCoroutinesApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
@@ -89,6 +92,7 @@ fun EditScreen(arguments: EditRouteArguments) {
       ) {
         HorizontalPager(
 //          count = 2,
+//          userScrollEnabled = false
           state = model.pagerState,
           dragEnabled = false
         ) { currentIndex ->
@@ -155,7 +159,12 @@ private fun ComposedHeader(
       ) {
         titles.forEachIndexed { index, title ->
           Tab(
-            text = { Text(title) },
+            text = {
+              Text(
+                text = title,
+                color = Color.Unspecified
+              )
+            },
             selected = model.selectedTabIndex == index,
             onClick = { model.selectedTabIndex = index }
           )
