@@ -84,7 +84,7 @@ private suspend fun checkNewVersion() = coroutineScope {
         }
       ))
     }
-  } catch (e: SocketTimeoutException) {
+  } catch (e: MoeRequestException) {
     printRequestErr(e, "初始化检查新版本失败")
   }
 }

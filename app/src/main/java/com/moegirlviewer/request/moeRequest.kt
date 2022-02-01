@@ -19,7 +19,9 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
+import java.net.SocketException
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 val moeOkHttpClient = OkHttpClient.Builder()
   .cookieJar(cookieJar)
@@ -65,6 +67,7 @@ suspend fun <T> moeRequest(
 
   try {
     val response = moeOkHttpClient.newCall(request).execute()
+//    response.close()
 
     if (!response.isSuccessful) {
       if (response.code == 404) {
@@ -116,6 +119,12 @@ suspend fun <T> moeRequest(
     }
   } catch (e: SocketTimeoutException) {
     throw MoeRequestTimeoutException(e)
+  } catch (e: Exception) {
+    e.printStackTrace()
+    throw MoeRequestTimeoutException(
+//      message = Globals.context.getString(R.string.netErr),
+      cause = e
+    )
   }
 }
 
@@ -142,7 +151,7 @@ open class MoeRequestWikiException(
 
 open class MoeRequestHttpException(
   message: String,
-  code: Int,
+  code: Int = 0,
   cause: Throwable? = null
 ) : MoeRequestException(
   message = message,

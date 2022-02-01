@@ -2,19 +2,26 @@ package com.moegirlviewer.component.nativeCommentContent.util
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.moegirlviewer.R
+import com.moegirlviewer.component.Center
+import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.util.Globals
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
@@ -51,12 +58,14 @@ fun parseCommentHtml(
               ))
             }
 
-            item.tagName() == "a" -> commentElements.add(aTagParser(item))
+            item.tagName() == "a" &&
+            item.childNodeSize() == 1 &&
+            item.childNode(0) is TextNode -> commentElements.add(aTagParser(item))
 
             item.tagName() == "img" -> {
               var widthAttr = item.attr("width")
               var heightAttr = item.attr("height")
-              val imageUrl = item.attr("src")
+              val imageUrl = item.attr("src").correctImgUrl()
 
               // 如果img标签上没有width或height属性，这里尝试手动获取一下大小
               if (widthAttr == "" || heightAttr == "") {
@@ -69,8 +78,8 @@ fun parseCommentHtml(
               var height = heightAttr.toInt().dp
 
               if (width.value > maxImageWidth) {
+                height *= maxImageWidth / width.value
                 width = maxImageWidth.dp
-                height *= width.value / maxImageWidth
               }
 
               val inlineContent = InlineTextContent(
@@ -80,13 +89,35 @@ fun parseCommentHtml(
                   placeholderVerticalAlign = PlaceholderVerticalAlign.Bottom
                 ),
                 children = {
-                  Image(
+                  val themeColors = MaterialTheme.colors
+                  val painter = rememberImagePainter(imageUrl)
+
+                  Box(
                     modifier = Modifier
-                      .width(width)
-                      .height(height),
-                    painter = rememberImagePainter(imageUrl),
-                    contentDescription = null
-                  )
+                      .fillMaxSize()
+                  ) {
+                    Image(
+                      modifier = Modifier
+                        .fillMaxSize(),
+                      painter = painter,
+                      contentDescription = null
+                    )
+
+                    if (painter.state !is ImagePainter.State.Success) {
+                      Box(
+                        modifier = Modifier
+                          .fillMaxSize()
+                          .background(themeColors.surface)
+                      ) {
+                        Image(
+                          modifier = Modifier
+                            .fillMaxSize(),
+                          painter = painterResource(id = R.drawable.placeholder),
+                          contentDescription = null
+                        )
+                      }
+                    }
+                  }
                 }
               )
 
@@ -200,4 +231,8 @@ private fun probeImageSize(imageUrl: String): ImageSize {
   Globals.imageLoader.enqueue(request)
 
   return runBlocking { completableDeferred.await() }
+}
+
+private fun String.correctImgUrl(): String {
+  return this.replace("https://img.moegirl.org/", "https://img.moegirl.org.cn/")
 }

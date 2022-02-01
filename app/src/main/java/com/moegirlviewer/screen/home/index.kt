@@ -1,10 +1,8 @@
 package com.moegirlviewer.screen.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.BadgedBox
 import androidx.compose.material.ExperimentalMaterialApi
@@ -18,9 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.node.Ref
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberImagePainter
 import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen() {
   val model: HomeScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
-  val drawerRef = Ref<CustomDrawerRef>()
+  val drawerRef = remember { Ref<CustomDrawerRef>() }
 
   LaunchedEffect(true) {
     if (HomeScreenModel.needReload && model.articleViewRef.value!!.loadStatus == LoadStatus.LOADING) {
