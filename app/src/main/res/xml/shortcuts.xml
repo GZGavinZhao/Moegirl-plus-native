@@ -1,0 +1,33 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="search"
+        android:icon="@drawable/shortcut_search"
+        android:shortcutShortLabel="@string/search"
+    >
+        <intent
+            android:action="com.moegirlviewer.SEARCH"
+            android:targetPackage="com.moegirlviewer"
+            android:targetClass="com.moegirlviewer.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="continueRead"
+        android:icon="@drawable/shortcut_back"
+        android:shortcutShortLabel="@string/continueRead"
+    >
+        <intent
+            android:action="com.moegirlviewer.CONTINUE_READ"
+            android:targetPackage="com.moegirlviewer"
+            android:targetClass="com.moegirlviewer.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="random"
+        android:icon="@drawable/shortcut_random"
+        android:shortcutShortLabel="@string/random"
+    >
+        <intent
+            android:action="com.moegirlviewer.RANDOM"
+            android:targetPackage="com.moegirlviewer"
+            android:targetClass="com.moegirlviewer.MainActivity" />
+    </shortcut>
+    <!-- Specify more shortcuts here. -->
+</shortcuts>

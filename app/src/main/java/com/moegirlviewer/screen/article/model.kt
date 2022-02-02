@@ -51,13 +51,16 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   var editAllowed by mutableStateOf<Boolean?>(null)
 
   // 真实页面名
-  val truePageName get() = articleData?.parse?.title ?: routeArguments.pageName
+  val truePageName get() = articleData?.parse?.title ?:
+    routeArguments.pageName ?:
+    routeArguments.readingRecord?.pageName
   // 要显示的页面名(受萌百标题格式化模板的影响)
   val displayPageName get() = getTextFromHtml(
     (
       articleData?.parse?.displaytitle ?:
       routeArguments.displayName ?:
       routeArguments.pageName ?:
+      routeArguments.readingRecord?.pageName ?:
       Globals.context.getString(R.string.app_name)
     ).replace("_", " ")
   )
@@ -135,6 +138,14 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
         articleViewRef.value!!.htmlWebViewRef!!.injectScript("""
           document.getElementById('${routeArguments.anchor}').scrollIntoView()
           window.scrollTo(0, window.scrollY - $minusOffset)
+        """.trimIndent())
+      }
+    }
+
+    if (routeArguments.readingRecord != null) {
+      coroutineScope.launch {
+        articleViewRef.value!!.htmlWebViewRef!!.injectScript("""
+          window.scrollTo(0, ${routeArguments.readingRecord!!.scrollY})
         """.trimIndent())
       }
     }

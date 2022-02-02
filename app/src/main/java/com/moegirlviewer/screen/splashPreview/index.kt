@@ -48,21 +48,15 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
   var visibleInfoBar by remember { mutableStateOf(true) }
 
   LaunchedEffect(true) {
-    suspend fun animationLoop() {
-//      Globals.activity.useFullScreenLayout()
-      model.showAppearAnimation()
-      model.showHideAnimation()
-      animationLoop()
-    }
-
-    while (true) {
-      animationLoop()
-    }
+    model.routeArguments = arguments
   }
 
-//  DisposableEffect(true) {
-//    onDispose { Globals.activity.useFreeStatusBarLayout() }
-//  }
+  LaunchedEffect(true) {
+    while (true) {
+      model.showAppearAnimation()
+      model.showHideAnimation()
+    }
+  }
 
   Scaffold(
     modifier = Modifier

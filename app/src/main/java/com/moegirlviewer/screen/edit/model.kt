@@ -68,14 +68,29 @@ class EditScreenModel @Inject constructor() : ViewModel() {
 
   suspend fun loadWikitext() {
     if (routeArguments.type == EditType.NEW_PAGE || isNewSection) {
-      focusRequester.requestFocus()
-      insertWikitext(QuickInsertText(
-        text = "== ${Globals.context.getString(R.string.title)} ==",
-        minusOffset = 3,
-        selectionMinusOffset = 2
-      ))
+      if (routeArguments.preload == null) {
+        insertWikitext(QuickInsertText(
+          text = "== ${Globals.context.getString(R.string.title)} ==",
+          minusOffset = 3,
+          selectionMinusOffset = 2
+        ))
+        focusRequester.requestFocus()
 
-      wikitextStatus = LoadStatus.SUCCESS
+        wikitextStatus = LoadStatus.SUCCESS
+      } else {
+        wikitextStatus = LoadStatus.LOADING
+        try {
+          val res = EditApi.getWikitext(routeArguments.preload!!)
+          val getPreloadContentRegex = Regex("""<includeonly>([\s\S]+)</includeonly>""")
+          val preloadContent = getPreloadContentRegex.find(res.parse.wikitext._asterisk)?.groupValues?.get(1)
+          wikitextTextFieldValue = TextFieldValue(preloadContent ?: "")
+          wikitextStatus = LoadStatus.SUCCESS
+        } catch (e: MoeRequestException) {
+          printRequestErr(e, "加载预加载模版内容失败")
+          wikitextStatus = LoadStatus.FAIL
+        }
+      }
+
       return
     }
 

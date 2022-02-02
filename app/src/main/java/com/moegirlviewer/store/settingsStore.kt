@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.moegirlviewer.DataStoreName
+import com.moegirlviewer.screen.article.ReadingRecord
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.SplashImage
 import com.moegirlviewer.util.SplashImageKey
@@ -43,7 +44,10 @@ data class RecentChangesSettings(
 ) : Settings()
 
 data class OtherSettings(
+  // 拒绝的版本，在给用户提示有更新后，如果用户点击拒绝，则记录到这里
   var rejectedVersionName: String = "",
+  // 用户上次的阅读记录
+  var readingRecord: ReadingRecord? = null
 ) : Settings()
 
 object SettingsStore {
@@ -51,8 +55,6 @@ object SettingsStore {
   val recentChanges = SettingsStoreClient(RecentChangesSettings::class.java)
   val otherSettings = SettingsStoreClient(OtherSettings::class.java)
 }
-
-
 
 private val Context.dataStore by preferencesDataStore(DataStoreName.SETTINGS.name)
 private val dataStore get() = Globals.context.dataStore

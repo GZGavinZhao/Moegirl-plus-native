@@ -46,7 +46,7 @@ fun EditScreen(arguments: EditRouteArguments) {
   SideEffect {
     model.routeArguments = arguments
     model.backupId = computeMd5(
-      arguments.pageName + arguments.type.name + (arguments.section ?: "")
+      arguments.pageName + arguments.type.name + (arguments.section ?: "") + (arguments.preload ?: "")
     )
   }
 

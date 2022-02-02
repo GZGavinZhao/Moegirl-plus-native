@@ -99,4 +99,17 @@ object PageApi {
 
     return res.query.pages.values.toList().first()
   }
+
+  suspend fun getRandomPage(
+    count: Int = 1
+  ) = moeRequest(
+    entity = GetRandomPageResBean::class.java,
+    params = mapOf(
+      "action" to "query",
+      "list" to "random",
+      "rnnamespace" to "0",
+      "rnfilterredir" to "nonredirects",
+      "rnlimit" to count
+    )
+  )
 }

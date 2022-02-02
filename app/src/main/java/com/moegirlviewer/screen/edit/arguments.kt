@@ -8,6 +8,7 @@ class EditRouteArguments(
   val pageName: String,
   val type: EditType,
   val section: String? = null,
+  val preload: String? = null
 ) : RouteArguments() {
   constructor() : this("", EditType.FULL)
 }

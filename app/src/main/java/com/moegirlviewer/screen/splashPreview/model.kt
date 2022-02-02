@@ -10,6 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashPreviewScreenModel @Inject constructor() : ViewModel() {
+  lateinit var routeArguments: SplashPreviewRouteArguments
   val contentAlpha = Animatable(0f)
   val imageScale = Animatable(1.2f)
 
@@ -42,5 +43,6 @@ class SplashPreviewScreenModel @Inject constructor() : ViewModel() {
 
   override fun onCleared() {
     super.onCleared()
+    routeArguments.removeReferencesFromArgumentPool()
   }
 }

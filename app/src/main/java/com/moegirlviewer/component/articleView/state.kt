@@ -45,6 +45,7 @@ import okhttp3.FormBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 val defaultInjectedFiles = listOf("main.css", "main.js")
@@ -296,7 +297,7 @@ class ArticleViewState(
         val anchor = linkData.get("anchor")?.asString
         val displayName = linkData.get("displayName")?.asString
 
-        if (pageName.contains("""^Special:""")) {
+        if (pageName.contains(Regex("""^Special:"""))) {
           Globals.commonAlertDialog.showText(Globals.context.getString(R.string.specialLinkUnsupported))
           return@to
         }
@@ -363,6 +364,7 @@ class ArticleViewState(
       if (linkType == "edit") {
         val section = linkData.get("section").asString
         val pageName = linkData.get("pageName").asString
+        val preload = if (linkData.has("preload")) linkData.get("preload").asString else null
 
         if (props.linkDisabled) return@to
 
@@ -391,7 +393,8 @@ class ArticleViewState(
             Globals.navController.navigate(EditRouteArguments(
               pageName = pageName,
               type = EditType.SECTION,
-              section = section
+              section = section,
+              preload = preload
             ))
           }
         }

@@ -1,9 +1,11 @@
 package com.moegirlviewer.initialization
 
+import android.util.Log
 import androidx.core.net.toUri
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.app.AppApi
+import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.component.styled.StyledText
@@ -25,6 +27,7 @@ private val coroutineScope = CoroutineScope(Dispatchers.Main)
 fun onComposeCreated() {
   coroutineScope.launch { initAccount() }
   coroutineScope.launch { checkNewVersion() }
+  coroutineScope.launch { checkShortcutIntent() }
   registerTasks()
   checkDeepLink()
 }
@@ -44,6 +47,28 @@ private fun checkDeepLink() {
     deepLink.contains(plainRegex) -> {
       val pageName = plainRegex.find(deepLink)!!.groupValues[1]
       if (pageName.contains(Regex("""^[Mm]ainpage$""")).not()) gotoArticlePage(pageName)
+    }
+  }
+}
+
+private suspend fun checkShortcutIntent() {
+  val intentAction = Globals.activity.intent.action ?: ""
+  val getShortcutActionRegex = Regex("""^com\.moegirlviewer\.(.+)$""")
+  if (intentAction.contains(getShortcutActionRegex)){
+    val shortcutAction = getShortcutActionRegex.find(intentAction)!!.groupValues[1]
+    when(shortcutAction) {
+      "SEARCH" -> Globals.navController.navigate("search")
+      "CONTINUE_READ" -> {
+        val readingRecord = SettingsStore.otherSettings.getValue { this.readingRecord }.first() ?: return
+        Globals.navController.navigate(ArticleRouteArguments(
+          pageName = readingRecord.pageName,
+          readingRecord = readingRecord
+        ))
+      }
+      "RANDOM" -> {
+        val randomPage = PageApi.getRandomPage().query.random.first().title
+        gotoArticlePage(randomPage)
+      }
     }
   }
 }

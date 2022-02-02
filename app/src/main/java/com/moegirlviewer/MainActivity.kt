@@ -68,6 +68,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlin.jvm.functions.FunctionN
 
 @AndroidEntryPoint
 @ExperimentalMaterialApi

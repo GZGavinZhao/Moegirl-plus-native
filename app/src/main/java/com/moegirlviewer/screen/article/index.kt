@@ -12,6 +12,7 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.compable.StatusBar
+import com.moegirlviewer.compable.remember.rememberDebouncedManualEffector
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
@@ -30,8 +31,12 @@ import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.imeBottomPadding
 import com.moegirlviewer.util.navigate
 import com.moegirlviewer.util.printRequestErr
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 @ExperimentalMaterialApi
 @Composable
@@ -89,9 +94,24 @@ fun ArticleScreen(
     }
   }
 
+  val debouncedManualEffector = rememberDebouncedManualEffector<ReadingRecord>(1000) {
+    scope.launch {
+      SettingsStore.otherSettings.setValue {
+        this.readingRecord = it
+      }
+    }
+  }
+
   val handleOnScrollChanged: HtmlWebViewScrollChangeHandler = { _, top, _, oldTop ->
     model.visibleHeader = top < 80 || top < oldTop
     model.visibleCommentButton = top < oldTop
+    scope.launch {
+      debouncedManualEffector.trigger(ReadingRecord(
+        pageName = model.truePageName!!,
+        progress = top.toFloat() / model.articleViewRef.value!!.htmlWebViewRef!!.webView.contentHeight,
+        scrollY = top
+      ))
+    }
   }
 
   StatusBar(
@@ -197,3 +217,9 @@ fun ArticleScreen(
   }
 }
 
+class ReadingRecord(
+  val pageName: String,
+  val progress: Float,
+  val scrollY: Int,
+  val date: LocalDateTime = LocalDateTime.now()
+)

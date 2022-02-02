@@ -22,8 +22,10 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
+import com.moegirlviewer.screen.article.ReadingRecord
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import kotlin.math.max
 
 typealias ArticleData = PageContentResBean
@@ -35,6 +37,7 @@ class ArticleViewProps(
   val pageId: Int? = null,
   val html: String? = null,
   val revId: Int? = null,
+  val readingRecord: ReadingRecord? = null,
   val injectedStyles: List<String>? = null,
   val injectedScripts: List<String>? = null,
   val linkDisabled: Boolean = false,

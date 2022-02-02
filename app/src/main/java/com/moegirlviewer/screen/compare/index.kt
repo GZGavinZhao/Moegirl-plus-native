@@ -5,6 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LowPriority
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -152,7 +153,12 @@ private fun ComposedHeader(
       ) {
         titles.forEachIndexed { index, title ->
           Tab(
-            text = { StyledText(title) },
+            text = {
+              StyledText(
+                text = title,
+                color = Color.Unspecified
+              )
+            },
             selected = model.selectedTabIndex == index,
             onClick = { model.selectedTabIndex = index }
           )
