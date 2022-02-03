@@ -19,7 +19,7 @@ import com.moegirlviewer.component.styled.StyledText
 
 class CommonLoadingDialogProps(
   val title: String? = null,
-  val closeOnDismiss: Boolean = true,
+  val closeOnDismiss: Boolean = false,
   val onDismiss: (() -> Unit)? = null
 )
 
