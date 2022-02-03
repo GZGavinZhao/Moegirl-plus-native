@@ -70,7 +70,7 @@ fun CommentEditor(
 
   val cachedWebViews = rememberCachedWebViews()
   val articleViewRef = remember { Ref<ArticleViewRef>() }
-  val pagerState = rememberPagerState(2)
+  val pagerState = rememberPagerState()
   var statusOfCommentPreview by remember { mutableStateOf(LoadStatus.INITIAL) }
   var commentPreviewHtml by remember { mutableStateOf("") }
 
@@ -225,9 +225,9 @@ fun CommentEditor(
             cachedWebViews.Provider {
               HorizontalPager(
                 state = pagerState,
-                dragEnabled = false
-//                count = 2,
-//                userScrollEnabled = false
+//                dragEnabled = false
+                count = 2,
+                userScrollEnabled = false
               ) { currentPage ->
                 if (currentPage == 0) {
                   PlainTextField(

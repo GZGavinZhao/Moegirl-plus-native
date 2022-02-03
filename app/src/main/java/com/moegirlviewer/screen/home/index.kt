@@ -1,8 +1,10 @@
 package com.moegirlviewer.screen.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.BadgedBox
 import androidx.compose.material.ExperimentalMaterialApi
@@ -16,11 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.node.Ref
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberImagePainter
 import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
@@ -30,9 +30,11 @@ import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.drawer.CommonDrawer
+import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.navigate
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -100,7 +101,8 @@ fun ArticleScreenFindBar(
           ) {
             StyledText(
               text = stringResource(id = R.string.findNext),
-              fontSize = 13.sp
+              fontSize = 13.sp,
+              color = Color.Unspecified
             )
           }
         }

@@ -1,13 +1,9 @@
 package com.moegirlviewer.util
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -18,17 +14,17 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.input.pointer.PointerInputScope
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.positionChangeConsumed
+import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import com.google.accompanist.insets.LocalWindowInsets
-import com.moegirlviewer.util.Globals
 import kotlinx.coroutines.delay
+import kotlin.math.PI
+import kotlin.math.abs
 
 fun Modifier.sideBorder(
   side: BorderSide,
@@ -109,17 +105,3 @@ fun Modifier.imeBottomPadding() = composed {
   val paddingValue = min(ime.layoutInsets.bottom.toDp(), ime.bottom.toDp())
   padding(bottom = paddingValue)
 }
-
-private val VerticalScrollConsumer = object : NestedScrollConnection {
-  override fun onPreScroll(available: Offset, source: NestedScrollSource) = available.copy(x = 0f)
-  override suspend fun onPreFling(available: Velocity) = available.copy(x = 0f)
-}
-
-private val HorizontalScrollConsumer = object : NestedScrollConnection {
-  override fun onPreScroll(available: Offset, source: NestedScrollSource) = available.copy(y = 0f)
-  override suspend fun onPreFling(available: Velocity) = available.copy(y = 0f)
-}
-
-fun Modifier.disableVerticalPointerInputScroll() = this.nestedScroll(VerticalScrollConsumer)
-
-fun Modifier.disableHorizontalPointerInputScroll() = this.nestedScroll(HorizontalScrollConsumer)

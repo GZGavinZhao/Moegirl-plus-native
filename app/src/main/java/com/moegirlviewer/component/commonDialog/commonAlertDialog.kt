@@ -10,6 +10,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -175,6 +176,7 @@ fun CommonAlertDialogUI(
             StyledText(
               text = leftButton?.text ?: "",
               fontWeight = FontWeight.Bold,
+              color = Color.Unspecified
             )
           }
 

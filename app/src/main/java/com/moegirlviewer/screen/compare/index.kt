@@ -64,7 +64,7 @@ fun CompareScreen(
     when(model.status) {
       LoadStatus.SUCCESS -> {
         HorizontalPager(
-//          count = 2,
+          count = 2,
           state = model.pagerState,
         ) { currentIndex ->
           if (currentIndex == 0) {

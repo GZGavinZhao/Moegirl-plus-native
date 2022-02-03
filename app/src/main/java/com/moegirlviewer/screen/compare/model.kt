@@ -29,7 +29,7 @@ import javax.inject.Inject
 class CompareScreenModel @Inject constructor() : ViewModel() {
   lateinit var routeArguments: CompareRouteArguments
   val coroutineScope = CoroutineScope(Dispatchers.Main)
-  val pagerState = PagerState(2)
+  val pagerState = PagerState(0)
   var compareData by mutableStateOf<ComparePageResult.Compare?>(null)
   var leftLines by mutableStateOf(emptyList<DiffLine>())
   var rightLines by mutableStateOf(emptyList<DiffLine>())

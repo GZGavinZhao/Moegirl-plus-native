@@ -42,7 +42,6 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
   val model: SplashPreviewScreenModel = hiltViewModel()
   val splashImages = remember { SplashImageKey.getSplashImages().reversed() }
   val pagerState = rememberPagerState(
-    pageCount = splashImages.size,
     initialPage = splashImages.indexOfFirst { it.key == arguments.intiialSplashImageKey }
   )
   var visibleInfoBar by remember { mutableStateOf(true) }
@@ -71,6 +70,7 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
     }
   ) {
     HorizontalPager(
+      count = splashImages.size,
       state = pagerState,
     ) { currentPage ->
       Box(

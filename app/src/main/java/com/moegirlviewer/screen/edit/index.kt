@@ -91,10 +91,10 @@ fun EditScreen(arguments: EditRouteArguments) {
         }
       ) {
         HorizontalPager(
-//          count = 2,
-//          userScrollEnabled = false
+          count = 2,
+          userScrollEnabled = false,
           state = model.pagerState,
-          dragEnabled = false
+//          dragEnabled = false
         ) { currentIndex ->
           if (currentIndex == 0) {
             EditScreenWikitextEditor()

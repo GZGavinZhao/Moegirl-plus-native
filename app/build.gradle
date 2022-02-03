@@ -105,14 +105,13 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-rc01'
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
-    def accompanist_version = '0.21.4-beta'
+    def accompanist_version = '0.24.1-alpha'
     implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
     implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
-    // 这个先用0.18版本的，当前的版本不能禁用滑动手势，等添加这个参数之后再用最新版
-    implementation "com.google.accompanist:accompanist-pager:0.18.0"
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
     implementation "com.google.accompanist:accompanist-flowlayout:$accompanist_version"
 
     def roomVersion = "2.4.0"
@@ -134,10 +133,10 @@ dependencies {
     implementation "io.coil-kt:coil-svg:1.4.0"
     implementation "io.coil-kt:coil-gif:1.4.0"
 
-    implementation 'com.github.piasy:BigImageViewer:1.8.1'
-    implementation 'com.github.piasy:FrescoImageLoader:1.8.1'
-    implementation 'com.github.piasy:ProgressPieIndicator:1.8.1'
-    implementation 'com.github.piasy:FrescoImageViewFactory:1.8.1'
+//    implementation 'com.github.piasy:BigImageViewer:1.8.1'
+//    implementation 'com.github.piasy:FrescoImageLoader:1.8.1'
+//    implementation 'com.github.piasy:ProgressPieIndicator:1.8.1'
+//    implementation 'com.github.piasy:FrescoImageViewFactory:1.8.1'
 
     kapt "com.google.dagger:hilt-android-compiler:2.35"
 }

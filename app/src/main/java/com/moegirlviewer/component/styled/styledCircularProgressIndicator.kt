@@ -7,7 +7,8 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun StyledCircularProgressIndicator(
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+
 ) {
   val themeColors = MaterialTheme.colors
 

@@ -12,10 +12,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
 import com.moegirlviewer.R
-import com.moegirlviewer.component.compose.composePagedBigImageViews.ComposePagedBigImageViews
+import com.moegirlviewer.component.imageViewer.ImageViewer
 import com.moegirlviewer.component.styled.StyledText
 
 @ExperimentalComposeUiApi
@@ -27,38 +30,52 @@ fun ImageViewerScreen(
 ) {
   val model: ImageViewerScreenModel = hiltViewModel()
   val configuration = LocalConfiguration.current
+  val imagePainters = arguments.images.map { rememberImagePainter(it.fileUrl) }
 
   LaunchedEffect(true) {
     model.routeArguments = arguments
-    model.currentImgIndex = arguments.initialIndex
+    model.pagerState.scrollToPage(arguments.initialIndex)
   }
 
   Box(
     modifier = Modifier
-      .fillMaxSize(),
+      .fillMaxSize()
+      .background(Color.Black),
     contentAlignment = Alignment.BottomStart
   ) {
-    ComposePagedBigImageViews(
-      modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black),
-      images = arguments.images,
-      initialIndex = arguments.initialIndex,
-      onPageChange = { model.currentImgIndex = it }
-    )
+    HorizontalPager(
+      state = model.pagerState,
+      count = arguments.images.size
+    ) { currentIndex ->
+      ImageViewer(
+        modifier = Modifier
+          .fillMaxSize(),
+        painter = imagePainters[currentIndex]
+      )
+    }
+
+//    ComposePagedBigImageViews(
+//      modifier = Modifier
+//        .fillMaxSize()
+//        .background(Color.Black),
+//      images = arguments.images,
+//      initialIndex = arguments.initialIndex,
+//      onPageChange = { model.currentImgIndex = it }
+//    )
 
     if (arguments.images.size > 1) {
       Column(
         modifier = Modifier
           .offset(20.dp, (-20).dp)
-          .width((configuration.screenWidthDp * 0.6).dp),
+          .width((configuration.screenWidthDp * 0.6).dp)
+          .zIndex(1f),
       ) {
         StyledText(
-          text = stringResource(id = R.string.gallery) + "：${model.currentImgIndex + 1} / ${arguments.images.size}",
+          text = stringResource(id = R.string.gallery) + "：${model.pagerState.currentPage + 1} / ${arguments.images.size}",
           color = Color(0xffcccccc)
         )
         StyledText(
-          text = arguments.images[model.currentImgIndex].title,
+          text = arguments.images[model.pagerState.currentPage].title,
           color = Color(0xffcccccc)
         )
       }

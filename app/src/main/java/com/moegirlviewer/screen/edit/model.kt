@@ -49,7 +49,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
   val coroutineScope = CoroutineScope(Dispatchers.Main)
   lateinit var routeArguments: EditRouteArguments
   var selectedTabIndex by mutableStateOf(0)
-  val pagerState = PagerState(2)
+  val pagerState = PagerState()
 
   var wikitextTextFieldValue by mutableStateOf(TextFieldValue())
   var originalWikiText = ""
