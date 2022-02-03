@@ -27,9 +27,9 @@ val moeOkHttpClient = OkHttpClient.Builder()
   .cookieJar(cookieJar)
   .addInterceptor(CommonConfigInterceptor())
   .addInterceptor(MoeInterceptor())
-  .addInterceptor(HttpLoggingInterceptor().apply {
-    this.level = HttpLoggingInterceptor.Level.BODY
-  })
+//  .addInterceptor(HttpLoggingInterceptor().apply {
+//    this.level = HttpLoggingInterceptor.Level.BODY
+//  })
   .build()
 
 suspend fun <T> moeRequest(
@@ -67,7 +67,6 @@ suspend fun <T> moeRequest(
 
   try {
     val response = moeOkHttpClient.newCall(request).execute()
-//    response.close()
 
     if (!response.isSuccessful) {
       if (response.code == 404) {
@@ -119,10 +118,8 @@ suspend fun <T> moeRequest(
     }
   } catch (e: SocketTimeoutException) {
     throw MoeRequestTimeoutException(e)
-  } catch (e: Exception) {
-    e.printStackTrace()
+  } catch (e: UnknownHostException) {
     throw MoeRequestTimeoutException(
-//      message = Globals.context.getString(R.string.netErr),
       cause = e
     )
   }
