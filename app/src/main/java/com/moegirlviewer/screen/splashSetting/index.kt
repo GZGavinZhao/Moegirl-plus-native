@@ -183,11 +183,17 @@ fun SplashSettingScreen() {
             onClick = {
               coroutineScope.launch {
                 SettingsStore.common.setValue {
-                  this.splashImageMode = SplashImageMode.CUSTOM_RANDOM
-                  this.selectedSplashImages = if (this.selectedSplashImages.contains(item.key)) {
-                    this.selectedSplashImages.filter { it != item.key }
+                  if (this.splashImageMode != SplashImageMode.CUSTOM_RANDOM) {
+                    this.splashImageMode = SplashImageMode.CUSTOM_RANDOM
+                    if (!this.selectedSplashImages.contains(item.key)) {
+                      this.selectedSplashImages = this.selectedSplashImages + listOf(item.key)
+                    }
                   } else {
-                    this.selectedSplashImages + listOf(item.key)
+                    this.selectedSplashImages = if (this.selectedSplashImages.contains(item.key)) {
+                      this.selectedSplashImages.filter { it != item.key }
+                    } else {
+                      this.selectedSplashImages + listOf(item.key)
+                    }
                   }
                 }
               }
@@ -210,7 +216,7 @@ private fun ImageItem(
 ) {
   val themeColors = MaterialTheme.colors
   val animatedBorderWidth by animateDpAsState(
-    if (selected && visiblePreviewButton) 3.dp else 0.dp
+    if (selected && visiblePreviewButton) 4.dp else 0.dp
   )
 
   Box(
