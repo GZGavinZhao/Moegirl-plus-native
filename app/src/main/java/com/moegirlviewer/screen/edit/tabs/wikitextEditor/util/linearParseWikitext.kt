@@ -1,11 +1,11 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 
-fun linearTintWikitext(wikitext: String): AnnotatedString {
+fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitextMarkup>> {
   val wikitextLength = wikitext.length
   var startCursor = 0
   var endCursor = 0
@@ -14,7 +14,7 @@ fun linearTintWikitext(wikitext: String): AnnotatedString {
   var skipStartMarkupMatching = false  // 为ture时，跳过开始EqualWikitextMarkup的开始匹配，让结束匹配来处理
   var skipCursorIncrement = false
 
-  val resultList = mutableListOf<ParseResult>()
+  val resultList = mutableListOf<ParseResult<PairWikitextMarkup>>()
   while(endCursor < wikitextLength) {
     if (skipCursorIncrement) {
       skipCursorIncrement = false
@@ -24,19 +24,21 @@ fun linearTintWikitext(wikitext: String): AnnotatedString {
     }
 
     // 起始标记匹配
-    if (markupTextCache.length >= MarkupMatcher.minMarkupTextLength) {
+    if (markupTextCache.length >= PairMarkupMatcher.minMarkupTextLength) {
       try {
-        val marchedFirstMarkup = MarkupMatcher.matchStart(markupTextCache, wikitext, endCursor)
+        val marchedFirstMarkup = PairMarkupMatcher.matchStart(markupTextCache, wikitext, endCursor)
         if (marchedFirstMarkup is EqualWikitextMarkup && skipStartMarkupMatching) {
           skipStartMarkupMatching = false
         } else {
           val parseResultOfStartMarkupPreviousText = ParseResult(
             content = wikitext.substring(startCursor, endCursor - marchedFirstMarkup.startText.length),
+            contentRange = startCursor until endCursor - marchedFirstMarkup.startText.length,
             markup = if (stackForStartMarkupMatch.isNotEmpty()) stackForStartMarkupMatch.last() else null,
           )
           val parseResultOfStartMarkup = ParseResult(
             markup = marchedFirstMarkup,
-            containStartMarkup = true
+            containStartMarkup = true,
+            contentRange = startCursor..startCursor
           )
 
           resultList.addAll(listOf(
@@ -61,11 +63,12 @@ fun linearTintWikitext(wikitext: String): AnnotatedString {
 
       // 结束标记匹配
       try {
-        val marchedEndMarkup = MarkupMatcher.matchEnd(markupTextCache, wikitext, endCursor)
+        val marchedEndMarkup = PairMarkupMatcher.matchEnd(markupTextCache, wikitext, endCursor)
         val isEqualWikiTextMarkup = marchedEndMarkup is EqualWikitextMarkup
         if ((stackForStartMarkupMatch.last() == marchedEndMarkup) || isEqualWikiTextMarkup) {
           resultList.add(ParseResult(
             content = wikitext.substring(startCursor, endCursor - marchedEndMarkup.endText.length),
+            contentRange = startCursor until endCursor - marchedEndMarkup.endText.length,
             markup = marchedEndMarkup,
             containEndMarkup = true
           ))
@@ -93,30 +96,32 @@ fun linearTintWikitext(wikitext: String): AnnotatedString {
     if (stackForStartMarkupMatch.isNotEmpty()) {
       resultList.add(ParseResult(
         content = markupTextCache,
+        contentRange = startCursor until endCursor,
         markup = stackForStartMarkupMatch.last(),
       ))
     } else {
-      resultList.add(ParseResult(markupTextCache))
+      resultList.add(ParseResult(
+        markupTextCache,
+        contentRange = startCursor..startCursor
+      ))
     }
   }
 
-  return buildAnnotatedString {
-    for (item in resultList) { tintTextByMarkup(item) }
-  }
+  return resultList
 }
 
-private object MarkupMatcher {
+private object PairMarkupMatcher {
   val minMarkupTextLength =
-    markupList.map { if (it.startText.length < it.endText.length) it.startText.length else it.endText.length }.minOrNull()!!
+    linearParsingMarkupList.map { if (it.startText.length < it.endText.length) it.startText.length else it.endText.length }.minOrNull()!!
   val maxMarkupTextLength =
-    markupList.map { if (it.startText.length > it.endText.length) it.startText.length else it.endText.length }.maxOrNull()!!
+    linearParsingMarkupList.map { if (it.startText.length > it.endText.length) it.startText.length else it.endText.length }.maxOrNull()!!
   fun matchStart(text: String, fullText: String, cursor: Int): PairWikitextMarkup {
-    val foundMarkup = markupList.first { it.matchStart(text) }
+    val foundMarkup = linearParsingMarkupList.first { it.matchStart(text) }
     probe(ProbeType.START, foundMarkup.startText, fullText, cursor)
     return foundMarkup
   }
   fun matchEnd(text: String, fullText: String, cursor: Int): PairWikitextMarkup {
-    val foundMarkup = markupList.first { it.matchEnd(text) }
+    val foundMarkup = linearParsingMarkupList.first { it.matchEnd(text) }
     probe(ProbeType.END, foundMarkup.endText, fullText, cursor)
     return foundMarkup
   }
@@ -138,9 +143,9 @@ private object MarkupMatcher {
       probeText += fullText[cursor + probeIndex]
 
       val result = if (type == ProbeType.START) {
-        markupList.indexOfFirst { it.startText == probeText }
+        linearParsingMarkupList.indexOfFirst { it.startText == probeText }
       } else {
-        markupList.indexOfFirst { it.endText == probeText }
+        linearParsingMarkupList.indexOfFirst { it.endText == probeText }
       }
 
       if (result == - 1) {
@@ -167,93 +172,18 @@ class ProbeHitException(
   val probePosition: Int
 ) : Exception()
 
-private val markupList = listOf(
-  PairWikitextMarkup(
-    startText = "[[",
-    endText = "]]",
-    style = SpanStyle(
-      color = Color(0xff21A3F1),
-    ),
-  ),
-  PairWikitextMarkup(
-    startText = "{{",
-    endText = "}}",
-    style = SpanStyle(
-      color = Color(0xffE38A2E),
-    ),
-  ),
-  PairWikitextMarkup(
-    startText = "[http",
-    endText = "]",
-    style = SpanStyle(
-      color = Color(0xff38AD6C)
-    ),
-  ),
-  PairWikitextMarkup(
-    startText = "<!--",
-    endText = "-->",
-    style = SpanStyle(
-      color = Color(0xffBEF781)
-    )
-  ),
-  EqualWikitextMarkup(
-    text = "'''",
-    style = SpanStyle(
-      fontWeight = FontWeight.Black,
-    ),
-  ),
-  EqualWikitextMarkup(
-    text = "''",
-    style = SpanStyle(
-      fontStyle = FontStyle.Italic
-    )
-  )
-)
-
-private abstract class WikitextMarkup(
-  val style: SpanStyle,
-  val contentStyle: SpanStyle = style
-)
-
-private open class PairWikitextMarkup(
-  val startText: String,
-  val endText: String,
+open class PairWikitextMarkup(
+  override val startText: String,
+  override val endText: String,
   style: SpanStyle,
   contentStyle: SpanStyle = style
-) : WikitextMarkup(style, contentStyle) {
+) : WikitextMarkup(style, contentStyle), TintableWikitextMarkup {
   fun matchStart(text: String) = text.takeLast(startText.length) == startText
   fun matchEnd(text: String) = text.takeLast(endText.length) == endText
 }
 
-private class EqualWikitextMarkup(
+class EqualWikitextMarkup(
   text: String,
   style: SpanStyle,
   contentStyle: SpanStyle = style
 ) : PairWikitextMarkup(text, text, style, contentStyle)
-
-//class TagWikitextMarkup(
-//  val tagName: String,
-//  style: SpanStyle,
-//  contentStyle: SpanStyle = style
-//) : WikitextMarkup(style, contentStyle)
-
-private class ParseResult(
-  val content: String = "",
-  val markup: PairWikitextMarkup? = null,
-  val containStartMarkup: Boolean = false,
-  val containEndMarkup: Boolean = false
-)
-
-private fun AnnotatedString.Builder.tintTextByMarkup(parseResult: ParseResult) {
-  if (parseResult.markup == null) {
-    append(parseResult.content)
-  } else {
-    if (parseResult.containStartMarkup) {
-      withStyle(parseResult.markup.style) { append(parseResult.markup.startText) }
-    }
-    withStyle(parseResult.markup.contentStyle) { append(parseResult.content) }
-    if (parseResult.containEndMarkup) {
-      withStyle(parseResult.markup.style) { append(parseResult.markup.endText) }
-    }
-  }
-}
