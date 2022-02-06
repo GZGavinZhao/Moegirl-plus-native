@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.NospzGothicMoeFamily
 
 @Composable
 fun PlainTextField(
@@ -58,7 +60,7 @@ fun PlainTextField(
       .then(modifier),
     enabled = enabled,
     readOnly = readOnly,
-    textStyle = textStyle,
+    textStyle = textStyle.merge(LocalTextStyle.current),
     keyboardOptions = keyboardOptions,
     keyboardActions = keyboardActions,
     singleLine = singleLine,
@@ -125,7 +127,7 @@ fun PlainTextField(
       .then(modifier),
     enabled = enabled,
     readOnly = readOnly,
-    textStyle = textStyle,
+    textStyle = textStyle.merge(LocalTextStyle.current),
     keyboardOptions = keyboardOptions,
     keyboardActions = keyboardActions,
     singleLine = singleLine,

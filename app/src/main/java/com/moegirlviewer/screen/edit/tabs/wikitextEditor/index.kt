@@ -96,8 +96,7 @@ fun EditScreenWikitextEditor() {
           .focusRequester(model.focusRequester),
         value = if (syntaxHighlight) textFieldValue else model.wikitextTextFieldValue,
         textStyle = TextStyle.Default.copy(
-          fontSize = 16.sp,
-          fontFamily = NospzGothicMoeFamily
+          fontSize = 16.sp
         ),
         onValueChange = {
           model.wikitextTextFieldValue = it

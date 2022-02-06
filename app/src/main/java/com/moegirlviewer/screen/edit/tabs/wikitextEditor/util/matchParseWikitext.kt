@@ -79,8 +79,8 @@ open class InlinePairWikitextMarkup(
   contentStyle: SpanStyle = style
 ) : InlineWikitextMarkup(startText, endText, style, contentStyle) {
   override val regex = run {
-    val regexStartText = startText
-    val regexEndText = endText
+    val regexStartText = Regex.escape(startText)
+    val regexEndText = Regex.escape(endText)
     Regex("""^$regexStartText([\s\S]+)$regexEndText\s+?$""", RegexOption.MULTILINE)
   }
 }

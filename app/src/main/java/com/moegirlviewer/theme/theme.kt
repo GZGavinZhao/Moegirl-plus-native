@@ -4,13 +4,15 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import com.moegirlviewer.store.SettingsStore
+import com.moegirlviewer.util.NospzGothicMoeFamily
 import com.moegirlviewer.util.darken
 import com.moegirlviewer.util.isMoegirl
 import com.moegirlviewer.util.lighten
@@ -109,11 +111,16 @@ fun MoegirlPlusTheme(
   content: @Composable () -> Unit
 ) {
   val themeColors = MaterialTheme.colors
+  val useSpecialCharSupportedFontInApp by SettingsStore.common.getValue { this.useSpecialCharSupportedFontInApp }.collectAsState(
+    initial = false
+  )
   val colors = isMoegirl(
     if (isUseDarkMode()) MoegirlDarkColorPalette else MoegirlLightColorPalette,
     if (isUseDarkMode()) HmoeDarkColorPalette else HmoeLightColorPalette
   )
-
+  val textStyle = LocalTextStyle.current.copy(
+    fontFamily = if (useSpecialCharSupportedFontInApp) NospzGothicMoeFamily else FontFamily.Default
+  )
   val textSelectionColors = TextSelectionColors(
     backgroundColor = colors.secondary.copy(alpha = 0.3f),
     handleColor = colors.secondary,
@@ -126,6 +133,7 @@ fun MoegirlPlusTheme(
     content = {
       CompositionLocalProvider(
         LocalTextSelectionColors provides textSelectionColors,
+        LocalTextStyle provides textStyle,
         content = content,
       )
     }

@@ -73,7 +73,8 @@ fun tintWikitext(wikitext: String): AnnotatedString {
   val linearParseResult = linearParseWikitext(wikitext)
   val matchParseResult = matchParseWikitext(wikitext)
   return buildAnnotatedString {
-    for (item in linearParseResult.mergeInlineParseResult(matchParseResult)) {
+//    for (item in linearParseResult.mergeInlineParseResult(matchParseResult)) {
+    for (item in linearParseResult) {
       tintTextByMarkup(item)
     }
   }
