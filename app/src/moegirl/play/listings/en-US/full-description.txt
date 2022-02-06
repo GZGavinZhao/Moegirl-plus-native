@@ -1,12 +1,12 @@
 Third-party client for moegirl.org
 <h3>Features</h3>
 <ul>
-<li>Design for mobile with great reading experience</li>
+<li>Designed for mobile with great reading experience</li>
 <li>Complete commenting system</li>
-<li>Easy-to-use edit and preview functions</li>
-<li>Latest changes, watching list, page history and diff compare</li>
+<li>Easy-to-use editing and preview features</li>
+<li>Latest changes, monitor entries, page history, and diff compare</li>
 <li>Search items and browse in categories</li>
-<li>Browse history</li>
-<li>Item cache</li>
+<li>Browsing history</li>
+<li>Cache pages</li>
 <li>Night mode</li>
 </ul>
