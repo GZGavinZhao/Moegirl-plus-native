@@ -10,7 +10,7 @@ class SourceConstants(
   val filePrefix: String
 )
 
-val sourceConstants = when (BuildConfig.FLAVOR) {
+val sourceConstants = when (BuildConfig.FLAVOR_source) {
   "moegirl" -> SourceConstants(
     source = DataSource.MOEGIRL,
     apiUrl = "https://zh.moegirl.org.cn/api.php",
@@ -45,6 +45,8 @@ object Constants {
 
   val topAppBarHeight = 56
   val articleCacheDirPath = "article_cache"
+  val targetStore = if (BuildConfig.FLAVOR_targetStore == "common")
+    TargetStore.COMMON else TargetStore.FDROID
 }
 
 enum class DataSource(val code: String) {
@@ -56,4 +58,9 @@ enum class DataStoreName {
   ACCOUNT,
   SEARCH_RECORDS,
   SETTINGS,
+}
+
+enum class TargetStore {
+  COMMON,
+  FDROID
 }

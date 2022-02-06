@@ -44,7 +44,7 @@ android {
         }
     }
 
-    flavorDimensions "source"
+    flavorDimensions 'targetStore', 'source'
 
     productFlavors {
         hmoe {
@@ -55,6 +55,14 @@ android {
         moegirl {
             dimension 'source'
             applicationId 'com.moegirlviewer'
+        }
+
+        common {
+            dimension 'targetStore'
+        }
+
+        fdroid {
+            dimension 'targetStore'
         }
     }
 

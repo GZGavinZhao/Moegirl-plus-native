@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.core.net.toUri
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.TargetStore
 import com.moegirlviewer.api.app.AppApi
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.component.commonDialog.ButtonConfig
@@ -26,7 +27,9 @@ private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
 fun onComposeCreated() {
   coroutineScope.launch { initAccount() }
-  coroutineScope.launch { checkNewVersion() }
+  if (Constants.targetStore != TargetStore.FDROID) {
+    coroutineScope.launch { checkNewVersion() }
+  }
   coroutineScope.launch { checkShortcutIntent() }
   registerTasks()
   checkDeepLink()
