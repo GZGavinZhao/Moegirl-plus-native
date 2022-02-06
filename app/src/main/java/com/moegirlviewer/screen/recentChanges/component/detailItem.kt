@@ -1,6 +1,7 @@
 package com.moegirlviewer.screen.recentChanges.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
@@ -27,6 +28,7 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.compare.ComparePageRouteArguments
 import com.moegirlviewer.theme.GreenPrimary
 import com.moegirlviewer.theme.RedAccent
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import java.time.format.DateTimeFormatter
@@ -122,7 +124,8 @@ fun ComposedHeader(
         modifier = Modifier
           .padding(end = 5.dp)
           .size(30.dp)
-          .clip(CircleShape),
+          .clip(CircleShape)
+          .background(themeColors.background2),
         painter = rememberImagePainter(Constants.avatarUrl + userName),
         contentDescription = null
       )

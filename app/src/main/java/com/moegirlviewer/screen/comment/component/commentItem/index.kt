@@ -49,6 +49,7 @@ import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.commentReply.CommentReplyRouteArguments
 import com.moegirlviewer.store.CommentStore
 import com.moegirlviewer.store.PageComments
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import com.moegirlviewer.util.CommentTree.Companion.replyList
@@ -260,6 +261,7 @@ private fun ComposedHeader(
         .padding(end = 10.dp)
         .size(40.dp)
         .clip(CircleShape)
+        .background(themeColors.background2)
         .noRippleClickable { gotoUserPage(userName) },
       painter = rememberImagePainter(Constants.avatarUrl + userName),
       contentDescription = null

@@ -23,6 +23,7 @@ import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.notification.Notification
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.diffNowDate
 import com.moegirlviewer.util.gotoUserPage
@@ -64,6 +65,7 @@ fun NotificationScreenItem(
         modifier = Modifier
           .size(45.dp)
           .clip(CircleShape)
+          .background(themeColors.background2)
         ,
         painter = rememberImagePainter(Constants.avatarUrl + notification.agent.name),
         contentDescription = null

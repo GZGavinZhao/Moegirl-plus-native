@@ -29,6 +29,7 @@ import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.compare.ComparePageRouteArguments
 import com.moegirlviewer.theme.GreenPrimary
 import com.moegirlviewer.theme.RedAccent
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import java.time.format.DateTimeFormatter
@@ -116,7 +117,8 @@ private fun ComposedTitle(
         modifier = Modifier
           .padding(end = 5.dp)
           .size(30.dp)
-          .clip(CircleShape),
+          .clip(CircleShape)
+          .background(themeColors.background2),
         painter = rememberImagePainter(Constants.avatarUrl + userName),
         contentDescription = null
       )

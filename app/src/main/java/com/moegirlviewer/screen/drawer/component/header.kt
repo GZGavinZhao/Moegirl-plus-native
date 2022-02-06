@@ -26,6 +26,7 @@ import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.store.AccountStore
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
@@ -61,6 +62,7 @@ fun CommonDrawerHeader(
         .width(avatarSize.dp)
         .height(avatarSize.dp)
         .clip(CircleShape)
+        .background(themeColors.background2)
         .noRippleClickable { handleOnClickAvatarOrHintText() }
         .border(3.dp, themeColors.onPrimary, shape = CircleShape)
       ,

@@ -42,6 +42,7 @@ import com.moegirlviewer.screen.recentChanges.util.EditUserOfChanges
 import com.moegirlviewer.screen.recentChanges.util.RawRecentChanges
 import com.moegirlviewer.theme.GreenPrimary
 import com.moegirlviewer.theme.RedAccent
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import java.time.format.DateTimeFormatter
@@ -286,7 +287,8 @@ private fun UsersBar(
           modifier = Modifier
             .padding(end = 5.dp)
             .size(30.dp)
-            .clip(CircleShape),
+            .clip(CircleShape)
+            .background(themeColors.background2),
           painter = rememberImagePainter(Constants.avatarUrl + item.name),
           contentDescription = null
         )
@@ -356,7 +358,8 @@ private fun ComposedFooter(
         Image(
           modifier = Modifier
             .size(30.dp)
-            .clip(CircleShape),
+            .clip(CircleShape)
+            .background(themeColors.background2),
           painter = rememberImagePainter(Constants.avatarUrl + firstUserName),
           contentDescription = null,
         )

@@ -32,6 +32,7 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.compare.util.DiffLine
 import com.moegirlviewer.screen.compare.util.DiffRowContentType
 import com.moegirlviewer.screen.compare.util.DiffRowMarker
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.gotoUserPage
@@ -83,6 +84,7 @@ private fun ComposedHeader(
         modifier = Modifier
           .size(30.dp)
           .clip(CircleShape)
+          .background(themeColors.background2)
           .noRippleClickable { gotoUserPage(userName) },
         painter = rememberImagePainter(Constants.avatarUrl + userName),
         contentDescription = null
