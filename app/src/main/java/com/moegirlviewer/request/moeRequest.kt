@@ -65,63 +65,63 @@ suspend fun <T> moeRequest(
     .url(urlBuilder.build())
     .build()
 
-  try {
-    val response = moeOkHttpClient.newCall(request).execute()
-
-    if (!response.isSuccessful) {
-      if (response.code == 404) {
-        throw MoeRequestTimeoutException()
-      } else {
-        Log.e("[MoeRequestHttpException]", response.body?.string() ?: "body不存在")
-        throw MoeRequestHttpException(
-          code = response.code,
-          message = response.message
-        )
-      }
-    }
-
-    val bodyContent = response.body!!.string()
-
-    when(response.probeMoeResponseType(bodyContent)) {
-      DATA -> {
-        Gson().fromJson(bodyContent, entity)
-      }
-
-      ERROR -> {
-        throw response.body!!.toMoeRequestError(bodyContent)
-      }
-
-      POLL -> {
-        bodyContent as T
-      }
-
-      TX_CAPTCHA -> {
-        withContext(Dispatchers.Main) {
-          Globals.navController.navigate(CaptchaRouteArguments(
-            captchaHtml = bodyContent,
-          )) {
-            this.launchSingleTop = true
-          }
-        }
-
-        throw MoeRequestWikiException("被腾讯captcha拦截")
-      }
-
-      TX_BLOCKED -> {
-        toast(Globals.context.getString(R.string.txBlocked))
-        throw MoeRequestWikiException("被腾讯防火墙拦截")
-      }
-
-      UNKNOWN -> {
-        throw MoeRequestWikiException("未知错误")
-      }
-    }
+  val response = try {
+    moeOkHttpClient.newCall(request).execute()
   } catch (e: SocketTimeoutException) {
     throw MoeRequestTimeoutException(e)
-  } catch (e: UnknownHostException) {
+  } catch (e: Exception) {
     throw MoeRequestTimeoutException(
       cause = e
     )
+  }
+
+  if (!response.isSuccessful) {
+    if (response.code == 404) {
+      throw MoeRequestTimeoutException()
+    } else {
+      Log.e("[MoeRequestHttpException]", response.body?.string() ?: "body不存在")
+      throw MoeRequestHttpException(
+        code = response.code,
+        message = response.message
+      )
+    }
+  }
+
+  val bodyContent = response.body!!.string()
+
+  when(response.probeMoeResponseType(bodyContent)) {
+    DATA -> {
+      Gson().fromJson(bodyContent, entity)
+    }
+
+    ERROR -> {
+      throw response.body!!.toMoeRequestError(bodyContent)
+    }
+
+    POLL -> {
+      bodyContent as T
+    }
+
+    TX_CAPTCHA -> {
+      withContext(Dispatchers.Main) {
+        Globals.navController.navigate(CaptchaRouteArguments(
+          captchaHtml = bodyContent,
+        )) {
+          this.launchSingleTop = true
+        }
+      }
+
+      throw MoeRequestWikiException("被腾讯captcha拦截")
+    }
+
+    TX_BLOCKED -> {
+      toast(Globals.context.getString(R.string.txBlocked))
+      throw MoeRequestWikiException("被腾讯防火墙拦截")
+    }
+
+    UNKNOWN -> {
+      throw MoeRequestWikiException("未知错误")
+    }
   }
 }
 

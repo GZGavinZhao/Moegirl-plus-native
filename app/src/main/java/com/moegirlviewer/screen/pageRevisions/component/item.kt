@@ -16,6 +16,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -154,7 +155,7 @@ private fun SummaryContent(
           withStyle(
             SpanStyle(
             color = themeColors.text.secondary,
-            fontStyle = FontStyle.Italic
+            textGeometricTransform = remember { TextGeometricTransform.Italic() }
           )
           ) {
             append("→${summary.section}  ")

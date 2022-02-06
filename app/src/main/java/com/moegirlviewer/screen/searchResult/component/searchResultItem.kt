@@ -17,6 +17,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import com.moegirlviewer.api.search.bean.SearchResultBean
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
+import com.moegirlviewer.util.Italic
 import com.moegirlviewer.util.sideBorder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -68,7 +70,7 @@ fun SearchResultItem(
         .padding(top = 10.dp, start = 10.dp, end = 10.dp)
         .fillMaxWidth(),
       backgroundColor = themeColors.surface,
-      elevation = 1.dp,
+      elevation = 3.dp,
       onClick = { onClick(data.title) }
     ) {
       Column(
@@ -128,7 +130,7 @@ private fun ComposedHeader(
       textAlign = TextAlign.Right,
       style = TextStyle(
         color = themeColors.primary,
-        fontStyle = FontStyle.Italic
+        textGeometricTransform = remember { TextGeometricTransform.Italic() }
       )
     )
   }

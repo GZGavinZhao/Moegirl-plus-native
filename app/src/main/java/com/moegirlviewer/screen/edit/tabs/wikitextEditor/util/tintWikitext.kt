@@ -1,9 +1,12 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util
 
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextGeometricTransform
+import com.moegirlviewer.util.Italic
 
 internal val linearParsingMarkupList = listOf(
   PairWikitextMarkup(
@@ -43,7 +46,7 @@ internal val linearParsingMarkupList = listOf(
   EqualWikitextMarkup(
     text = "''",
     style = SpanStyle(
-      fontStyle = FontStyle.Italic
+      textGeometricTransform = remember { TextGeometricTransform.Italic() }
     )
   )
 )

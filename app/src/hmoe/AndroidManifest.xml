@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.moegirlviewer">
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:name=".ApplicationContainer"
@@ -19,12 +17,16 @@
             android:theme="@style/Theme.MoegirlPlus.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <meta-data android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="www.hmoegirl.com" />
+                <data android:scheme="https" android:host="m.hmoegirl.com" />
+            </intent-filter>
         </activity>
     </application>
 

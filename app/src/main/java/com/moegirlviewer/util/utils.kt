@@ -12,6 +12,7 @@ import android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
@@ -157,3 +158,7 @@ fun LocalDate.toDate(): Date {
   val zdt: ZonedDateTime = this.atStartOfDay(zoneId)
   return Date.from(zdt.toInstant())
 }
+
+fun TextGeometricTransform.Companion.Italic() = TextGeometricTransform(
+  skewX = -0.3f
+)
