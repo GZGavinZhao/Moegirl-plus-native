@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -32,11 +31,7 @@ import com.moegirlviewer.screen.settings.component.SettingsScreenItem
 import com.moegirlviewer.screen.splashPreview.SplashPreviewRouteArguments
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.store.SplashImageMode
-import com.moegirlviewer.theme.text
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.SplashImage
-import com.moegirlviewer.util.SplashImageKey
-import com.moegirlviewer.util.navigate
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
 @Composable
@@ -50,7 +45,7 @@ fun SplashSettingScreen() {
   val selectedSplashImages by SettingsStore.common.getValue { this.selectedSplashImages }.collectAsState(
     initial = remember { emptyList() }
   )
-  val splashImages = remember { SplashImageKey.getSplashImages().reversed() }
+  val reversedSplashImageList = remember { splashImageList.reversed() }
 
   BackHandler(selectedSplashImageMode == SplashImageMode.CUSTOM_RANDOM && selectedSplashImages.isEmpty()) {
     Globals.commonAlertDialog.show(CommonAlertDialogProps(
@@ -170,7 +165,7 @@ fun SplashSettingScreen() {
         mainAxisSpacing = 5.dp,
         crossAxisSpacing = 5.dp
       ) {
-        for (item in splashImages) {
+        for (item in reversedSplashImageList) {
           ImageItem(
             splashImage = item,
             visiblePreviewButton = selectedSplashImageMode == SplashImageMode.CUSTOM_RANDOM,

@@ -40,9 +40,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
   val model: SplashPreviewScreenModel = hiltViewModel()
-  val splashImages = remember { SplashImageKey.getSplashImages().reversed() }
+  val reversedSplashImageList = remember { splashImageList.reversed() }
   val pagerState = rememberPagerState(
-    initialPage = splashImages.indexOfFirst { it.key == arguments.intiialSplashImageKey }
+    initialPage = reversedSplashImageList.indexOfFirst { it.key == arguments.intiialSplashImageKey }
   )
   var visibleInfoBar by remember { mutableStateOf(true) }
 
@@ -63,14 +63,14 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
         visibleInfoBar = !visibleInfoBar
       },
     topBar = {
-      if (visibleInfoBar) ComposedHeader(splashImages[pagerState.currentPage])
+      if (visibleInfoBar) ComposedHeader(reversedSplashImageList[pagerState.currentPage])
     },
     bottomBar = {
       if (visibleInfoBar) ComposedFooter()
     }
   ) {
     HorizontalPager(
-      count = splashImages.size,
+      count = reversedSplashImageList.size,
       state = pagerState,
     ) { currentPage ->
       Box(
@@ -84,7 +84,7 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
           modifier = Modifier
             .fillMaxSize()
             .scale(model.imageScale.value),
-          painter = painterResource(splashImages[currentPage].resId),
+          painter = painterResource(reversedSplashImageList[currentPage].resId),
           contentDescription = null,
           contentScale = ContentScale.Crop
         )
@@ -126,7 +126,7 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
 
 @Composable
 private fun ComposedHeader(
-  currentSplashImage: SplashImageWithKey
+  currentSplashImage: SplashImage
 ) {
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
@@ -176,7 +176,7 @@ private fun ComposedHeader(
 @Composable
 private fun ComposedFooter() {
   val themeColors = MaterialTheme.colors
-  val splashImagesSize = remember { SplashImageKey.values().size }
+  val splashImagesSize = remember { splashImageList.size }
   val selectedSplashImagesSize by SettingsStore.common.getValue { this.selectedSplashImages.size }.collectAsState(
     initial = 0
   )

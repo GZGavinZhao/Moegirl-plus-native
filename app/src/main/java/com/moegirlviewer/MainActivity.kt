@@ -9,18 +9,11 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.moegirlviewer.api.account.bean.LoginTokenBean
 import com.moegirlviewer.initialization.OnComposeCreate
 import com.moegirlviewer.initialization.initializeOnCreate
-import com.moegirlviewer.request.MoeRequestMethod
-import com.moegirlviewer.request.moeRequest
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.article.ArticleScreen
 import com.moegirlviewer.screen.browsingHistory.BrowsingHistoryScreen
@@ -62,13 +55,11 @@ import com.moegirlviewer.theme.MoegirlPlusTheme
 import com.moegirlviewer.util.*
 import com.moegirlviewer.util.RouteArguments.Companion.formattedArguments
 import com.moegirlviewer.util.RouteArguments.Companion.formattedRouteName
-import com.moegirlviewer.util.SplashImageKey.Companion.toSplashImage
 import com.moegirlviewer.view.ComposeWithSplashScreenView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlin.jvm.functions.FunctionN
 
 @AndroidEntryPoint
 @ExperimentalMaterialApi
@@ -242,12 +233,12 @@ private suspend fun ComponentActivity.withSplashScreen(
   useFullScreenLayout()
 
   val usingSplashImage = when(splashImageMode) {
-    SplashImageMode.NEW -> SplashImageKey.values().last().toSplashImage()
-    SplashImageMode.RANDOM -> SplashImageKey.getSplashImages().random()
+    SplashImageMode.NEW -> splashImageList.last()
+    SplashImageMode.RANDOM -> splashImageList.random()
     SplashImageMode.CUSTOM_RANDOM -> SettingsStore.common.getValue { this.selectedSplashImages }
-      .map { it.ifEmpty { SplashImageKey.values().toList() } }
+      .map { it.ifEmpty { listOf(splashImageList.last().key) } }
+      .map { splashImageKeys -> splashImageList.filter { splashImageKeys.contains(it.key) } }
       .first()
-      .map { it.toSplashImage() }
       .random()
     else -> null
   }!!

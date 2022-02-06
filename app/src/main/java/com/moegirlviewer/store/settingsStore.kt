@@ -7,8 +7,7 @@ import com.google.gson.Gson
 import com.moegirlviewer.DataStoreName
 import com.moegirlviewer.screen.article.ReadingRecord
 import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.SplashImage
-import com.moegirlviewer.util.SplashImageKey
+import com.moegirlviewer.util.splashImageList
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -24,7 +23,7 @@ data class CommonSettings(
   var useSpecialCharSupportedFontInApp: Boolean = false,
   var useSpecialCharSupportedFontInArticle: Boolean = false,
   var splashImageMode: SplashImageMode = SplashImageMode.NEW,
-  var selectedSplashImages: List<SplashImageKey> = listOf(SplashImageKey.values().last())
+  var selectedSplashImages: List<String> = listOf(splashImageList.last().key)
 ) : Settings()
 
 enum class SplashImageMode {
