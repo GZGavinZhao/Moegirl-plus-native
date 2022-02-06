@@ -1,5 +1,6 @@
 package com.moegirlviewer.component
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -49,6 +50,9 @@ fun PlainTextField(
   cursorBrush: Brush = SolidColor(MaterialTheme.colors.secondary),
   decorationBox: (@Composable (@Composable () -> Unit) -> Unit) = { it() }
 ) {
+  val finalTextStyle = textStyle.copy(
+    fontFamily = MaterialTheme.typography.body1.fontFamily
+  )
   var focused by remember { mutableStateOf(false) }
 
   BasicTextField(
@@ -60,7 +64,7 @@ fun PlainTextField(
       .then(modifier),
     enabled = enabled,
     readOnly = readOnly,
-    textStyle = textStyle.merge(LocalTextStyle.current),
+    textStyle = finalTextStyle,
     keyboardOptions = keyboardOptions,
     keyboardActions = keyboardActions,
     singleLine = singleLine,
@@ -116,6 +120,9 @@ fun PlainTextField(
   cursorBrush: Brush = SolidColor(MaterialTheme.colors.secondary),
   decorationBox: (@Composable (@Composable () -> Unit) -> Unit) = { it() }
 ) {
+  val finalTextStyle = textStyle.copy(
+    fontFamily = MaterialTheme.typography.body1.fontFamily
+  )
   var focused by remember { mutableStateOf(false) }
 
   BasicTextField(
@@ -127,7 +134,7 @@ fun PlainTextField(
       .then(modifier),
     enabled = enabled,
     readOnly = readOnly,
-    textStyle = textStyle.merge(LocalTextStyle.current),
+    textStyle = finalTextStyle,
     keyboardOptions = keyboardOptions,
     keyboardActions = keyboardActions,
     singleLine = singleLine,

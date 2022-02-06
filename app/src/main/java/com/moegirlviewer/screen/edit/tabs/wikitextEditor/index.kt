@@ -67,7 +67,7 @@ fun EditScreenWikitextEditor() {
 
   LaunchedEffect(true) {
     backupFlow.debounce(1000).collect {
-      if (it !== model.originalWikiText) model.makeBackup(it)
+      if (it != "" && it != model.originalWikiText) model.makeBackup(it)
     }
   }
 

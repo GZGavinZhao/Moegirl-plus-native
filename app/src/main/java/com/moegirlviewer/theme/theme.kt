@@ -5,10 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import com.moegirlviewer.store.SettingsStore
@@ -110,7 +107,6 @@ fun MoegirlPlusTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit
 ) {
-  val themeColors = MaterialTheme.colors
   val useSpecialCharSupportedFontInApp by SettingsStore.common.getValue { this.useSpecialCharSupportedFontInApp }.collectAsState(
     initial = false
   )
@@ -118,22 +114,27 @@ fun MoegirlPlusTheme(
     if (isUseDarkMode()) MoegirlDarkColorPalette else MoegirlLightColorPalette,
     if (isUseDarkMode()) HmoeDarkColorPalette else HmoeLightColorPalette
   )
-  val textStyle = LocalTextStyle.current.copy(
-    fontFamily = if (useSpecialCharSupportedFontInApp) NospzGothicMoeFamily else FontFamily.Default
-  )
-  val textSelectionColors = TextSelectionColors(
-    backgroundColor = colors.secondary.copy(alpha = 0.3f),
-    handleColor = colors.secondary,
-  )
+  val typography = remember(useSpecialCharSupportedFontInApp) {
+    Typography(
+      body1 = Typography.body1.copy(
+        fontFamily = if (useSpecialCharSupportedFontInApp) NospzGothicMoeFamily else FontFamily.Default
+      )
+    )
+  }
+  val textSelectionColors = remember(colors) {
+    TextSelectionColors(
+      backgroundColor = colors.secondary.copy(alpha = 0.3f),
+      handleColor = colors.secondary,
+    )
+  }
 
   MaterialTheme(
     colors = colors,
-    typography = Typography,
+    typography = typography,
     shapes = Shapes,
     content = {
       CompositionLocalProvider(
         LocalTextSelectionColors provides textSelectionColors,
-        LocalTextStyle provides textStyle,
         content = content,
       )
     }

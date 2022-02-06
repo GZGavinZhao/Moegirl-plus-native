@@ -9,7 +9,6 @@ import androidx.compose.ui.unit.sp
 // 文字样式全由component/styled/styledText设置
 val Typography = Typography(
   body1 = TextStyle(
-    fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Normal,
     fontSize = 16.sp
   ),
