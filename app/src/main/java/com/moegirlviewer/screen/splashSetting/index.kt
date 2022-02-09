@@ -227,7 +227,7 @@ private fun ImageItem(
       modifier = Modifier
         .fillMaxSize()
         .clickable { onClick() },
-      painter = rememberImagePainter(data = splashImage.resId),
+      painter = splashImage.composePainter(),
       contentDescription = null,
       contentScale = ContentScale.Crop
     )

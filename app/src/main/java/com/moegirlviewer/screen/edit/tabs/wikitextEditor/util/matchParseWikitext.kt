@@ -1,18 +1,19 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util
 
+import android.util.Log
 import androidx.compose.ui.text.SpanStyle
 
 fun matchParseWikitext(wikitext: String): List<ParseResult<InlineWikitextMarkup>> {
   val resultList = mutableListOf<ParseResult<InlineWikitextMarkup>>()
-  var currentText: String? = wikitext
+  var startIndex = 0
 
-  while (currentText != null) {
-    val matchResult = InlineMarkupMatcher.matchMarkup(currentText)
+  while (startIndex != -1) {
+    val matchResult = InlineMarkupMatcher.matchMarkup(wikitext, startIndex)
     if (matchResult != null) {
       when(matchResult.markup) {
         is InlineEqualWikitextMarkup -> {
           val contentRange =
-            (matchResult.range.start - matchResult.markup.startText.length)..
+            (matchResult.range.start + matchResult.markup.startText.length)..
             (matchResult.range.endInclusive - matchResult.markup.endText.length)
 
           resultList.add(ParseResult(
@@ -20,26 +21,28 @@ fun matchParseWikitext(wikitext: String): List<ParseResult<InlineWikitextMarkup>
             contentRange = contentRange,
             markup = matchResult.markup,
             containStartMarkup = true,
-            containEndMarkup = true
+            containEndMarkup = true,
+            suffix = matchResult.emptyStringInMarkupEnd
           ))
         }
         is InlineSingleWikitextMarkup -> {
           val contentRange =
-            (matchResult.range.start - matchResult.markup.startText.length)..
+            (matchResult.range.start + matchResult.markup.startText.length)..
             matchResult.range.endInclusive
 
           resultList.add(ParseResult(
             content = matchResult.content,
             contentRange = contentRange,
             markup = matchResult.markup,
-            containStartMarkup = true
+            containStartMarkup = true,
+            suffix = matchResult.emptyStringInMarkupEnd
           ))
         }
       }
 
-      currentText = currentText.substring(matchResult.range.endInclusive + 1)
+      startIndex = matchResult.range.endInclusive + 1
     } else {
-      currentText = null
+      startIndex = -1
     }
   }
 
@@ -47,18 +50,19 @@ fun matchParseWikitext(wikitext: String): List<ParseResult<InlineWikitextMarkup>
 }
 
 private object InlineMarkupMatcher {
-  fun matchMarkup(text: String): MarkupMatchResult? {
-    var regexMatchResult: MatchResult? = null
-    val matchedMarkup = matchParsingMarkupList.firstOrNull {
-      val findResult = it.regex.find(text)
-      if (findResult != null) regexMatchResult = findResult
-      findResult != null
-    }
+  fun matchMarkup(text: String, startIndex: Int): MarkupMatchResult? {
+    val matchedMarkup = matchParsingMarkupList
+      .mapNotNull {
+        val result = it.regex.find(text, startIndex)
+        if (result != null) it to result else null
+      }
+      .minByOrNull { it.second.range.first }
 
     return if (matchedMarkup != null) MarkupMatchResult(
-      content = regexMatchResult!!.groupValues[1],
-      range = regexMatchResult!!.range,
-      markup = matchedMarkup
+      content = matchedMarkup.second.groupValues[1],
+      range = matchedMarkup.second.range,
+      markup = matchedMarkup.first,
+      emptyStringInMarkupEnd = matchedMarkup.second.groupValues.getOrNull(2)
     ) else null
   }
 }
@@ -81,7 +85,7 @@ open class InlinePairWikitextMarkup(
   override val regex = run {
     val regexStartText = Regex.escape(startText)
     val regexEndText = Regex.escape(endText)
-    Regex("""^$regexStartText([\s\S]+)$regexEndText\s+?$""", RegexOption.MULTILINE)
+    Regex("""^$regexStartText([\s\S]+?)$regexEndText(\s*?)$""", RegexOption.MULTILINE)
   }
 }
 
@@ -92,10 +96,10 @@ class InlineEqualWikitextMarkup(
 ) : InlinePairWikitextMarkup(text, text, style, contentStyle)
 
 class InlineSingleWikitextMarkup(
-  startText: String,
+  text: String,
   style: SpanStyle,
   contentStyle: SpanStyle = style
-) : InlineWikitextMarkup(startText, "\n", style, contentStyle), TintableWikitextMarkup {
+) : InlineWikitextMarkup(text, "", style, contentStyle), TintableWikitextMarkup {
   override val regex get() = run {
     val regexStartText = Regex.escape(startText)
     Regex("""^$regexStartText([\s\S]+?)$""", RegexOption.MULTILINE)
@@ -106,4 +110,5 @@ private class MarkupMatchResult(
   val content: String,
   val range: ClosedRange<Int>,
   val markup: InlineWikitextMarkup,
+  val emptyStringInMarkupEnd: String?
 )

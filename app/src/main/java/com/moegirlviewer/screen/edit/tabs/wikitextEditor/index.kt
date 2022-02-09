@@ -23,12 +23,10 @@ import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.NospzGothicMoeFamily
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 @InternalCoroutinesApi
@@ -40,11 +38,7 @@ fun EditScreenWikitextEditor() {
   val model: EditScreenModel = hiltViewModel()
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
-  var textFieldValue by remember(model.wikitextTextFieldValue) { mutableStateOf(
-    model.wikitextTextFieldValue.copy(
-      annotatedString = tintWikitext(model.wikitextTextFieldValue.text)
-    )
-  ) }
+  var textFieldValue by remember(model.wikitextTextFieldValue) { mutableStateOf(model.wikitextTextFieldValue) }
   var visibleQuickInsertBar by remember { mutableStateOf(false) }
   val syntaxHighlight by SettingsStore.common.getValue { this.syntaxHighlight }.collectAsState(
     initial = true
@@ -52,13 +46,13 @@ fun EditScreenWikitextEditor() {
   // 将value转为flow，主要是为了要flow的防抖功能，用于更新备份
   val backupFlow = remember { MutableStateFlow(model.wikitextTextFieldValue.text) }
 
-//  if (syntaxHighlight) {
-//    LaunchedEffect(model.wikitextTextFieldValue) {
-//      textFieldValue = model.wikitextTextFieldValue.copy(
-//        annotatedString = withContext(Dispatchers.Default) { linearTintWikitext(model.wikitextTextFieldValue.text) }
-//      )
-//    }
-//  }
+  if (syntaxHighlight) {
+    LaunchedEffect(model.wikitextTextFieldValue) {
+      textFieldValue = model.wikitextTextFieldValue.copy(
+        annotatedString = withContext(Dispatchers.Default) { tintWikitext(model.wikitextTextFieldValue.text) }
+      )
+    }
+  }
 
   LaunchedEffect(model.wikitextTextFieldValue.text) {
     model.shouldReloadPreview = true

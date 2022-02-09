@@ -1,12 +1,13 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util
 
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextGeometricTransform
-import com.moegirlviewer.util.Italic
+import androidx.compose.ui.text.withStyle
+import java.lang.Integer.max
 
 internal val linearParsingMarkupList = listOf(
   PairWikitextMarkup(
@@ -46,28 +47,49 @@ internal val linearParsingMarkupList = listOf(
   EqualWikitextMarkup(
     text = "''",
     style = SpanStyle(
-      textGeometricTransform = remember { TextGeometricTransform.Italic() }
+      fontStyle = FontStyle.Italic
     )
   )
 )
 
 internal val matchParsingMarkupList = listOf(
-  InlineEqualWikitextMarkup(
-    text = "==",
-    style = SpanStyle(
-      color = Color.Green
+  *(6 downTo 1).map {
+    InlineEqualWikitextMarkup(
+      text = "=".repeat(it),
+      style = SpanStyle(
+        color = Color.Red,
+        fontWeight = FontWeight.Black
+      )
     )
-  ),
-  InlineEqualWikitextMarkup(
+  }.toTypedArray(),
+  InlineSingleWikitextMarkup(
     text = "*",
     style = SpanStyle(
-      color = Color.Red
+      color = Color(0xff6868F2),
+      fontWeight = FontWeight.Black
+    ),
+    contentStyle = SpanStyle(
+      color = Color(0xff6868F2)
     )
   ),
-  InlineEqualWikitextMarkup(
+  InlineSingleWikitextMarkup(
     text = "#",
     style = SpanStyle(
-      color = Color.Blue
+      color = Color(0xff6868F2),
+      fontWeight = FontWeight.Black
+    ),
+    contentStyle = SpanStyle(
+      color = Color(0xff6868F2)
+    )
+  ),
+  InlineSingleWikitextMarkup(
+    text = ";",
+    style = SpanStyle(
+      color = Color(0xff6868F2),
+      fontWeight = FontWeight.Black
+    ),
+    contentStyle = SpanStyle(
+      color = Color(0xff6868F2)
     )
   ),
 )
@@ -75,12 +97,15 @@ internal val matchParsingMarkupList = listOf(
 fun tintWikitext(wikitext: String): AnnotatedString {
   val linearParseResult = linearParseWikitext(wikitext)
   val matchParseResult = matchParseWikitext(wikitext)
-  return buildAnnotatedString {
-//    for (item in linearParseResult.mergeInlineParseResult(matchParseResult)) {
-    for (item in linearParseResult) {
+
+  val mergedResult = linearParseResult.mergeInlineParseResult(matchParseResult)
+  val annotatedString = buildAnnotatedString {
+    for (item in mergedResult) {
       tintTextByMarkup(item)
     }
   }
+
+  return annotatedString
 }
 
 abstract class WikitextMarkup(
@@ -107,6 +132,8 @@ data class ParseResult<T : TintableWikitextMarkup>(
   val markup: T? = null,
   val containStartMarkup: Boolean = false,
   val containEndMarkup: Boolean = false,
+  val prefix: String? = null,
+  val suffix: String? = null
 ) {
   val startMarkupRange: ClosedRange<Int>? get() {
     if (markup == null || !containStartMarkup) return null
@@ -116,57 +143,12 @@ data class ParseResult<T : TintableWikitextMarkup>(
     if (markup == null || !containEndMarkup) return null
     return contentRange.endInclusive..(contentRange.endInclusive + markup.endText.length)
   }
-  val fillContentRange: ClosedRange<Int> get() {
+  val fullContentRange: ClosedRange<Int> get() {
     if (markup == null) return contentRange
     val startOffset = if (containStartMarkup) -markup.startText.length else 0
     val endOffset = if (containEndMarkup) markup.endText.length else 0
-    return (contentRange.start + startOffset)..(contentRange.endInclusive + endOffset)
+    return (contentRange.start + startOffset - (prefix?.length ?: 0))..(contentRange.endInclusive + endOffset + (suffix?.length ?: 0))
   }
-}
-
-fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
-  other: List<ParseResult<InlineWikitextMarkup>>
-): List<ParseResult<out TintableWikitextMarkup>> {
-  val mergedList: MutableList<ParseResult<out TintableWikitextMarkup>> = this.toMutableList()
-  for (otherItem in other) {
-    val indexOfStartOverlapElement = this.indexOfFirst { otherItem.fillContentRange.contains(it.contentRange.start) }
-    val indexOfEndOverlapElement = this.indexOfFirst { otherItem.fillContentRange.contains(it.contentRange.endInclusive) }
-
-    if (indexOfEndOverlapElement == indexOfEndOverlapElement) {
-      val overlapElement = this[indexOfEndOverlapElement]
-      val (
-        leftContentOfOverlapElement,
-        rightContentOfOverlapElement
-      ) = overlapElement.content.split(otherItem.markup!!.regex, 1)
-      val newOverlapElements = listOf<ParseResult<out TintableWikitextMarkup>>(
-        overlapElement.copy(
-          content = leftContentOfOverlapElement,
-          contentRange = overlapElement.contentRange.start..(overlapElement.contentRange.start + leftContentOfOverlapElement.length),
-          containEndMarkup = false
-        ),
-        otherItem,
-        overlapElement.copy(
-          content = rightContentOfOverlapElement,
-          contentRange = (overlapElement.contentRange.endInclusive - rightContentOfOverlapElement.length)..overlapElement.contentRange.endInclusive,
-          containStartMarkup = false
-        )
-      )
-      mergedList.removeAt(indexOfEndOverlapElement)
-      mergedList.addAll(indexOfEndOverlapElement - 1, newOverlapElements)
-    } else {
-//      val startOverlapElement = this[indexOfStartOverlapElement]
-//      val (
-//        leftContentOfStartOverlapElement,
-//        rightContentOfStartOverlapElement
-//      ) = startOverlapElement.content.split(otherItem.markup!!.startText)
-//      val newStartElement = startOverlapElement.copy(content = leftContentOfStartOverlapElement)
-//
-//      val endOverlapElement = this[indexOfEndOverlapElement]
-
-    }
-  }
-
-  return mergedList
 }
 
 //fun List<ParseResult>.update(
@@ -181,6 +163,7 @@ private fun AnnotatedString.Builder.tintTextByMarkup(parseResult: ParseResult<ou
   if (parseResult.markup == null) {
     append(parseResult.content)
   } else {
+    if (parseResult.prefix != null) append(parseResult.prefix)
     if (parseResult.containStartMarkup) {
       withStyle(parseResult.markup.style) { append(parseResult.markup.startText) }
     }
@@ -188,5 +171,6 @@ private fun AnnotatedString.Builder.tintTextByMarkup(parseResult: ParseResult<ou
     if (parseResult.containEndMarkup) {
       withStyle(parseResult.markup.style) { append(parseResult.markup.endText) }
     }
+    if (parseResult.suffix != null) append(parseResult.suffix)
   }
 }

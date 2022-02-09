@@ -84,7 +84,7 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
           modifier = Modifier
             .fillMaxSize()
             .scale(model.imageScale.value),
-          painter = painterResource(reversedSplashImageList[currentPage].resId),
+          painter = reversedSplashImageList[currentPage].composePainter(),
           contentDescription = null,
           contentScale = ContentScale.Crop
         )
@@ -126,7 +126,7 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
 
 @Composable
 private fun ComposedHeader(
-  currentSplashImage: SplashImage
+  currentSplashImage: MoegirlSplashImage
 ) {
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()

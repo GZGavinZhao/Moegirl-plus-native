@@ -22,9 +22,6 @@ import com.moegirlviewer.R
 fun SplashScreen(
   state: SplashScreenState
 ) {
-  val density = LocalDensity.current
-  val localConfiguration = LocalConfiguration.current
-
   Box(
     modifier = Modifier
       .fillMaxSize()
@@ -35,7 +32,7 @@ fun SplashScreen(
       modifier = Modifier
         .fillMaxSize()
         .scale(state.imageScale.value),
-      painter = painterResource(state.splashImage.resId),
+      painter = state.splashImage.composePainter(),
       contentDescription = null,
       contentScale = ContentScale.Crop
     )

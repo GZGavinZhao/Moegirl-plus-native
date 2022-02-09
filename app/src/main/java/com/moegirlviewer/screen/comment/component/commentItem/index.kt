@@ -6,6 +6,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -175,6 +177,7 @@ fun CommentScreenCommentItem(
       .padding(bottom = 1.dp)
       .fillMaxWidth()
       .background(themeColors.surface)
+      // 这里有问题，会被内部的clickableText挡住，应该用pointerInput手动检测手势，设置由父组件优先处理手势，如果不满足长按条件则不消耗手势，放行给子组件处理
       .combinedClickable(
         enabled = true,
         onClick = {},

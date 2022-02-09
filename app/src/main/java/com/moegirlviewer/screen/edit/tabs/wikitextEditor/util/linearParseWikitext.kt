@@ -1,9 +1,6 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 
 fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitextMarkup>> {
   val wikitextLength = wikitext.length
@@ -35,10 +32,11 @@ fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitextMarkup>>
             contentRange = startCursor until endCursor - marchedFirstMarkup.startText.length,
             markup = if (stackForStartMarkupMatch.isNotEmpty()) stackForStartMarkupMatch.last() else null,
           )
+          val markupContentPosition = endCursor - 1 - marchedFirstMarkup.startText.length
           val parseResultOfStartMarkup = ParseResult(
             markup = marchedFirstMarkup,
             containStartMarkup = true,
-            contentRange = startCursor..startCursor
+            contentRange = markupContentPosition..markupContentPosition
           )
 
           resultList.addAll(listOf(
@@ -102,7 +100,7 @@ fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitextMarkup>>
     } else {
       resultList.add(ParseResult(
         markupTextCache,
-        contentRange = startCursor..startCursor
+        contentRange = startCursor until endCursor
       ))
     }
   }
