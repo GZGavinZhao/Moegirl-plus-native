@@ -52,11 +52,6 @@ fun QuickInsertBar(
       onClick = { onClickItem(QuickInsertText("|")) }
     )
     Item(
-      icon = ImageVector.vectorResource(id = R.drawable.fountain_pen_tip),
-      subtitle = stringResource(id = R.string.sign),
-      onClick = { onClickItem(QuickInsertText("--~~~~")) }
-    )
-    Item(
       title = stringResource(id = R.string.strong),
       onClick = { onClickItem(QuickInsertText("''''''", 3)) }
     )
@@ -64,6 +59,11 @@ fun QuickInsertBar(
       title = "<del>",
       subtitle = stringResource(id = R.string.delLine),
       onClick = { onClickItem(QuickInsertText("<del></del>", 6)) }
+    )
+    Item(
+      icon = ImageVector.vectorResource(id = R.drawable.fountain_pen_tip),
+      subtitle = stringResource(id = R.string.sign),
+      onClick = { onClickItem(QuickInsertText("--~~~~")) }
     )
     Item(
       title = stringResource(id = R.string.heimu),
@@ -77,6 +77,11 @@ fun QuickInsertBar(
         QuickInsertText(
           "{{color|${Globals.context.getString(R.string.colorTextPlaceholder)}}}", 5, 2
       )) }
+    )
+    Item(
+      title = "*",
+      subtitle = stringResource(id = R.string.unorderedList),
+      onClick = { onClickItem(QuickInsertText("* ")) }
     )
     Item(
       title = "#",
