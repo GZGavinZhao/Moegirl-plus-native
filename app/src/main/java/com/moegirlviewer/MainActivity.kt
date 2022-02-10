@@ -22,6 +22,7 @@ import com.moegirlviewer.screen.captcha.CaptchaRouteArguments
 import com.moegirlviewer.screen.captcha.CaptchaScreen
 import com.moegirlviewer.screen.category.CategoryRouteArguments
 import com.moegirlviewer.screen.category.CategoryScreen
+import com.moegirlviewer.screen.cloudflareCaptcha.CloudflareCaptchaScreen
 import com.moegirlviewer.screen.comment.CommentRouteArguments
 import com.moegirlviewer.screen.comment.CommentScreen
 import com.moegirlviewer.screen.commentReply.CommentReplyRouteArguments
@@ -137,6 +138,11 @@ private fun Routes(navController: NavHostController) {
       arguments = CaptchaRouteArguments::class.java.formattedArguments,
       animation = Animation.NONE
     ) { CaptchaScreen(it.arguments!!.toRouteArguments()) }
+
+//    animatedComposable(
+//      route = "cloudflareCaptcha",
+//      animation = Animation.NONE
+//    ) { CloudflareCaptchaScreen() }
 
     animatedComposable(
       route = "search",

@@ -7,7 +7,7 @@ import okhttp3.Response
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 
-fun Response.probeMoeResponseType(bodyContent: String): MoeResponseType {
+internal fun Response.probeMoeResponseType(bodyContent: String): MoeResponseType {
   if (this.request.url.queryParameter("rs") == "AJAXPoll::submitVote") return MoeResponseType.POLL
 
   return try {
@@ -17,10 +17,10 @@ fun Response.probeMoeResponseType(bodyContent: String): MoeResponseType {
       MoeResponseType.DATA
   } catch (e: JsonSyntaxException) {
     val htmlDoc = Jsoup.parse(bodyContent)
-    when(htmlDoc.title()) {
-      "AccessDeny" -> MoeResponseType.TX_BLOCKED
-      "" -> MoeResponseType.TX_CAPTCHA
-      else -> MoeResponseType.TX_CAPTCHA
+    when {
+      htmlDoc.title() == "AccessDeny" -> MoeResponseType.TX_BLOCKED
+      htmlDoc.title() == "" -> MoeResponseType.TX_CAPTCHA
+      else -> MoeResponseType.UNKNOWN
     }
   }
 }

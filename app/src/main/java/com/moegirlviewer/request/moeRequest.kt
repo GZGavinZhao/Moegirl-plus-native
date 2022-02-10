@@ -1,16 +1,11 @@
 package com.moegirlviewer.request
 
 import android.util.Log
-import com.google.gson.Gson
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
-import com.moegirlviewer.request.util.MoeResponseType.*
-import com.moegirlviewer.request.util.probeMoeResponseType
-import com.moegirlviewer.request.util.toMoeRequestError
+import com.moegirlviewer.request.util.bodyContentHandle
 import com.moegirlviewer.request.util.toQueryStringParams
-import com.moegirlviewer.screen.captcha.CaptchaRouteArguments
 import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.navigate
 import com.moegirlviewer.util.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,17 +14,16 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
-import java.net.SocketException
+import org.jsoup.Jsoup
 import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 
 val moeOkHttpClient = OkHttpClient.Builder()
   .cookieJar(cookieJar)
   .addInterceptor(CommonConfigInterceptor())
   .addInterceptor(MoeInterceptor())
-//  .addInterceptor(HttpLoggingInterceptor().apply {
-//    this.level = HttpLoggingInterceptor.Level.BODY
-//  })
+  .addInterceptor(HttpLoggingInterceptor().apply {
+    this.level = HttpLoggingInterceptor.Level.BODY
+  })
   .build()
 
 suspend fun <T> moeRequest(
@@ -79,50 +73,29 @@ suspend fun <T> moeRequest(
     if (response.code == 404) {
       throw MoeRequestTimeoutException()
     } else {
-      Log.e("[MoeRequestHttpException]", response.body?.string() ?: "body不存在")
-      throw MoeRequestHttpException(
-        code = response.code,
-        message = response.message
-      )
-    }
-  }
+      val bodyContent = response.body?.string()
+      val htmlDoc = Jsoup.parse(bodyContent ?: "")
 
-  val bodyContent = response.body!!.string()
+      if (htmlDoc.title().contains("Cloudflare")) {
+//        withContext(Dispatchers.Main) {
+//          Globals.navController.navigate("cloudflareCaptcha") {
+//            this.launchSingleTop = true
+//          }
+//        }
 
-  when(response.probeMoeResponseType(bodyContent)) {
-    DATA -> {
-      Gson().fromJson(bodyContent, entity)
-    }
-
-    ERROR -> {
-      throw response.body!!.toMoeRequestError(bodyContent)
-    }
-
-    POLL -> {
-      bodyContent as T
-    }
-
-    TX_CAPTCHA -> {
-      withContext(Dispatchers.Main) {
-        Globals.navController.navigate(CaptchaRouteArguments(
-          captchaHtml = bodyContent,
-        )) {
-          this.launchSingleTop = true
-        }
+        toast(Globals.context.getString(R.string.blockedByCloudflareHint))
+        throw MoeRequestWikiException("被Cloudflare captcha拦截")
+      } else {
+        Log.e("[MoeRequestHttpException]", bodyContent ?: "body不存在")
+        throw MoeRequestHttpException(
+          code = response.code,
+          message = response.message
+        )
       }
-
-      throw MoeRequestWikiException("被腾讯captcha拦截")
-    }
-
-    TX_BLOCKED -> {
-      toast(Globals.context.getString(R.string.txBlocked))
-      throw MoeRequestWikiException("被腾讯防火墙拦截")
-    }
-
-    UNKNOWN -> {
-      throw MoeRequestWikiException("未知错误")
     }
   }
+
+  response.bodyContentHandle(entity)
 }
 
 enum class MoeRequestMethod {

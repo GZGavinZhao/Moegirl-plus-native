@@ -180,6 +180,8 @@
     <string name="previewResult">预览效果</string>
     <string name="customRandom">自定义随机</string>
     <string name="continueRead">继续阅读</string>
+    <string name="firewallValidation">防火墙验证</string>
+    <string name="complateValidate">验证完毕</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>
@@ -277,7 +279,8 @@
     <string name="useSpecialCharSupportedFontInApp">在应用中使用支持特殊字符的字体</string>
     <string name="useSpecialCharSupportedFontInAppHelpText">开启后将覆盖系统字体</string>
     <string name="splashImageUnselectedHint">未选择任何启动屏图片，将自动转换为完全随机模式，确定要返回吗？</string>
-
+    <string name="cloudflareValidationHint">被WAF拦截，需要验证后才能继续获取数据，请稍后</string>
+    <string name="blockedByCloudflareHint">连接失败，请更改您的地区代理节点</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤销[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|讨论]]）的版本%2$s</string>
