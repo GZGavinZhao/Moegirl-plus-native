@@ -79,8 +79,10 @@ object PageApi {
         .flatMap { (it.query?.pages?.values) ?: emptyList() }
         .fold(mutableMapOf()) { result, item ->
           val fileName = item.title.replaceFirst(Constants.filePrefix, "")
-          val fileUrl = item.imageinfo[0].url
-          result[fileName] = fileUrl
+          if (item.imageinfo != null && item.imageinfo.isNotEmpty()) {
+            val fileUrl = item.imageinfo[0].url
+            result[fileName] = fileUrl
+          }
           result
         }
     }

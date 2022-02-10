@@ -8,7 +8,7 @@ data class ImageInfoResBean(
     val pages: Map<Int, MapValue>
   ) {
     data class MapValue(
-      val imageinfo: List<Imageinfo>,
+      val imageinfo: List<Imageinfo>?,
       val imagerepository: String,
       val known: String,
       val missing: String,
