@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.drawer.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -14,12 +15,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.ImagePainter
 import com.moegirlviewer.R
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
@@ -29,6 +33,7 @@ import com.moegirlviewer.screen.contribution.ContributionRouteArguments
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.isMoegirl
 import com.moegirlviewer.util.navigate
 
@@ -98,13 +103,26 @@ fun CommonDrawerBody(
           }
         )
       }
+
+      if (!isMoegirl()) {
+        Item(
+          image = painterResource(id = R.drawable.hua_ji),
+          text = stringResource(id = R.string.joinGroup),
+          onClick = {
+            withDrawerClosed {
+              gotoArticlePage("H萌娘:官方群组")
+            }
+          }
+        )
+      }
     }
   }
 }
 
 @Composable
 private fun Item(
-  icon: ImageVector,
+  icon: ImageVector? = null,
+  image: Painter? = null,
   text: String,
   onClick: () -> Unit,
 ) {
@@ -117,14 +135,23 @@ private fun Item(
       .padding(vertical = 15.dp, horizontal = 10.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Icon(
-      modifier = Modifier
-        .width(28.dp)
-        .height(28.dp),
-      imageVector = icon,
-      contentDescription = null,
-      tint = themeColors.secondary
-    )
+    if (icon != null) {
+      Icon(
+        modifier = Modifier
+          .width(28.dp)
+          .height(28.dp),
+        imageVector = icon,
+        contentDescription = null,
+        tint = themeColors.secondary
+      )
+    } else {
+      Image(
+        modifier = Modifier
+          .size(28.dp),
+        painter = image!!,
+        contentDescription = null,
+      )
+    }
 
     StyledText(
       modifier = Modifier

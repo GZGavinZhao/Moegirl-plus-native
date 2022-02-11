@@ -182,6 +182,7 @@
     <string name="continueRead">继续阅读</string>
     <string name="firewallValidation">防火墙验证</string>
     <string name="complateValidate">验证完毕</string>
+    <string name="joinGroup">加入群组</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>
