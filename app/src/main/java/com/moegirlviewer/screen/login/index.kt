@@ -111,7 +111,7 @@ fun LoginScreen() {
           ) {
             StyledText(
               text = stringResource(R.string.login),
-              color = Color.White,
+              color = isMoegirl(Color.White, Color.Black),
             )
           }
 

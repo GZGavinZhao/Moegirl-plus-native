@@ -297,7 +297,7 @@ class ArticleViewState(
         val anchor = linkData.get("anchor")?.asString
         val displayName = linkData.get("displayName")?.asString
 
-        if (pageName.contains(Regex("""^Special:"""))) {
+        if (pageName.contains(Regex("""^(Special|特殊):"""))) {
           Globals.commonAlertDialog.showText(Globals.context.getString(R.string.specialLinkUnsupported))
           return@to
         }

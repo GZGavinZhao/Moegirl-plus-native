@@ -98,10 +98,11 @@ private suspend fun initAccount() {
 private suspend fun checkNewVersion() = coroutineScope {
   try {
     val res = AppApi.getLastVersion()
-    val currentVersion = Globals.context.packageManager.getPackageInfo(Globals.context.packageName, 0).versionName
+    fun String.toVersionNumber() = this.replace(".", "").toInt()
+    val currentVersion = Globals.context.packageManager.getPackageInfo(Globals.context.packageName, 0).versionName.toVersionNumber()
     val rejectedVersion = SettingsStore.otherSettings.getValue { this.rejectedVersionName }.first()
 
-    if (res.version != currentVersion && res.version != rejectedVersion) {
+    if (res.version.toVersionNumber() > currentVersion && res.version != rejectedVersion) {
       Globals.commonAlertDialog.show(CommonAlertDialogProps(
         title = Globals.context.getString(R.string.hasNewVersionHint),
         content = { StyledText(res.desc) },

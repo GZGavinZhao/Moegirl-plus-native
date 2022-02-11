@@ -8,5 +8,4 @@ import com.moegirlviewer.util.Globals
 
 fun Application.initializeOnCreate() {
   Globals.room = initRoom(applicationContext)
-//  BigImageViewer.initialize(FrescoImageLoader.with(applicationContext))
 }
