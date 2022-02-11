@@ -1,8 +1,11 @@
 package com.moegirlviewer.api.app
 
 import com.google.gson.Gson
+import com.moegirlviewer.api.app.bean.AppLastVersionBean
+import com.moegirlviewer.api.app.bean.HmoeSplashImageConfigBean
 import com.moegirlviewer.request.CommonRequestException
 import com.moegirlviewer.request.commonOkHttpClient
+import com.moegirlviewer.request.send
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
@@ -30,6 +33,13 @@ object AppApi {
         cause = e
       )
     }
+  }
+
+  suspend fun getHmoeSplashImageConfig(): HmoeSplashImageConfigBean {
+    val request = Request.Builder()
+      .url("https://www.hmoegirl.com/index.php?title=User:%E6%9D%B1%E6%9D%B1%E5%90%9B/app/splashImages&action=raw")
+      .build()
+    return request.send(HmoeSplashImageConfigBean::class.java)
   }
 }
 

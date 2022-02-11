@@ -28,6 +28,7 @@ import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.gotoUserPage
+import com.moegirlviewer.util.isMoegirl
 import kotlinx.coroutines.launch
 
 @Composable
@@ -129,12 +130,15 @@ fun SettingsScreen() {
           }
         )
       }
-      SettingsScreenItem(
-        title = stringResource(id = R.string.selectSplashScreenImage),
-        onClick = {
-          Globals.navController.navigate("splashSetting")
-        }
-      )
+
+      if (isMoegirl()) {
+        SettingsScreenItem(
+          title = stringResource(id = R.string.selectSplashScreenImage),
+          onClick = {
+            Globals.navController.navigate("splashSetting")
+          }
+        )
+      }
 //      SettingsScreenItem(
 //        title = stringResource(id = R.string.darkThemeBySystem),
 //        subtext = stringResource(id = R.string.darkThemeBySystemHelpText),

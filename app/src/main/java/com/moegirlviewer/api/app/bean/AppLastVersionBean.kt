@@ -1,4 +1,4 @@
-package com.moegirlviewer.api.app
+package com.moegirlviewer.api.app.bean
 
 data class AppLastVersionBean(
   val assets: List<Asset>,

@@ -8,7 +8,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.navigation.NavHostController
+import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -93,7 +95,7 @@ class MainActivity : ComponentActivity() {
       val splashImageMode = SettingsStore.common.getValue { this.splashImageMode }.first()
       val isShowSplashScreen = !hasDeepLink &&
         homeScreenReady.isActive &&
-        splashImageMode != SplashImageMode.OFF
+        (isMoegirl(splashImageMode != SplashImageMode.OFF, true))
 
       if (isShowSplashScreen) {
         withSplashScreen(
@@ -238,16 +240,21 @@ private suspend fun ComponentActivity.withSplashScreen(
 ) = coroutineScope {
   useFullScreenLayout()
 
-  val usingSplashImage = when(splashImageMode) {
-    SplashImageMode.NEW -> splashImageList.last()
-    SplashImageMode.RANDOM -> splashImageList.random()
-    SplashImageMode.CUSTOM_RANDOM -> SettingsStore.common.getValue { this.selectedSplashImages }
-      .map { it.ifEmpty { listOf(splashImageList.last().key) } }
-      .map { splashImageKeys -> splashImageList.filter { splashImageKeys.contains(it.key) } }
-      .first()
-      .random()
-    else -> null
-  }!!
+  val usingSplashImage = if (isMoegirl()) {
+    when(splashImageMode) {
+      SplashImageMode.NEW -> splashImageList.last()
+      SplashImageMode.RANDOM -> splashImageList.random()
+      SplashImageMode.CUSTOM_RANDOM -> SettingsStore.common.getValue { this.selectedSplashImages }
+        .map { it.ifEmpty { listOf(splashImageList.last().key) } }
+        .map { splashImageKeys -> splashImageList.filter { splashImageKeys.contains(it.key) } }
+        .first()
+        .random()
+      else -> null
+    }!!
+  } else {
+    val image = HmoeSplashImageManager.getRandomImage()
+    SplashImage.onlyUseInSplashScreen { rememberImagePainter(image) }
+  }
 
   val mainWithSplashView = ComposeWithSplashScreenView(
     context = this@withSplashScreen,

@@ -23,6 +23,7 @@ import com.moegirlviewer.screen.article.ArticleRouteArguments
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.internal.toHexString
+import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.time.*
@@ -162,3 +163,5 @@ fun LocalDate.toDate(): Date {
 fun TextGeometricTransform.Companion.Italic() = TextGeometricTransform(
   skewX = -0.3f
 )
+
+fun File.existsChild(fileName: String) = this.list { _, existsFileName -> existsFileName == fileName }!!.isNotEmpty()

@@ -10,7 +10,17 @@ open class SplashImage(
   val composePainter: @Composable () -> Painter,
   val title: String,
   val author: String,
-)
+) {
+  companion object {
+    fun onlyUseInSplashScreen(
+      composePainter: @Composable () -> Painter
+    ) = SplashImage(
+      composePainter = composePainter,
+      title = "",
+      author = ""
+    )
+  }
+}
 
 class MoegirlSplashImage(
   resId: Int,

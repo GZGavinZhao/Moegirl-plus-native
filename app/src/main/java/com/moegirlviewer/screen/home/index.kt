@@ -33,6 +33,7 @@ import com.moegirlviewer.screen.drawer.CommonDrawer
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.HmoeSplashImageManager
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.navigate
 import kotlinx.coroutines.CompletableDeferred

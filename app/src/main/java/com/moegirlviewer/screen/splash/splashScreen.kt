@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.R
+import com.moegirlviewer.util.isMoegirl
 
 // 这个页面本身不在路由中
 @Composable
@@ -53,19 +54,21 @@ fun SplashScreen(
         ),
     )
 
-    Box(
-      modifier = Modifier
-        .fillMaxSize()
-        .offset(y = (-70).dp),
-      contentAlignment = Alignment.BottomCenter
-    ) {
-      Image(
+    if (isMoegirl()) {
+      Box(
         modifier = Modifier
-          .width(174.dp)
-          .height(55.dp),
-        painter = painterResource(id = R.drawable.site_name),
-        contentDescription = null
-      )
+          .fillMaxSize()
+          .offset(y = (-70).dp),
+        contentAlignment = Alignment.BottomCenter
+      ) {
+        Image(
+          modifier = Modifier
+            .width(174.dp)
+            .height(55.dp),
+          painter = painterResource(id = R.drawable.site_name),
+          contentDescription = null
+        )
+      }
     }
   }
 }

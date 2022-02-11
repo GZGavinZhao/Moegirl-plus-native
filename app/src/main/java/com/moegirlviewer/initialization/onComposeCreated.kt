@@ -33,6 +33,13 @@ fun onComposeCreated() {
   coroutineScope.launch { checkShortcutIntent() }
   registerTasks()
   checkDeepLink()
+
+  if (!isMoegirl()) {
+    coroutineScope.launch {
+      HmoeSplashImageManager.loadConfig()
+      HmoeSplashImageManager.syncImagesByConfig()
+    }
+  }
 }
 
 private fun checkDeepLink() {
