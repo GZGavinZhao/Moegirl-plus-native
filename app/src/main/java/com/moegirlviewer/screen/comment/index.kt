@@ -208,7 +208,7 @@ private fun ComposedHeader(
     },
     title = {
       StyledText(
-        text = "${stringResource(id = R.string.talk)}：${title}",
+        text = "${stringResource(id = R.string.comment)}：${title}",
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         color = themeColors.onPrimary,
