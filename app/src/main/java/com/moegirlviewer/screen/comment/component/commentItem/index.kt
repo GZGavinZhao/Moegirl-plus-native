@@ -106,6 +106,8 @@ fun CommentScreenCommentItem(
     } catch (e: MoeRequestException) {
       printRequestErr(e, "点赞操作失败")
       toast(e.message)
+    } catch (e: NotLoggedInException) {
+      printPlainLog(e.message ?: "", e)
     } finally {
       Globals.commonLoadingDialog.hide()
     }

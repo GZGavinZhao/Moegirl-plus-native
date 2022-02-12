@@ -33,8 +33,4 @@ suspend fun checkIsLoggedIn(message: String) {
 
 class NotLoggedInException(
   val gotoLoginClicked: Boolean
-) : Exception() {
-  override fun toString(): String {
-    return "未登录拦截：${if (gotoLoginClicked) "点击前往登录" else "取消前往登录"}"
-  }
-}
+) : Exception("未登录拦截：${if (gotoLoginClicked) "点击前往登录" else "取消前往登录"}")
