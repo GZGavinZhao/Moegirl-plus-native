@@ -22,7 +22,8 @@ object AppApi {
           val resBody = Gson().fromJson(res.body!!.string(), AppLastVersionBean::class.java)
           AppLastVersion(
             version = resBody.tag_name,
-            desc = resBody.body
+            moegirlDesc = Regex("""## Moegirl\+\n([\s\S]+?)(\n##|$)""").find(resBody.body)?.groupValues?.get(1),
+            hmoeDesc = Regex("""## HMoegirl\n([\s\S]+)(\n##|$)""").find(resBody.body)?.groupValues?.get(1)
           )
         } else {
           throw CommonRequestException(res.message)
@@ -45,5 +46,6 @@ object AppApi {
 
 class AppLastVersion(
   val version: String,
-  val desc: String
+  val moegirlDesc: String?,
+  val hmoeDesc: String?
 )

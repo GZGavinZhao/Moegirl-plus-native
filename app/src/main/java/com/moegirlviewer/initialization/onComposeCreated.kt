@@ -105,7 +105,7 @@ private suspend fun checkNewVersion() = coroutineScope {
     if (res.version.toVersionNumber() > currentVersion && res.version != rejectedVersion) {
       Globals.commonAlertDialog.show(CommonAlertDialogProps(
         title = Globals.context.getString(R.string.hasNewVersionHint),
-        content = { StyledText(res.desc) },
+        content = { StyledText(isMoegirl(res.moegirlDesc, res.hmoeDesc) ?: "") },
         secondaryButton = ButtonConfig.cancelButton(
           onClick = {
             coroutineScope.launch {
