@@ -29,7 +29,7 @@ class MoegirlSplashImage(
   val key: String,
   val season: String,
 ) : SplashImage(
-  composePainter = { painterResource(resId) },
+  composePainter = { rememberImagePainter(resId) },
   title = title,
   author = author
 )
