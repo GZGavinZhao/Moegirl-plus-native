@@ -72,18 +72,6 @@ fun CommonDrawerBody(
         .then(modifier)
     ) {
       Item(
-        icon = Icons.Filled.Forum,
-        text = stringResource(id = R.string.talkPage),
-        onClick = {
-          withDrawerClosed {
-            Globals.navController.navigate(ArticleRouteArguments(
-              pageName = isMoegirl("萌娘百科 talk:讨论版", "H萌娘讨论:讨论版")
-            ))
-          }
-        }
-      )
-
-      Item(
         icon = ImageVector.vectorResource(R.drawable.dice_5),
         text = stringResource(id = R.string.randomArticle),
         onClick = {
@@ -97,6 +85,18 @@ fun CommonDrawerBody(
         onClick = {
           withDrawerClosed {
             Globals.navController.navigate("recentChanges")
+          }
+        }
+      )
+
+      Item(
+        icon = Icons.Filled.Forum,
+        text = stringResource(id = R.string.talkPage),
+        onClick = {
+          withDrawerClosed {
+            Globals.navController.navigate(ArticleRouteArguments(
+              pageName = isMoegirl("萌娘百科 talk:讨论版", "H萌娘讨论:讨论版")
+            ))
           }
         }
       )

@@ -274,7 +274,7 @@
     <string name="deleteBrowsingRecordHint">是否要删除该条记录？</string>
     <string name="invalidLoginStatusHint">登录状态已失效</string>
     <string name="editFailedHint">提交编辑失败，以下是萌百API返回的提示信息：</string>
-    <string name="syntaxHighlightHelpText">目前只支持部分语法</string>
+    <string name="syntaxHighlightHelpText">目前开启后编辑时文字会有闪烁的情况</string>
     <string name="darkThemeBySystem">适配深色模式(实验性)</string>
     <string name="darkThemeBySystemHelpText">部分条目会有文字看不清的情况</string>
     <string name="useSpecialCharSupportedFontInArticle">在条目中使用支持特殊字符的字体</string>

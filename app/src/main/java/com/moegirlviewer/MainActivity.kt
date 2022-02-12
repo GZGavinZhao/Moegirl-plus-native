@@ -277,10 +277,10 @@ private suspend fun ComponentActivity.withSplashScreen(
     complete()
   }
 
-  launch {
-    homeScreenReady.await()
-    complete()
-  }
+//  launch {
+//    homeScreenReady.await()
+//    complete()
+//  }
 
   application.initializeOnCreate()
   initializeOnCreate()

@@ -98,37 +98,42 @@ fun SettingsScreen() {
           }
         )
       }
-      SettingsScreenItem(
-        title = stringResource(id = R.string.useSpecialCharSupportedFontInArticle),
-        subtext = stringResource(id = R.string.useSpecialCharSupportedFontInArticleHelpText),
-        onClick = {
-          setSettingItem { this.useSpecialCharSupportedFontInArticle = !this.useSpecialCharSupportedFontInArticle }
-        }
-      ) {
-        Switch(
-          checked = commonSettings.useSpecialCharSupportedFontInArticle,
-          colors = switchColors,
-          onCheckedChange = {
-            setSettingItem { this.useSpecialCharSupportedFontInArticle = it }
+
+      if (isMoegirl()) {
+        SettingsScreenItem(
+          title = stringResource(id = R.string.useSpecialCharSupportedFontInArticle),
+          subtext = stringResource(id = R.string.useSpecialCharSupportedFontInArticleHelpText),
+          onClick = {
+            setSettingItem { this.useSpecialCharSupportedFontInArticle = !this.useSpecialCharSupportedFontInArticle }
           }
-        )
+        ) {
+          Switch(
+            checked = commonSettings.useSpecialCharSupportedFontInArticle,
+            colors = switchColors,
+            onCheckedChange = {
+              setSettingItem { this.useSpecialCharSupportedFontInArticle = it }
+            }
+          )
+        }
       }
 
-      Title(R.string._interface)
-      SettingsScreenItem(
-        title = stringResource(id = R.string.useSpecialCharSupportedFontInApp),
-        subtext = stringResource(id = R.string.useSpecialCharSupportedFontInAppHelpText),
-        onClick = {
-          setSettingItem { this.useSpecialCharSupportedFontInApp = !this.useSpecialCharSupportedFontInApp }
-        }
-      ) {
-        Switch(
-          checked = commonSettings.useSpecialCharSupportedFontInApp,
-          colors = switchColors,
-          onCheckedChange = {
-            setSettingItem { this.useSpecialCharSupportedFontInApp = it }
+      if (isMoegirl()) {
+        Title(R.string._interface)
+        SettingsScreenItem(
+          title = stringResource(id = R.string.useSpecialCharSupportedFontInApp),
+          subtext = stringResource(id = R.string.useSpecialCharSupportedFontInAppHelpText),
+          onClick = {
+            setSettingItem { this.useSpecialCharSupportedFontInApp = !this.useSpecialCharSupportedFontInApp }
           }
-        )
+        ) {
+          Switch(
+            checked = commonSettings.useSpecialCharSupportedFontInApp,
+            colors = switchColors,
+            onCheckedChange = {
+              setSettingItem { this.useSpecialCharSupportedFontInApp = it }
+            }
+          )
+        }
       }
 
       if (isMoegirl()) {

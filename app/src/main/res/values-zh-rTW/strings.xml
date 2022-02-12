@@ -276,7 +276,7 @@
     <string name="deleteBrowsingRecordHint">是否要刪除該條記錄？</string>
     <string name="invalidLoginStatusHint">登入狀態已失效</string>
     <string name="editFailedHint">提交編輯失敗，以下是萌百API返回的提示資訊：</string>
-    <string name="syntaxHighlightHelpText">目前只支援部分語法</string>
+    <string name="syntaxHighlightHelpText">目前開啟後編輯時文字會有閃爍的情況</string>
     <string name="useSpecialCharSupportedFontInArticle">在條目中使用支援特殊字元的字型</string>
     <string name="useSpecialCharSupportedFontInArticleHelpText">有些條目中存在生僻字、中文不使用的日文漢字等，開啟此選項可修復</string>
     <string name="useSpecialCharSupportedFontInApp">在應用中使用支援特殊字元的字型</string>

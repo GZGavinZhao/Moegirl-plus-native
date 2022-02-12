@@ -47,17 +47,19 @@ object HmoeSplashImageManager {
 
     val images = if (this::config.isInitialized) {
       config.checkFestivalImages(localImagesMap)
-        ?: config.images
-          .asSequence()
-          .filter { !it.disabled }
-          .map { it.imageUrl.localImageFileName() }
-          .filter { localImagesMap.containsKey(it) }
-          .map { localImagesMap[it]!!.path }
-          .toList()
+        ?.map { DrawableWrapper.createFromPath(it) }
+        ?: (
+          config.images
+            .asSequence()
+            .filter { !it.disabled }
+            .map { it.imageUrl.localImageFileName() }
+            .filter { localImagesMap.containsKey(it) }
+            .map { DrawableWrapper.createFromPath(localImagesMap[it]!!.path) }
+            .toList() + listOf(fallbackImage)
+        )
     } else {
-      localImagesMap.values.map { it.path }
+      localImagesMap.values.map { DrawableWrapper.createFromPath(it.path) }
     }
-      .map { DrawableWrapper.createFromPath(it) }
 
     return if (images.isNotEmpty()) images.random()!! else fallbackImage
   }
