@@ -1,19 +1,28 @@
 package com.moegirlviewer
 
 import android.os.Bundle
+import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.ComposeView
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.moegirlviewer.component.Center
 import com.moegirlviewer.initialization.OnComposeCreate
 import com.moegirlviewer.initialization.initializeOnCreate
 import com.moegirlviewer.screen.article.ArticleRouteArguments
@@ -106,7 +115,10 @@ class MainActivity : ComponentActivity() {
         application.initializeOnCreate()
         initializeOnCreate()
         useFreeStatusBarLayout()
-        setContent { ContentBody() }
+
+        setContent {
+          AppDefaultEnterAnimation { ContentBody() }
+        }
       }
     }
   }
@@ -286,4 +298,23 @@ private suspend fun ComponentActivity.withSplashScreen(
   initializeOnCreate()
 
   mainWithSplashView.setContent(content)
+}
+
+@Composable
+private fun AppDefaultEnterAnimation(
+  content: @Composable () -> Unit
+) {
+  val alpha = remember { Animatable(0f) }
+
+  LaunchedEffect(true) {
+    alpha.animateTo(
+      targetValue = 1f,
+      animationSpec = tween(durationMillis = 700)
+    )
+  }
+
+  Center(
+    modifier = Modifier.alpha(alpha.value),
+    content = { content() }
+  )
 }

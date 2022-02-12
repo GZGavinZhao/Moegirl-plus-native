@@ -18,14 +18,15 @@ class SplashScreenState(
     contentAlpha.animateTo(
       targetValue = 1f,
       animationSpec = tween(
-        durationMillis = 350
+        delayMillis = 1000,
+        durationMillis = 300
       )
     )
 
     imageScale.animateTo(
       targetValue = 1f,
       animationSpec = tween(
-        durationMillis = 2650,
+        durationMillis = 2800,
       )
     )
   }

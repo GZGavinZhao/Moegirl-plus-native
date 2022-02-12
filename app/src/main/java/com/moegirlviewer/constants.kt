@@ -31,7 +31,7 @@ val sourceConstants = when (BuildConfig.FLAVOR_source) {
     filePrefix = "文件:"
   )
 
-  else -> error("数据源'${BuildConfig.FLAVOR}'的常量集未配置！")
+  else -> error("数据源'${BuildConfig.FLAVOR_source}'的常量集未配置！")
 }
 
 object Constants {
