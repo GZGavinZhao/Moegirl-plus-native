@@ -10,4 +10,4 @@ val GreenSecondary = Color(0xff0DBC79)
 val RedAccent = Color(0xffff5252)
 
 val OrangePrimary = Color(0xffff9800)
-val OrangeLight = Color(0xffffE686)
+val OrangeLight = Color(0xffFFDAB4)

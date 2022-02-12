@@ -48,9 +48,9 @@ private val MoegirlDarkColorPalette = darkColors(
 @SuppressLint("ConflictingOnColor")
 private val HmoeLightColorPalette = lightColors(
   primary = OrangePrimary,
-  primaryVariant = Color(0xffC9E7CA),
+  primaryVariant = OrangeLight,
   secondary = OrangePrimary,
-  secondaryVariant = Color(0xffB9D5BA),
+  secondaryVariant = OrangeLight,
   background = Color.White,
   error = RedAccent,
 
@@ -66,7 +66,7 @@ private val HmoeLightColorPalette = lightColors(
 private val HmoeDarkColorPalette = darkColors(
   primary = Color(0xff3A3A3B),
   primaryVariant = Color(0xff3A3A3B).lighten(0.2f),
-  secondary = OrangeLight,
+  secondary = Color(0xffffE686),
   secondaryVariant = GreenSecondary.darken(0.2f),
   background = Color(0xff252526),
   surface = Color(0xff3A3A3B),

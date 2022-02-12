@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.moegirlviewer.R
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.PlainTextField
 import com.moegirlviewer.component.ReloadButton
@@ -23,11 +24,14 @@ import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.NospzGothicMoeFamily
+import com.moegirlviewer.util.toast
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import kotlin.system.measureTimeMillis
 
 @InternalCoroutinesApi
 @FlowPreview
@@ -40,17 +44,26 @@ fun EditScreenWikitextEditor() {
   val scope = rememberCoroutineScope()
   var textFieldValue by remember(model.wikitextTextFieldValue) { mutableStateOf(model.wikitextTextFieldValue) }
   var visibleQuickInsertBar by remember { mutableStateOf(false) }
-  val syntaxHighlight by SettingsStore.common.getValue { this.syntaxHighlight }.collectAsState(
-    initial = true
-  )
+  var syntaxHighlight by remember { mutableStateOf(false) }
   // 将value转为flow，主要是为了要flow的防抖功能，用于更新备份
   val backupFlow = remember { MutableStateFlow(model.wikitextTextFieldValue.text) }
 
+  LaunchedEffect(true) {
+    syntaxHighlight = SettingsStore.common.getValue { this.syntaxHighlight }.first()
+  }
+
   if (syntaxHighlight) {
     LaunchedEffect(model.wikitextTextFieldValue) {
-      textFieldValue = model.wikitextTextFieldValue.copy(
-        annotatedString = withContext(Dispatchers.Default) { tintWikitext(model.wikitextTextFieldValue.text) }
-      )
+      val consumingTime = measureTimeMillis {
+        textFieldValue = model.wikitextTextFieldValue.copy(
+          annotatedString = withContext(Dispatchers.Default) { tintWikitext(model.wikitextTextFieldValue.text) }
+        )
+      }
+
+      if (consumingTime > 1000) {
+        toast(Globals.context.getString(R.string.codeHighlightTimeoutHint))
+        syntaxHighlight = false
+      }
     }
   }
 
@@ -90,7 +103,8 @@ fun EditScreenWikitextEditor() {
           .focusRequester(model.focusRequester),
         value = if (syntaxHighlight) textFieldValue else model.wikitextTextFieldValue,
         textStyle = TextStyle.Default.copy(
-          fontSize = 16.sp
+          fontSize = 16.sp,
+          lineHeight = 18.sp
         ),
         onValueChange = {
           model.wikitextTextFieldValue = it

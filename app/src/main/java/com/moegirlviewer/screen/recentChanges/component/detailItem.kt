@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,7 +26,6 @@ import com.moegirlviewer.R
 import com.moegirlviewer.component.UserTail
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.compare.ComparePageRouteArguments
-import com.moegirlviewer.theme.GreenPrimary
 import com.moegirlviewer.theme.RedAccent
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
@@ -55,7 +53,7 @@ fun RecentChangesDetailItem(
   Column(
     modifier = Modifier
       .padding(top = 5.dp, start = 3.5.dp)
-      .sideBorder(BorderSide.LEFT, 5.dp, if (diffSize >= 0) GreenPrimary else RedAccent)
+      .sideBorder(BorderSide.LEFT, 5.dp, if (diffSize >= 0) themeColors.secondary else RedAccent)
       .padding(horizontal = 10.dp)
   ) {
     ComposedHeader(
@@ -88,8 +86,8 @@ fun ComposedHeader(
     "log" to "(${Globals.context.getString(R.string.log)})"
   ) }[type]!!
   val titlePrefixColor = remember { mapOf(
-    "new" to GreenPrimary,
-    "edit" to GreenPrimary,
+    "new" to themeColors.secondary,
+    "edit" to themeColors.secondary,
     "log" to Color(0xff9E9E9E)
   ) }[type]!!
 
@@ -101,7 +99,7 @@ fun ComposedHeader(
     if (type != "log") {
       StyledText(
         text = (if (diffSize > 0) "+" else "") + diffSize,
-        color = if (diffSize >= 0) GreenPrimary else RedAccent,
+        color = if (diffSize >= 0) themeColors.secondary else RedAccent,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp
       )

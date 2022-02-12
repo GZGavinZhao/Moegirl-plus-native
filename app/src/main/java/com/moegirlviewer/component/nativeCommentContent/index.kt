@@ -22,7 +22,6 @@ import com.moegirlviewer.util.openHttpUrl
 
 @Composable
 fun NativeCommentContent(
-  modifier: Modifier = Modifier,
   commentElements: List<CommentElement>,
   linkedTextStyle: SpanStyle = SpanStyle(),
   prefixContents: List<CommentElement> = emptyList(),

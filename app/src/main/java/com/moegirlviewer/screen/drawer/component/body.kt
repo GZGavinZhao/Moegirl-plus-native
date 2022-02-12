@@ -8,6 +8,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatIndentDecrease
 import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.History
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -106,7 +107,7 @@ fun CommonDrawerBody(
 
       if (!isMoegirl()) {
         Item(
-          image = painterResource(id = R.drawable.hua_ji),
+          icon = Icons.Filled.Group,
           text = stringResource(id = R.string.joinGroup),
           onClick = {
             withDrawerClosed {

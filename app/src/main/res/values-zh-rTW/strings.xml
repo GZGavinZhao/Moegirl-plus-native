@@ -282,6 +282,7 @@
     <string name="splashImageUnselectedHint">未選擇任何啟動屏圖片，將自動轉換為完全隨機模式，確定要返回嗎？</string>
     <string name="cloudflareValidationHint">被WAF攔截，需要驗證後才能繼續獲取資料，請稍後</string>
     <string name="blockedByCloudflareHint">連線失敗，請更改您的地區代理節點</string>
+    <string name="codeHighlightTimeoutHint">程式碼過長，高亮功能因處理超時已自動關閉，請合理使用段落編輯功能</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤銷[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|討論]]）的版本%2$s</string>

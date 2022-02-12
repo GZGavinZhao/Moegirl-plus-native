@@ -9,10 +9,7 @@ import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.store.AccountStore
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.openHttpUrl
-import com.moegirlviewer.util.printRequestErr
-import com.moegirlviewer.util.toast
+import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +51,7 @@ class SettingsScreenModel @Inject constructor(): ViewModel() {
       if (res.version != currentVersion) {
         Globals.commonAlertDialog.show(CommonAlertDialogProps(
           title = Globals.context.getString(R.string.hasNewVersionHint),
-          content = { StyledText(res.desc) },
+          content = { StyledText(isMoegirl(res.moegirlDesc, res.hmoeDesc) ?: "") },
           secondaryButton = ButtonConfig.cancelButton(),
           onPrimaryButtonClick = {
             openHttpUrl(Constants.appDownloadUrl)

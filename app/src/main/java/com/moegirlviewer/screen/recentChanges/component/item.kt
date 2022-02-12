@@ -24,8 +24,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontSynthesis
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,7 +40,6 @@ import com.moegirlviewer.screen.contribution.ContributionRouteArguments
 import com.moegirlviewer.screen.pageRevisions.PageRevisionsRouteArguments
 import com.moegirlviewer.screen.recentChanges.util.EditUserOfChanges
 import com.moegirlviewer.screen.recentChanges.util.RawRecentChanges
-import com.moegirlviewer.theme.GreenPrimary
 import com.moegirlviewer.theme.RedAccent
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
@@ -165,8 +162,8 @@ private fun ComposedTitle(
     "log" to "(${Globals.context.getString(R.string.log)})"
   ) }[type]!!
   val titlePrefixColor = remember { mapOf(
-    "new" to GreenPrimary,
-    "edit" to GreenPrimary,
+    "new" to themeColors.secondary,
+    "edit" to themeColors.secondary,
     "log" to Color(0xff9E9E9E)
   ) }[type]!!
   var textWidth by remember { mutableStateOf(0f) }
@@ -180,7 +177,7 @@ private fun ComposedTitle(
     if (type != "log") {
       StyledText(
         text = (if (totalDiffSize > 0) "+" else "") + totalDiffSize,
-        color = if (totalDiffSize >= 0) GreenPrimary else RedAccent,
+        color = if (totalDiffSize >= 0) themeColors.secondary else RedAccent,
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold
       )

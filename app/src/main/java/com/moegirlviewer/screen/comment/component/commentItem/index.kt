@@ -199,7 +199,8 @@ fun CommentScreenCommentItem(
 
       Column(
         modifier = Modifier
-          .padding(vertical = 10.dp, horizontal = 15.dp)
+          .padding(vertical = 10.dp, horizontal = 15.dp),
+        verticalArrangement = Arrangement.Center
       ) {
         ComposedHeader(
           userName = commentData.username,
@@ -337,11 +338,9 @@ private fun ComposedCommentContent(
   Box() {
     Column(
       modifier = Modifier
-        .padding(start = 50.dp)
+        .padding(top = 5.dp, start = 50.dp, end = 25.dp)
     ) {
       NativeCommentContent(
-        modifier = Modifier
-          .padding(top = 5.dp),
         commentElements = commentData.parsedText,
         prefixContents = replyTargetContent ?: emptyList(),
         linkedTextStyle = SpanStyle(

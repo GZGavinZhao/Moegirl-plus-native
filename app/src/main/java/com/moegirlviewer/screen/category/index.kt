@@ -130,7 +130,7 @@ fun CategoryScreen(
             pageName = item.title,
             thumbnail = item.thumbnail,
             // 貌似是mw的bug，有时获取到的分类下页面的数据，页面的所有分类居然是null
-            categories = (item.categories ?: emptyList()).map { it.title.replaceFirst("Category:", "") },
+            categories = (item.categories ?: emptyList()).map { it.title.replaceFirst(Regex("^(分类|分類|Category):"), "") },
             onClick = {
               Globals.navController.navigate(ArticleRouteArguments(
                 pageName = item.title
@@ -186,48 +186,50 @@ private fun ComposedHeader(
       },
     )
 
-    RippleColorScope(color = themeColors.onPrimary) {
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(40.dp)
-          .background(themeColors.primary)
-          .horizontalScroll(scrollState),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        for (item in categories) {
-          Box(
-            modifier = Modifier
-              .clickable {
-                if (item != categories.last()) Globals.navController.navigate(
-                  ArticleRouteArguments(
-                    pageName = "Category:$item",
-                    displayName = Globals.context.getString(R.string.category) + "：$item"
-                  )
-                )
-              }
-              .fillMaxHeight()
-              .padding(horizontal = 17.dp),
-            contentAlignment = Alignment.Center
-          ) {
-            StyledText(
-              text = item,
-              color = themeColors.onPrimary
-            )
-          }
-
-          if (item != categories.last()) {
+    if (categories.isNotEmpty()) {
+      RippleColorScope(color = themeColors.onPrimary) {
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .background(themeColors.primary)
+            .horizontalScroll(scrollState),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          for (item in categories) {
             Box(
               modifier = Modifier
-                .offset(y = 1.dp)
+                .clickable {
+                  if (item != categories.last()) Globals.navController.navigate(
+                    ArticleRouteArguments(
+                      pageName = "Category:$item",
+                      displayName = Globals.context.getString(R.string.category) + "：$item"
+                    )
+                  )
+                }
+                .fillMaxHeight()
+                .padding(horizontal = 17.dp),
+              contentAlignment = Alignment.Center
             ) {
-              Icon(
-                modifier = Modifier
-                  .size(30.dp),
-                imageVector = Icons.Filled.ChevronRight,
-                contentDescription = null,
-                tint = themeColors.onPrimary
+              StyledText(
+                text = item,
+                color = themeColors.onPrimary
               )
+            }
+
+            if (item != categories.last()) {
+              Box(
+                modifier = Modifier
+                  .offset(y = 1.dp)
+              ) {
+                Icon(
+                  modifier = Modifier
+                    .size(30.dp),
+                  imageVector = Icons.Filled.ChevronRight,
+                  contentDescription = null,
+                  tint = themeColors.onPrimary
+                )
+              }
             }
           }
         }
