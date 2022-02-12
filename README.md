@@ -6,7 +6,9 @@
 
 条目渲染与排版引擎：[moegirlRenderer](https://github.com/koharubiyori/moegirlRenderer)
 
-> 下载
-> * 酷安：https://www.coolapk.com/apk/247471
+## 下载
+
 > * Github Releases：https://github.com/koharubiyori/Moegirl-plus-native/releases
+> * 酷安：https://www.coolapk.com/apk/247471
+> * F-Droid：https://f-droid.org/packages/com.moegirlviewer
 
