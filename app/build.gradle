@@ -49,7 +49,7 @@ android {
     productFlavors {
         hmoe {
             dimension 'source'
-            applicationId 'com.moegirlviewer.hmoe'
+            applicationId 'koharubiyori.hmoegirl'
         }
 
         moegirl {

@@ -63,7 +63,8 @@ private fun checkDeepLink() {
 
 private suspend fun checkShortcutIntent() {
   val intentAction = Globals.activity.intent.action ?: ""
-  val getShortcutActionRegex = Regex("""^com\.moegirlviewer\.(.+)$""")
+  val regexPackageName = Regex.escape(Globals.context.packageName)
+  val getShortcutActionRegex = Regex("""^$regexPackageName\.(.+)$""")
   if (intentAction.contains(getShortcutActionRegex)){
     val shortcutAction = getShortcutActionRegex.find(intentAction)!!.groupValues[1]
     when(shortcutAction) {

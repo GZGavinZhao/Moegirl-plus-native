@@ -26,17 +26,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.ImagePainter
 import com.moegirlviewer.R
+import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.contribution.ContributionRouteArguments
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.theme.text
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.gotoArticlePage
-import com.moegirlviewer.util.isMoegirl
-import com.moegirlviewer.util.navigate
+import com.moegirlviewer.util.*
+import kotlinx.coroutines.launch
 
 @Composable
 fun CommonDrawerBody(
@@ -51,6 +51,18 @@ fun CommonDrawerBody(
   fun withDrawerClosed(exec: () -> Unit) {
     drawerRef.close()
     exec()
+  }
+
+  fun gotoRandomPage() = scope.launch {
+    try {
+      Globals.commonLoadingDialog.showText(Globals.context.getString(R.string.doingRandom) + "...")
+      val randomPage = PageApi.getRandomPage().query.random.first().title
+      gotoArticlePage(randomPage)
+    } catch (e: MoeRequestException) {
+      toast(e.message)
+    } finally {
+      Globals.commonLoadingDialog.hide()
+    }
   }
 
   RippleColorScope(themeColors.secondary) {
@@ -68,6 +80,14 @@ fun CommonDrawerBody(
               pageName = isMoegirl("萌娘百科 talk:讨论版", "H萌娘讨论:讨论版")
             ))
           }
+        }
+      )
+
+      Item(
+        icon = ImageVector.vectorResource(R.drawable.dice_5),
+        text = stringResource(id = R.string.randomArticle),
+        onClick = {
+          withDrawerClosed { gotoRandomPage() }
         }
       )
 

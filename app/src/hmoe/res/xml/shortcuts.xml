@@ -5,9 +5,9 @@
         android:shortcutShortLabel="@string/search"
     >
         <intent
-            android:action="com.moegirlviewer.hmoe.SEARCH"
-            android:targetPackage="com.moegirlviewer.hmoe"
-            android:targetClass="com.moegirlviewer.hmoe.MainActivity" />
+            android:action="koharubiyori.hmoegirl.SEARCH"
+            android:targetPackage="koharubiyori.hmoegirl"
+            android:targetClass="com.moegirlviewer.MainActivity" />
     </shortcut>
     <shortcut
         android:shortcutId="continueRead"
@@ -15,9 +15,9 @@
         android:shortcutShortLabel="@string/continueRead"
     >
         <intent
-            android:action="com.moegirlviewer.hmoe.CONTINUE_READ"
-            android:targetPackage="com.moegirlviewer.hmoe"
-            android:targetClass="com.moegirlviewer.hmoe.MainActivity" />
+            android:action="koharubiyori.hmoegirl.CONTINUE_READ"
+            android:targetPackage="koharubiyori.hmoegirl"
+            android:targetClass="com.moegirlviewer.MainActivity" />
     </shortcut>
     <shortcut
         android:shortcutId="random"
@@ -25,9 +25,9 @@
         android:shortcutShortLabel="@string/random"
     >
         <intent
-            android:action="com.moegirlviewer.hmoe.RANDOM"
-            android:targetPackage="com.moegirlviewer.hmoe"
-            android:targetClass="com.moegirlviewer.hmoe.MainActivity" />
+            android:action="koharubiyori.hmoegirl.RANDOM"
+            android:targetPackage="koharubiyori.hmoegirl"
+            android:targetClass="com.moegirlviewer.MainActivity" />
     </shortcut>
     <!-- Specify more shortcuts here. -->
 </shortcuts>

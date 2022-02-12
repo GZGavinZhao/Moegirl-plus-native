@@ -183,6 +183,8 @@
     <string name="firewallValidation">防火墙验证</string>
     <string name="complateValidate">验证完毕</string>
     <string name="joinGroup">加入群组</string>
+    <string name="randomArticle">随机条目</string>
+    <string name="doingRandom">随机中</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>
