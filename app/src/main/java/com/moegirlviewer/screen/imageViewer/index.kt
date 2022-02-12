@@ -50,18 +50,10 @@ fun ImageViewerScreen(
       ImageViewer(
         modifier = Modifier
           .fillMaxSize(),
+        scaleRange = 0.8f..4f,
         painter = imagePainters[currentIndex]
       )
     }
-
-//    ComposePagedBigImageViews(
-//      modifier = Modifier
-//        .fillMaxSize()
-//        .background(Color.Black),
-//      images = arguments.images,
-//      initialIndex = arguments.initialIndex,
-//      onPageChange = { model.currentImgIndex = it }
-//    )
 
     if (arguments.images.size > 1) {
       Column(

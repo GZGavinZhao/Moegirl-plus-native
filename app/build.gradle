@@ -142,10 +142,5 @@ dependencies {
     implementation "io.coil-kt:coil-svg:1.4.0"
     implementation "io.coil-kt:coil-gif:1.4.0"
 
-//    implementation 'com.github.piasy:BigImageViewer:1.8.1'
-//    implementation 'com.github.piasy:FrescoImageLoader:1.8.1'
-//    implementation 'com.github.piasy:ProgressPieIndicator:1.8.1'
-//    implementation 'com.github.piasy:FrescoImageViewFactory:1.8.1'
-
     kapt "com.google.dagger:hilt-android-compiler:2.35"
 }
