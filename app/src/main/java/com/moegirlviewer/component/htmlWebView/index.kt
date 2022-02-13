@@ -1,9 +1,8 @@
 package com.moegirlviewer.component.htmlWebView
 
 import android.annotation.SuppressLint
-import android.webkit.JavascriptInterface
-import android.webkit.WebView
-import androidx.compose.foundation.layout.fillMaxHeight
+import android.util.Log
+import android.webkit.*
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -38,6 +37,7 @@ fun HtmlWebView(
   baseUrl: String = assetsBaseUrl,
   messageHandlers: HtmlWebViewMessageHandlers? = null,
   ref: Ref<HtmlWebViewRef>,
+  shouldInterceptRequest: ((webView: WebView, request: WebResourceRequest) -> WebResourceResponse?)? = null,
   onScrollChanged: HtmlWebViewScrollChangeHandler? = null
 ) {
   val isInDarkTheme = false
@@ -115,6 +115,12 @@ fun HtmlWebView(
       this.javaScriptEnabled = true
     }
 
+    webView.webViewClient = object : WebViewClient() {
+      override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
+        return shouldInterceptRequest?.invoke(view, request)
+      }
+    }
+
     /*
     * 在全局命名空间声明了一个变量用来保存messageHandlersReferenceMap，在postMessage方法内直接引用。
     * 因为这里webview的实例已经委托给viewModel来保存，当取出来的时候，绑定的messageHandlers也还是之前的，
@@ -141,7 +147,7 @@ fun HtmlWebView(
         }
       }, "_NativeInterface")
 
-      webView.loadDataWithBaseURL(baseUrl, "", "text/html", "UTF-8", null)
+      webView.loadDataWithBaseURL(baseUrl, "", "text/html", "utf8", null)
       cachedWebView.webViewInstance = webView
     }
   }

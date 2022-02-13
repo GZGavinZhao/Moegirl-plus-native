@@ -10,6 +10,7 @@ import com.moegirlviewer.api.app.AppApi
 import com.moegirlviewer.api.app.bean.HmoeSplashImageConfigBean
 import com.moegirlviewer.request.CommonRequestException
 import com.moegirlviewer.request.commonOkHttpClient
+import com.moegirlviewer.request.moeOkHttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
@@ -90,7 +91,7 @@ object HmoeSplashImageManager {
           .build()
         withContext(Dispatchers.IO) {
           val res = try {
-            commonOkHttpClient.newCall(request).execute()
+            moeOkHttpClient.newCall(request).execute()
           } catch (e: CommonRequestException) {
             printRequestErr(e, "H萌娘：启动屏图片下载失败：$imageUrl")
             return@withContext

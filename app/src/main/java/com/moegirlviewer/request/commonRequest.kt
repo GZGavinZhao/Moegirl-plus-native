@@ -25,7 +25,7 @@ class CommonRequestException(
 suspend fun <T> Request.send(entity: Class<T>): T {
   return withContext(Dispatchers.IO) {
     val res = try {
-      commonOkHttpClient.newCall(this@send).execute()
+      moeOkHttpClient.newCall(this@send).execute()
     } catch (e: Exception) {
       throw CommonRequestException(
         message = e.message,

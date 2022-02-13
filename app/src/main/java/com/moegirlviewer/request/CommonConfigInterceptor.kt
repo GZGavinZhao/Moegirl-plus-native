@@ -1,5 +1,8 @@
 package com.moegirlviewer.request
 
+import android.util.Log
+import android.webkit.WebView
+import com.moegirlviewer.util.Globals
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.util.concurrent.TimeUnit
@@ -12,7 +15,7 @@ class CommonConfigInterceptor : Interceptor {
       .withWriteTimeout(10, TimeUnit.SECONDS)
       .request().newBuilder()
       .addHeader("cache-control", "no-cache")
-      .addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.95 Safari/537.36")
+      .addHeader("user-agent", Globals.httpUserAgent)
       .addHeader("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\"")
       .addHeader("sec-ch-ua-mobile", "?0")
       .addHeader("sec-fetch-dest", "empty")
@@ -27,4 +30,6 @@ class CommonConfigInterceptor : Interceptor {
     return chain.proceed(newRequest)
   }
 }
+
+var token: String? = null
 

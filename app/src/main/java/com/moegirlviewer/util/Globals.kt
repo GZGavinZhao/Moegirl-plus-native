@@ -25,4 +25,5 @@ object Globals {
   lateinit var commonDatePickerDialog: CommonDatePickerDialogState
   lateinit var room: AppDatabase
   lateinit var imageLoader: ImageLoader
+  lateinit var httpUserAgent: String
 }

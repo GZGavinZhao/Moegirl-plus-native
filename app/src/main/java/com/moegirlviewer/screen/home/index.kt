@@ -49,7 +49,7 @@ fun HomeScreen() {
   val drawerRef = remember { Ref<CustomDrawerRef>() }
 
   LaunchedEffect(true) {
-    if (HomeScreenModel.needReload && model.articleViewRef.value!!.loadStatus == LoadStatus.LOADING) {
+    if (HomeScreenModel.needReload || model.articleViewRef.value!!.loadStatus == LoadStatus.LOADING) {
       model.articleViewRef.value!!.reload(true)
       HomeScreenModel.needReload = false
     }

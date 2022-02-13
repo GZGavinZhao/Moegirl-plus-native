@@ -23,6 +23,7 @@ val moeOkHttpClient = OkHttpClient.Builder()
   .addInterceptor(MoeInterceptor())
   .addInterceptor(HttpLoggingInterceptor().apply {
     this.level = HttpLoggingInterceptor.Level.BODY
+    this.redactHeader("cookie")
   })
   .build()
 
@@ -73,17 +74,16 @@ suspend fun <T> moeRequest(
     if (response.code == 404) {
       throw MoeRequestTimeoutException()
     } else {
-      val bodyContent = response.body?.string()
-      val htmlDoc = Jsoup.parse(bodyContent ?: "")
+      val bodyContent = response.body?.string() ?: ""
 
-      if (htmlDoc.title().contains("Cloudflare")) {
-//        withContext(Dispatchers.Main) {
-//          Globals.navController.navigate("cloudflareCaptcha") {
-//            this.launchSingleTop = true
-//          }
-//        }
+      if (bodyContent.contains("Cloudflare", true)) {
+        withContext(Dispatchers.Main) {
+          Globals.navController.navigate("cloudflareCaptcha") {
+            this.launchSingleTop = true
+          }
+        }
 
-        toast(Globals.context.getString(R.string.blockedByCloudflareHint))
+//        toast(Globals.context.getString(R.string.blockedByCloudflareHint))
         throw MoeRequestWikiException("被Cloudflare captcha拦截")
       } else {
         Log.e("[MoeRequestHttpException]", bodyContent ?: "body不存在")

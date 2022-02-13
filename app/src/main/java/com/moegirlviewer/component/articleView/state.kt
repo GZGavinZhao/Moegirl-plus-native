@@ -1,6 +1,10 @@
 package com.moegirlviewer.component.articleView
 
 import android.os.Parcelable
+import android.webkit.CookieManager
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
@@ -24,9 +28,7 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebViewContent
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
 import com.moegirlviewer.component.styled.StyledText
-import com.moegirlviewer.request.MoeRequestException
-import com.moegirlviewer.request.MoeRequestWikiException
-import com.moegirlviewer.request.commonOkHttpClient
+import com.moegirlviewer.request.*
 import com.moegirlviewer.room.pageContentCache.PageContentCache
 import com.moegirlviewer.room.pageNameRedirect.PageNameRedirect
 import com.moegirlviewer.screen.article.ArticleRouteArguments
@@ -45,7 +47,6 @@ import okhttp3.FormBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
 val defaultInjectedFiles = listOf("main.css", "main.js")
@@ -91,7 +92,7 @@ class ArticleViewState(
     val styles = """
       @font-face {
         font-family: "NospzGothicMoe";
-        src: url("file:///android_res/font/nospz_gothic_moe.ttf");
+        src: url("font/nospz_gothic_moe.ttf");
       }     
 
       body {
@@ -122,6 +123,20 @@ class ArticleViewState(
         --color-light: ${context.themeColors.primary.lighten(0.3F).toCssRgbaString()};
       }
     """.trimIndent()
+
+    val cookieManager = CookieManager.getInstance()
+    val cookies = cookieJar.loadForRequest(Constants.domain.toHttpUrl())
+
+    coroutineScope {
+      for (cookie in cookies) {
+        async {
+          val completableDeferred = CompletableDeferred<Unit>()
+          cookieManager.setCookie(Constants.domain, cookie.toString()) {
+            completableDeferred.complete(Unit)
+          }
+        }
+      }
+    }
 
     val messageForLoaded = """
       setTimeout(() => _postMessage('loaded'))
@@ -285,6 +300,33 @@ class ArticleViewState(
     htmlWebViewRef.value!!.injectScript("""
       document.body.style.fontFamily = 'initial'
     """.trimIndent())
+  }
+
+  // h萌娘在被waf拦截后所有资源需要带cookie，由于不同源cookie没法带过去，这里需要代理加载资源
+  fun shouldInterceptRequest(webView: WebView, request: WebResourceRequest): WebResourceResponse? {
+    if (request.url.toString().contains(Constants.mainUrl).not()) return null
+
+    val okhttpRequest = Request.Builder()
+      .url(request.url.toString())
+      .build()
+    val res = try {
+      moeOkHttpClient.newCall(okhttpRequest).execute()
+    } catch (e: Exception) {
+      printRequestErr(e, "宿主代理webView加载资源失败")
+      return null
+    }
+
+    val byteStream = res.body?.byteStream()
+
+    return if (byteStream != null) {
+      WebResourceResponse(
+        res.headers["content-type"],
+        "utf-8",
+        byteStream
+      )
+    } else {
+      null
+    }
   }
 
   val defaultMessageHandlers: HtmlWebViewMessageHandlers = mapOf(

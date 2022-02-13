@@ -90,6 +90,8 @@ android {
         kotlinCompilerVersion kotlin_version
     }
     packagingOptions {
+        exclude '/META-INF/INDEX.LIST'
+        exclude "META-INF/io.netty.versions.properties"
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
@@ -141,6 +143,10 @@ dependencies {
     implementation "io.coil-kt:coil-compose:1.4.0"
     implementation "io.coil-kt:coil-svg:1.4.0"
     implementation "io.coil-kt:coil-gif:1.4.0"
+
+//    implementation("io.ktor:ktor-server-core:1.6.7")
+//    implementation("io.ktor:ktor-server-cio:1.6.7")
+//    implementation "ch.qos.logback:logback-classic:1.2.5"
 
     kapt "com.google.dagger:hilt-android-compiler:2.35"
 }

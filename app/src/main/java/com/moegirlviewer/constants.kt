@@ -2,6 +2,9 @@ package com.moegirlviewer
 
 class SourceConstants(
   val source: DataSource,
+  val domain: String,
+  val mainUrl: String,
+  val mainPageUrl: String,
   val apiUrl: String,
   val avatarUrl: String,
   val shareUrl: String,
@@ -10,9 +13,12 @@ class SourceConstants(
   val filePrefix: String
 )
 
-val sourceConstants = when (BuildConfig.FLAVOR_source) {
+private val sourceConstants = when (BuildConfig.FLAVOR_source) {
   "moegirl" -> SourceConstants(
     source = DataSource.MOEGIRL,
+    domain = "https://moegirl.org.cn",
+    mainUrl = "https://zh.moegirl.org.cn/Mainpage",
+    mainPageUrl = "https://zh.moegirl.org.cn/Mainpage",
     apiUrl = "https://zh.moegirl.org.cn/api.php",
     avatarUrl = "https://commons.moegirl.org.cn/extensions/Avatar/avatar.php?user=",
     shareUrl = "https://mzh.moegirl.org.cn/index.php?curid=",
@@ -23,6 +29,9 @@ val sourceConstants = when (BuildConfig.FLAVOR_source) {
 
   "hmoe" -> SourceConstants(
     source = DataSource.HMOE,
+    domain = "https://hmoegirl.com",
+    mainUrl = "https://www.hmoegirl.com",
+    mainPageUrl = "https://www.hmoegirl.com/Mainpage",
     apiUrl = "https://www.hmoegirl.com/api.php",
     avatarUrl = "https://www.hmoegirl.com/extensions/Avatar/avatar.php?user=",
     shareUrl = "https://www.hmoegirl.com/index.php?curid=",
@@ -36,6 +45,9 @@ val sourceConstants = when (BuildConfig.FLAVOR_source) {
 
 object Constants {
   val source = sourceConstants.source
+  val domain = sourceConstants.domain
+  val mainUrl = sourceConstants.mainUrl
+  val mainPageUrl = sourceConstants.mainPageUrl
   val apiUrl = sourceConstants.apiUrl
   val avatarUrl = sourceConstants.avatarUrl
   val shareUrl = sourceConstants.shareUrl

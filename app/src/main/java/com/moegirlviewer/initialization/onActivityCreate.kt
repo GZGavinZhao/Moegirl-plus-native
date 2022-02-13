@@ -1,6 +1,7 @@
 package com.moegirlviewer.initialization
 
 import android.os.Build
+import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import com.moegirlviewer.util.Globals

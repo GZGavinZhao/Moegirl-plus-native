@@ -20,10 +20,14 @@ import com.moegirlviewer.Constants
 import com.moegirlviewer.DataSource
 import com.moegirlviewer.R
 import com.moegirlviewer.screen.article.ArticleRouteArguments
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.internal.toHexString
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
+import java.io.InputStream
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.time.*
@@ -34,6 +38,8 @@ import java.util.*
 annotation class ProguardIgnore
 
 fun isMoegirl() = Constants.source == DataSource.MOEGIRL
+
+val globalCoroutineScope = CoroutineScope(Dispatchers.Main)
 
 fun <T> isMoegirl(ifIsTrue: T, ifIsFalse: T): T {
   return if (isMoegirl()) ifIsTrue else ifIsFalse
@@ -165,3 +171,19 @@ fun TextGeometricTransform.Companion.Italic() = TextGeometricTransform(
 )
 
 fun File.existsChild(fileName: String) = this.list { _, existsFileName -> existsFileName == fileName }!!.isNotEmpty()
+
+@Throws(IOException::class)
+fun InputStream.readAllBytes(): ByteArray {
+  val bufLen = 4 * 0x400 // 4KB
+  val buf = ByteArray(bufLen)
+  var readLen: Int = 0
+
+  ByteArrayOutputStream().use { o ->
+    this.use { i ->
+      while (i.read(buf, 0, bufLen).also { readLen = it } != -1)
+        o.write(buf, 0, readLen)
+    }
+
+    return o.toByteArray()
+  }
+}

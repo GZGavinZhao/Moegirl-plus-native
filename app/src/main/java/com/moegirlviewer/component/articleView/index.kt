@@ -25,7 +25,6 @@ import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.screen.article.ReadingRecord
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import kotlin.math.max
 
 typealias ArticleData = PageContentResBean
@@ -150,7 +149,8 @@ fun ArticleView(
     HtmlWebView(
       messageHandlers = state.defaultMessageHandlers + (props.messageHandlers ?: emptyMap()),
       onScrollChanged = props.onScrollChanged,
-      ref = state.htmlWebViewRef
+      ref = state.htmlWebViewRef,
+      shouldInterceptRequest = { webView, request -> state.shouldInterceptRequest(webView, request) }
     )
 
     if (state.status != LoadStatus.SUCCESS) {

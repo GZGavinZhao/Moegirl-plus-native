@@ -1,5 +1,6 @@
 package com.moegirlviewer.api.account
 
+import com.moegirlviewer.Constants
 import com.moegirlviewer.api.account.bean.LoginResultBean
 import com.moegirlviewer.api.account.bean.LoginTokenBean
 import com.moegirlviewer.api.account.bean.UserInfoBean
@@ -53,7 +54,7 @@ object AccountApi {
   suspend fun poll(pollId: String, answer: String, token: String): String {
     return moeRequest(
       entity = String::class.java,
-      baseUrl = "https://zh.moegirl.org.cn/index.php",
+      baseUrl = "${Constants.mainUrl}/index.php",
       params = mutableMapOf<String, Any>().apply {
         this["action"] = "ajax"
         this["rs"] = "AJAXPoll::submitVote"

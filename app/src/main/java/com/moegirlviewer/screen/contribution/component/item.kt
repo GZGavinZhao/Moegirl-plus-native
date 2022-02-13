@@ -83,7 +83,7 @@ private fun ComposedTitle(
     if (diffSize != null) {
       StyledText(
         text = (if (diffSize > 0) "+" else "") + diffSize,
-        color = if (diffSize >= 0) GreenPrimary else RedAccent,
+        color = if (diffSize >= 0) themeColors.secondary else RedAccent,
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold
       )

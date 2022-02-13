@@ -1,7 +1,9 @@
 package com.moegirlviewer
 
+import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -87,6 +89,7 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     Globals.context = applicationContext
     Globals.activity = this
+    Globals.httpUserAgent = getHttpUserAgent()
 
     @Composable
     fun ContentBody() {
@@ -153,10 +156,10 @@ private fun Routes(navController: NavHostController) {
       animation = Animation.NONE
     ) { CaptchaScreen(it.arguments!!.toRouteArguments()) }
 
-//    animatedComposable(
-//      route = "cloudflareCaptcha",
-//      animation = Animation.NONE
-//    ) { CloudflareCaptchaScreen() }
+    animatedComposable(
+      route = "cloudflareCaptcha",
+      animation = Animation.NONE
+    ) { CloudflareCaptchaScreen() }
 
     animatedComposable(
       route = "search",
@@ -317,4 +320,11 @@ private fun AppDefaultEnterAnimation(
     modifier = Modifier.alpha(alpha.value),
     content = { content() }
   )
+}
+
+private fun Context.getHttpUserAgent(): String {
+  val webview = WebView(this)
+  val result = webview.settings.userAgentString
+  webview.destroy()
+  return result
 }
