@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
+import com.moegirlviewer.component.UserAvatar
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.notification.Notification
 import com.moegirlviewer.theme.background2
@@ -61,14 +62,11 @@ fun NotificationScreenItem(
         }
       }
     ) {
-      Image(
+      UserAvatar(
         modifier = Modifier
           .size(45.dp)
-          .clip(CircleShape)
-          .background(themeColors.background2)
         ,
-        painter = rememberImagePainter(Constants.avatarUrl + notification.agent.name),
-        contentDescription = null
+        userName = notification.agent.name,
       )
     }
 

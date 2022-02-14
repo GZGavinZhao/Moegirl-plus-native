@@ -24,6 +24,7 @@ import com.moegirlviewer.util.isMoegirl
 fun SplashScreen(
   state: SplashScreenState
 ) {
+
   Box(
     modifier = Modifier
       .fillMaxSize()

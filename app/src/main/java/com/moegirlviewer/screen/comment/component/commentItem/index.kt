@@ -41,6 +41,7 @@ import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.comment.CommentApi
+import com.moegirlviewer.component.UserAvatar
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.component.nativeCommentContent.NativeCommentContent
@@ -262,15 +263,11 @@ private fun ComposedHeader(
   val themeColors = MaterialTheme.colors
 
   Row() {
-    Image(
+    UserAvatar(
       modifier = Modifier
         .padding(end = 10.dp)
-        .size(40.dp)
-        .clip(CircleShape)
-        .background(themeColors.background2)
-        .noRippleClickable { gotoUserPage(userName) },
-      painter = rememberImagePainter(Constants.avatarUrl + userName),
-      contentDescription = null
+        .size(40.dp),
+      userName = userName
     )
 
     Column() {

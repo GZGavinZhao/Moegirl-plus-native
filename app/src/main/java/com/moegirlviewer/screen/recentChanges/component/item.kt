@@ -34,6 +34,7 @@ import androidx.compose.ui.zIndex
 import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.component.UserAvatar
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.compare.ComparePageRouteArguments
 import com.moegirlviewer.screen.contribution.ContributionRouteArguments
@@ -282,14 +283,11 @@ private fun UsersBar(
           .noRippleClickable { gotoUserPage(item.name) },
         verticalAlignment = Alignment.CenterVertically
       ) {
-        Image(
+        UserAvatar(
           modifier = Modifier
             .padding(end = 5.dp)
-            .size(30.dp)
-            .clip(CircleShape)
-            .background(themeColors.background2),
-          painter = rememberImagePainter(Constants.avatarUrl + item.name),
-          contentDescription = null
+            .size(30.dp),
+          userName = item.name
         )
         StyledText(
           text = "${item.name} (×${item.total})",
@@ -354,13 +352,10 @@ private fun ComposedFooter(
           .noRippleClickable { gotoUserPage(firstUserName) },
         verticalAlignment = Alignment.CenterVertically
       ) {
-        Image(
+        UserAvatar(
           modifier = Modifier
-            .size(30.dp)
-            .clip(CircleShape)
-            .background(themeColors.background2),
-          painter = rememberImagePainter(Constants.avatarUrl + firstUserName),
-          contentDescription = null,
+            .size(30.dp),
+          userName = firstUserName,
         )
 
         Column(

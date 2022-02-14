@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.component.UserAvatar
 import com.moegirlviewer.component.UserTail
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.article.ArticleRouteArguments
@@ -114,14 +115,11 @@ private fun ComposedTitle(
         .noRippleClickable { gotoUserPage(userName) },
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Image(
+      UserAvatar(
         modifier = Modifier
           .padding(end = 5.dp)
-          .size(30.dp)
-          .clip(CircleShape)
-          .background(themeColors.background2),
-        painter = rememberImagePainter(Constants.avatarUrl + userName),
-        contentDescription = null
+          .size(30.dp),
+        userName = userName
       )
       StyledText(
         text = userName,

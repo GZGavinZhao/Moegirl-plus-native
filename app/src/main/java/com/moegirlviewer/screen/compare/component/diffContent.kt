@@ -27,6 +27,7 @@ import coil.compose.rememberImagePainter
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.Center
+import com.moegirlviewer.component.UserAvatar
 import com.moegirlviewer.component.UserTail
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.compare.util.DiffLine
@@ -80,14 +81,10 @@ private fun ComposedHeader(
     Row(
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Image(
+      UserAvatar(
         modifier = Modifier
-          .size(30.dp)
-          .clip(CircleShape)
-          .background(themeColors.background2)
-          .noRippleClickable { gotoUserPage(userName) },
-        painter = rememberImagePainter(Constants.avatarUrl + userName),
-        contentDescription = null
+          .size(30.dp),
+        userName = userName,
       )
 
       StyledText(
