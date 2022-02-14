@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Moegirl+</string>
+    <string name="app_name">HMoegirl</string>
 
     <!-- 單詞（可以作為變數名字面意思使用） -->
     <string name="note">註釋</string>
@@ -145,7 +145,7 @@
     <string name="changeType">更改型別</string>
     <string name="myEdit">我的編輯</string>
     <string name="microEdit">小編輯</string>
-    <string name="searchInMoegirl">搜尋萌娘百科...</string>
+    <string name="searchPlaceholderText">搜尋萌娘百科...</string>
     <string name="recentSearch">最近搜尋</string>
     <string name="loadFail">載入失敗</string>
     <string name="noSearchRecord">暫無搜尋記錄</string>

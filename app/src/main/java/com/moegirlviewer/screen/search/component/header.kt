@@ -65,7 +65,7 @@ fun SearchScreenHeader() {
           }
         ),
         onValueChange = { model.keywordInputValue = it },
-        placeholder = stringResource(id = R.string.searchInMoegirl),
+        placeholder = stringResource(id = R.string.searchPlaceholderText),
       )
     },
     actions = {

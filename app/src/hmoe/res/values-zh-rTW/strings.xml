@@ -2,8 +2,8 @@
     <string name="siteName">H萌娘</string>
     <string name="moegirlShare">H萌娘分享</string>
 
-    <string name="loginOrJoinMoegirl">登录/加入H萌娘</string>
+    <string name="loginOrJoinMoegirl">登入/加入H萌娘</string>
 
-    <string name="noAccountHint">还没有H萌娘帐号？点击前往官网注册</string>
-    <string name="moegirlSloganText">H萌娘，万物皆可H的百科全书！</string>
+    <string name="noAccountHint">還沒有H萌娘帳號？點選前往官網註冊</string>
+    <string name="moegirlSloganText">H萌娘，萬物皆可H的百科全書！</string>
 </resources>

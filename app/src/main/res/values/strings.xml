@@ -145,7 +145,7 @@
     <string name="changeType">更改类型</string>
     <string name="myEdit">我的编辑</string>
     <string name="microEdit">小编辑</string>
-    <string name="searchInMoegirl">搜索萌娘百科...</string>
+    <string name="searchPlaceholderText">搜索萌娘百科...</string>
     <string name="recentSearch">最近搜索</string>
     <string name="loadFail">加载失败</string>
     <string name="noSearchRecord">暂无搜索记录</string>
