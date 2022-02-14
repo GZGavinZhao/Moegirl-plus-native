@@ -163,7 +163,7 @@ private fun MoreMenu(
     } else {
       Item(
         action = MoreMenuAction.GOTO_LOGIN,
-        text = stringResource(id = R.string.login)
+        text = stringResource(id = R.string.loginToEdit)
       )
     }
 

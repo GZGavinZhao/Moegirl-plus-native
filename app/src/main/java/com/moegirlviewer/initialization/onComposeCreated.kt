@@ -43,43 +43,34 @@ fun onComposeCreated() {
 }
 
 private fun checkDeepLink() {
-  val deepLink = Globals.activity.intent.dataString ?: return
-  val plainRegex = Regex(""".+/(.+)$""")
-  val pageIdRegex = Regex("""curid=\d+""")
+  val deepLink = Globals.activity.intent.deepLink ?: return
 
-  when {
-    deepLink.contains(pageIdRegex) -> {
-      val pageId = deepLink.toUri().getQueryParameter("curid")!!.toInt()
+  when(deepLink) {
+    is PageIdDeepLink -> {
       Globals.navController.navigate(ArticleRouteArguments(
-        pageId = pageId
+        pageId = deepLink.pageId
       ))
     }
-    deepLink.contains(plainRegex) -> {
-      val pageName = plainRegex.find(deepLink)!!.groupValues[1]
-      if (pageName.contains(Regex("""^[Mm]ainpage$""")).not()) gotoArticlePage(pageName)
+    is PageNameDeepLink -> {
+      if (!deepLink.isMainPage) gotoArticlePage(deepLink.pageName)
     }
   }
 }
 
 private suspend fun checkShortcutIntent() {
-  val intentAction = Globals.activity.intent.action ?: ""
-  val regexPackageName = Regex.escape(Globals.context.packageName)
-  val getShortcutActionRegex = Regex("""^$regexPackageName\.(.+)$""")
-  if (intentAction.contains(getShortcutActionRegex)){
-    val shortcutAction = getShortcutActionRegex.find(intentAction)!!.groupValues[1]
-    when(shortcutAction) {
-      "SEARCH" -> Globals.navController.navigate("search")
-      "CONTINUE_READ" -> {
-        val readingRecord = SettingsStore.otherSettings.getValue { this.readingRecord }.first() ?: return
-        Globals.navController.navigate(ArticleRouteArguments(
-          pageName = readingRecord.pageName,
-          readingRecord = readingRecord
-        ))
-      }
-      "RANDOM" -> {
-        val randomPage = PageApi.getRandomPage().query.random.first().title
-        gotoArticlePage(randomPage)
-      }
+  val shortcutAction = Globals.activity.intent.shortcutAction ?: return
+  when(shortcutAction) {
+    ShortcutAction.SEARCH -> Globals.navController.navigate("search")
+    ShortcutAction.CONTINUE_READ -> {
+      val readingRecord = SettingsStore.otherSettings.getValue { this.readingRecord }.first() ?: return
+      Globals.navController.navigate(ArticleRouteArguments(
+        pageName = readingRecord.pageName,
+        readingRecord = readingRecord
+      ))
+    }
+    ShortcutAction.RANDOM -> {
+      val randomPage = PageApi.getRandomPage().query.random.first().title
+      gotoArticlePage(randomPage)
     }
   }
 }
