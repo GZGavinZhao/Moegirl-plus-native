@@ -8,12 +8,14 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun StatusBar(
+  visible: Boolean = true,
   backgroundColor: Color = Color.Transparent,
   darkIcons: Boolean = false
 ) {
   val systemUiController = rememberSystemUiController()
 
   LaunchedEffect(true) {
+    systemUiController.isStatusBarVisible = visible
     systemUiController.setStatusBarColor(
       color = backgroundColor,
       darkIcons = darkIcons

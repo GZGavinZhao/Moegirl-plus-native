@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.util.isMoegirl
 
 // 这个页面本身不在路由中

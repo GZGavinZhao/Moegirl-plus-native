@@ -1,7 +1,5 @@
 package com.moegirlviewer.initialization
 
-import android.util.Log
-import androidx.core.net.toUri
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.TargetStore
@@ -20,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.net.SocketTimeoutException
 import java.util.*
 
 private val coroutineScope = CoroutineScope(Dispatchers.Main)

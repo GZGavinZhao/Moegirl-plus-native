@@ -2,7 +2,6 @@ package com.moegirlviewer
 
 import android.content.Context
 import android.os.Bundle
-import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,15 +16,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.ComposeView
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.moegirlviewer.component.Center
-import com.moegirlviewer.initialization.OnComposeCreate
+import com.moegirlviewer.initialization.OnComposeWillCreate
 import com.moegirlviewer.initialization.initializeOnCreate
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.article.ArticleScreen
@@ -48,7 +45,6 @@ import com.moegirlviewer.screen.contribution.ContributionScreen
 import com.moegirlviewer.screen.edit.EditRouteArguments
 import com.moegirlviewer.screen.edit.EditScreen
 import com.moegirlviewer.screen.home.HomeScreen
-import com.moegirlviewer.screen.home.homeScreenReady
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.screen.imageViewer.ImageViewerScreen
 import com.moegirlviewer.screen.login.LoginScreen
@@ -95,7 +91,7 @@ class MainActivity : ComponentActivity() {
     fun ContentBody() {
       MoegirlPlusTheme {
         ProvideWindowInsets {
-          OnComposeCreate {
+          OnComposeWillCreate {
             Routes(it)
           }
         }
@@ -104,9 +100,11 @@ class MainActivity : ComponentActivity() {
 
     coroutineScope.launch {
       val hasDeepLink = intent.dataString != null
+      val hasShortcutAction = intent.shortcutAction != null
       val splashImageMode = SettingsStore.common.getValue { this.splashImageMode }.first()
       val isShowSplashScreen = !hasDeepLink &&
-        homeScreenReady.isActive &&
+        !hasShortcutAction &&
+//        homeScreenReady.isActive &&
         (isMoegirl(splashImageMode != SplashImageMode.OFF, true))
 
       if (isShowSplashScreen) {

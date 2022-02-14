@@ -28,7 +28,7 @@ import com.moegirlviewer.util.Globals
 @ExperimentalFoundationApi
 @ExperimentalAnimationApi
 @Composable
-fun OnComposeCreate(
+fun OnComposeWillCreate(
   content: @Composable (NavHostController) -> Unit
 ) {
   val themeColors = MaterialTheme.colors
