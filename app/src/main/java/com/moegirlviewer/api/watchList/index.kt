@@ -23,11 +23,14 @@ object WatchListApi {
     startISO: String,
     includeMinor: Boolean,
     includeRobot: Boolean,
+    includeLog: Boolean,
     limit: Int
   ): RecentChangesOfWatchList {
     val showing = mutableListOf<String>()
+    val type = mutableListOf("edit", "new")
     if (!includeMinor) showing.add("!minor")
     if (!includeRobot) showing.add("!bot")
+    if (includeLog) type.add("log")
 
     return moeRequest(
       entity = RecentChangesOfWatchList::class.java,

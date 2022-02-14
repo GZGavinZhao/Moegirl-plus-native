@@ -11,11 +11,15 @@ object EditingRecordApi {
     excludeUser: String? = null,
     includeMinor: Boolean,
     includeRobot: Boolean,
+    includeLog: Boolean,
     limit: Int
   ): RecentChangesBean {
     val showing = mutableListOf<String>()
+    val type = mutableListOf("edit", "new")
     if (!includeMinor) showing.add("!minor")
     if (!includeRobot) showing.add("!bot")
+    if (includeLog) type.add("log")
+
 
     return moeRequest(
       entity = RecentChangesBean::class.java,
@@ -26,6 +30,7 @@ object EditingRecordApi {
         this["rcprop"] = "tags|comment|flags|user|title|timestamp|ids|sizes|redirect"
         this["rcshow"] = showing.joinToString("|")
         this["rclimit"] = limit
+        this["rctype"] = type.joinToString("|")
         if (namespace != null) this["rcnamespace"] = namespace
         if (excludeUser != null) this["rcexcludeuser"] = excludeUser
       }

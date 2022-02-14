@@ -44,7 +44,8 @@ class RecentChangesScreenModel @Inject constructor() : ViewModel() {
           startISO = LocalDateTime.now().minusDays(settings.daysAgo.toLong()).format(moegirlNormalTimestampDateFormatter),
           limit = settings.totalLimit,
           includeMinor = settings.includeMinor,
-          includeRobot = settings.includeRobot
+          includeRobot = settings.includeRobot,
+          includeLog = settings.includeLog,
         ).query.watchlist.map { RawRecentChanges(it) }
       } else {
         EditingRecordApi.getRecentChanges(
@@ -52,6 +53,7 @@ class RecentChangesScreenModel @Inject constructor() : ViewModel() {
           limit = settings.totalLimit,
           includeMinor = settings.includeMinor,
           includeRobot = settings.includeRobot,
+          includeLog = settings.includeLog,
           excludeUser = if (settings.includeSelf) null else AccountStore.userName.first()
         ).query.recentchanges.map { RawRecentChanges(it) }
       }

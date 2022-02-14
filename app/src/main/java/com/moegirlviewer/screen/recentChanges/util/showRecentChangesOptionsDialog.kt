@@ -106,17 +106,20 @@ suspend fun showRecentChangesOptionsDialog(): RecentChangesSettings? {
               onCheckedChange = { settings = settings.copy(includeSelf = it) }
             )
           }
-
+          CapsuleCheckbox(
+            text = stringResource(id = R.string.microEdit),
+            checked = settings.includeMinor,
+            onCheckedChange = { settings = settings.copy(includeMinor = it) }
+          )
           CapsuleCheckbox(
             text = stringResource(id = R.string.robot),
             checked = settings.includeRobot,
             onCheckedChange = { settings = settings.copy(includeRobot = it) }
           )
-
           CapsuleCheckbox(
-            text = stringResource(id = R.string.microEdit),
-            checked = settings.includeMinor,
-            onCheckedChange = { settings = settings.copy(includeMinor = it) }
+            text = stringResource(id = R.string.log),
+            checked = settings.includeLog,
+            onCheckedChange = { settings = settings.copy(includeLog = it) }
           )
         }
       }

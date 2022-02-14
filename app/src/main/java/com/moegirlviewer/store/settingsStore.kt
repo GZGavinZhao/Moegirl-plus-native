@@ -39,6 +39,7 @@ data class RecentChangesSettings(
   var includeSelf: Boolean = true,
   var includeMinor: Boolean = true,
   var includeRobot: Boolean = false,
+  var includeLog: Boolean = false,
   var isWatchListMode: Boolean = false
 ) : Settings()
 
