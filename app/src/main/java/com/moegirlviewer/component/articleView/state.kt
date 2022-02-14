@@ -187,32 +187,6 @@ class ArticleViewState(
 
     launch {
       try {
-        // 为主页添加缓存，最长有效期为当天，每次加载缓存后，后台请求最新内容更新缓存
-        if (pageName == "Mainpage") {
-          val cache = Globals.room.pageContentCache().getCache(pageName).first()
-          if (cache != null) {
-            if (cache.date.toLocalDate() == LocalDate.now()) {
-              consumeArticleData(cache.content, cache.pageInfo)
-              try {
-                val articleData = PageApi.getPageContent(pageName)
-                val pageInfo = PageApi.getPageInfo(pageName)
-                Globals.room.pageContentCache().insertItem(PageContentCache(
-                  pageName = pageName,
-                  content = articleData,
-                  pageInfo = pageInfo
-                ))
-              } catch (e: MoeRequestException) {
-                printRequestErr(e, "后台更新首页缓存失败")
-              }
-
-              return@launch
-            } else {
-              Globals.room.pageContentCache().removeItem(cache)
-            }
-          }
-        }
-
-
         val truePageName = PageApi.getTruePageName(pageName, pageId)
         if (truePageName == null) {
           props.onArticleMissed?.invoke()
