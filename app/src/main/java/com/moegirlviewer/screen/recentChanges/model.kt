@@ -58,20 +58,13 @@ class RecentChangesScreenModel @Inject constructor() : ViewModel() {
         ).query.recentchanges.map { RawRecentChanges(it) }
       }
 
+      val a = processRecentChanges(rawChangesData)
+
       val changeListOfDays = processRecentChanges(rawChangesData)
-        // 添加日期
-        .fold(mutableMapOf<String, MutableList<RecentChanges>>()) { result, item ->
-          val titleDateStr = formatTitleDate(item.timestamp)
-          if (!result.containsKey(titleDateStr)) result[titleDateStr] = mutableListOf()
-          result[titleDateStr]!!.add(item)
-          result
+        // 添加日期，并将所有项转化为适配器
+        .flatMap {
+          listOf(DateTitleItemAdapter(formatTitleDate(it[0].timestamp))) + it.map { DataItemAdapter(it) }
         }
-        // 展平日期，并将所有项转化为适配器
-        .map { listOf(
-          DateTitleItemAdapter(it.key),
-          *it.value.map { DataItemAdapter(it) }.toTypedArray()
-        ) }
-        .flatten()
 
       changesList = changeListOfDays
       status = LoadStatus.SUCCESS
@@ -95,7 +88,7 @@ class RecentChangesScreenModel @Inject constructor() : ViewModel() {
   }
 
   private val chineseWeeks = Gson().fromJson(Globals.context.getString(R.string.jsonArray_chineseWeeks), Array<String>::class.java)
-  fun formatTitleDate(dateISO: String): String {
+  private fun formatTitleDate(dateISO: String): String {
     val localDateTime = parseMoegirlNormalTimestamp(dateISO)
     val yearWord = Globals.context.getString(R.string.year)
     val monthWord = Globals.context.getString(R.string.month)
@@ -119,7 +112,7 @@ class RecentChangesScreenModel @Inject constructor() : ViewModel() {
 }
 
 sealed class ListItemRenderAdapter(
-  val key: String
+  val key: Any
 )
 
 class DateTitleItemAdapter(
@@ -128,4 +121,4 @@ class DateTitleItemAdapter(
 
 class DataItemAdapter(
   val data: RecentChanges,
-) : ListItemRenderAdapter(data.title)
+) : ListItemRenderAdapter(data.revid)

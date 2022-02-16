@@ -2,12 +2,37 @@ package com.moegirlviewer.screen.recentChanges.util
 
 import com.moegirlviewer.api.editingRecord.bean.RecentChangesBean
 import com.moegirlviewer.api.watchList.bean.RecentChangesOfWatchList
+import com.moegirlviewer.util.parseMoegirlNormalTimestamp
+import java.time.LocalDateTime
 
 // 这里的代码主要是为了统一“最近更改”和“监视列表下最近更改”的数据类型，以及合并同页面编辑，为数据添加编辑用户字段
 
-fun processRecentChanges(list: List<RawRecentChanges>): List<RecentChanges> {
-  // 收集同页面编辑，并放入details字段
-  val listWithDetails = list.fold(mutableListOf<RecentChanges>()) { result, item ->
+fun processRecentChanges(list: List<RawRecentChanges>): List<List<RecentChanges>> {
+  return list
+    .chunkedByDate()
+    .map { it.withDetails().withUsers() }
+}
+
+private fun List<RawRecentChanges>.chunkedByDate(): List<List<RawRecentChanges>> {
+  val dateChangePoints = this.foldIndexed(emptyList<Int>()) { index, result, item ->
+    if (index == 0) return@foldIndexed listOf(0)
+    val prevItemDate = parseMoegirlNormalTimestamp(this[index - 1].timestamp).toLocalDate()
+    val itemDate = parseMoegirlNormalTimestamp(item.timestamp).toLocalDate()
+    if (prevItemDate != itemDate)
+      result + listOf(index) else
+      result
+  }
+
+  return dateChangePoints
+    .mapIndexed { index, point ->
+      if (index == 0) emptyList() else this.subList(dateChangePoints[index - 1], point)
+    }
+    .drop(1)
+    .plus(listOf(this.subList(dateChangePoints.last(), this.size)))
+}
+
+private fun List<RawRecentChanges>.withDetails(): List<RecentChanges> {
+  return this.fold(mutableListOf()) { result, item ->
     if (result.all { it.title != item.title }) {
       result.add(RecentChanges(
         rawRecentChanges = item,
@@ -19,9 +44,10 @@ fun processRecentChanges(list: List<RawRecentChanges>): List<RecentChanges> {
 
     result
   }
+}
 
-  // 添加users和各自的编辑次数
-  for (item in listWithDetails) {
+private fun List<RecentChanges>.withUsers(): List<RecentChanges> {
+  for (item in this) {
     for (detailItem in item.details) {
       val foundUserIndex = item.users.indexOfFirst { it.name == detailItem.user }
       if (foundUserIndex != -1) {
@@ -35,7 +61,7 @@ fun processRecentChanges(list: List<RawRecentChanges>): List<RecentChanges> {
     }
   }
 
-  return listWithDetails
+  return this
 }
 
 // 这个类的字段命名就按萌百接口返回数据的名字来命名了，方便查找
@@ -93,7 +119,7 @@ data class EditUserOfChanges(
 class RecentChanges(
   rawRecentChanges: RawRecentChanges,
   val details: MutableList<RawRecentChanges> = mutableListOf(),
-  val users: MutableList<EditUserOfChanges> = mutableListOf()
+  val users: MutableList<EditUserOfChanges> = mutableListOf(),
 ) : RawRecentChanges(
   comment = rawRecentChanges.comment,
   minor = rawRecentChanges.minor,
