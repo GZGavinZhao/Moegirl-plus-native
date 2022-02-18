@@ -6,8 +6,6 @@ import android.webkit.WebView
 import androidx.lifecycle.ViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.request.cookieJar
-import com.moegirlviewer.request.token
-import com.moegirlviewer.screen.home.HomeScreenModel
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,8 +24,9 @@ class CloudflareCaptchaScreenModel @Inject constructor() : ViewModel() {
     if (isExtractCloudflareTokenExecuted) return
     val cookieManager = CookieManager.getInstance()
     val cookieStr: String? = cookieManager.getCookie(cookieDomain)
-    token = cookieStr
-    val tokenCookieStr = cookieStr?.split(";")?.firstOrNull { it.contains(Regex("""^cf_clearance=""")) }
+    val tokenCookieStr = cookieStr?.split(";")
+      ?.map { it.trim() }
+      ?.firstOrNull { it.contains(Regex("""^cf_clearance=""")) }
 
     if (tokenCookieStr == null) {
       webview.reload()

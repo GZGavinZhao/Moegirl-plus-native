@@ -1,7 +1,5 @@
 package com.moegirlviewer.request
 
-import android.util.Log
-import android.webkit.WebView
 import com.moegirlviewer.util.Globals
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -30,6 +28,3 @@ class CommonConfigInterceptor : Interceptor {
     return chain.proceed(newRequest)
   }
 }
-
-var token: String? = null
-

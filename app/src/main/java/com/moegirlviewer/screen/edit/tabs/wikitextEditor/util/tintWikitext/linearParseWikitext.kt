@@ -1,8 +1,12 @@
-package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util
+package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext
 
 import androidx.compose.ui.text.SpanStyle
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.ParseResult
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.TintableWikitextMarkup
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.WikitextMarkup
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.linearParsingMarkupList
 
-fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitextMarkup>> {
+internal fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitextMarkup>> {
   val wikitextLength = wikitext.length
   var startCursor = 0
   var endCursor = 0
@@ -64,12 +68,14 @@ fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitextMarkup>>
         val marchedEndMarkup = PairMarkupMatcher.matchEnd(markupTextCache, wikitext, endCursor)
         val isEqualWikiTextMarkup = marchedEndMarkup is EqualWikitextMarkup
         if ((stackForStartMarkupMatch.last() == marchedEndMarkup) || isEqualWikiTextMarkup) {
-          resultList.add(ParseResult(
+          resultList.add(
+            ParseResult(
             content = wikitext.substring(startCursor, endCursor - marchedEndMarkup.endText.length),
             contentRange = startCursor until endCursor - marchedEndMarkup.endText.length,
             markup = marchedEndMarkup,
             containEndMarkup = true
-          ))
+          )
+          )
           startCursor = endCursor
           markupTextCache = ""
           if (isEqualWikiTextMarkup) {
@@ -92,16 +98,20 @@ fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitextMarkup>>
 
   if (markupTextCache.isNotEmpty()) {
     if (stackForStartMarkupMatch.isNotEmpty()) {
-      resultList.add(ParseResult(
+      resultList.add(
+        ParseResult(
         content = markupTextCache,
         contentRange = startCursor until endCursor,
         markup = stackForStartMarkupMatch.last(),
-      ))
+      )
+      )
     } else {
-      resultList.add(ParseResult(
+      resultList.add(
+        ParseResult(
         markupTextCache,
         contentRange = startCursor until endCursor
-      ))
+      )
+      )
     }
   }
 

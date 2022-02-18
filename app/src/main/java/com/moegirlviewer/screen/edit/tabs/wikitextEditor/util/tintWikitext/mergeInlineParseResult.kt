@@ -1,6 +1,11 @@
-package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util
+package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext
 
-fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.InlinePairWikitextMarkup
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.InlineWikitextMarkup
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.ParseResult
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.TintableWikitextMarkup
+
+internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
   inlineParseResult: List<ParseResult<InlineWikitextMarkup>>
 ): List<ParseResult<out TintableWikitextMarkup>> {
   val mergedList: MutableList<ParseResult<out TintableWikitextMarkup>> = this.toMutableList()

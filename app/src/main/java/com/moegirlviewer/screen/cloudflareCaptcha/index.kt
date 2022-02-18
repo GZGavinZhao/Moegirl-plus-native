@@ -24,9 +24,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-// 没调试出来，虽然cookie取到了，但还是会被拦截，cloudflare会检查userAgentString，如果用的是桌面端的也不行
-// 另外有些梯子的节点，无论怎么验证都过不去
-// 未来尝试将请求器的header改为模拟手机浏览器的请求，目前模拟的是windows chrome浏览器的请求
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun CloudflareCaptchaScreen() {
@@ -39,6 +36,7 @@ fun CloudflareCaptchaScreen() {
   LaunchedEffect(true) {
     while (true) {
       delay(300)
+      println(model.webview.title)
       if (model.webview.title == "H萌娘") model.extractCloudflareToken()
     }
   }

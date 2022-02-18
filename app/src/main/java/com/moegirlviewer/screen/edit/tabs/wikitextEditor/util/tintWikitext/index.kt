@@ -7,7 +7,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import java.lang.Integer.max
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.EqualWikitextMarkup
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.PairWikitextMarkup
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.linearParseWikitext
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.mergeInlineParseResult
 
 internal val linearParsingMarkupList = listOf(
   PairWikitextMarkup(
@@ -106,6 +109,20 @@ fun tintWikitext(wikitext: String): AnnotatedString {
   }
 
   return annotatedString
+}
+
+class TintedWikitext(
+  val parseResult: List<ParseResult<out TintableWikitextMarkup>>
+) {
+  fun update(newWikitext: String) {
+
+  }
+
+  fun toAnnotatedString() = buildAnnotatedString {
+    for (item in parseResult) {
+      tintTextByMarkup(item)
+    }
+  }
 }
 
 abstract class WikitextMarkup(

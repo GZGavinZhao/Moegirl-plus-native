@@ -1,9 +1,8 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util
 
-import android.util.Log
 import androidx.compose.ui.text.SpanStyle
 
-fun matchParseWikitext(wikitext: String): List<ParseResult<InlineWikitextMarkup>> {
+internal fun matchParseWikitext(wikitext: String): List<ParseResult<InlineWikitextMarkup>> {
   val resultList = mutableListOf<ParseResult<InlineWikitextMarkup>>()
   var startIndex = 0
 
