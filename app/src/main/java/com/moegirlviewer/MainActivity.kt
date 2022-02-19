@@ -44,6 +44,7 @@ import com.moegirlviewer.screen.contribution.ContributionRouteArguments
 import com.moegirlviewer.screen.contribution.ContributionScreen
 import com.moegirlviewer.screen.edit.EditRouteArguments
 import com.moegirlviewer.screen.edit.EditScreen
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.diffWikitext
 import com.moegirlviewer.screen.home.HomeScreen
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.screen.imageViewer.ImageViewerScreen
@@ -86,6 +87,7 @@ class MainActivity : ComponentActivity() {
     Globals.context = applicationContext
     Globals.activity = this
     Globals.httpUserAgent = getHttpUserAgent()
+    diffWikitext("112233", "113344")
 
     @Composable
     fun ContentBody() {

@@ -4,6 +4,7 @@ import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.InlinePairWikitext
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.InlineWikitextMarkup
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.ParseResult
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.TintableWikitextMarkup
+import okhttp3.internal.filterList
 
 internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
   inlineParseResult: List<ParseResult<InlineWikitextMarkup>>
@@ -12,6 +13,10 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
   for (inlineParseResultItem in inlineParseResult) {
     val indexOfStartOverlapElement = mergedList.indexOfFirst { it.fullContentRange.contains(inlineParseResultItem.fullContentRange.start) }
     val indexOfEndOverlapElement = mergedList.indexOfFirst { it.fullContentRange.contains(inlineParseResultItem.fullContentRange.endInclusive) }
+
+    if (indexOfStartOverlapElement == -1) {
+      true
+    }
 
     if (indexOfStartOverlapElement == indexOfEndOverlapElement) {
       val overlapElement = mergedList[indexOfEndOverlapElement]
@@ -118,7 +123,10 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
       }
 
       val elementForInsertTargetPosInBeforeDelete = mergedList.getOrNull(indexOfStartOverlapElement - 1)
-      mergedList.removeAll(mergedList.subList(indexOfStartOverlapElement, indexOfEndOverlapElement + 1))
+      val newMergedList = mergedList.filterIndexed { index, _ -> (indexOfStartOverlapElement..indexOfEndOverlapElement).contains(index).not() }
+      mergedList.clear()
+      mergedList.addAll(newMergedList)
+//      mergedList.removeAll(mergedList.subList(indexOfStartOverlapElement, indexOfEndOverlapElement + 1))
       val insertTargetPos = if (elementForInsertTargetPosInBeforeDelete == null) 0 else mergedList.indexOf(elementForInsertTargetPosInBeforeDelete) + 1
       mergedList.addAll(insertTargetPos, newOverlapElements)
     }

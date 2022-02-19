@@ -7,8 +7,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.EqualWikitextMarkup
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.PairWikitextMarkup
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.*
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.diffWikitext
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.linearParseWikitext
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.mergeInlineParseResult
 
@@ -69,7 +69,7 @@ internal val matchParsingMarkupList = listOf(
     text = "*",
     style = SpanStyle(
       color = Color(0xff6868F2),
-      fontWeight = FontWeight.Black
+//      fontWeight = FontWeight.Black
     ),
     contentStyle = SpanStyle(
       color = Color(0xff6868F2)
@@ -79,7 +79,7 @@ internal val matchParsingMarkupList = listOf(
     text = "#",
     style = SpanStyle(
       color = Color(0xff6868F2),
-      fontWeight = FontWeight.Black
+//      fontWeight = FontWeight.Black
     ),
     contentStyle = SpanStyle(
       color = Color(0xff6868F2)
@@ -89,7 +89,7 @@ internal val matchParsingMarkupList = listOf(
     text = ";",
     style = SpanStyle(
       color = Color(0xff6868F2),
-      fontWeight = FontWeight.Black
+//      fontWeight = FontWeight.Black
     ),
     contentStyle = SpanStyle(
       color = Color(0xff6868F2)
@@ -97,32 +97,31 @@ internal val matchParsingMarkupList = listOf(
   ),
 )
 
-fun tintWikitext(wikitext: String): AnnotatedString {
-  val linearParseResult = linearParseWikitext(wikitext)
-  val matchParseResult = matchParseWikitext(wikitext)
-
-  val mergedResult = linearParseResult.mergeInlineParseResult(matchParseResult)
-  val annotatedString = buildAnnotatedString {
-    for (item in mergedResult) {
-      tintTextByMarkup(item)
-    }
-  }
-
-  return annotatedString
-}
-
 class TintedWikitext(
-  val parseResult: List<ParseResult<out TintableWikitextMarkup>>
+  val originalText: String,
+  private val parseResult: List<ParseResult<out TintableWikitextMarkup>> = tintWikitext(originalText)
 ) {
-  fun update(newWikitext: String) {
-
+  fun update(newWikitext: String): TintedWikitext {
+    if (newWikitext == originalText) return this
+    val diffs = diffWikitext(originalText, newWikitext)
+    println(diffs)
+    return TintedWikitext(
+      originalText = newWikitext
+    )
   }
 
-  fun toAnnotatedString() = buildAnnotatedString {
+  val annotatedString get() = buildAnnotatedString {
     for (item in parseResult) {
       tintTextByMarkup(item)
     }
   }
+}
+
+private fun tintWikitext(wikitext: String): List<ParseResult<out TintableWikitextMarkup>> {
+  val linearParseResult = linearParseWikitext(wikitext)
+  val matchParseResult = matchParseWikitext(wikitext)
+
+  return linearParseResult.mergeInlineParseResult(matchParseResult)
 }
 
 abstract class WikitextMarkup(

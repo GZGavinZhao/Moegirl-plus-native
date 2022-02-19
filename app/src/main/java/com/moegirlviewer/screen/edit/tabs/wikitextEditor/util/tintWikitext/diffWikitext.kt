@@ -3,9 +3,28 @@ package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext
 internal fun diffWikitext(
   before: String,
   after: String
-) {
-  val diff = getDiff(before, after)
-  println(diff)
+): List<DiffBlock> {
+  val (deletedString, addedString) = getDiff(before, after)
+  val result = mutableListOf<DiffBlock>()
+  val contentRegex = Regex("[^${Regex.escape(placeholder.toString())}]+")
+
+  for (item in contentRegex.findAll(deletedString)) {
+    result.add(DiffBlock(
+      type = DiffType.MINUS,
+      content = item.value,
+      position = item.range.first
+    ))
+  }
+
+  for (item in contentRegex.findAll(addedString)) {
+    result.add(DiffBlock(
+      type = DiffType.PLUS,
+      content = item.value,
+      position = item.range.first
+    ))
+  }
+
+  return result
 }
 
 class DiffBlock(
@@ -19,8 +38,10 @@ enum class DiffType {
   MINUS
 }
 
+private const val placeholder = '\t'
+
 //获取两个字符串的差异，将相同部分设置为空格，返回的字符串数组为处理后的结果
-fun getDiff(a: String, b: String): Array<String> {
+private fun getDiff(a: String, b: String): Array<String> {
   var result: Array<String>? = null
   //选取长度较小的字符串用来穷举子串
   if (a.length < b.length) {
@@ -41,7 +62,6 @@ private fun getDiff(a: String, b: String, start: Int, end: Int): Array<String> {
       val sub = result[0].substring(i, i + len)
       var idx = -1
       if (result[1].indexOf(sub).also { idx = it } != -1) {
-        println(sub)
         result[0] = setEmpty(result[0], i, i + len)
         result[1] = setEmpty(result[1], idx, idx + len)
         if (i > 0) {
@@ -65,7 +85,7 @@ private fun getDiff(a: String, b: String, start: Int, end: Int): Array<String> {
 private fun setEmpty(s: String, start: Int, end: Int): String {
   val array = s.toCharArray()
   for (i in start until end) {
-    array[i] = ' '
+    array[i] = placeholder
   }
   return String(array)
 }

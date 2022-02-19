@@ -19,17 +19,19 @@ import com.moegirlviewer.component.ReloadButton
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.screen.edit.EditScreenModel
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.component.QuickInsertBar
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.TintedWikitext
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.InitRef
 import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.NospzGothicMoeFamily
 import com.moegirlviewer.util.toast
-import kotlinx.coroutines.*
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import kotlin.system.measureTimeMillis
 
@@ -43,6 +45,7 @@ fun EditScreenWikitextEditor() {
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
   var textFieldValue by remember(model.wikitextTextFieldValue) { mutableStateOf(model.wikitextTextFieldValue) }
+  val tintedWikitext = remember { InitRef(TintedWikitext(textFieldValue.text)) }
   var visibleQuickInsertBar by remember { mutableStateOf(false) }
   var syntaxHighlight by remember { mutableStateOf(false) }
   // 将value转为flow，主要是为了要flow的防抖功能，用于更新备份
@@ -55,8 +58,9 @@ fun EditScreenWikitextEditor() {
   if (syntaxHighlight) {
     LaunchedEffect(model.wikitextTextFieldValue) {
       val consumingTime = measureTimeMillis {
+        tintedWikitext.value = tintedWikitext.value.update(model.wikitextTextFieldValue.text)
         textFieldValue = model.wikitextTextFieldValue.copy(
-          annotatedString = withContext(Dispatchers.Default) { tintWikitext(model.wikitextTextFieldValue.text) }
+          annotatedString = tintedWikitext.value.annotatedString
         )
       }
 
