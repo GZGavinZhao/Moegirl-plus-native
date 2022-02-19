@@ -1,9 +1,9 @@
-package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util
+package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext
 
 import androidx.compose.ui.text.SpanStyle
 
-internal fun matchParseWikitext(wikitext: String): List<ParseResult<InlineWikitextMarkup>> {
-  val resultList = mutableListOf<ParseResult<InlineWikitextMarkup>>()
+internal fun matchParseWikitext(wikitext: String): List<FullLineParseResult> {
+  val resultList = mutableListOf<FullLineParseResult>()
   var startIndex = 0
 
   while (startIndex != -1) {
@@ -15,27 +15,31 @@ internal fun matchParseWikitext(wikitext: String): List<ParseResult<InlineWikite
             (matchResult.range.start + matchResult.markup.startText.length)..
             (matchResult.range.endInclusive - matchResult.markup.endText.length)
 
-          resultList.add(ParseResult(
+          resultList.add(
+            FullLineParseResult(
             content = matchResult.content,
             contentRange = contentRange,
             markup = matchResult.markup,
             containStartMarkup = true,
             containEndMarkup = true,
-            suffix = matchResult.emptyStringInMarkupEnd
-          ))
+            suffixSpace = matchResult.emptyStringInMarkupEnd
+          )
+          )
         }
         is InlineSingleWikitextMarkup -> {
           val contentRange =
             (matchResult.range.start + matchResult.markup.startText.length)..
             matchResult.range.endInclusive
 
-          resultList.add(ParseResult(
+          resultList.add(
+            FullLineParseResult(
             content = matchResult.content,
             contentRange = contentRange,
             markup = matchResult.markup,
             containStartMarkup = true,
-            suffix = matchResult.emptyStringInMarkupEnd
-          ))
+            suffixSpace = matchResult.emptyStringInMarkupEnd
+          )
+          )
         }
       }
 
@@ -102,6 +106,48 @@ class InlineSingleWikitextMarkup(
   override val regex get() = run {
     val regexStartText = Regex.escape(startText)
     Regex("""^$regexStartText([\s\S]+?)$""", RegexOption.MULTILINE)
+  }
+}
+
+data class FullLineParseResult(
+  val content: String,
+  val contentRange: ClosedRange<Int>,
+  val markup: InlineWikitextMarkup,
+  val containStartMarkup: Boolean = false,
+  val containEndMarkup: Boolean = false,
+  val prefixSpace: String? = null,
+  val suffixSpace: String? = null,
+) {
+  fun toTintableParseResultList() = mutableListOf<ParseResult<out TintableWikitextMarkup>>().apply {
+    if (prefixSpace != null) {
+      val startMarkupLength = if (containStartMarkup) markup.startText.length else 0
+      this.add(ParseResult(
+        content = prefixSpace,
+        contentRange = (contentRange.start - prefixSpace.length - startMarkupLength)..contentRange.start
+      ))
+    }
+    if (containStartMarkup) this.add(ParseResult(
+      markup = markup,
+      contentOriginalPos = contentRange.start,
+      startMarkup = true
+    ))
+    this.add(ParseResult(
+      content = content,
+      contentRange = contentRange,
+      markup = markup
+    ))
+    if (containEndMarkup) this.add(ParseResult(
+      markup = markup,
+      contentOriginalPos = contentRange.endInclusive,
+      startMarkup = false
+    ))
+    if (suffixSpace != null) {
+      val endMarkupLength = if (containEndMarkup) markup.endText.length else 0
+      this.add(ParseResult(
+        content = suffixSpace,
+        contentRange = contentRange.endInclusive..(contentRange.endInclusive + suffixSpace.length + endMarkupLength)
+      ))
+    }
   }
 }
 

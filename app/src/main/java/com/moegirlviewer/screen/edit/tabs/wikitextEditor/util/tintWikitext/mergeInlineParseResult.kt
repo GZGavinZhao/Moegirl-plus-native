@@ -1,18 +1,12 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext
 
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.InlinePairWikitextMarkup
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.InlineWikitextMarkup
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.ParseResult
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.TintableWikitextMarkup
-import okhttp3.internal.filterList
-
 internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
-  inlineParseResult: List<ParseResult<InlineWikitextMarkup>>
+  inlineParseResult: List<FullLineParseResult>
 ): List<ParseResult<out TintableWikitextMarkup>> {
   val mergedList: MutableList<ParseResult<out TintableWikitextMarkup>> = this.toMutableList()
   for (inlineParseResultItem in inlineParseResult) {
-    val indexOfStartOverlapElement = mergedList.indexOfFirst { it.fullContentRange.contains(inlineParseResultItem.fullContentRange.start) }
-    val indexOfEndOverlapElement = mergedList.indexOfFirst { it.fullContentRange.contains(inlineParseResultItem.fullContentRange.endInclusive) }
+    val indexOfStartOverlapElement = mergedList.indexOfFirst { it.contentRange.contains(inlineParseResultItem.contentRange.start) }
+    val indexOfEndOverlapElement = mergedList.indexOfFirst { it.contentRange.contains(inlineParseResultItem.contentRange.endInclusive) }
 
     if (indexOfStartOverlapElement == -1) {
       true
@@ -26,19 +20,17 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
         rightContentOfOverlapElement
       ) = overlapElement.content.split(inlineParseResultItem.markup!!.regex, 2)
       val newOverlapElements = mutableListOf<ParseResult<out TintableWikitextMarkup>>().apply {
-        if (leftContentOfOverlapElement != "" || overlapElement.containStartMarkup || overlapElement.containEndMarkup) {
+        if (leftContentOfOverlapElement != "") {
           this.add(overlapElement.copy(
             content = leftContentOfOverlapElement,
             contentRange = overlapElement.contentRange.start until (overlapElement.contentRange.start + leftContentOfOverlapElement.length),
-            containEndMarkup = false
           ))
         }
-        this.add(inlineParseResultItem)
-        if (rightContentOfOverlapElement != "" || overlapElement.containStartMarkup || overlapElement.containEndMarkup) {
+        this.addAll(inlineParseResultItem.toTintableParseResultList())
+        if (rightContentOfOverlapElement != "") {
           this.add(overlapElement.copy(
             content = rightContentOfOverlapElement,
             contentRange = (overlapElement.contentRange.endInclusive - rightContentOfOverlapElement.length + 1)..overlapElement.contentRange.endInclusive,
-            containStartMarkup = false
           ))
         }
       }
@@ -63,56 +55,48 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
       ) = endOverlapElement.content.split(inlineParseResultItem.markup.endText, limit = 2)
 
       val newOverlapElements = mutableListOf<ParseResult<out TintableWikitextMarkup>>().apply {
-        if (leftContentOfStartOverlapElement != "" || startOverlapElement.containStartMarkup || startOverlapElement.containEndMarkup) {
+        if (leftContentOfStartOverlapElement != "") {
           this.add(startOverlapElement.copy(
             content = leftContentOfStartOverlapElement,
             contentRange = startOverlapElement.contentRange.start until startOverlapElement.contentRange.start + leftContentOfStartOverlapElement.length,
-            containEndMarkup = false
           ))
         }
-        this.add(inlineParseResultItem.copy(
+        this.addAll(inlineParseResultItem.copy(
           content = "",
-          contentRange = inlineParseResultItem.fullContentRange.start..inlineParseResultItem.fullContentRange.start,
+          contentRange = inlineParseResultItem.contentRange.start..inlineParseResultItem.contentRange.start,
+          suffixSpace = null,
           containStartMarkup = true,
-          containEndMarkup = false,
-          suffix = null
-        ))
+        ).toTintableParseResultList())
         if (rightContentOfStartOverlapElement != "") {
-          this.add(inlineParseResultItem.copy(
+          this.addAll(inlineParseResultItem.copy(
             content = rightContentOfStartOverlapElement,
             contentRange = inlineParseResultItem.contentRange.start until inlineParseResultItem.contentRange.start + rightContentOfStartOverlapElement.length,
-            containStartMarkup = false,
-            containEndMarkup = false,
-            suffix = null
-          ))
+            suffixSpace = null
+          ).toTintableParseResultList())
         }
 
         this.addAll(parsedTitleContent)
 
         if (inlineParseResultItem.markup is InlinePairWikitextMarkup) {
           if (leftContentOfEndOverlapElement != "") {
-            this.add(inlineParseResultItem.copy(
+            this.addAll(inlineParseResultItem.copy(
               content = leftContentOfEndOverlapElement,
               contentRange = endOverlapElement.contentRange.start until (endOverlapElement.contentRange.start + leftContentOfEndOverlapElement.length),
-              containStartMarkup = false,
-              containEndMarkup = false,
-              suffix = null
-            ))
+              suffixSpace = null
+            ).toTintableParseResultList())
           }
 
-          this.add(inlineParseResultItem.copy(
+          this.addAll(inlineParseResultItem.copy(
             content = "",
             contentRange = inlineParseResultItem.contentRange.endInclusive..inlineParseResultItem.contentRange.endInclusive,
-            containStartMarkup = false,
-            containEndMarkup = true,
-          ))
+            containEndMarkup = true
+          ).toTintableParseResultList())
 
-          if (rightContentOfEndOverlapElement != "" || endOverlapElement.containEndMarkup) {
+          if (rightContentOfEndOverlapElement != "") {
             this.add(endOverlapElement.copy(
               content = rightContentOfEndOverlapElement,
-              contentRange = inlineParseResultItem.fullContentRange.endInclusive until
-                (inlineParseResultItem.fullContentRange.endInclusive + rightContentOfEndOverlapElement.length),
-              containStartMarkup = false
+              contentRange = inlineParseResultItem.contentRange.endInclusive until
+                (inlineParseResultItem.contentRange.endInclusive + rightContentOfEndOverlapElement.length),
             ))
           }
         } else {

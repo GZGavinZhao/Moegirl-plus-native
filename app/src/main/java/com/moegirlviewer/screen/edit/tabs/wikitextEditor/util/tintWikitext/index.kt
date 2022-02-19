@@ -1,4 +1,4 @@
-package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util
+package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
@@ -7,10 +7,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.*
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.diffWikitext
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.linearParseWikitext
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.mergeInlineParseResult
 
 internal val linearParsingMarkupList = listOf(
   PairWikitextMarkup(
@@ -143,28 +139,56 @@ interface TintableWikitextMarkup {
 }
 
 data class ParseResult<T : TintableWikitextMarkup>(
-  val content: String = "",
+  val content: String,
   val contentRange: ClosedRange<Int>,
   val markup: T? = null,
-  val containStartMarkup: Boolean = false,
-  val containEndMarkup: Boolean = false,
-  val prefix: String? = null,
-  val suffix: String? = null
+//  val containStartMarkup: Boolean = false,
+//  val containEndMarkup: Boolean = false,
+//  val prefix: String? = null,
+//  val suffix: String? = null
 ) {
-  val startMarkupRange: ClosedRange<Int>? get() {
-    if (markup == null || !containStartMarkup) return null
-    return (contentRange.start - markup.startText.length)..contentRange.start
+  constructor(
+    markup: T?,
+    contentOriginalPos: Int,
+    startMarkup: Boolean,
+  ) : this(
+    content = (if (startMarkup) markup?.startText else markup?.endText) ?: "",
+    markup = markup,
+    contentRange = if (startMarkup)
+      (contentOriginalPos - (markup?.startText?.length ?: 0)) until contentOriginalPos else
+      (contentOriginalPos + 1)..(contentOriginalPos + (markup?.endText?.length ?: 0))
+  )
+
+  fun expand(
+    containStartMarkup: Boolean = false,
+    containEndMarkup: Boolean = false,
+  ): List<ParseResult<T>> = mutableListOf<ParseResult<T>>().apply {
+    if (containStartMarkup) this.add(ParseResult(
+      markup = this@ParseResult.markup,
+      contentOriginalPos = contentRange.start,
+      startMarkup = true
+    ))
+    this.add(this@ParseResult)
+    if (containEndMarkup) this.add(ParseResult(
+      markup = this@ParseResult.markup,
+      contentOriginalPos = contentRange.endInclusive,
+      startMarkup = false
+    ))
   }
-  val endMarkupRange: ClosedRange<Int>? get() {
-    if (markup == null || !containEndMarkup) return null
-    return contentRange.endInclusive..(contentRange.endInclusive + markup.endText.length)
-  }
-  val fullContentRange: ClosedRange<Int> get() {
-    if (markup == null) return contentRange
-    val startOffset = if (containStartMarkup) -markup.startText.length else 0
-    val endOffset = if (containEndMarkup) markup.endText.length else 0
-    return (contentRange.start + startOffset - (prefix?.length ?: 0))..(contentRange.endInclusive + endOffset + (suffix?.length ?: 0))
-  }
+//  val startMarkupRange: ClosedRange<Int>? get() {
+//    if (markup == null) return null
+//    return (contentRange.start - markup.startText.length)..contentRange.start
+//  }
+//  val endMarkupRange: ClosedRange<Int>? get() {
+//    if (markup == null) return null
+//    return contentRange.endInclusive..(contentRange.endInclusive + markup.endText.length)
+//  }
+//  val fullContentRange: ClosedRange<Int> get() {
+//    if (markup == null) return contentRange
+//    val startOffset = if (containStartMarkup) -markup.startText.length else 0
+//    val endOffset = if (containEndMarkup) markup.endText.length else 0
+//    return (contentRange.start + startOffset - (prefix?.length ?: 0))..(contentRange.endInclusive + endOffset + (suffix?.length ?: 0))
+//  }
 }
 
 //fun List<ParseResult>.update(
@@ -179,14 +203,14 @@ private fun AnnotatedString.Builder.tintTextByMarkup(parseResult: ParseResult<ou
   if (parseResult.markup == null) {
     append(parseResult.content)
   } else {
-    if (parseResult.prefix != null) append(parseResult.prefix)
-    if (parseResult.containStartMarkup) {
-      withStyle(parseResult.markup.style) { append(parseResult.markup.startText) }
-    }
+//    if (parseResult.prefix != null) append(parseResult.prefix)
+//    if (parseResult.containStartMarkup) {
+//      withStyle(parseResult.markup.style) { append(parseResult.markup.startText) }
+//    }
     withStyle(parseResult.markup.contentStyle) { append(parseResult.content) }
-    if (parseResult.containEndMarkup) {
-      withStyle(parseResult.markup.style) { append(parseResult.markup.endText) }
-    }
-    if (parseResult.suffix != null) append(parseResult.suffix)
+//    if (parseResult.containEndMarkup) {
+//      withStyle(parseResult.markup.style) { append(parseResult.markup.endText) }
+//    }
+//    if (parseResult.suffix != null) append(parseResult.suffix)
   }
 }

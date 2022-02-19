@@ -1,10 +1,6 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext
 
 import androidx.compose.ui.text.SpanStyle
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.ParseResult
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.TintableWikitextMarkup
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.WikitextMarkup
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.linearParsingMarkupList
 
 internal fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitextMarkup>> {
   val wikitextLength = wikitext.length
@@ -31,22 +27,24 @@ internal fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitex
         if (marchedFirstMarkup is EqualWikitextMarkup && skipStartMarkupMatching) {
           skipStartMarkupMatching = false
         } else {
-          val parseResultOfStartMarkupPreviousText = ParseResult(
-            content = wikitext.substring(startCursor, endCursor - marchedFirstMarkup.startText.length),
-            contentRange = startCursor until endCursor - marchedFirstMarkup.startText.length,
-            markup = if (stackForStartMarkupMatch.isNotEmpty()) stackForStartMarkupMatch.last() else null,
-          )
-          val markupContentPosition = endCursor - 1 - marchedFirstMarkup.startText.length
+          val startMarkupPreviousText = wikitext.substring(startCursor, endCursor - marchedFirstMarkup.startText.length)
+          if (startMarkupPreviousText != "") {
+            val parseResultOfStartMarkupPreviousText = ParseResult(
+              content = startMarkupPreviousText,
+              contentRange = startCursor until endCursor - marchedFirstMarkup.startText.length,
+              markup = if (stackForStartMarkupMatch.isNotEmpty()) stackForStartMarkupMatch.last() else null,
+            )
+
+            resultList.add(parseResultOfStartMarkupPreviousText)
+          }
+
           val parseResultOfStartMarkup = ParseResult(
             markup = marchedFirstMarkup,
-            containStartMarkup = true,
-            contentRange = markupContentPosition..markupContentPosition
+            startMarkup = true,
+            contentOriginalPos = endCursor - 1
           )
 
-          resultList.addAll(listOf(
-            parseResultOfStartMarkupPreviousText,
-            parseResultOfStartMarkup
-          ))
+          resultList.add(parseResultOfStartMarkup)
 
           stackForStartMarkupMatch.add(marchedFirstMarkup)
           if (marchedFirstMarkup is EqualWikitextMarkup) skipStartMarkupMatching = true
@@ -68,14 +66,13 @@ internal fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitex
         val marchedEndMarkup = PairMarkupMatcher.matchEnd(markupTextCache, wikitext, endCursor)
         val isEqualWikiTextMarkup = marchedEndMarkup is EqualWikitextMarkup
         if ((stackForStartMarkupMatch.last() == marchedEndMarkup) || isEqualWikiTextMarkup) {
-          resultList.add(
-            ParseResult(
+          resultList.addAll(ParseResult(
             content = wikitext.substring(startCursor, endCursor - marchedEndMarkup.endText.length),
             contentRange = startCursor until endCursor - marchedEndMarkup.endText.length,
             markup = marchedEndMarkup,
+          ).expand(
             containEndMarkup = true
-          )
-          )
+          ))
           startCursor = endCursor
           markupTextCache = ""
           if (isEqualWikiTextMarkup) {
@@ -98,20 +95,16 @@ internal fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitex
 
   if (markupTextCache.isNotEmpty()) {
     if (stackForStartMarkupMatch.isNotEmpty()) {
-      resultList.add(
-        ParseResult(
+      resultList.add(ParseResult(
         content = markupTextCache,
         contentRange = startCursor until endCursor,
         markup = stackForStartMarkupMatch.last(),
-      )
-      )
+      ))
     } else {
-      resultList.add(
-        ParseResult(
+      resultList.add(ParseResult(
         markupTextCache,
         contentRange = startCursor until endCursor
-      )
-      )
+      ))
     }
   }
 
@@ -120,9 +113,9 @@ internal fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitex
 
 private object PairMarkupMatcher {
   val minMarkupTextLength =
-    linearParsingMarkupList.map { if (it.startText.length < it.endText.length) it.startText.length else it.endText.length }.minOrNull()!!
+    linearParsingMarkupList.minOf { if (it.startText.length < it.endText.length) it.startText.length else it.endText.length }
   val maxMarkupTextLength =
-    linearParsingMarkupList.map { if (it.startText.length > it.endText.length) it.startText.length else it.endText.length }.maxOrNull()!!
+    linearParsingMarkupList.maxOf { if (it.startText.length > it.endText.length) it.startText.length else it.endText.length }
   fun matchStart(text: String, fullText: String, cursor: Int): PairWikitextMarkup {
     val foundMarkup = linearParsingMarkupList.first { it.matchStart(text) }
     probe(ProbeType.START, foundMarkup.startText, fullText, cursor)
@@ -143,9 +136,6 @@ private object PairMarkupMatcher {
   ) {
     var probeIndex = 0
     var probeText = text
-    if (probeText == "]]") {
-      println(true)
-    }
     while (probeText.length <= maxMarkupTextLength && (cursor + probeIndex < fullText.length - 1)) {
       // cursor是用来切substring的，本身就比当前文字的index大1，所以probeIndex是0时拿到的也是下一个字符
       probeText += fullText[cursor + probeIndex]

@@ -12,26 +12,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.moegirlviewer.R
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.PlainTextField
 import com.moegirlviewer.component.ReloadButton
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.screen.edit.EditScreenModel
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.component.QuickInsertBar
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.TintedWikitext
+import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.TintedWikitext
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.InitRef
 import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.toast
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import kotlin.system.measureTimeMillis
 
@@ -58,16 +54,18 @@ fun EditScreenWikitextEditor() {
   if (syntaxHighlight) {
     LaunchedEffect(model.wikitextTextFieldValue) {
       val consumingTime = measureTimeMillis {
-        tintedWikitext.value = tintedWikitext.value.update(model.wikitextTextFieldValue.text)
+        tintedWikitext.value = withContext(Dispatchers.Default) {
+          tintedWikitext.value.update(model.wikitextTextFieldValue.text)
+        }
         textFieldValue = model.wikitextTextFieldValue.copy(
           annotatedString = tintedWikitext.value.annotatedString
         )
       }
 
-      if (consumingTime > 1000) {
-        toast(Globals.context.getString(R.string.codeHighlightTimeoutHint))
-        syntaxHighlight = false
-      }
+//      if (consumingTime > 1000) {
+//        toast(Globals.context.getString(R.string.codeHighlightTimeoutHint))
+//        syntaxHighlight = false
+//      }
     }
   }
 
