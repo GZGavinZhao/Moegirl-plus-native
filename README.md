@@ -17,4 +17,4 @@ Moegilr+(萌娘百科)
 
 HMoegirl(H萌娘)
 > * Github Releases：https://github.com/koharubiyori/Moegirl-plus-native/releases
-
+> * F-Droid：https://f-droid.org/packages/koharubiyori.hmoegirl
