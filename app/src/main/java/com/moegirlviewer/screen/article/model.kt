@@ -74,7 +74,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     MediaWikiNamespace.USER.code,
     MediaWikiNamespace.HELP.code,
     MediaWikiNamespace.PROJECT.code
-  ).contains(articleInfo?.ns)
+  ).contains(articleInfo?.ns) && isMoegirl(true, hmoeCommentDisabledTitles.contains(truePageName).not())
   // 是否显示前往讨论页的按钮，当前为讨论页时不显示
   val visibleTalkButton get() = articleInfo?.ns != null && !MediaWikiNamespace.isTalkPage(articleInfo!!.ns)
   // 当前页面是否存在讨论页
@@ -274,3 +274,15 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     routeArguments.removeReferencesFromArgumentPool()
   }
 }
+
+val hmoeCommentDisabledTitles = listOf(
+  "H萌娘:免责声明",
+  "H萌娘:隐私政策",
+  "H萌娘:创建新条目",
+  "H萌娘:官方群组",
+  "H萌娘:条目创建请求",
+  "H萌娘:讨论版导航",
+  "有关部门娘",
+  "习妡萍",
+  "禁评",
+)
