@@ -110,7 +110,7 @@ class InlineSingleWikitextMarkup(
 }
 
 data class FullLineParseResult(
-  val content: String,
+  val content: String? = null,
   val contentRange: ClosedRange<Int>,
   val markup: InlineWikitextMarkup,
   val containStartMarkup: Boolean = false,
@@ -118,6 +118,8 @@ data class FullLineParseResult(
   val prefixSpace: String? = null,
   val suffixSpace: String? = null,
 ) {
+  val fullContentRange: ClosedRange<Int> = (contentRange.start - markup.startText.length)..(contentRange.endInclusive + markup.endText.length)
+
   fun toTintableParseResultList() = mutableListOf<ParseResult<out TintableWikitextMarkup>>().apply {
     if (prefixSpace != null) {
       val startMarkupLength = if (containStartMarkup) markup.startText.length else 0
@@ -131,11 +133,13 @@ data class FullLineParseResult(
       contentOriginalPos = contentRange.start,
       startMarkup = true
     ))
-    this.add(ParseResult(
-      content = content,
-      contentRange = contentRange,
-      markup = markup
-    ))
+    if (content != null) {
+      this.add(ParseResult(
+        content = content,
+        contentRange = contentRange,
+        markup = markup
+      ))
+    }
     if (containEndMarkup) this.add(ParseResult(
       markup = markup,
       contentOriginalPos = contentRange.endInclusive,

@@ -41,7 +41,7 @@ internal fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitex
           val parseResultOfStartMarkup = ParseResult(
             markup = marchedFirstMarkup,
             startMarkup = true,
-            contentOriginalPos = endCursor - 1
+            contentOriginalPos = endCursor - marchedFirstMarkup.startText.length + marchedFirstMarkup.startText.length
           )
 
           resultList.add(parseResultOfStartMarkup)
@@ -65,7 +65,7 @@ internal fun linearParseWikitext(wikitext: String): List<ParseResult<PairWikitex
       try {
         val marchedEndMarkup = PairMarkupMatcher.matchEnd(markupTextCache, wikitext, endCursor)
         val isEqualWikiTextMarkup = marchedEndMarkup is EqualWikitextMarkup
-        if ((stackForStartMarkupMatch.last() == marchedEndMarkup) || isEqualWikiTextMarkup) {
+        if (stackForStartMarkupMatch.last() == marchedEndMarkup) {
           resultList.addAll(ParseResult(
             content = wikitext.substring(startCursor, endCursor - marchedEndMarkup.endText.length),
             contentRange = startCursor until endCursor - marchedEndMarkup.endText.length,
@@ -136,6 +136,11 @@ private object PairMarkupMatcher {
   ) {
     var probeIndex = 0
     var probeText = text
+    class HitProbe(
+      val text: String,
+      val position: Int
+    )
+    var hitProbe: HitProbe? = null
     while (probeText.length <= maxMarkupTextLength && (cursor + probeIndex < fullText.length - 1)) {
       // cursor是用来切substring的，本身就比当前文字的index大1，所以probeIndex是0时拿到的也是下一个字符
       probeText += fullText[cursor + probeIndex]
@@ -146,17 +151,20 @@ private object PairMarkupMatcher {
         linearParsingMarkupList.indexOfFirst { it.endText == probeText }
       }
 
-      if (result == - 1) {
-        return
-      } else {
-        throw ProbeHitException(
-          probeText = probeText,
-          probePosition = cursor + probeIndex + 1
+      if (result != -1) {
+        hitProbe = HitProbe(
+          text = probeText,
+          position = cursor + probeIndex + 1
         )
       }
 
       probeIndex++
     }
+
+    if (hitProbe != null) throw ProbeHitException(
+      probeText = hitProbe.text,
+      probePosition = hitProbe.position
+    )
   }
 }
 

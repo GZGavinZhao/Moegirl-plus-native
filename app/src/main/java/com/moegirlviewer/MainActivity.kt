@@ -87,7 +87,6 @@ class MainActivity : ComponentActivity() {
     Globals.context = applicationContext
     Globals.activity = this
     Globals.httpUserAgent = getHttpUserAgent()
-    diffWikitext("112233", "113344")
 
     @Composable
     fun ContentBody() {

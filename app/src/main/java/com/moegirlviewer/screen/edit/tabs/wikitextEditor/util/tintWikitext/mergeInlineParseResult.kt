@@ -5,11 +5,17 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
 ): List<ParseResult<out TintableWikitextMarkup>> {
   val mergedList: MutableList<ParseResult<out TintableWikitextMarkup>> = this.toMutableList()
   for (inlineParseResultItem in inlineParseResult) {
-    val indexOfStartOverlapElement = mergedList.indexOfFirst { it.contentRange.contains(inlineParseResultItem.contentRange.start) }
-    val indexOfEndOverlapElement = mergedList.indexOfFirst { it.contentRange.contains(inlineParseResultItem.contentRange.endInclusive) }
+    val indexOfStartOverlapElement = mergedList.indexOfFirst { it.contentRange.contains(inlineParseResultItem.fullContentRange.start) }
+    val indexOfEndOverlapElement = mergedList.indexOfFirst { it.contentRange.contains(inlineParseResultItem.fullContentRange.endInclusive) }
 
     if (indexOfStartOverlapElement == -1) {
       true
+    }
+
+    fun List<String>.pad(size: Int, value: String = ""): List<String> {
+      val result = this.toMutableList()
+      while (result.size < size) result.add(value)
+      return result
     }
 
     if (indexOfStartOverlapElement == indexOfEndOverlapElement) {
@@ -18,7 +24,7 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
       val (
         leftContentOfOverlapElement,
         rightContentOfOverlapElement
-      ) = overlapElement.content.split(inlineParseResultItem.markup!!.regex, 2)
+      ) = overlapElement.content.split(inlineParseResultItem.markup.regex, 2).pad(2)
       val newOverlapElements = mutableListOf<ParseResult<out TintableWikitextMarkup>>().apply {
         if (leftContentOfOverlapElement != "") {
           this.add(overlapElement.copy(
@@ -48,11 +54,11 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
       val (
         leftContentOfStartOverlapElement,
         rightContentOfStartOverlapElement
-      ) = startOverlapElement.content.split(inlineParseResultItem.markup!!.startText, limit = 2)
+      ) = startOverlapElement.content.split(inlineParseResultItem.markup.startText, limit = 2).pad(2)
       val (
         leftContentOfEndOverlapElement,
         rightContentOfEndOverlapElement,
-      ) = endOverlapElement.content.split(inlineParseResultItem.markup.endText, limit = 2)
+      ) = endOverlapElement.content.split(inlineParseResultItem.markup.endText, limit = 2).pad(2)
 
       val newOverlapElements = mutableListOf<ParseResult<out TintableWikitextMarkup>>().apply {
         if (leftContentOfStartOverlapElement != "") {
@@ -62,7 +68,7 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
           ))
         }
         this.addAll(inlineParseResultItem.copy(
-          content = "",
+          content = null,
           contentRange = inlineParseResultItem.contentRange.start..inlineParseResultItem.contentRange.start,
           suffixSpace = null,
           containStartMarkup = true,
@@ -71,7 +77,9 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
           this.addAll(inlineParseResultItem.copy(
             content = rightContentOfStartOverlapElement,
             contentRange = inlineParseResultItem.contentRange.start until inlineParseResultItem.contentRange.start + rightContentOfStartOverlapElement.length,
-            suffixSpace = null
+            suffixSpace = null,
+            containStartMarkup = false,
+            containEndMarkup = false
           ).toTintableParseResultList())
         }
 
@@ -82,12 +90,14 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
             this.addAll(inlineParseResultItem.copy(
               content = leftContentOfEndOverlapElement,
               contentRange = endOverlapElement.contentRange.start until (endOverlapElement.contentRange.start + leftContentOfEndOverlapElement.length),
-              suffixSpace = null
+              suffixSpace = null,
+              containStartMarkup = false,
+              containEndMarkup = false
             ).toTintableParseResultList())
           }
 
           this.addAll(inlineParseResultItem.copy(
-            content = "",
+            content = null,
             contentRange = inlineParseResultItem.contentRange.endInclusive..inlineParseResultItem.contentRange.endInclusive,
             containEndMarkup = true
           ).toTintableParseResultList())

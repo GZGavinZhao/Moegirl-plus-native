@@ -5,8 +5,11 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontSynthesis
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.withStyle
+import com.moegirlviewer.util.Italic
 
 internal val linearParsingMarkupList = listOf(
   PairWikitextMarkup(
@@ -38,6 +41,13 @@ internal val linearParsingMarkupList = listOf(
     )
   ),
   EqualWikitextMarkup(
+    text = "'''''",
+    style = SpanStyle(
+      fontWeight = FontWeight.Black,
+      textGeometricTransform = TextGeometricTransform.Italic()
+    ),
+  ),
+  EqualWikitextMarkup(
     text = "'''",
     style = SpanStyle(
       fontWeight = FontWeight.Black,
@@ -46,7 +56,7 @@ internal val linearParsingMarkupList = listOf(
   EqualWikitextMarkup(
     text = "''",
     style = SpanStyle(
-      fontStyle = FontStyle.Italic
+      textGeometricTransform = TextGeometricTransform.Italic()
     )
   )
 )
@@ -93,17 +103,116 @@ internal val matchParsingMarkupList = listOf(
   ),
 )
 
-class TintedWikitext(
-  val originalText: String,
-  private val parseResult: List<ParseResult<out TintableWikitextMarkup>> = tintWikitext(originalText)
+data class TintedWikitext(
+  val originalWikitext: String,
+  private val cursorPosition: Int = 0,
+  private val parseResult: List<ParseResult<out TintableWikitextMarkup>> = emptyList()
 ) {
-  fun update(newWikitext: String): TintedWikitext {
-    if (newWikitext == originalText) return this
-    val diffs = diffWikitext(originalText, newWikitext)
-    println(diffs)
-    return TintedWikitext(
-      originalText = newWikitext
+  fun update(newWikitext: String, cursorPosition: Int) = TintedWikitext(
+    originalWikitext = newWikitext,
+    cursorPosition = cursorPosition,
+    parseResult = tintWikitext(newWikitext)
+  )
+
+  // 高亮性能优化暂时研究不明白了，先这样吧
+  fun hackedUpdate(newWikitext: String, cursorPosition: Int): TintedWikitext {
+    fun defaultReturn() = this.copy(
+      cursorPosition = cursorPosition
     )
+
+    return when {
+      // 内容无变化
+      newWikitext == originalWikitext -> defaultReturn()
+
+      originalWikitext.isEmpty() -> this.copy(
+        originalWikitext = originalWikitext,
+        cursorPosition = cursorPosition,
+      )
+
+      // 光标位置删除单个字符
+      newWikitext.length == originalWikitext.length - 1 -> {
+        val deletedChar = newWikitext[cursorPosition]
+//        val indexOfActiveResultElement = parseResult.indexOfFirst { it.contentRange.contains(cursorPosition) }
+//        val activeResultElement = parseResult[indexOfActiveResultElement]
+        val mutableResult = parseResult.toMutableList()
+        val diffBlock = DiffBlock(
+          type = DiffType.MINUS,
+          content = deletedChar.toString(),
+          position = cursorPosition
+        )
+
+        TintedWikitext(
+          originalWikitext = newWikitext,
+          cursorPosition = cursorPosition,
+          parseResult = mutableResult.modify(diffBlock, true)
+        )
+      }
+
+      // 光标位置输入单个字符
+      newWikitext.length == originalWikitext.length + 1 -> {
+        val addedChar = newWikitext[cursorPosition - 1]
+        val mutableResult = parseResult.toMutableList()
+        val diffBlock = DiffBlock(
+          type = DiffType.MINUS,
+          content = addedChar.toString(),
+          position = cursorPosition
+        )
+
+        TintedWikitext(
+          originalWikitext = newWikitext,
+          cursorPosition = cursorPosition,
+          parseResult = mutableResult.modify(diffBlock, true)
+        )
+      }
+
+      // 其他情况
+      else -> {
+        fun String.toLineContents() = Regex("[^\n]+\n?").findAll(this).map { it.range to it.value }.toList()
+        val originalLineContents = originalWikitext.toLineContents()
+        val newLineContents = newWikitext.toLineContents()
+        // 变化内容都在一行
+        if (originalLineContents.size == newLineContents.size) {
+          val indexOfActiveLine = newLineContents.indexOfFirst { it.first.contains(cursorPosition) }
+          val lineDiffs = diffWikitext(originalLineContents[indexOfActiveLine].second, newLineContents[indexOfActiveLine].second)
+          val newParseResult = parseResult.toMutableList()
+          for (item in lineDiffs) {
+            if (item.type == DiffType.PLUS) {
+              val indexOfActiveResultElement = parseResult.indexOfFirst { it.contentRange.contains(item.position) }
+              val activeResultElement = parseResult[indexOfActiveResultElement]
+              newParseResult[indexOfActiveResultElement] = activeResultElement.copy(
+                content = activeResultElement.content + item.content
+              )
+            } else {
+              val endPosition = item.position
+              val startPosition = endPosition - item.content.length
+              val indexOfActiveResultStartElement = parseResult.indexOfFirst { it.contentRange.contains(startPosition) }
+              val indexOfActiveResultEndElement = parseResult.indexOfFirst { it.contentRange.contains(endPosition) }
+
+              // 变化内容处于同一节点
+              if (indexOfActiveResultStartElement == indexOfActiveResultEndElement) {
+                val activeResultElement = parseResult[indexOfActiveResultStartElement]
+                val relativeStartPosition = startPosition - activeResultElement.contentRange.start
+                val relativeEndPosition = endPosition - activeResultElement.contentRange.start
+                newParseResult[indexOfActiveResultStartElement] = activeResultElement.copy(
+                  content = activeResultElement.content.removeRange(relativeStartPosition..relativeEndPosition)
+                )
+              } else {
+
+              }
+            }
+          }
+
+          return TintedWikitext(
+            originalWikitext = newWikitext,
+            cursorPosition = cursorPosition,
+            parseResult = newParseResult
+          )
+        } else {
+          // 其他情况，这时仅仅是对比内容也会花费较长时间，直接返回原文
+          return defaultReturn()
+        }
+      }
+    }
   }
 
   val annotatedString get() = buildAnnotatedString {
