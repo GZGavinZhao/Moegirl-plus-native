@@ -1,6 +1,6 @@
 package com.moegirlviewer.api.search
 
-import com.moegirlviewer.api.search.bean.SearchHintBean
+import SearchHintBean
 import com.moegirlviewer.api.search.bean.SearchResultBean
 import com.moegirlviewer.request.moeRequest
 import com.moegirlviewer.util.MediaWikiNamespace
@@ -14,11 +14,10 @@ object SearchApi {
     entity = SearchHintBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
-      this["list"] = "search"
-      this["srsearch"] = keyword
-      this["srlimit"] = limit
-      this["srwhat"] = "text"
-      if (namespace != null) this["srnamespace"] = namespace.code
+      this["list"] = "prefixsearch"
+      this["pssearch"] = keyword
+      this["pslimit"] = limit
+      if (namespace != null) this["psnamespace"] = namespace.code
     }
   )
 
@@ -31,9 +30,13 @@ object SearchApi {
       this["action"] = "query"
       this["list"] = "search"
       this["srsearch"] = keyword
-      this["continue"] = "-||"
       this["sroffset"] = offset
       this["srprop"] = "timestamp|redirecttitle|snippet|categoriesnippet|sectiontitle|pageimages"
+
+      this["gsrsearch"] = keyword
+      this["gsroffset"] = offset
+      this["prop"] = "pageimages"
+      this["generator"] = "search"
     }
   )
 }

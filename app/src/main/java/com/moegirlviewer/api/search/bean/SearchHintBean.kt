@@ -1,5 +1,3 @@
-package com.moegirlviewer.api.search.bean
-
 data class SearchHintBean(
   val batchcomplete: String,
   val `continue`: Continue,
@@ -7,25 +5,16 @@ data class SearchHintBean(
 ) {
   data class Continue(
     val `continue`: String,
-    val sroffset: Int
+    val psoffset: Int
   )
 
   data class Query(
-    val search: List<Search>,
-    val searchinfo: Searchinfo
+    val prefixsearch: List<Prefixsearch>
   ) {
-    data class Search(
+    data class Prefixsearch(
       val ns: Int,
       val pageid: Int,
-      val size: Int,
-      val snippet: String,
-      val timestamp: String,
-      val title: String,
-      val wordcount: Int
-    )
-
-    data class Searchinfo(
-      val totalhits: Int
+      val title: String
     )
   }
 }

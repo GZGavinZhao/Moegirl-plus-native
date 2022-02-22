@@ -40,7 +40,7 @@ fun ColumnScope.SearchScreenHintList() {
     status = LoadStatus.LOADING
     try {
       status = LoadStatus.LOADING
-      list = SearchApi.getHint(model.keywordInputValue).query.search.map { it.title }
+      list = SearchApi.getHint(model.keywordInputValue).query.prefixsearch.map { it.title }
       status = if (list.isEmpty()) LoadStatus.EMPTY else LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {
       status = LoadStatus.FAIL
