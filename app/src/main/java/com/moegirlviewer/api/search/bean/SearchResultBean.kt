@@ -21,7 +21,7 @@ data class SearchResultBean(
       val ns: Int,
       val pageid: Int,
       val pageimage: String,
-      val thumbnail: Thumbnail,
+      val thumbnail: Thumbnail? = null,
       val title: String
     ) {
       data class Thumbnail(
@@ -31,7 +31,7 @@ data class SearchResultBean(
       )
     }
 
-    data class Search(
+    open class Search(
       val categorysnippet: String? = null,
       val redirecttitle: String? = null,
       val sectiontitle: String? = null,

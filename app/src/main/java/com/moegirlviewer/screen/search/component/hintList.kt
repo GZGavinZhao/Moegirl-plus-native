@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
@@ -17,15 +18,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.SearchApi
+import com.moegirlviewer.component.styled.StyleLinearProgressIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.search.SearchScreenModel
 import com.moegirlviewer.store.SearchRecord
 import com.moegirlviewer.theme.text
-import com.moegirlviewer.util.BorderSide
-import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.printRequestErr
-import com.moegirlviewer.util.sideBorder
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
 @Composable
@@ -44,6 +43,7 @@ fun ColumnScope.SearchScreenHintList() {
       status = if (list.isEmpty()) LoadStatus.EMPTY else LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {
       status = LoadStatus.FAIL
+      toast(Globals.context.getString(R.string.netErr))
       printRequestErr(e, "加载搜索提示失败")
     }
   }
@@ -57,6 +57,10 @@ fun ColumnScope.SearchScreenHintList() {
       .weight(1f)
       .verticalScroll(rememberScrollState())
   ) {
+    if (status == LoadStatus.LOADING) {
+      StyleLinearProgressIndicator()
+    }
+
     for (item in list) {
       Item(
         text = item,

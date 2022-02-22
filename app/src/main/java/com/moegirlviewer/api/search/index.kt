@@ -35,6 +35,7 @@ object SearchApi {
 
       this["gsrsearch"] = keyword
       this["gsroffset"] = offset
+      this["pithumbsize"] = 500
       this["prop"] = "pageimages"
       this["generator"] = "search"
     }

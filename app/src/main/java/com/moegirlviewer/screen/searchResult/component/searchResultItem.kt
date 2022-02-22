@@ -1,6 +1,7 @@
 package com.moegirlviewer.screen.searchResult.component
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -9,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextGeometricTransform
@@ -22,6 +23,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
+import coil.compose.rememberImagePainter
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.bean.SearchResultBean
 import com.moegirlviewer.component.styled.StyledText
@@ -32,16 +36,18 @@ import com.moegirlviewer.util.sideBorder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
+import java.lang.Float
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
-typealias SearchResultItem = SearchResultBean.Query.Search
+import kotlin.OptIn
+import kotlin.String
+import kotlin.Unit
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun SearchResultItem(
-  data: SearchResultItem,
+  data: SearchResultItemData,
   keyword: String,
   onClick: (pageName: String) -> Unit
 ) {
@@ -60,47 +66,42 @@ fun SearchResultItem(
     }
   }
 
-//  AnimatedVisibility(
-//    visibleState = remember { MutableTransitionState(false).apply { targetState = true } },
-//    enter = scaleIn() + fadeIn(),
-//    exit = scaleOut() + fadeOut()
-//  ) {
-    Card(
+  Card(
+    modifier = Modifier
+      .padding(top = 10.dp, start = 10.dp, end = 10.dp)
+      .fillMaxWidth(),
+    backgroundColor = themeColors.surface,
+    elevation = 3.dp,
+    onClick = { onClick(data.title) }
+  ) {
+    Column(
       modifier = Modifier
-        .padding(top = 10.dp, start = 10.dp, end = 10.dp)
-        .fillMaxWidth(),
-      backgroundColor = themeColors.surface,
-      elevation = 3.dp,
-      onClick = { onClick(data.title) }
+        .padding(5.dp)
     ) {
-      Column(
+      ComposedHeader(
+        title = data.title,
+        subInfoText = subInfoText
+      )
+
+      Box(
         modifier = Modifier
-          .padding(5.dp)
+          .padding(top = 5.dp)
+          .fillMaxWidth()
+          .sideBorder(BorderSide.TOP, 2.dp, themeColors.secondary)
+          .sideBorder(BorderSide.BOTTOM, 2.dp, themeColors.secondary)
+          .padding(vertical = 5.dp)
       ) {
-        ComposedHeader(
-          title = data.title,
-          subInfoText = subInfoText
-        )
-
-        Box(
-          modifier = Modifier
-            .padding(top = 5.dp)
-            .fillMaxWidth()
-            .sideBorder(BorderSide.TOP, 2.dp, themeColors.secondary)
-            .sideBorder(BorderSide.BOTTOM, 2.dp, themeColors.secondary)
-            .padding(vertical = 5.dp)
-        ) {
-          SearchContent(
-            html = data.snippet
-          )
-        }
-
-        ComposedFooter(
-          date = LocalDate.parse(data.timestamp, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"))
+        SearchContent(
+          html = data.snippet,
+          imageSource = data.imageUrl
         )
       }
+
+      ComposedFooter(
+        date = LocalDate.parse(data.timestamp, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"))
+      )
     }
-//  }
+  }
 }
 
 @Composable
@@ -128,46 +129,94 @@ private fun ComposedHeader(
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       textAlign = TextAlign.Right,
+      color = themeColors.secondary,
       style = TextStyle(
-        color = themeColors.primary,
         textGeometricTransform = remember { TextGeometricTransform.Italic() }
       )
     )
   }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun SearchContent(
-  html: String
+  html: String,
+  imageSource: SearchResultBean.Query.MapValue.Thumbnail?
 ) {
   val themeColors = MaterialTheme.colors
 
   if (html.trim() != "") {
-    val htmlDoc = Jsoup.parse(html)
+    val htmlDoc = remember(html) { Jsoup.parse(html) }
     val elements = htmlDoc.body().childNodes()
 
-    StyledText(
-      buildAnnotatedString {
-        elements.forEach {
-          withStyle(
-            style = SpanStyle(
-              fontSize = 15.sp
-            )
-          ) {
-            if (it is Element && it.hasClass("searchmatch")) {
-              withStyle(
-                style = SpanStyle(
-                  background = themeColors.secondaryVariant
-                )
-              ) {
-                append(it.text())
+    Row(
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      StyledText(
+        modifier = Modifier
+          .weight(1f),
+        text = buildAnnotatedString {
+          elements.forEach {
+            withStyle(
+              style = SpanStyle(
+                fontSize = 15.sp
+              )
+            ) {
+              if (it is Element && it.hasClass("searchmatch")) {
+                withStyle(
+                  style = SpanStyle(
+                    background = themeColors.secondaryVariant
+                  )
+                ) {
+                  append(it.text())
+                }
+              } else {
+                append((it as TextNode).text())
               }
-            } else {
-              append((it as TextNode).text())
             }
           }
         }
+      )
+
+      if (imageSource != null) {
+        val painter = rememberImagePainter(imageSource.source) {
+          crossfade(true)
+        }
+
+        Box(
+          modifier = Modifier
+            .width(100.dp)
+            .fillMaxHeight(),
+          contentAlignment = Alignment.Center
+        ) {
+          Image(
+            modifier = Modifier
+              .padding(start = 5.dp, end = 3.dp)
+              .fillMaxWidth()
+              .height(Float.min(120f, (100f / imageSource.width * imageSource.height)).dp),
+            painter = painter,
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            alignment = Alignment.TopCenter
+          )
+
+          if (painter.state !is ImagePainter.State.Success) {
+            Image(
+              modifier = Modifier
+                .padding(start = 5.dp, end = 3.dp)
+                .fillMaxWidth()
+                .height(120.dp),
+              painter = rememberImagePainter(R.drawable.placeholder),
+              contentDescription = null
+            )
+          }
+        }
       }
+    }
+  } else {
+    StyledText(
+      text = stringResource(id = R.string.pageNoContent),
+      color = themeColors.text.secondary
     )
   }
 }
@@ -193,3 +242,17 @@ private fun ComposedFooter(
     )
   }
 }
+
+class SearchResultItemData(
+  searchItem: SearchResultBean.Query.Search,
+  val imageUrl: SearchResultBean.Query.MapValue.Thumbnail? = null
+) : SearchResultBean.Query.Search(
+   categorysnippet = searchItem.categorysnippet,
+   redirecttitle = searchItem.redirecttitle,
+   sectiontitle = searchItem.sectiontitle,
+   ns = searchItem.ns,
+   pageid = searchItem.pageid,
+   snippet = searchItem.snippet,
+   timestamp = searchItem.timestamp,
+   title = searchItem.title,
+)

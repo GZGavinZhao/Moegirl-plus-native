@@ -1,13 +1,12 @@
 package com.moegirlviewer.screen.searchResult
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.moegirlviewer.api.search.SearchApi
-import com.moegirlviewer.screen.searchResult.component.SearchResultItem
+import com.moegirlviewer.screen.searchResult.component.SearchResultItemData
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.printRequestErr
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchResultScreenModel @Inject constructor() : ViewModel()  {
-  var resultList by mutableStateOf<List<SearchResultItem>>(emptyList())
+  var resultList by mutableStateOf<List<SearchResultItemData>>(emptyList())
   lateinit var routeArguments: SearchResultRouteArguments
   var resultTotal by mutableStateOf(-1)
   var status by mutableStateOf(LoadStatus.INITIAL)
@@ -39,7 +38,13 @@ class SearchResultScreenModel @Inject constructor() : ViewModel()  {
       }
 
       resultTotal = res.query.searchinfo.totalhits
-      resultList = resultList + res.query.search
+      val searchResultItems = res.query.search.map {
+        SearchResultItemData(
+          searchItem = it,
+          imageUrl = res.query.pages[it.pageid]!!.thumbnail
+        )
+      }
+      resultList = resultList + searchResultItems
       status = nextStatus
     } catch(e: Exception) {
       printRequestErr(e, "加载搜索结果失败")
