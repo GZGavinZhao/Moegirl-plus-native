@@ -1,5 +1,8 @@
 package com.moegirlviewer.screen.category.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -68,7 +71,15 @@ fun SubCategoryList() {
       }
 
       // list
-      if (isExpanded) {
+      AnimatedVisibility(
+        visible = isExpanded,
+        enter = expandVertically(
+          expandFrom = Alignment.Top
+        ),
+        exit = shrinkVertically(
+          shrinkTowards = Alignment.Top
+        )
+      ) {
         Column(
           modifier = Modifier
             .sideBorder(BorderSide.TOP, 1.dp, themeColors.text.tertiary)
@@ -92,10 +103,10 @@ fun SubCategoryList() {
                 modifier = Modifier
                   .padding(start = 5.dp)
                   .noRippleClickable {
-                     Globals.navController.navigate(ArticleRouteArguments(
-                       pageName = "Category:$item",
-                       displayName = Globals.context.getString(R.string.category) + "：$item"
-                     ))
+                    Globals.navController.navigate(ArticleRouteArguments(
+                      pageName = "Category:$item",
+                      displayName = Globals.context.getString(R.string.category) + "：$item"
+                    ))
                   },
                 text = item,
                 fontSize = 15.sp,

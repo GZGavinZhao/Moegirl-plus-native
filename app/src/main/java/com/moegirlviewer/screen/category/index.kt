@@ -1,5 +1,11 @@
 package com.moegirlviewer.screen.category
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -14,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +29,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -40,10 +48,12 @@ import com.moegirlviewer.screen.category.component.CategoryScreenItem
 import com.moegirlviewer.screen.category.component.SubCategoryList
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.Italic
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.navigate
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CategoryScreen(
   arguments: CategoryRouteArguments
@@ -104,7 +114,8 @@ fun CategoryScreen(
                 .padding(top = 5.dp, start = 10.dp),
               style = TextStyle(
                 color = themeColors.text.secondary,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
               ),
               text = annotatedString,
               onClick = { offset ->
@@ -118,8 +129,13 @@ fun CategoryScreen(
           }
         }
 
-        if (model.subCategories.isNotEmpty()) {
-          item { SubCategoryList() }
+        item {
+          AnimatedVisibility(
+            visible = model.subCategories.isNotEmpty(),
+            enter = expandVertically()
+          ) {
+            SubCategoryList()
+          }
         }
 
         itemsIndexed(

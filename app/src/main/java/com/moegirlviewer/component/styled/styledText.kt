@@ -27,7 +27,8 @@ import com.moegirlviewer.util.NospzGothicMoeFamily
 fun StyledText(
   text: String,
   modifier: Modifier = Modifier,
-  color: Color = MaterialTheme.colors.text.primary,
+  style: TextStyle? = null,
+  color: Color = style?.color ?: MaterialTheme.colors.text.primary,
   fontSize: TextUnit = TextUnit.Unspecified,
   fontStyle: FontStyle? = null,
   fontWeight: FontWeight? = null,
@@ -40,7 +41,6 @@ fun StyledText(
   softWrap: Boolean = true,
   maxLines: Int = Int.MAX_VALUE,
   onTextLayout: (TextLayoutResult) -> Unit = {},
-  style: TextStyle = LocalTextStyle.current,
 ) {
   val themeColors = MaterialTheme.colors
   val useSpecialCharSupportedFont by SettingsStore.common.getValue { this.useSpecialCharSupportedFontInApp }.collectAsState(
@@ -64,7 +64,7 @@ fun StyledText(
     softWrap = softWrap,
     maxLines = maxLines,
     onTextLayout = onTextLayout,
-    style = style,
+    style = style ?: LocalTextStyle.current,
   )
 }
 
@@ -73,9 +73,10 @@ fun StyledText(
 fun StyledText(
   text: AnnotatedString,
   modifier: Modifier = Modifier,
-  color: Color = MaterialTheme.colors.text.primary,
-  fontSize: TextUnit = TextUnit.Unspecified,
+  style: TextStyle? = null,
   fontStyle: FontStyle? = null,
+  color: Color = style?.color ?: MaterialTheme.colors.text.primary,
+  fontSize: TextUnit = TextUnit.Unspecified,
   fontWeight: FontWeight? = null,
   fontFamily: FontFamily? = null,
   letterSpacing: TextUnit = TextUnit.Unspecified,
@@ -87,7 +88,6 @@ fun StyledText(
   maxLines: Int = Int.MAX_VALUE,
   inlineContent: Map<String, InlineTextContent> = mapOf(),
   onTextLayout: (TextLayoutResult) -> Unit = {},
-  style: TextStyle = LocalTextStyle.current,
   onClick: ((Int) -> Unit)? = null
 ) {
   val themeColors = MaterialTheme.colors
@@ -124,6 +124,6 @@ fun StyledText(
       layoutResult = it
       onTextLayout(it)
     },
-    style = style,
+    style = style ?: LocalTextStyle.current,
   )
 }
