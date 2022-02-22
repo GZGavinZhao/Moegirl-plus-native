@@ -62,7 +62,9 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
       routeArguments.pageName ?:
       routeArguments.readingRecord?.pageName ?:
       Globals.context.getString(R.string.app_name)
-    ).replace("_", " ")
+    )
+      .replace("_", " ")
+      .replace(Regex("""^(Category|分类|分類):"""), "${Globals.context.getString(R.string.category)}：")
   )
   val pageId get() = articleData?.parse?.pageid
 
