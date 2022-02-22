@@ -77,6 +77,7 @@ class ContributionScreenModel @Inject constructor() : ViewModel() {
       startDate = endDateBackup
     }
 
+    lazyListState.scrollToItem(0)
     loadContributionList(true)
   }
 
