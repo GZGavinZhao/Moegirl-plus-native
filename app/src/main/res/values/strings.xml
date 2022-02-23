@@ -186,6 +186,8 @@
     <string name="randomArticle">随机条目</string>
     <string name="doingRandom">随机中</string>
     <string name="loginToEdit">登录后编辑</string>
+    <string name="downloadFailed">下载失败</string>
+    <string name="shareFailed">分享失败</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>

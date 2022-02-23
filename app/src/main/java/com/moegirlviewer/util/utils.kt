@@ -70,6 +70,17 @@ fun shareText(content: String) {
   Globals.activity.startActivity(Intent.createChooser(intent, shareText))
 }
 
+fun shareImage(
+  imageUri: Uri,
+  type: String = "image/png"
+) {
+  val intent = Intent(Intent.ACTION_SEND)
+  intent.type = type
+  intent.putExtra(Intent.EXTRA_STREAM, imageUri)
+  val shareText = Globals.context.getString(R.string.share)
+  Globals.activity.startActivity(Intent.createChooser(intent, shareText))
+}
+
 @Composable
 fun Int.toDp(): Dp {
   return (this / LocalDensity.current.density).dp
