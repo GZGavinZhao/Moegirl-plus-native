@@ -277,10 +277,11 @@ class ArticleViewState(
 
   // h萌娘在被waf拦截后所有资源需要带cookie，由于不同源cookie没法带过去，这里需要代理加载资源
   fun shouldInterceptRequest(webView: WebView, request: WebResourceRequest): WebResourceResponse? {
-    if (request.url.toString().contains(Constants.mainUrl).not()) return null
+    if (request.url.toString().contains(Constants.domain.replace("https://", "")).not()) return null
 
     val okhttpRequest = Request.Builder()
       .url(request.url.toString())
+      .addHeader("Referer", Constants.mainUrl)
       .build()
     val res = try {
       moeOkHttpClient.newCall(okhttpRequest).execute()

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.util.Globals
 
@@ -19,6 +20,7 @@ import com.moegirlviewer.util.Globals
 fun AppHeaderIcon(
   modifier: Modifier = Modifier,
   image: ImageVector,
+  iconSize: Dp = 30.dp,
   iconColor: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
   onClick: () -> Unit,
 ) {
@@ -27,8 +29,8 @@ fun AppHeaderIcon(
   ) {
     Icon(
       modifier = Modifier
-        .width(30.dp)
-        .height(30.dp)
+        .width(iconSize)
+        .height(iconSize)
         .then(modifier),
       imageVector = image,
       contentDescription = null,

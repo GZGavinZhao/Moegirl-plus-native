@@ -3,6 +3,7 @@ package com.moegirlviewer.api.account
 import com.moegirlviewer.Constants
 import com.moegirlviewer.api.account.bean.LoginResultBean
 import com.moegirlviewer.api.account.bean.LoginTokenBean
+import com.moegirlviewer.api.account.bean.ThankResultBean
 import com.moegirlviewer.api.account.bean.UserInfoBean
 import com.moegirlviewer.api.edit.EditApi
 import com.moegirlviewer.request.MoeRequestMethod
@@ -62,6 +63,16 @@ object AccountApi {
       }
     )
   }
+
+  suspend fun thank(revId: Int) = moeRequest(
+    entity = ThankResultBean::class.java,
+    method = MoeRequestMethod.POST,
+    params = mapOf(
+      "action" to "thank",
+      "token" to EditApi.getCsrfToken(),
+      "rev" to revId
+    )
+  )
 }
 
 private suspend fun login(token: String, userName: String, password: String) =

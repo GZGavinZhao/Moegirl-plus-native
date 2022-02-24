@@ -473,7 +473,7 @@ private fun ComposedCommentReply(
       StyledText(
         modifier = Modifier
           .padding(bottom = 2.dp),
-        fontSize = 13.sp,
+        fontSize = 14.sp,
         text = buildAnnotatedString {
           withStyle(SpanStyle(color = themeColors.secondary)) {
             append(item.username)

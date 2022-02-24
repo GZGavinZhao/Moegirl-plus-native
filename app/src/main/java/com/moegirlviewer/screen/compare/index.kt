@@ -1,10 +1,15 @@
 package com.moegirlviewer.screen.compare
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LowPriority
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.sharp.Favorite
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -142,6 +147,14 @@ private fun ComposedHeader(
               image = Icons.Filled.LowPriority,
               onClick = {
                 showUndoDialog(model)
+              }
+            )
+
+            AppHeaderIcon(
+              image = Icons.Filled.FavoriteBorder,
+              iconSize = 28.dp,
+              onClick = {
+                model.sendThank()
               }
             )
           }

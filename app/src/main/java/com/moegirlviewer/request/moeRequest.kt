@@ -23,7 +23,6 @@ val moeOkHttpClient = OkHttpClient.Builder()
   .addInterceptor(MoeInterceptor())
   .addInterceptor(HttpLoggingInterceptor().apply {
     this.level = HttpLoggingInterceptor.Level.BODY
-    this.redactHeader("cookie")
   })
   .build()
 
@@ -114,7 +113,7 @@ open class MoeRequestWikiException(
   code: String = "customError",
   cause: Throwable? = null
 ) : MoeRequestException(
-  message = "[MoeRequestWikiException] $code: $message",
+  message = message,
   code = code,
   cause = cause
 )

@@ -3,13 +3,18 @@ package com.moegirlviewer.screen.compare
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.moegirlviewer.R
+import com.moegirlviewer.api.account.AccountApi
 import com.moegirlviewer.api.edit.EditApi
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.editingRecord.bean.ComparePageResult
+import com.moegirlviewer.component.commonDialog.ButtonConfig
+import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.compare.util.DiffLine
 import com.moegirlviewer.screen.compare.util.collectDiffBlocksFormHtml
@@ -18,10 +23,7 @@ import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.printRequestErr
 import com.moegirlviewer.util.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -96,6 +98,29 @@ class CompareScreenModel @Inject constructor() : ViewModel() {
     } finally {
       Globals.commonLoadingDialog.hide()
     }
+  }
+
+  fun sendThank() {
+    Globals.commonAlertDialog.show(CommonAlertDialogProps(
+      content = { StyledText(stringResource(id = R.string.sendThankHint)) },
+      secondaryButton = ButtonConfig.cancelButton(),
+      onPrimaryButtonClick = {
+        coroutineScope.launch {
+          Globals.commonLoadingDialog.showText(Globals.context.getString(R.string.submitting))
+          try {
+            // 没有toRevId代表是通过“当前”按钮点进来的，这个感谢功能应该总是给用点进去的那条修订的编辑者发送
+            // “当前”是点击版本(from)与当前版本(to)对比，“之前”是点击版本的上个版本(from)与点击版本(to)对比
+            AccountApi.thank(routeArgumentsOfPageCompare.toRevId ?: routeArgumentsOfPageCompare.fromRevId)
+            toast(Globals.context.getString(R.string.sent))
+          } catch (e: MoeRequestException) {
+            printRequestErr(e, "发送编辑感谢失败")
+            toast(e.message)
+          } finally {
+            Globals.commonLoadingDialog.hide()
+          }
+        }
+      }
+    ))
   }
 
   override fun onCleared() {

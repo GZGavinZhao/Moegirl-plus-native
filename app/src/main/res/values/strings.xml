@@ -79,6 +79,7 @@
     <string name="_off">关闭</string>
     <string name="author">作者</string>
     <string name="selected">已选择</string>
+    <string name="sent">已发送</string>
 
     <string name="year">年</string>
     <string name="month">月</string>
@@ -288,6 +289,7 @@
     <string name="cloudflareValidationHint">被WAF拦截，需要验证后才能继续获取数据，请稍后</string>
     <string name="blockedByCloudflareHint">连接失败，请更改您的地区代理节点</string>
     <string name="codeHighlightTimeoutHint">代码过长，高亮功能因处理超时已自动关闭，请合理使用段落编辑功能</string>
+    <string name="sendThankHint">确定要向该修订记录的编辑者发送感谢吗？</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤销[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|讨论]]）的版本%2$s</string>
