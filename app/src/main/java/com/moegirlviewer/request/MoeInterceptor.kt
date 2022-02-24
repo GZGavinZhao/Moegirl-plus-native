@@ -1,6 +1,6 @@
 package com.moegirlviewer.request
 
-import com.moegirlviewer.util.isSimplifiedChineseEnv
+import com.moegirlviewer.util.isTraditionalChineseEnv
 import okhttp3.FormBody
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -12,7 +12,7 @@ class MoeInterceptor : Interceptor {
 
     val extraParams = mapOf(
       "format" to "json",
-      "variant" to if (isSimplifiedChineseEnv()) "zh-hans" else "zh-hant"
+      "variant" to if (isTraditionalChineseEnv()) "zh-hant" else "zh-hans"
     )
 
     if (originalRequest.method == MoeRequestMethod.GET.name) {

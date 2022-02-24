@@ -46,7 +46,6 @@ import kotlinx.parcelize.Parcelize
 import okhttp3.FormBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
-import java.time.LocalDate
 import java.util.*
 
 val defaultInjectedFiles = listOf("main.css", "main.js")
@@ -75,7 +74,7 @@ class ArticleViewState(
 
     val moegirlRendererConfig = createMoegirlRendererConfig(
       pageName = props.pageName,
-      language = if(isSimplifiedChineseEnv()) "zh-hans" else "zh-hant",
+      language = if(isTraditionalChineseEnv()) "zh-hant" else "zh-hans",
       site = Constants.source.code,
       enabledCategories = props.addCategories,
       heimu = SettingsStore.common.getValue { this.heimu }.first(),

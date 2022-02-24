@@ -1,5 +1,6 @@
 package com.moegirlviewer
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.webkit.WebView
@@ -71,6 +72,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.util.*
 
 @AndroidEntryPoint
 @ExperimentalMaterialApi
@@ -87,6 +89,11 @@ class MainActivity : ComponentActivity() {
     Globals.context = applicationContext
     Globals.activity = this
     Globals.httpUserAgent = getHttpUserAgent()
+
+//    AlertDialog.Builder(this)
+//      .setMessage("languageTag:${Locale.getDefault().toLanguageTag()}\ncountry:${Locale.getDefault().displayCountry}")
+//      .create()
+//      .show()
 
     @Composable
     fun ContentBody() {

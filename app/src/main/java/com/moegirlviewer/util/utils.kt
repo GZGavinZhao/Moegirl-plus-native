@@ -147,9 +147,8 @@ fun LocalDate.toEpochMilli(): Long {
   return this.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 }
 
-// 有的手机返回的语言代码不规范，只好这么判断
-fun isSimplifiedChineseEnv() = listOf("zh-CN", "zh-SG", "zh-Hans-CN", "zh-Hans-SG").contains(Locale.getDefault().toLanguageTag()) ||
-  Locale.getDefault().displayCountry == "中国"
+fun isTraditionalChineseEnv() = listOf("zh-HK", "zh-MO", "zh-TW", "zh-Hant-HK", "zh-Hant-MO", "zh-Hant-tw")
+  .contains(Locale.getDefault().toLanguageTag())
 
 fun computeMd5(content: String): String {
   val md = MessageDigest.getInstance("MD5")

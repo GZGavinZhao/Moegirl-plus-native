@@ -66,6 +66,7 @@ class ImageViewerScreenModel @Inject constructor() : ViewModel()  {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
         stream.toByteArray()
       }
+      file.deleteOnExit()
 
       file.writeBytes(byteArr)
       val uriAuthority = Globals.context.packageName + ".fileprovider"
