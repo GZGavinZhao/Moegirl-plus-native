@@ -406,7 +406,8 @@ class ArticleViewState(
           val isNonAutoConfirmed = checkIfNonAutoConfirmedToShowEditAlert(pageName, section)
           if (!isNonAutoConfirmed) {
             Globals.navController.navigate(EditRouteArguments(
-              pageName = pageName,
+              // Hmoe通过编辑链接获取的标题有问题，只能使用articleData的了，但这样就导致只能编辑当前看的页面
+              pageName = isMoegirl(pageName, articleData!!.parse.title),
               type = EditType.SECTION,
               section = section,
               preload = preload
