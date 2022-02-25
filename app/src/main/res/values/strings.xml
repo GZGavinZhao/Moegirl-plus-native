@@ -198,7 +198,7 @@
     <string name="insufficientPermissions">没有权限编辑该页面</string>
     <string name="loadErrToClickRetry">加载失败，点击重试</string>
     <string name="loadErrToSwipeRetry">加载失败，下拉重试</string>
-    <string name="doubleBackToExit">再次按下退出程序</string>
+    <string name="doubleBackToExit">再按一次退出程序&gt;_&lt;</string>
     <string name="articleMissedHint">该页面还未创建</string>
     <string name="netErrToRetry">请求超时，请重试</string>
     <string name="pageVersionHistory">页面版本历史</string>
