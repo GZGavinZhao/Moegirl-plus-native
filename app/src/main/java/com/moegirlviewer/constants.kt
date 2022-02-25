@@ -52,7 +52,7 @@ object Constants {
   val avatarUrl = sourceConstants.avatarUrl
   val shareUrl = sourceConstants.shareUrl
   val registerUrl = sourceConstants.registerUrl
-  val appDownloadUrl = sourceConstants.appDownloadUrl
+//  val appDownloadUrl = sourceConstants.appDownloadUrl
   val filePrefix = sourceConstants.filePrefix
 
   val topAppBarHeight = 56

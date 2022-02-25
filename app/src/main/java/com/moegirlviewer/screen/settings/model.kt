@@ -51,10 +51,10 @@ class SettingsScreenModel @Inject constructor(): ViewModel() {
       if (res.version != currentVersion) {
         Globals.commonAlertDialog.show(CommonAlertDialogProps(
           title = Globals.context.getString(R.string.hasNewVersionHint),
-          content = { StyledText(isMoegirl(res.moegirlDesc, res.hmoeDesc) ?: "") },
+          content = { StyledText(res.desc ?: "") },
           secondaryButton = ButtonConfig.cancelButton(),
           onPrimaryButtonClick = {
-            openHttpUrl(Constants.appDownloadUrl)
+            openHttpUrl(res.downloadUrl)
           }
         ))
       } else {

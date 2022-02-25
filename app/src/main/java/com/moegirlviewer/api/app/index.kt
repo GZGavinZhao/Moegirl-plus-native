@@ -6,9 +6,13 @@ import com.moegirlviewer.api.app.bean.HmoeSplashImageConfigBean
 import com.moegirlviewer.request.CommonRequestException
 import com.moegirlviewer.request.commonOkHttpClient
 import com.moegirlviewer.request.send
+import com.moegirlviewer.util.isMoegirl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
+
+val getMoegirlDescRegex = Regex("""## Moegirl\+[\r\n]+([\s\S]+?)([\r\n]+##|$)""")
+val getHmoeDescRegex = Regex("""## HMoegirl[\r\n]+([\s\S]+)([\r\n]+##|$)""")
 
 object AppApi {
   suspend fun getLastVersion(): AppLastVersion {
@@ -22,8 +26,8 @@ object AppApi {
           val resBody = Gson().fromJson(res.body!!.string(), AppLastVersionBean::class.java)
           AppLastVersion(
             version = resBody.tag_name,
-            moegirlDesc = Regex("""## Moegirl\+\n([\s\S]+?)(\n##|$)""").find(resBody.body)?.groupValues?.get(1),
-            hmoeDesc = Regex("""## HMoegirl\n([\s\S]+)(\n##|$)""").find(resBody.body)?.groupValues?.get(1)
+            desc = isMoegirl(getMoegirlDescRegex, getHmoeDescRegex).find(resBody.body)?.groupValues?.get(1),
+            downloadUrl = resBody.assets.first { it.name == isMoegirl("Moegirl+.apk","HMoegirl.apk") }.browser_download_url
           )
         } else {
           throw CommonRequestException(res.message)
@@ -46,6 +50,6 @@ object AppApi {
 
 class AppLastVersion(
   val version: String,
-  val moegirlDesc: String?,
-  val hmoeDesc: String?
+  val desc: String?,
+  val downloadUrl: String
 )
