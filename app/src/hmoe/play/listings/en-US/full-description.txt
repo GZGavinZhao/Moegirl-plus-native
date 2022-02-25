@@ -1,4 +1,4 @@
-Third-party client for hmoegirl.com
+Official client for hmoegirl.com
 <h3>Features</h3>
 <ul>
 <li>Designed for mobile with great reading experience</li>
