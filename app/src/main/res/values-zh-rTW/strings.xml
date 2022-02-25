@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">HMoegirl</string>
-
     <!-- 單詞（可以作為變數名字面意思使用） -->
     <string name="note">註釋</string>
     <string name="contribution">貢獻</string>

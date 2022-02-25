@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">HMoegirl</string>
     <string name="siteName">H萌娘</string>
     <string name="moegirlShare">H萌娘分享</string>
 
