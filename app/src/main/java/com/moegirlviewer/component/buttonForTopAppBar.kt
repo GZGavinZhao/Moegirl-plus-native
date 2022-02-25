@@ -48,6 +48,7 @@ fun BackButton(
     modifier = Modifier
       .then(modifier),
     image = Icons.Filled.ArrowBack,
+    iconSize = 29.dp,
     iconColor = iconColor,
     onClick = { Globals.navController.popBackStack() }
   )

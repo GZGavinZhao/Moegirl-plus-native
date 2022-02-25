@@ -121,6 +121,7 @@ fun EditScreenWikitextEditor() {
     ) {
       PlainTextField(
         modifier = Modifier
+          .padding(horizontal = 3.dp)
           .fillMaxWidth()
           .weight(1f)
           .focusRequester(model.focusRequester),
