@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -112,6 +113,7 @@ fun BrowsingHistoryScreen() {
 @Composable
 private fun ComposedHeader() {
   val themeColors = MaterialTheme.colors
+  val model: BrowsingHistoryScreenModel = hiltViewModel()
 
   StyledTopAppBar(
     navigationIcon = {
@@ -128,6 +130,12 @@ private fun ComposedHeader() {
         image = Icons.Filled.Search,
         onClick = {
           Globals.navController.navigate("browsingHistorySearch")
+        }
+      )
+      AppHeaderIcon(
+        image = Icons.Filled.Delete,
+        onClick = {
+          model.deleteAllRecords()
         }
       )
     }

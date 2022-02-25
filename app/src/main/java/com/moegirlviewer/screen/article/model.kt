@@ -144,6 +144,15 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
       }
     }
 
+    if (truePageName == "H萌娘:官方群组") {
+      coroutineScope.launch {
+        articleViewRef.value!!.htmlWebViewRef!!.injectScript("""
+          document.getElementById('app-background').style.display = 'block'
+          document.getElementById('app-background-top-padding').style.height = '${Constants.topAppBarHeight + Globals.statusBarHeight}px'
+        """.trimIndent())
+      }
+    }
+
     if (routeArguments.readingRecord != null) {
       coroutineScope.launch {
         articleViewRef.value!!.htmlWebViewRef!!.injectScript("""
@@ -214,7 +223,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
     try {
       val userInfo = AccountStore.loadUserInfo()
-      val isUnprotectednessPage = articleInfo!!.protection.any { it.type != "edit" } || articleInfo!!.protection.isEmpty()
+      val isUnprotectednessPage = articleInfo!!.protection.all { it.type != "edit" } || articleInfo!!.protection.isEmpty()
       val isSysop = userInfo.groups.contains("sysop")
       val isPatroller = userInfo.groups.contains("patroller")
 

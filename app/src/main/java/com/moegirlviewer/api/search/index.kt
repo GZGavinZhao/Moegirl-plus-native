@@ -8,7 +8,7 @@ import com.moegirlviewer.util.MediaWikiNamespace
 object SearchApi {
   suspend fun getHint(
     keyword: String,
-    limit: Int = 20,
+    limit: Int = 50,
     namespace: MediaWikiNamespace? = null
   )  = moeRequest(
     entity = SearchHintBean::class.java,
@@ -32,12 +32,14 @@ object SearchApi {
       this["srsearch"] = keyword
       this["sroffset"] = offset
       this["srprop"] = "timestamp|redirecttitle|snippet|categoriesnippet|sectiontitle|pageimages"
+      this["srwhat"] = "text"
 
       this["gsrsearch"] = keyword
       this["gsroffset"] = offset
       this["pithumbsize"] = 500
       this["prop"] = "pageimages"
       this["generator"] = "search"
+      this["gsrwhat"] = "text"
     }
   )
 }

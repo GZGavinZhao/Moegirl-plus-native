@@ -27,6 +27,7 @@ import com.moegirlviewer.store.RecentChangesSettings
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.isMoegirl
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.first
 
@@ -111,11 +112,13 @@ suspend fun showRecentChangesOptionsDialog(): RecentChangesSettings? {
             checked = settings.includeMinor,
             onCheckedChange = { settings = settings.copy(includeMinor = it) }
           )
-          CapsuleCheckbox(
-            text = stringResource(id = R.string.robot),
-            checked = settings.includeRobot,
-            onCheckedChange = { settings = settings.copy(includeRobot = it) }
-          )
+          if (isMoegirl()) {
+            CapsuleCheckbox(
+              text = stringResource(id = R.string.robot),
+              checked = settings.includeRobot,
+              onCheckedChange = { settings = settings.copy(includeRobot = it) }
+            )
+          }
           CapsuleCheckbox(
             text = stringResource(id = R.string.log),
             checked = settings.includeLog,

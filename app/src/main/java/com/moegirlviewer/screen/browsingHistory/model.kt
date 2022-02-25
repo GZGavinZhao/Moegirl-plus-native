@@ -84,6 +84,24 @@ class BrowsingHistoryScreenModel @Inject constructor() : ViewModel() {
     ))
   }
 
+  fun deleteAllRecords() {
+    Globals.commonAlertDialog.show(CommonAlertDialogProps(
+      content = {
+        StyledText(
+          text = Globals.context.getString(R.string.cleanAllBrowseHistoryHint)
+        )
+      },
+      secondaryButton = ButtonConfig.cancelButton(),
+      onPrimaryButtonClick = {
+        coroutineScope.launch {
+          Globals.room.browsingRecord().clear()
+          toast(Globals.context.getString(R.string.deleted))
+          lists = BrowsingRecordLists()
+        }
+      }
+    ))
+  }
+
   override fun onCleared() {
     super.onCleared()
     coroutineScope.cancel()

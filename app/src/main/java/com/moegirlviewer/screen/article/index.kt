@@ -183,6 +183,7 @@ fun ArticleScreen(
                   revId = arguments.revId,
                   editAllowed = model.editAllowed ?: false,
                   contentTopPadding = (Constants.topAppBarHeight + statusBarHeight).dp,
+                  addCategories = model.truePageName != "H萌娘:官方群组",
                   onScrollChanged = handleOnScrollChanged,
                   onArticleLoaded = { data, info -> model.handleOnArticleLoaded(data, info) },
                   onArticleRendered = { model.handleOnArticleRendered() },

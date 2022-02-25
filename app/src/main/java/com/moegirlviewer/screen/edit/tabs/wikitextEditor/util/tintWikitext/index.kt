@@ -66,7 +66,7 @@ internal val matchParsingMarkupList = listOf(
     InlineEqualWikitextMarkup(
       text = "=".repeat(it),
       style = SpanStyle(
-        color = Color.Red,
+        color = Color(0xffCB2828),
         fontWeight = FontWeight.Black
       )
     )

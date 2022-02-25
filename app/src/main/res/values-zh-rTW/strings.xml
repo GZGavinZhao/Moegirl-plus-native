@@ -198,7 +198,7 @@
     <string name="insufficientPermissions">沒有許可權編輯該頁面</string>
     <string name="loadErrToClickRetry">載入失敗，點選重試</string>
     <string name="loadErrToSwipeRetry">載入失敗，下拉重試</string>
-    <string name="doubleBackToExit">再按一次退出程式&gt;_&lt;</string>
+    <string name="doubleBackToExit">再按一次退出程式 &gt;_&lt;</string>
     <string name="articleMissedHint">該頁面還未建立</string>
     <string name="netErrToRetry">請求超時，請重試</string>
     <string name="pageVersionHistory">頁面版本歷史</string>
