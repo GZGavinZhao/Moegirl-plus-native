@@ -1,3 +1,5 @@
+package com.moegirlviewer.api.search.bean
+
 data class SearchHintBean(
   val batchcomplete: String,
   val `continue`: Continue,

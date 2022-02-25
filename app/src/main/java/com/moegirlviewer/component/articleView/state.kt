@@ -281,7 +281,6 @@ class ArticleViewState(
 
     val okhttpRequest = Request.Builder()
       .url(request.url.toString())
-      .addHeader("Referer", Constants.mainUrl)
       .build()
     val res = try {
       moeOkHttpClient.newCall(okhttpRequest).execute()

@@ -1,5 +1,6 @@
 package com.moegirlviewer.request
 
+import com.moegirlviewer.Constants
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.isMoegirl
 import okhttp3.Interceptor
@@ -27,6 +28,7 @@ class CommonConfigInterceptor : Interceptor {
       .addHeader("dnt", "1")
       .addHeader("pragma", "no-cache")
       .addHeader("accept", "*/*")
+      .addHeader("Referer", Constants.mainUrl)
       .build()
 
     return chain.proceed(newRequest)

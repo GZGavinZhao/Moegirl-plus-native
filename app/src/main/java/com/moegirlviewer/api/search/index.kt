@@ -1,6 +1,6 @@
 package com.moegirlviewer.api.search
 
-import SearchHintBean
+import com.moegirlviewer.api.search.bean.SearchHintBean
 import com.moegirlviewer.api.search.bean.SearchResultBean
 import com.moegirlviewer.request.moeRequest
 import com.moegirlviewer.util.MediaWikiNamespace
