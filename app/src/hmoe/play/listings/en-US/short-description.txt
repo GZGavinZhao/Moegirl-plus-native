@@ -1,1 +1,1 @@
-Third-party client for hmoegirl.com
+Offical client for hmoegirl.com
