@@ -114,35 +114,35 @@ fun SubCategoryList() {
               )
             }
           }
-        }
 
-        if (model.statusOfSubCategories == LoadStatus.SUCCESS) {
-          Box(
-            modifier = Modifier
-              .noRippleClickable {
-                scope.launch { model.loadSubCategories() }
-              }
-              .fillMaxWidth()
-              .padding(vertical = 10.dp)
-            ,
-            contentAlignment = Alignment.Center
-          ) {
-            StyledText(
-              text = stringResource(id = R.string.loadMore),
-              color = themeColors.secondary,
-              fontSize = 15.sp
-            )
+          if (model.statusOfSubCategories == LoadStatus.SUCCESS) {
+            Box(
+              modifier = Modifier
+                .noRippleClickable {
+                  scope.launch { model.loadSubCategories() }
+                }
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)
+              ,
+              contentAlignment = Alignment.Center
+            ) {
+              StyledText(
+                text = stringResource(id = R.string.loadMore),
+                color = themeColors.secondary,
+                fontSize = 15.sp
+              )
+            }
           }
-        }
 
-        if (model.statusOfSubCategories == LoadStatus.LOADING) {
-          Box(
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(vertical = 10.dp),
-            contentAlignment = Alignment.Center
-          ) {
-            StyledCircularProgressIndicator()
+          if (model.statusOfSubCategories == LoadStatus.LOADING) {
+            Box(
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+              contentAlignment = Alignment.Center
+            ) {
+              StyledCircularProgressIndicator()
+            }
           }
         }
       }
