@@ -6,7 +6,7 @@
 
 该项目是萌娘百科与H萌娘的第三方安卓客户端，使用Jetpack Compose单Activity模式开发。
 
-条目渲染与排版引擎：[moegirlRenderer](https://github.com/koharubiyori/moegirlRenderer)
+条目排版与渲染器：[moegirlRenderer](https://github.com/koharubiyori/moegirlRenderer)
 
 ## 下载
 
