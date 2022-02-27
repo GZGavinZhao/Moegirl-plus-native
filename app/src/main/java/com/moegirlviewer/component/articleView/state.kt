@@ -279,9 +279,13 @@ class ArticleViewState(
   fun shouldInterceptRequest(webView: WebView, request: WebResourceRequest): WebResourceResponse? {
     if (request.url.toString().contains(Constants.domain.replace("https://", "")).not()) return null
 
+    val urlStr = request.url.toString()
+      .replace(Regex("""^file://"""), "https://")
+
     val okhttpRequest = Request.Builder()
-      .url(request.url.toString())
+      .url(urlStr)
       .build()
+
     val res = try {
       moeOkHttpClient.newCall(okhttpRequest).execute()
     } catch (e: Exception) {
