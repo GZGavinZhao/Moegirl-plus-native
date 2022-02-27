@@ -17,8 +17,8 @@ android {
         applicationId "com.moegirlviewer"
         minSdk 26
         targetSdk 31
-        versionCode 2222
-        versionName "2.3.5"
+        versionCode 2223
+        versionName "2.3.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -31,7 +31,7 @@ android {
             reset()
             enable true
             universalApk true  // If true, also generate a universal APK
-            include "armeabi-v7a", "arm64-v8a"
+            include "arm64-v8a"
         }
     }
 
