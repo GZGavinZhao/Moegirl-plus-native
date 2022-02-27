@@ -1,6 +1,7 @@
 package com.moegirlviewer.component.articleView
 
 import android.os.Parcelable
+import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse

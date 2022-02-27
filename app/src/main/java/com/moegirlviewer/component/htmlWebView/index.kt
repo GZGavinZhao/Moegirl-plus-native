@@ -2,6 +2,7 @@ package com.moegirlviewer.component.htmlWebView
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.view.View
 import android.webkit.*
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
@@ -107,6 +108,7 @@ fun HtmlWebView(
 
   LaunchedEffect(true) {
     val webView = webViewRef.value!!
+    webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
     with (webView.settings) {
       this.allowFileAccess = true
