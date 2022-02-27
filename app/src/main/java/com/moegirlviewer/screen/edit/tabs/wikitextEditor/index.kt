@@ -83,7 +83,7 @@ fun EditScreenWikitextEditor() {
         }
       }
 
-      if (consumingTime > 1000 && !isDebugEnv()) {
+      if (consumingTime > 300 && !isDebugEnv()) {
         toast(Globals.context.getString(R.string.codeHighlightTimeoutHint))
         syntaxHighlight = false
       }
