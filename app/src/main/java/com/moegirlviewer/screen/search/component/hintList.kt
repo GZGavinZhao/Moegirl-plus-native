@@ -33,10 +33,12 @@ fun ColumnScope.SearchScreenHintList() {
   val scope = rememberCoroutineScope()
   var list by rememberSaveable { mutableStateOf(listOf<String>()) }
   var status by rememberSaveable { mutableStateOf(LoadStatus.INITIAL) }
+  var prevSearchKeyword by rememberSaveable { mutableStateOf("") }
 
   suspend fun loadHintList() = scope.launch {
-    if (model.keywordInputValue.trim() == "") { return@launch }
+    if (model.keywordInputValue.trim() == "" || model.keywordInputValue == prevSearchKeyword) { return@launch }
     status = LoadStatus.LOADING
+    prevSearchKeyword = model.keywordInputValue
     try {
       status = LoadStatus.LOADING
       list = SearchApi.getHint(model.keywordInputValue).query.prefixsearch.map { it.title }

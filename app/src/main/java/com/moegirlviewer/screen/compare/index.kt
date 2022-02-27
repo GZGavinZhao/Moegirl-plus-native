@@ -152,7 +152,7 @@ private fun ComposedHeader(
 
             AppHeaderIcon(
               image = Icons.Filled.FavoriteBorder,
-              iconSize = 28.dp,
+              iconSize = 27.dp,
               onClick = {
                 model.sendThank()
               }

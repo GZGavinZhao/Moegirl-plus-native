@@ -337,7 +337,7 @@ private fun ComposedCommentContent(
   Box() {
     Column(
       modifier = Modifier
-        .padding(top = 5.dp, start = 50.dp, end = 25.dp)
+        .padding(top = 5.dp, start = commentItemLeftPadding.dp, end = commentItemRightPadding.dp)
     ) {
       NativeCommentContent(
         commentElements = commentData.parsedText,
@@ -353,7 +353,7 @@ private fun ComposedCommentContent(
 
       Row(
         modifier = Modifier
-          .padding(top = 10.dp, end = 25.dp)
+          .padding(top = 10.dp, end = 10.dp)
           .fillMaxWidth()
           .offset(y = (-1).dp),
       ) {
@@ -464,7 +464,7 @@ private fun ComposedCommentReply(
 
   Column(
     modifier = Modifier
-      .padding(top = 10.dp, start = 50.dp, end = 25.dp, bottom = 5.dp)
+      .padding(top = 10.dp, start = commentItemLeftPadding.dp, end = commentItemRightPadding.dp, bottom = 5.dp)
       .fillMaxWidth()
       .background(if (isDarkTheme) themeColors.background else Color(0xffededed))
       .padding(10.dp)
@@ -513,3 +513,6 @@ private fun ComposedCommentReply(
 private fun String.eraseTargetUserName(): String {
   return this.replace(Regex("""^@<a[\s\S]+?</a>"""), "")
 }
+
+val commentItemLeftPadding = 50
+val commentItemRightPadding = 10

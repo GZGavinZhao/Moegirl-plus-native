@@ -20,7 +20,7 @@ import com.moegirlviewer.util.Globals
 fun AppHeaderIcon(
   modifier: Modifier = Modifier,
   image: ImageVector,
-  iconSize: Dp = 30.dp,
+  iconSize: Dp = 29.dp,
   iconColor: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
   onClick: () -> Unit,
 ) {

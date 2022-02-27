@@ -293,6 +293,7 @@ val hmoeCommentDisabledTitles = listOf(
   "H萌娘:官方群组",
   "H萌娘:条目创建请求",
   "H萌娘:讨论版导航",
+  "H萌娘:主题板块导航",
   "有关部门娘",
   "习妡萍",
   "禁评",

@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModel
+import coil.memory.MemoryCache
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
@@ -27,6 +29,8 @@ class ImageViewerScreenModel @Inject constructor() : ViewModel()  {
     val imageUrl = routeArguments.images[pagerState.currentPage].fileUrl
     val imageRequest = ImageRequest.Builder(Globals.context)
       .data(imageUrl)
+      .memoryCacheKey(MemoryCache.Key(imageUrl))
+      .memoryCachePolicy(CachePolicy.ENABLED)
       .target(
         onSuccess = {
           completableDeferred.complete(it)
