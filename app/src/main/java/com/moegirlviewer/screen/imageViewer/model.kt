@@ -47,7 +47,9 @@ class ImageViewerScreenModel @Inject constructor() : ViewModel()  {
 
   suspend fun downloadCurrentImage() {
     val imageUrl = routeArguments.images[pagerState.currentPage].fileUrl
+    Globals.commonLoadingDialog.show()
     val drawable = getCurrentImage()
+    Globals.commonLoadingDialog.hide()
     if (drawable != null) {
       saveImage(drawable.toBitmap(), computeMd5(imageUrl))
       toast(Globals.context.getString(R.string.imageSavedToAlbum))
@@ -58,7 +60,9 @@ class ImageViewerScreenModel @Inject constructor() : ViewModel()  {
 
   suspend fun shareCurrentImage() {
     val imageUrl = routeArguments.images[pagerState.currentPage].fileUrl
+    Globals.commonLoadingDialog.show()
     val drawable = getCurrentImage()
+    Globals.commonLoadingDialog.hide()
     if (drawable != null) {
       val shareImagesDir = File(Globals.context.externalCacheDir, "shareImages")
       shareImagesDir.mkdir()

@@ -24,11 +24,7 @@ private val MoegirlLightColorPalette = lightColors(
   error = RedAccent,
 
   onPrimary = Color.White,
-//  onSurface = Color(0xff323232),
-
-//  onSecondary = Color.White,
   surface = Color.White,
-//  onBackground = Color.Black,
 )
 
 @SuppressLint("ConflictingOnColor")
