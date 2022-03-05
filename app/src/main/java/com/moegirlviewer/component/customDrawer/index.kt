@@ -84,7 +84,7 @@ fun CustomDrawer(
     )
   }
 
-  // 初次渲染时会出现闪现的情况，这里延迟1秒显示
+  // 初次渲染时会出现闪现的情况，这里延迟显示
   LaunchedEffect(true) {
     delay(500)
     delayDisplayFlag = true
@@ -130,9 +130,10 @@ fun CustomDrawer(
           .swipeable(
             state = swipeableState,
             anchors = anchors,
-            thresholds = { _, _ -> FractionalThreshold(0.2f) },
+            thresholds = { _, _ -> FractionalThreshold(0.4f) },
             orientation = Orientation.Horizontal,
-            resistance = null
+            resistance = null,
+            velocityThreshold = 2.dp
           ),
         contentAlignment = if (isLeftSide) Alignment.TopStart else Alignment.TopEnd
       ) {
