@@ -104,7 +104,7 @@ class ArticleViewState(
         ${if (props.inDialogMode) """
           margin: 0 !important;
           padding: 0;
-          max-width: auto !important;
+          max-width: 100% !important;
         """.trimIndent() else ""}
         ${if (props.inDialogMode && context.isDarkTheme) 
           "background-color: ${context.themeColors.surface.toCssRgbaString()} !important" 
