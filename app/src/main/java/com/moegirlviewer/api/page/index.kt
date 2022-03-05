@@ -4,6 +4,7 @@ import com.moegirlviewer.Constants
 import com.moegirlviewer.api.page.bean.*
 import com.moegirlviewer.request.MoeRequestMethod
 import com.moegirlviewer.request.moeRequest
+import com.moegirlviewer.util.Globals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -109,7 +110,7 @@ object PageApi {
     entity = GetRandomPageResBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
-      this["prop"] = "extracts"
+      this["prop"] = "extracts|pageimages"
       this["continue"] = "grncontinue||"
       this["generator"] = "random"
       this["exsentences"] = "10"
@@ -119,7 +120,7 @@ object PageApi {
       this["exsectionformat"] = "plain"
       this["grnnamespace"] = "0"
       this["grnfilterredir"] = "nonredirects"
-      this["grnlimit"] = "10"
+      this["pithumbsize"] = Globals.activity.resources.displayMetrics.widthPixels
       this["grnlimit"] = count
       if (continueKey != null) this["grncontinue"] = continueKey
     }
