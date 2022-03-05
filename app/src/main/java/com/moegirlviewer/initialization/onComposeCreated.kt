@@ -66,7 +66,7 @@ private suspend fun checkShortcutIntent() {
       ))
     }
     ShortcutAction.RANDOM -> {
-      val randomPage = PageApi.getRandomPage().query.random.first().title
+      val randomPage = PageApi.getRandomPage().query.pages.values.first().title
       gotoArticlePage(randomPage)
     }
   }

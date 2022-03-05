@@ -3,19 +3,25 @@ package com.moegirlviewer.api.page.bean
 data class GetRandomPageResBean(
   val batchcomplete: String,
   val `continue`: Continue,
+  val limits: Limits,
   val query: Query
 ) {
   data class Continue(
     val `continue`: String,
-    val rncontinue: String
+    val grncontinue: String
+  )
+
+  data class Limits(
+    val extracts: Int
   )
 
   data class Query(
-    val random: List<Random>
+    val pages: Map<Int,MapValue>
   ) {
-    data class Random(
-      val id: Int,
+    data class MapValue(
+      val extract: String,
       val ns: Int,
+      val pageid: Int,
       val title: String
     )
   }

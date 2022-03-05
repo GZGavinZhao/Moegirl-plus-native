@@ -56,7 +56,7 @@ fun CommonDrawerBody(
   fun gotoRandomPage() = scope.launch {
     try {
       Globals.commonLoadingDialog.showText(Globals.context.getString(R.string.doingRandom) + "...")
-      val randomPage = PageApi.getRandomPage().query.random.first().title
+      val randomPage = PageApi.getRandomPage().query.pages.values.first().title
       gotoArticlePage(randomPage)
     } catch (e: MoeRequestException) {
       toast(e.message)

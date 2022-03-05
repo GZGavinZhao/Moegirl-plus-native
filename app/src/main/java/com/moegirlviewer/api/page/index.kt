@@ -103,15 +103,25 @@ object PageApi {
   }
 
   suspend fun getRandomPage(
-    count: Int = 1
+    count: Int = 1,
+    continueKey: String? = null
   ) = moeRequest(
     entity = GetRandomPageResBean::class.java,
-    params = mapOf(
-      "action" to "query",
-      "list" to "random",
-      "rnnamespace" to "0",
-      "rnfilterredir" to "nonredirects",
-      "rnlimit" to count
-    )
+    params = mutableMapOf<String, Any>().apply {
+      this["action"] = "query"
+      this["prop"] = "extracts"
+      this["continue"] = "grncontinue||"
+      this["generator"] = "random"
+      this["exsentences"] = "10"
+      this["exlimit"] = "max"
+      this["exintro"] = 1
+      this["explaintext"] = 1
+      this["exsectionformat"] = "plain"
+      this["grnnamespace"] = "0"
+      this["grnfilterredir"] = "nonredirects"
+      this["grnlimit"] = "10"
+      this["grnlimit"] = count
+      if (continueKey != null) this["grncontinue"] = continueKey
+    }
   )
 }
