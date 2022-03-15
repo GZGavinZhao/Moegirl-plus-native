@@ -1,10 +1,7 @@
 package com.moegirlviewer.screen.randomPages.component
 
 import android.util.Log
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -52,7 +49,7 @@ internal fun BoxScope.RandomPageItem(
   val themeColors = MaterialTheme.colors
   val cardWidth = 350f
   val cardElevation = 2f
-  val rotateAngle = 30
+  val rotateAngle = 20
 
   val configuration = LocalConfiguration.current
   val density = LocalDensity.current
@@ -193,8 +190,9 @@ internal fun BoxScope.RandomPageItem(
 class RandomPageItemState {
   val swipeableState = SwipeableState(
     initialValue = 0,
-    animationSpec = tween(
-      durationMillis = 300
+    animationSpec = spring(
+      dampingRatio = Spring.DampingRatioNoBouncy,
+      stiffness = Spring.StiffnessMediumLow * 2
     )
   )
   private var viewData: GetRandomPageResBean.Query.MapValue? by mutableStateOf(null)
