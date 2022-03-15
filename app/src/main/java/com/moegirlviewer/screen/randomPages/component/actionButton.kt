@@ -1,7 +1,8 @@
 package com.moegirlviewer.screen.randomPages.component
 
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
@@ -20,10 +20,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.moegirlviewer.R
 import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.InitRef
-import com.moegirlviewer.util.printDebugLog
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.floor
 

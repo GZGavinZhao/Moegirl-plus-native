@@ -10,9 +10,7 @@ import com.moegirlviewer.api.edit.EditApi
 import com.moegirlviewer.api.notification.NotificationApi
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.request.MoeRequestTimeoutException
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.initUserInfo
-import com.moegirlviewer.util.printRequestErr
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +42,8 @@ object AccountStore {
         }
       }
 
-      initUserInfo()
+      initNecessaryUserInfo()
+      coroutineScope.launch { initDeferrableUserInfo() }
 
       LoginResult(true)
     } else {
