@@ -20,6 +20,13 @@ internal val linearParsingMarkupList = listOf(
     ),
   ),
   PairWikitextMarkup(
+    startText = "{{{",
+    endText = "}}}",
+    style = SpanStyle(
+      color = Color(0xff7801DC),
+    ),
+  ),
+  PairWikitextMarkup(
     startText = "{{",
     endText = "}}",
     style = SpanStyle(

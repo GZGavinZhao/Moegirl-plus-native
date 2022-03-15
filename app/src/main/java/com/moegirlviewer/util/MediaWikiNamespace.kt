@@ -31,7 +31,7 @@ enum class MediaWikiNamespace(val code: Int) {
     }
 
     fun isTalkPage(code: Int): Boolean {
-      return getNamespaceByCode(code).name.matches(Regex("""_TALK${'$'}"""))
+      return getNamespaceByCode(code).name.contains(Regex("""_TALK$"""))
     }
   }
 }
