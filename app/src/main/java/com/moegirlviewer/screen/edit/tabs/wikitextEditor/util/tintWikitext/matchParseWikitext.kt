@@ -65,7 +65,10 @@ private object InlineMarkupMatcher {
       content = matchedMarkup.second.groupValues[1],
       range = matchedMarkup.second.range,
       markup = matchedMarkup.first,
-      emptyStringInMarkupEnd = matchedMarkup.second.groupValues.getOrNull(2)
+      emptyStringInMarkupEnd = matchedMarkup.second.groupValues.getOrNull(2).run {
+        if (this == null) return@run null
+        return@run if (this == "") null else this
+      }
     ) else null
   }
 }

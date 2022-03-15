@@ -8,7 +8,7 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
     val indexOfStartOverlapElement = mergedList.indexOfFirst { it.contentRange.contains(inlineParseResultItem.fullContentRange.start) }
     val indexOfEndOverlapElement = mergedList.indexOfFirst { it.contentRange.contains(inlineParseResultItem.fullContentRange.endInclusive) }
 
-    if (indexOfStartOverlapElement == -1) {
+    if (inlineParseResult.indexOf(inlineParseResultItem) == 5) {
       true
     }
 
@@ -72,6 +72,7 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
           contentRange = inlineParseResultItem.contentRange.start..inlineParseResultItem.contentRange.start,
           suffixSpace = null,
           containStartMarkup = true,
+          containEndMarkup = false
         ).toTintableParseResultList())
         if (rightContentOfStartOverlapElement != "") {
           this.addAll(inlineParseResultItem.copy(
@@ -99,14 +100,15 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
           this.addAll(inlineParseResultItem.copy(
             content = null,
             contentRange = inlineParseResultItem.contentRange.endInclusive..inlineParseResultItem.contentRange.endInclusive,
+            containStartMarkup = false,
             containEndMarkup = true
           ).toTintableParseResultList())
 
           if (rightContentOfEndOverlapElement != "") {
             this.add(endOverlapElement.copy(
               content = rightContentOfEndOverlapElement,
-              contentRange = inlineParseResultItem.contentRange.endInclusive until
-                (inlineParseResultItem.contentRange.endInclusive + rightContentOfEndOverlapElement.length),
+              contentRange = inlineParseResultItem.fullContentRange.endInclusive until
+                (inlineParseResultItem.fullContentRange.endInclusive + rightContentOfEndOverlapElement.length),
             ))
           }
         } else {
