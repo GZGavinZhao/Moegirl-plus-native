@@ -51,40 +51,34 @@ fun EditScreenWikitextEditor() {
     syntaxHighlight = SettingsStore.common.getValue { this.syntaxHighlight }.first()
   }
 
-  LaunchedEffect(model.wikitextTextFieldValue.text.isNotEmpty()) {
-    if (model.wikitextTextFieldValue.text.isNotEmpty()) {
-      tintedWikitext.value = withContext(Dispatchers.Default) {
-        tintedWikitext.value.update(model.wikitextTextFieldValue.text, model.wikitextTextFieldValue.selection.end)
-      }
-      textFieldValue = model.wikitextTextFieldValue.copy(
-        annotatedString = tintedWikitext.value.annotatedString
-      )
-    }
-  }
-
   if (syntaxHighlight) {
     LaunchedEffect(model.wikitextTextFieldValue) {
       // 高亮性能优化暂时研究不明白了，先这样吧
-      val consumingTime = measureTimeMillis {
-//        tintedWikitext.value = withContext(Dispatchers.Default) {
-//          tintedWikitext.value.hackedUpdate(model.wikitextTextFieldValue.text, model.wikitextTextFieldValue.selection.end)
-//        }
-//        textFieldValue = model.wikitextTextFieldValue.copy(
-//          annotatedString = tintedWikitext.value.annotatedString
-//        )
+      try {
+        val consumingTime = measureTimeMillis {
+  //        tintedWikitext.value = withContext(Dispatchers.Default) {
+  //          tintedWikitext.value.hackedUpdate(model.wikitextTextFieldValue.text, model.wikitextTextFieldValue.selection.end)
+  //        }
+  //        textFieldValue = model.wikitextTextFieldValue.copy(
+  //          annotatedString = tintedWikitext.value.annotatedString
+  //        )
 
-        coroutineScope {
-          tintedWikitext.value = withContext(Dispatchers.Default) {
-            tintedWikitext.value.update(model.wikitextTextFieldValue.text, model.wikitextTextFieldValue.selection.end)
+          coroutineScope {
+            tintedWikitext.value = withContext(Dispatchers.Default) {
+              tintedWikitext.value.update(model.wikitextTextFieldValue.text, model.wikitextTextFieldValue.selection.end)
+            }
+            textFieldValue = model.wikitextTextFieldValue.copy(
+              annotatedString = tintedWikitext.value.annotatedString
+            )
           }
-          textFieldValue = model.wikitextTextFieldValue.copy(
-            annotatedString = tintedWikitext.value.annotatedString
-          )
         }
-      }
 
-      if (consumingTime > 300 && !isDebugEnv()) {
-        toast(Globals.context.getString(R.string.codeHighlightTimeoutHint))
+        if (consumingTime > 300 && !isDebugEnv()) {
+          toast(Globals.context.getString(R.string.codeHighlightTimeoutHint))
+          syntaxHighlight = false
+        }
+      } catch (e: ArrayIndexOutOfBoundsException) {
+        toast("代码高亮解析出现错误，请记下条目名称并联系APP开发者")
         syntaxHighlight = false
       }
     }
