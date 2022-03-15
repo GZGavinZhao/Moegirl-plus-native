@@ -1,11 +1,10 @@
 package com.moegirlviewer.screen.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BadgedBox
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -21,17 +20,24 @@ import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
+import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.drawer.CommonDrawer
+import com.moegirlviewer.screen.home.component.RandomPageCard
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.store.AccountStore
+import com.moegirlviewer.store.CardsHomePageSettings
+import com.moegirlviewer.store.SettingsStore
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.HmoeSplashImageManager
 import com.moegirlviewer.util.LoadStatus
@@ -47,11 +53,16 @@ fun HomeScreen() {
   val model: HomeScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
   val drawerRef = remember { Ref<CustomDrawerRef>() }
+  val isUseCardsHomePage by SettingsStore.common.getValue { cardsHomePage }.collectAsState(initial = true)
 
   LaunchedEffect(true) {
-    if (HomeScreenModel.needReload || model.articleViewRef.value!!.loadStatus == LoadStatus.LOADING) {
-      model.articleViewRef.value!!.reload(true)
-      HomeScreenModel.needReload = false
+    if (isUseCardsHomePage) {
+      if (model.cardsDataStatus == LoadStatus.INITIAL) model.loadCardsData()
+    } else {
+      if (HomeScreenModel.needReload || model.articleViewRef.value!!.loadStatus == LoadStatus.LOADING) {
+        model.articleViewRef.value!!.reload(true)
+        HomeScreenModel.needReload = false
+      }
     }
   }
 
@@ -71,18 +82,22 @@ fun HomeScreen() {
             )
           },
         ) {
-          ArticleView(
-            props = ArticleViewProps(
-              pageName = "Mainpage",
-              ref = model.articleViewRef,
-              onArticleRendered = {
-                scope.launch {
-                  delay(500)
-                  homeScreenReady.complete(true)
+          if (isUseCardsHomePage) {
+            ComposedCardsHomePage()
+          } else {
+            ArticleView(
+              props = ArticleViewProps(
+                pageName = "Mainpage",
+                ref = model.articleViewRef,
+                onArticleRendered = {
+                  scope.launch {
+                    delay(500)
+                    homeScreenReady.complete(true)
+                  }
                 }
-              }
+              )
             )
-          )
+          }
         }
       }
     }
@@ -149,4 +164,39 @@ fun ComposedTopAppBar(
       )
     },
   )
+}
+
+@Composable
+private fun ComposedCardsHomePage() {
+  val model: HomeScreenModel = hiltViewModel()
+  val scope = rememberCoroutineScope()
+  val themeColors = MaterialTheme.colors
+  val cardsHomePageSettings by SettingsStore.cardsHomePage.getValue { this }.collectAsState(
+    initial = remember { CardsHomePageSettings() }
+  )
+
+  LaunchedEffect(model.cardsDataStatus) {
+    model.swipeRefreshState.isRefreshing = model.cardsDataStatus == LoadStatus.LOADING
+  }
+
+  SwipeRefresh(
+    state = model.swipeRefreshState,
+    onRefresh = {
+      scope.launch {
+        model.loadCardsData()
+      }
+    },
+    indicator = { state, trigger ->
+      StyledSwipeRefreshIndicator(state, trigger)
+    }
+  ) {
+    Column(
+      modifier = Modifier
+        .verticalScroll(rememberScrollState())
+    ) {
+      if (cardsHomePageSettings.randomPage) {
+        RandomPageCard()
+      }
+    }
+  }
 }

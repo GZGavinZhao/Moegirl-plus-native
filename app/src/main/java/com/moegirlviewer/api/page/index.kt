@@ -111,7 +111,6 @@ object PageApi {
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
       this["prop"] = "extracts|pageimages"
-      this["continue"] = "grncontinue||"
       this["generator"] = "random"
       this["exsentences"] = "10"
       this["exlimit"] = "max"
@@ -122,7 +121,10 @@ object PageApi {
       this["grnfilterredir"] = "nonredirects"
       this["pithumbsize"] = Globals.activity.resources.displayMetrics.widthPixels
       this["grnlimit"] = count
-      if (continueKey != null) this["grncontinue"] = continueKey
+      if (continueKey != null) {
+        this["continue"] = "grncontinue||"
+        this["grncontinue"] = continueKey
+      }
     }
   )
 }

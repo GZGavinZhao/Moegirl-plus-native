@@ -15,11 +15,13 @@ import kotlinx.coroutines.flow.map
 // 每个设置项组应该继承Settings，所有成员使用var声明，带有默认值，之后在SettingsStore中声明client
 sealed class Settings
 
+// 设置页面里的设置项
 data class CommonSettings(
   var heimu: Boolean = true,
   var stopMediaOnLeave: Boolean = false,
   var syntaxHighlight: Boolean = true,
   var darkThemeBySystem: Boolean = false,
+  var cardsHomePage: Boolean = true,
   var useSpecialCharSupportedFontInApp: Boolean = false,
   var useSpecialCharSupportedFontInArticle: Boolean = false,
   var splashImageMode: SplashImageMode = SplashImageMode.NEW,
@@ -33,6 +35,7 @@ enum class SplashImageMode {
   CUSTOM_RANDOM
 }
 
+// 最近更改右上角按钮打开的设置
 data class RecentChangesSettings(
   var daysAgo: Int = 7,
   var totalLimit: Int = 500,
@@ -43,6 +46,11 @@ data class RecentChangesSettings(
   var isWatchListMode: Boolean = false
 ) : Settings()
 
+data class CardsHomePageSettings(
+  var randomPage: Boolean = true,
+) : Settings()
+
+// 一些杂项，基本不算是设置，只是用来记录的持久化变量
 data class OtherSettings(
   // 拒绝的版本，在给用户提示有更新后，如果用户点击拒绝，则记录到这里
   var rejectedVersionName: String = "",
@@ -53,7 +61,8 @@ data class OtherSettings(
 object SettingsStore {
   val common = SettingsStoreClient(CommonSettings::class.java)
   val recentChanges = SettingsStoreClient(RecentChangesSettings::class.java)
-  val otherSettings = SettingsStoreClient(OtherSettings::class.java)
+  val other = SettingsStoreClient(OtherSettings::class.java)
+  val cardsHomePage = SettingsStoreClient(CardsHomePageSettings::class.java)
 }
 
 private val Context.dataStore by preferencesDataStore(DataStoreName.SETTINGS.name)

@@ -22,7 +22,7 @@ val moeOkHttpClient = OkHttpClient.Builder()
   .addInterceptor(CommonConfigInterceptor())
   .addInterceptor(MoeInterceptor())
   .addInterceptor(HttpLoggingInterceptor().apply {
-    this.level = HttpLoggingInterceptor.Level.BODY
+    this.level = HttpLoggingInterceptor.Level.BASIC
   })
   .build()
 

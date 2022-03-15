@@ -59,7 +59,7 @@ private suspend fun checkShortcutIntent() {
   when(shortcutAction) {
     ShortcutAction.SEARCH -> Globals.navController.navigate("search")
     ShortcutAction.CONTINUE_READ -> {
-      val readingRecord = SettingsStore.otherSettings.getValue { this.readingRecord }.first() ?: return
+      val readingRecord = SettingsStore.other.getValue { this.readingRecord }.first() ?: return
       Globals.navController.navigate(ArticleRouteArguments(
         pageName = readingRecord.pageName,
         readingRecord = readingRecord
@@ -89,7 +89,7 @@ private suspend fun checkNewVersion() = coroutineScope {
     val res = AppApi.getLastVersion()
     fun String.toVersionNumber() = this.replace(".", "").toInt()
     val currentVersion = Globals.context.packageManager.getPackageInfo(Globals.context.packageName, 0).versionName.toVersionNumber()
-    val rejectedVersion = SettingsStore.otherSettings.getValue { this.rejectedVersionName }.first()
+    val rejectedVersion = SettingsStore.other.getValue { this.rejectedVersionName }.first()
 
     if (res.version.toVersionNumber() > currentVersion && res.version != rejectedVersion) {
       Globals.commonAlertDialog.show(CommonAlertDialogProps(
@@ -98,7 +98,7 @@ private suspend fun checkNewVersion() = coroutineScope {
         secondaryButton = ButtonConfig.cancelButton(
           onClick = {
             coroutineScope.launch {
-              SettingsStore.otherSettings.setValue {
+              SettingsStore.other.setValue {
                 rejectedVersionName = res.version
               }
             }

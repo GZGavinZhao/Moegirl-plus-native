@@ -23,7 +23,7 @@ data class GetRandomPageResBean(
       val ns: Int,
       val pageid: Int,
       val pageimage: String,
-      val thumbnail: Thumbnail,
+      val thumbnail: Thumbnail? = null,
       val title: String
     ) {
       data class Thumbnail(

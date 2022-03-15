@@ -31,9 +31,6 @@ import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.imeBottomPadding
 import com.moegirlviewer.util.navigate
 import com.moegirlviewer.util.printRequestErr
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -96,7 +93,7 @@ fun ArticleScreen(
 
   val debouncedManualEffector = rememberDebouncedManualEffector<ReadingRecord>(1000) {
     scope.launch {
-      SettingsStore.otherSettings.setValue {
+      SettingsStore.other.setValue {
         this.readingRecord = it
       }
     }

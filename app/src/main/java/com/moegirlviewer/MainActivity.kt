@@ -51,6 +51,7 @@ import com.moegirlviewer.screen.login.LoginScreen
 import com.moegirlviewer.screen.notification.NotificationScreen
 import com.moegirlviewer.screen.pageRevisions.PageRevisionsRouteArguments
 import com.moegirlviewer.screen.pageRevisions.PageVersionHistoryScreen
+import com.moegirlviewer.screen.randomPages.RandomPagesScreen
 import com.moegirlviewer.screen.recentChanges.RecentChangesScreen
 import com.moegirlviewer.screen.search.SearchScreen
 import com.moegirlviewer.screen.searchResult.SearchResultRouteArguments
@@ -244,6 +245,10 @@ private fun Routes(navController: NavHostController) {
       route = ContributionRouteArguments::class.java.formattedRouteName,
       arguments = ContributionRouteArguments::class.java.formattedArguments,
     ) { ContributionScreen(it.arguments!!.toRouteArguments()) }
+
+    animatedComposable(
+      route = "randomPages",
+    ) { RandomPagesScreen() }
   }
 }
 

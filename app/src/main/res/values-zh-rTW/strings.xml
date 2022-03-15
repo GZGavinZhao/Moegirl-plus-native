@@ -101,6 +101,7 @@
     <string name="noImage">暫無圖片</string>
     <string name="noComment">暫無評論</string>
     <string name="noSummary">暫無摘要</string>
+    <string name="noIntroduction">暫無簡介</string>
     <string name="moreOptions">更多選項</string>
     <string name="showCatalog">開啟目錄</string>
     <string name="findNext">查詢下一個</string>
@@ -187,6 +188,7 @@
     <string name="loginToEdit">登入後編輯</string>
     <string name="downloadFailed">下載失敗</string>
     <string name="shareFailed">分享失敗</string>
+    <string name="moreRandomArticle">更多隨機條目</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>
