@@ -59,14 +59,14 @@ fun CustomDrawer(
   var swipableStateRestored by remember { mutableStateOf(!delayDisplayFlag) }
 
   val isLeftSide = side == CustomDrawerSide.LEFT
-  val widthPx = density.run { width.toPx() }
+  val widthPx = remember(width) { density.run { width.toPx() } }
   val anchors = remember { mapOf(
       (if (isLeftSide) -widthPx else widthPx) to 0,
       0f to 1
   ) }
   val swipeOffset = if (swipableStateRestored)
-    swipeableState.offset.value.toDp() else
-    anchors.keys.first().dp
+    swipeableState.offset.value else
+    anchors.keys.first()
   val animationProgress = if (swipableStateRestored)
     1 - swipeableState.offset.value / anchors.keys.first() else
     0f
@@ -124,6 +124,9 @@ fun CustomDrawer(
         .width(width + gestureWidth)
         .fillMaxHeight()
         .visibility(animationProgress != 0f && displayFlag)
+        .graphicsLayer(
+          translationX = swipeOffset
+        )
     ) {
       Box(
         modifier = Modifier
@@ -131,13 +134,10 @@ fun CustomDrawer(
           .swipeable(
             state = swipeableState,
             anchors = anchors,
-            thresholds = { _, _ -> FractionalThreshold(0.5f) },
+            thresholds = { _, _ -> FractionalThreshold(0.4f) },
             orientation = Orientation.Horizontal,
             resistance = null,
-            velocityThreshold = SwipeableDefaults.VelocityThreshold / 2
-          )
-          .graphicsLayer(
-            translationX = density.run { swipeOffset.toPx() }
+            velocityThreshold = SwipeableDefaults.VelocityThreshold / 2,
           ),
         contentAlignment = if (isLeftSide) Alignment.TopStart else Alignment.TopEnd
       ) {
