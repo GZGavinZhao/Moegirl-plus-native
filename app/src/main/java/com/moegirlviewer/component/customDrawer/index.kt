@@ -1,6 +1,8 @@
 package com.moegirlviewer.component.customDrawer
 
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -11,6 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -45,11 +48,10 @@ fun CustomDrawer(
   val scope = rememberCoroutineScope()
   val swipeableState = rememberSwipeableState(
     initialValue = 0,
-    animationSpec = tween(
-      durationMillis = 150,
-      delayMillis = 0,
-      easing = LinearEasing,
-    ),
+    animationSpec = spring(
+      dampingRatio = Spring.DampingRatioNoBouncy,
+      stiffness = Spring.StiffnessMediumLow
+    )
   )
   var delayDisplayFlag by rememberSaveable { mutableStateOf(false) }
   var alwaysDelayDisplayFlag by remember { mutableStateOf(false) }
@@ -121,7 +123,6 @@ fun CustomDrawer(
       modifier = Modifier
         .width(width + gestureWidth)
         .fillMaxHeight()
-        .offset(x = swipeOffset)
         .visibility(animationProgress != 0f && displayFlag)
     ) {
       Box(
@@ -130,10 +131,13 @@ fun CustomDrawer(
           .swipeable(
             state = swipeableState,
             anchors = anchors,
-            thresholds = { _, _ -> FractionalThreshold(0.4f) },
+            thresholds = { _, _ -> FractionalThreshold(0.5f) },
             orientation = Orientation.Horizontal,
             resistance = null,
-            velocityThreshold = 2.dp
+            velocityThreshold = SwipeableDefaults.VelocityThreshold / 2
+          )
+          .graphicsLayer(
+            translationX = density.run { swipeOffset.toPx() }
           ),
         contentAlignment = if (isLeftSide) Alignment.TopStart else Alignment.TopEnd
       ) {

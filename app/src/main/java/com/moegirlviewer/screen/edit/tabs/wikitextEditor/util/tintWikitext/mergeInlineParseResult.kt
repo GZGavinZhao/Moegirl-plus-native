@@ -8,10 +8,6 @@ internal fun List<ParseResult<PairWikitextMarkup>>.mergeInlineParseResult(
     val indexOfStartOverlapElement = mergedList.indexOfFirst { it.contentRange.contains(inlineParseResultItem.fullContentRange.start) }
     val indexOfEndOverlapElement = mergedList.indexOfFirst { it.contentRange.contains(inlineParseResultItem.fullContentRange.endInclusive) }
 
-    if (inlineParseResult.indexOf(inlineParseResultItem) == 5) {
-      true
-    }
-
     fun List<String>.pad(size: Int, value: String = ""): List<String> {
       val result = this.toMutableList()
       while (result.size < size) result.add(value)
