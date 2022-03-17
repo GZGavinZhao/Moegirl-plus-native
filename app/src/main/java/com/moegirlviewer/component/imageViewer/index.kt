@@ -125,7 +125,7 @@ fun ImageViewer(
       )
     }
 
-    if (imageLoaded) {
+    if (!imageLoaded) {
       Box(
         modifier = Modifier
           .matchParentSize()

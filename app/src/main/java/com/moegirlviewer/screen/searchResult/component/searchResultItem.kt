@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -30,6 +31,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.bean.SearchResultBean
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
@@ -187,30 +189,17 @@ private fun SearchContent(
             .fillMaxHeight(),
           contentAlignment = Alignment.Center
         ) {
-          var imageLoaded by rememberSaveable { mutableStateOf(false) }
-
           AsyncImage(
             modifier = Modifier
               .padding(start = 5.dp, end = 3.dp)
               .fillMaxWidth()
               .height(Float.min(120f, (100f / imageSource.width * imageSource.height)).dp),
-            model = imageSource.source,
+            model = rememberImageRequest(imageSource.source),
+            placeholder = painterResource(id = R.drawable.placeholder),
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
             alignment = Alignment.TopCenter,
-            onSuccess = { imageLoaded = true }
           )
-
-          if (imageLoaded) {
-            AsyncImage(
-              modifier = Modifier
-                .padding(start = 5.dp, end = 3.dp)
-                .fillMaxWidth()
-                .height(120.dp),
-              model = R.drawable.placeholder,
-              contentDescription = null
-            )
-          }
         }
       }
     }
