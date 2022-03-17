@@ -4,9 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -17,25 +16,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.AsyncImage
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.moegirlviewer.R
+import com.moegirlviewer.api.page.PageApi
+import com.moegirlviewer.api.page.bean.GetRandomPageResBean
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.request.MoeRequestException
+import com.moegirlviewer.screen.home.HomeScreenCardState
 import com.moegirlviewer.screen.home.HomeScreenModel
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.gotoArticlePage
+import com.moegirlviewer.util.printRequestErr
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun RandomPageCard() {
-  val model: HomeScreenModel = hiltViewModel()
+fun RandomPageCard(
+  state: RandomPageCardState
+) {
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
-  val data = model.randomPageData.body
+  var imageLoaded by rememberSaveable { mutableStateOf(false) }
 
   CardContainer(
     icon = ImageVector.vectorResource(R.drawable.dice_5),
@@ -46,36 +54,29 @@ fun RandomPageCard() {
         Globals.navController.navigate("randomPages")
       }
     ) },
-    loadStatus = model.randomPageData.status,
+    loadStatus = state.status,
     onClick = {
-      if (model.randomPageData.status == LoadStatus.SUCCESS) gotoArticlePage(data!!.title)
+      if (state.status == LoadStatus.SUCCESS) gotoArticlePage(state.pageData!!.title)
     },
     onReload = {
-      scope.launch { model.loadRandomPageData() }
+      scope.launch { state.reload() }
     }
   ) {
-    if (data != null) {
+    if (state.pageData != null) {
       Column(
         modifier = Modifier
           .fillMaxWidth()
       ) {
-        if (data.thumbnail != null) {
-          val imagePainter = rememberImagePainter(data.thumbnail.source) {
-            crossfade(true)
-            this.placeholder(R.drawable.placeholder)
-            this.error(R.drawable.placeholder)
-          }
-
-          Image(
+        if (state.pageData!!.thumbnail != null) {
+          AsyncImage(
             modifier = Modifier
               .fillMaxWidth()
               .height(300.dp),
-            painter = imagePainter,
+            model = rememberImageRequest(state.pageData!!.thumbnail!!.source),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            alignment = if (imagePainter.state is ImagePainter.State.Success)
-              Alignment.TopCenter else
-              Alignment.Center
+            alignment = if (imageLoaded) Alignment.TopCenter else Alignment.Center,
+            onSuccess = { imageLoaded = true }
           )
         } else {
           Box(
@@ -99,16 +100,16 @@ fun RandomPageCard() {
             .fillMaxWidth()
         ) {
           StyledText(
-            text = data.title,
+            text = state.pageData!!.title,
             fontSize = 20.sp
           )
 
           StyledText(
             modifier = Modifier
               .padding(top = 10.dp),
-            text = if (data.extract != "") data.extract else stringResource(id = R.string.noIntroduction),
+            text = if (state.pageData!!.extract != "") state.pageData!!.extract else stringResource(id = R.string.noIntroduction),
             fontSize = 15.sp,
-            color = if (data.extract != "") themeColors.text.primary else themeColors.text.tertiary
+            color = if (state.pageData!!.extract != "") themeColors.text.primary else themeColors.text.tertiary
           )
         }
       }
@@ -118,6 +119,23 @@ fun RandomPageCard() {
           .fillMaxWidth()
           .height(350.dp)
       )
+    }
+  }
+}
+
+class RandomPageCardState : HomeScreenCardState() {
+  var pageData by mutableStateOf<GetRandomPageResBean.Query.MapValue?>(null)
+  var status by mutableStateOf(LoadStatus.INITIAL)
+
+  override suspend fun reload() {
+    status = LoadStatus.LOADING
+    try {
+      val res = PageApi.getRandomPage()
+      pageData = res.query.pages.values.first()
+      status = LoadStatus.SUCCESS
+    } catch (e: MoeRequestException) {
+      status = LoadStatus.FAIL
+      printRequestErr(e, "加载随机页面卡片数据失败")
     }
   }
 }

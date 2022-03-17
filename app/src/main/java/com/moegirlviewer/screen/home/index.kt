@@ -33,6 +33,7 @@ import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.drawer.CommonDrawer
 import com.moegirlviewer.screen.home.component.RandomPageCard
+import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCard
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CardsHomePageSettings
@@ -170,10 +171,6 @@ fun ComposedTopAppBar(
 private fun ComposedCardsHomePage() {
   val model: HomeScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
-  val themeColors = MaterialTheme.colors
-  val cardsHomePageSettings by SettingsStore.cardsHomePage.getValue { this }.collectAsState(
-    initial = remember { CardsHomePageSettings() }
-  )
 
   LaunchedEffect(model.cardsDataStatus) {
     model.swipeRefreshState.isRefreshing = model.cardsDataStatus == LoadStatus.LOADING
@@ -194,9 +191,8 @@ private fun ComposedCardsHomePage() {
       modifier = Modifier
         .verticalScroll(rememberScrollState())
     ) {
-      if (cardsHomePageSettings.randomPage) {
-        RandomPageCard()
-      }
+      RandomPageCard(model.randomPageCardState)
+      NewPagesCard(model.newPagesCardState)
     }
   }
 }

@@ -3,7 +3,8 @@ package com.moegirlviewer.screen.splash
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -11,12 +12,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.moegirlviewer.R
-import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.util.isMoegirl
 
 // 这个页面本身不在路由中
@@ -31,11 +30,11 @@ fun SplashScreen(
       .alpha(state.contentAlpha.value),
     contentAlignment = Alignment.BottomCenter
   ) {
-    Image(
+    AsyncImage(
       modifier = Modifier
         .fillMaxSize()
         .scale(state.imageScale.value),
-      painter = state.splashImage.composePainter(),
+      model = state.splashImage.imageData,
       contentDescription = null,
       contentScale = ContentScale.Crop
     )

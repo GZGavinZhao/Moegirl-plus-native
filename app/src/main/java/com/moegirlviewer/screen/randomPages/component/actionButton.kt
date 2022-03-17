@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.moegirlviewer.R
 import com.moegirlviewer.util.Globals
 import kotlinx.coroutines.launch
@@ -117,10 +117,7 @@ fun RandomPageActionButton(
             RotationAnimationType.Y -> Modifier.graphicsLayer(rotationY = rotationAnimationValue.value)
             RotationAnimationType.Z -> Modifier.graphicsLayer(rotationZ = rotationAnimationValue.value)
           }),
-//          .graphicsLayer(
-//            rotationY = rotationAnimationValue.value,
-//          ),
-        painter = rememberImagePainter(usingIcon),
+        painter = rememberAsyncImagePainter(usingIcon),
         contentDescription = null,
         tint = themeColors.onPrimary
       )

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.moegirlviewer.R
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
@@ -56,11 +56,11 @@ fun BrowsingHistoryScreenItem(
           )
       ) {
         if (record.imgUrl != null) {
-          Image(
+          AsyncImage(
             modifier = Modifier
               .width(70.dp)
               .height(90.dp),
-            painter = rememberImagePainter(record.imgUrl),
+            model = record.imgUrl,
             contentDescription = null,
             contentScale = ContentScale.Fit
           )

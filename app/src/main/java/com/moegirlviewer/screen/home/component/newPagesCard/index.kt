@@ -1,0 +1,124 @@
+package com.moegirlviewer.screen.home.component.newPagesCard
+
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FiberNew
+import androidx.compose.material.icons.filled.Subject
+import androidx.compose.material.icons.filled.ViewColumn
+import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.moegirlviewer.R
+import com.moegirlviewer.api.editingRecord.EditingRecordApi
+import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
+import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.request.MoeRequestException
+import com.moegirlviewer.screen.home.HomeScreenCardState
+import com.moegirlviewer.screen.home.component.CardContainer
+import com.moegirlviewer.screen.home.component.newPagesCard.component.ListLayoutNewPages
+import com.moegirlviewer.screen.home.component.newPagesCard.component.TextLayoutNewPages
+import com.moegirlviewer.store.SettingsStore
+import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.gotoArticlePage
+import com.moegirlviewer.util.noRippleClickable
+import com.moegirlviewer.util.printRequestErr
+import kotlinx.coroutines.launch
+import kotlin.math.min
+
+@Composable
+fun NewPagesCard(
+  state: NewPagesCardState
+) {
+  val themeColors = MaterialTheme.colors
+  val scope = rememberCoroutineScope()
+  val viewMode by SettingsStore.cardsHomePage.getValue { newPagesCardViewMode }.collectAsState(
+    initial = NewPagesCardViewMode.LIST
+  )
+
+  CardContainer(
+    icon = Icons.Filled.FiberNew,
+    title = stringResource(id = R.string.newArticles),
+    minHeight = 100.dp,
+    loadStatus = when {
+      state.status == LoadStatus.INIT_LOADING -> LoadStatus.INIT_LOADING
+      state.status == LoadStatus.FAIL && state.newPageList.isEmpty() -> LoadStatus.FAIL
+      else -> null
+    },
+    rightContent = {
+      Row() {
+        for (item in state.viewModes) {
+          Icon(
+            modifier = Modifier
+              .size(30.dp)
+              .padding(horizontal = 2.5.dp)
+              .noRippleClickable {
+                scope.launch {
+                  SettingsStore.cardsHomePage.setValue { newPagesCardViewMode = item.key }
+                }
+              },
+            imageVector = item.value,
+            contentDescription = null,
+            tint = if (viewMode == item.key) themeColors.secondary else themeColors.text.tertiary
+          )
+        }
+      }
+    }
+  ) {
+    when(viewMode) {
+      NewPagesCardViewMode.TEXT -> TextLayoutNewPages(pageList = state.newPageList)
+      NewPagesCardViewMode.LIST -> ListLayoutNewPages(pageList = state.newPageList)
+      NewPagesCardViewMode.COLUMN -> TODO()
+    }
+  }
+}
+
+class NewPagesCardState : HomeScreenCardState() {
+  val viewModes = mapOf(
+    NewPagesCardViewMode.TEXT to Icons.Filled.Subject,
+    NewPagesCardViewMode.LIST to Icons.Filled.ViewList,
+    NewPagesCardViewMode.COLUMN to Icons.Filled.ViewColumn
+  )
+  var newPageList by mutableStateOf(emptyList<NewPagesBean.Query.MapValue>())
+  var status by mutableStateOf(LoadStatus.INITIAL)
+  var continueKey: String? = null
+
+  suspend fun loadNext(reload: Boolean = false) {
+    if (LoadStatus.isCannotLoad(status)) return
+    if (reload) {
+      status = LoadStatus.INITIAL
+      continueKey = null
+    }
+    status = if (status == LoadStatus.INITIAL) LoadStatus.INIT_LOADING else LoadStatus.LOADING
+    try {
+      val res = EditingRecordApi.getNewPages(continueKey)
+      newPageList = (if (reload) emptyList() else newPageList) + res.query.pages
+        .filter { it.key != -1 }
+        .values.sortedBy { it.pageid }
+      continueKey = res.`continue`.grccontinue
+      status = LoadStatus.SUCCESS
+    } catch (e: MoeRequestException) {
+      printRequestErr(e, "加载最新页面卡片数据失败")
+      status = LoadStatus.FAIL
+    }
+  }
+
+  override suspend fun reload() = loadNext(true)
+}
+
+enum class NewPagesCardViewMode {
+  TEXT,
+  LIST,
+  COLUMN
+}

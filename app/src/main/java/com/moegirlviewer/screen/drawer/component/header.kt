@@ -1,6 +1,5 @@
 package com.moegirlviewer.screen.drawer.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -16,10 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.RippleColorScope
@@ -68,16 +66,11 @@ fun CommonDrawerHeader(
       ,
       shape = CircleShape,
     ) {
-      Image(
+      AsyncImage(
         modifier = Modifier
           .width(avatarSize.dp)
           .height(avatarSize.dp),
-        painter = (
-          if (isLoggedIn)
-            rememberImagePainter(Constants.avatarUrl + userName)
-          else
-            painterResource(R.drawable.akari)
-          ),
+        model = if (isLoggedIn) Constants.avatarUrl + userName else R.drawable.akari,
         contentDescription = null
       )
     }

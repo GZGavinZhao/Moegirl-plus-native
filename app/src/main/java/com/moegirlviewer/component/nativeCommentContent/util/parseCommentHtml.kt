@@ -1,14 +1,10 @@
 package com.moegirlviewer.component.nativeCommentContent.util
 
-import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
@@ -16,12 +12,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.moegirlviewer.R
-import com.moegirlviewer.component.Center
-import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.util.Globals
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
@@ -89,34 +82,17 @@ fun parseCommentHtml(
                   placeholderVerticalAlign = PlaceholderVerticalAlign.Bottom
                 ),
                 children = {
-                  val themeColors = MaterialTheme.colors
-                  val painter = rememberImagePainter(imageUrl)
-
                   Box(
                     modifier = Modifier
                       .fillMaxSize()
                   ) {
-                    Image(
+                    AsyncImage(
                       modifier = Modifier
                         .fillMaxSize(),
-                      painter = painter,
-                      contentDescription = null
+                      model = imageUrl,
+                      contentDescription = null,
+                      placeholder = painterResource(R.drawable.placeholder)
                     )
-
-                    if (painter.state !is ImagePainter.State.Success) {
-                      Box(
-                        modifier = Modifier
-                          .fillMaxSize()
-                          .background(themeColors.surface)
-                      ) {
-                        Image(
-                          modifier = Modifier
-                            .fillMaxSize(),
-                          painter = painterResource(id = R.drawable.placeholder),
-                          contentDescription = null
-                        )
-                      }
-                    }
                   }
                 }
               )

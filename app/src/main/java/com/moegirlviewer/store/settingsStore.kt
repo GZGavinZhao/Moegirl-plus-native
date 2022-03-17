@@ -6,7 +6,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.moegirlviewer.DataStoreName
 import com.moegirlviewer.screen.article.ReadingRecord
+import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCardViewMode
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.ProguardIgnore
 import com.moegirlviewer.util.splashImageList
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -46,8 +48,9 @@ data class RecentChangesSettings(
   var isWatchListMode: Boolean = false
 ) : Settings()
 
+//  var randomPage: Boolean = true,
 data class CardsHomePageSettings(
-  var randomPage: Boolean = true,
+  var newPagesCardViewMode: NewPagesCardViewMode = NewPagesCardViewMode.LIST
 ) : Settings()
 
 // 一些杂项，基本不算是设置，只是用来记录的持久化变量

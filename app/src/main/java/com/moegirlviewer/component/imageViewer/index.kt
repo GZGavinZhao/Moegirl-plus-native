@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,7 +20,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import coil.compose.ImagePainter
+import coil.request.ImageRequest
 import com.moegirlviewer.util.consumptionOptionalDetectTransformGestures
 import com.moegirlviewer.util.noRippleClickable
 import kotlinx.coroutines.launch
@@ -28,7 +31,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ImageViewer(
   modifier: Modifier = Modifier,
-  painter: ImagePainter,
+  imageRequest: ImageRequest,
   scaleRange: ClosedRange<Float> = 0.8f..2.5f,
   progressIndicator: @Composable () -> Unit = {
     DefaultImageViewerProgressIndicator()
@@ -41,6 +44,7 @@ fun ImageViewer(
   val translateY = remember { Animatable(0f) }
   val scale = remember { Animatable(1f) }
   var imageHeight by remember { mutableStateOf(0) }
+  var imageLoaded by remember { mutableStateOf(false) }
 
   Box(
     modifier = modifier
@@ -104,7 +108,7 @@ fun ImageViewer(
         },
       contentAlignment = Alignment.Center
     ) {
-      Image(
+      AsyncImage(
         modifier = Modifier
           .fillMaxWidth()
           .graphicsLayer(
@@ -115,12 +119,13 @@ fun ImageViewer(
           )
           .onGloballyPositioned { imageHeight = it.size.height },
         contentDescription = null,
-        painter = painter,
+        model = imageRequest,
         contentScale = ContentScale.FillWidth,
+        onSuccess = { imageLoaded = true }
       )
     }
 
-    if (painter.state !is ImagePainter.State.Success) {
+    if (imageLoaded) {
       Box(
         modifier = Modifier
           .matchParentSize()

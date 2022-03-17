@@ -23,11 +23,13 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.LocalImageLoader
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.moegirlviewer.R
 import com.moegirlviewer.component.imageViewer.ImageViewer
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.noRippleClickable
 import kotlinx.coroutines.launch
 
@@ -42,9 +44,12 @@ fun ImageViewerScreen(
   val model: ImageViewerScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
   val configuration = LocalConfiguration.current
-  val imagePainters = arguments.images.map { rememberImagePainter(it.fileUrl) {
-    memoryCacheKey(it.fileUrl)
-  } }
+  val imagePainters = arguments.images.map {
+    ImageRequest.Builder(Globals.context)
+      .data(it.fileUrl)
+      .memoryCacheKey(it.fileUrl)
+      .build()
+  }
 
   LaunchedEffect(true) {
     model.routeArguments = arguments
@@ -65,7 +70,7 @@ fun ImageViewerScreen(
         modifier = Modifier
           .fillMaxSize(),
         scaleRange = 0.8f..4f,
-        painter = imagePainters[currentIndex]
+        imageRequest = imagePainters[currentIndex]
       )
     }
 

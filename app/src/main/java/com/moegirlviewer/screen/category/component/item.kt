@@ -1,6 +1,5 @@
 package com.moegirlviewer.screen.category.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.moegirlviewer.R
 import com.moegirlviewer.api.category.bean.CategorySearchResultBean
@@ -75,12 +74,12 @@ fun CategoryScreenItem(
       }
 
       if (thumbnail != null) {
-        Image(
+        AsyncImage(
           modifier = Modifier
             .width(120.dp)
             .height(max(150f, (120f / thumbnail.width * thumbnail.height)).dp)
           ,
-          painter = rememberImagePainter(thumbnail.source),
+          model = thumbnail.source,
           contentDescription = null,
         )
       } else {

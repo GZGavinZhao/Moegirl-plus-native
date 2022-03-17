@@ -189,6 +189,7 @@
     <string name="downloadFailed">下載失敗</string>
     <string name="shareFailed">分享失敗</string>
     <string name="moreRandomArticle">更多隨機條目</string>
+    <string name="newArticles">最新條目</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>

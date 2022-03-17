@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.moegirlviewer.R
@@ -223,11 +223,11 @@ private fun ImageItem(
         color = themeColors.secondary
       )
   ) {
-    Image(
+    AsyncImage(
       modifier = Modifier
         .fillMaxSize()
         .clickable { onClick() },
-      painter = splashImage.composePainter(),
+      model = splashImage.imageData,
       contentDescription = null,
       contentScale = ContentScale.Crop
     )

@@ -271,7 +271,7 @@ private suspend fun ComponentActivity.withSplashScreen(
     }!!
   } else {
     val image = HmoeSplashImageManager.getRandomImage()
-    SplashImage.onlyUseInSplashScreen { rememberImagePainter(image) }
+    SplashImage.onlyUseInSplashScreen(image)
   }
 
   val mainWithSplashView = ComposeWithSplashScreenView(

@@ -16,12 +16,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -30,10 +30,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.theme.Shapes
 import com.moegirlviewer.util.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
@@ -80,11 +77,11 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
           .clip(RectangleShape),
         contentAlignment = Alignment.BottomCenter
       ) {
-        Image(
+        AsyncImage(
           modifier = Modifier
             .fillMaxSize()
             .scale(model.imageScale.value),
-          painter = reversedSplashImageList[currentPage].composePainter(),
+          model = reversedSplashImageList[currentPage].imageData,
           contentDescription = null,
           contentScale = ContentScale.Crop
         )

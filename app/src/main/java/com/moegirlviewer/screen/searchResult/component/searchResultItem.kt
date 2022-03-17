@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -24,7 +24,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.AsyncImage
 import coil.compose.ImagePainter
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.bean.SearchResultBean
@@ -179,34 +181,33 @@ private fun SearchContent(
       )
 
       if (imageSource != null) {
-        val painter = rememberImagePainter(imageSource.source) {
-          crossfade(true)
-        }
-
         Box(
           modifier = Modifier
             .width(100.dp)
             .fillMaxHeight(),
           contentAlignment = Alignment.Center
         ) {
-          Image(
+          var imageLoaded by rememberSaveable { mutableStateOf(false) }
+
+          AsyncImage(
             modifier = Modifier
               .padding(start = 5.dp, end = 3.dp)
               .fillMaxWidth()
               .height(Float.min(120f, (100f / imageSource.width * imageSource.height)).dp),
-            painter = painter,
+            model = imageSource.source,
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
-            alignment = Alignment.TopCenter
+            alignment = Alignment.TopCenter,
+            onSuccess = { imageLoaded = true }
           )
 
-          if (painter.state !is ImagePainter.State.Success) {
-            Image(
+          if (imageLoaded) {
+            AsyncImage(
               modifier = Modifier
                 .padding(start = 5.dp, end = 3.dp)
                 .fillMaxWidth()
                 .height(120.dp),
-              painter = rememberImagePainter(R.drawable.placeholder),
+              model = R.drawable.placeholder,
               contentDescription = null
             )
           }

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.component.ReloadButton
@@ -29,10 +30,12 @@ import com.moegirlviewer.util.noRippleClickable
 fun CardContainer(
   icon: ImageVector,
   title: String,
+  minHeight: Dp = 300.dp,
   moreLink: MoreLink? = null,
-  loadStatus: LoadStatus,
-  onClick: () -> Unit,
-  onReload: () -> Unit,
+  loadStatus: LoadStatus? = null,
+  onClick: (() -> Unit)? = null,
+  onReload: (() -> Unit)? = null,
+  rightContent: (@Composable () -> Unit)? = null,
   content: @Composable () -> Unit,
 ) {
   val themeColors = MaterialTheme.colors
@@ -79,16 +82,21 @@ fun CardContainer(
           fontSize = 16.sp,
           fontWeight = FontWeight.Bold
         )
+      } else {
+        rightContent?.invoke()
       }
     }
 
     Card(
       modifier = Modifier
+        .defaultMinSize(
+          minHeight = minHeight
+        )
         .padding(top = 15.dp)
         .fillMaxWidth(),
       elevation = 2.dp,
       shape = RoundedCornerShape(10.dp),
-      onClick = onClick
+      onClick = { onClick?.invoke() }
     ) {
       Box(
         modifier = Modifier
@@ -96,29 +104,31 @@ fun CardContainer(
       ) {
         content()
 
-        this@Column.AnimatedVisibility(
-          modifier = Modifier
-            .matchParentSize(),
-          visible = loadStatus != LoadStatus.SUCCESS,
-          enter = fadeIn(),
-          exit = fadeOut()
-        ) {
-          Box(
+        if (loadStatus != null) {
+          this@Column.AnimatedVisibility(
             modifier = Modifier
-              .matchParentSize()
-              .background(themeColors.background.copy(alpha = 0.8f)),
-            contentAlignment = Alignment.Center
+              .matchParentSize(),
+            visible = loadStatus != LoadStatus.SUCCESS,
+            enter = fadeIn(),
+            exit = fadeOut()
           ) {
-            if (loadStatus == LoadStatus.LOADING) {
-              StyledCircularProgressIndicator()
-            }
+            Box(
+              modifier = Modifier
+                .matchParentSize()
+                .background(themeColors.background.copy(alpha = 0.8f)),
+              contentAlignment = Alignment.Center
+            ) {
+              if (loadStatus == LoadStatus.LOADING || loadStatus == LoadStatus.INIT_LOADING) {
+                StyledCircularProgressIndicator()
+              }
 
-            if (loadStatus == LoadStatus.FAIL) {
-              ReloadButton(
-                modifier = Modifier
-                  .matchParentSize(),
-                onClick = onReload
-              )
+              if (loadStatus == LoadStatus.FAIL) {
+                ReloadButton(
+                  modifier = Modifier
+                    .matchParentSize(),
+                  onClick = { onReload?.invoke() }
+                )
+              }
             }
           }
         }

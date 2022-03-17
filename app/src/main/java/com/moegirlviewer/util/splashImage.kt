@@ -2,20 +2,19 @@ package com.moegirlviewer.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import coil.compose.rememberImagePainter
 import com.moegirlviewer.R
 
 open class SplashImage(
-  val composePainter: @Composable () -> Painter,
+  val imageData: Any,
   val title: String,
   val author: String,
 ) {
   companion object {
     fun onlyUseInSplashScreen(
-      composePainter: @Composable () -> Painter
+      imageData: Any
     ) = SplashImage(
-      composePainter = composePainter,
+      imageData = imageData,
       title = "",
       author = ""
     )
@@ -29,7 +28,7 @@ class MoegirlSplashImage(
   val key: String,
   val season: String,
 ) : SplashImage(
-  composePainter = { rememberImagePainter(resId) },
+  imageData = resId,
   title = title,
   author = author
 )

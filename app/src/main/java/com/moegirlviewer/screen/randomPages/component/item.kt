@@ -1,18 +1,16 @@
 package com.moegirlviewer.screen.randomPages.component
 
-import android.util.Log
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -22,23 +20,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.moegirlviewer.R
 import com.moegirlviewer.api.page.bean.GetRandomPageResBean
 import com.moegirlviewer.component.styled.StyledText
-import com.moegirlviewer.screen.randomPages.RandomPagesScreenModal
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.noRippleClickable
-import com.moegirlviewer.util.printDebugLog
-import com.moegirlviewer.util.toDp
-import kotlinx.coroutines.coroutineScope
 import java.lang.Float.max
-import java.lang.Float.min
 
 @OptIn(ExperimentalCoilApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -128,22 +119,17 @@ internal fun BoxScope.RandomPageItem(
           .fillMaxWidth()
       ) {
         if (state.imageUrl != null) {
-          val imagePainter = rememberImagePainter(state.imageUrl) {
-            crossfade(true)
-            this.placeholder(R.drawable.placeholder)
-            this.error(R.drawable.placeholder)
-          }
+          var imageLoaded by rememberSaveable { mutableStateOf(false) }
 
-          Image(
+          AsyncImage(
             modifier = Modifier
               .fillMaxWidth()
               .height(300.dp),
-            painter = imagePainter,
+            model = state.imageUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            alignment = if (imagePainter.state is ImagePainter.State.Success)
-              Alignment.TopCenter else
-              Alignment.Center
+            alignment = if (imageLoaded) Alignment.TopCenter else Alignment.Center,
+            onSuccess = { imageLoaded = true }
           )
         } else {
           Box(
