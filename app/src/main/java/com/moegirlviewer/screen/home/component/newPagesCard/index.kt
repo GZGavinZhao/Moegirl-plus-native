@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.home.component.newPagesCard
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.HomeScreenCardState
 import com.moegirlviewer.screen.home.component.CardContainer
+import com.moegirlviewer.screen.home.component.newPagesCard.component.ColumnLayoutNewPages
 import com.moegirlviewer.screen.home.component.newPagesCard.component.ListLayoutNewPages
 import com.moegirlviewer.screen.home.component.newPagesCard.component.TextLayoutNewPages
 import com.moegirlviewer.store.SettingsStore
@@ -50,7 +52,7 @@ fun NewPagesCard(
   CardContainer(
     icon = Icons.Filled.FiberNew,
     title = stringResource(id = R.string.newArticles),
-    minHeight = 100.dp,
+    minHeight = 150.dp,
     loadStatus = when {
       state.status == LoadStatus.INIT_LOADING -> LoadStatus.INIT_LOADING
       state.status == LoadStatus.FAIL && state.newPageList.isEmpty() -> LoadStatus.FAIL
@@ -61,7 +63,7 @@ fun NewPagesCard(
         for (item in state.viewModes) {
           Icon(
             modifier = Modifier
-              .size(30.dp)
+              .size(34.dp)
               .padding(horizontal = 2.5.dp)
               .noRippleClickable {
                 scope.launch {
@@ -76,10 +78,12 @@ fun NewPagesCard(
       }
     }
   ) {
-    when(viewMode) {
-      NewPagesCardViewMode.TEXT -> TextLayoutNewPages(pageList = state.newPageList)
-      NewPagesCardViewMode.LIST -> ListLayoutNewPages(pageList = state.newPageList)
-      NewPagesCardViewMode.COLUMN -> TODO()
+    Crossfade(targetState = viewMode) {
+      when(it) {
+        NewPagesCardViewMode.TEXT -> TextLayoutNewPages(pageList = state.newPageList)
+        NewPagesCardViewMode.LIST -> ListLayoutNewPages(pageList = state.newPageList)
+        NewPagesCardViewMode.COLUMN -> ColumnLayoutNewPages(pageList = state.newPageList)
+      }
     }
   }
 }

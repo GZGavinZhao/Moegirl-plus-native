@@ -7,13 +7,15 @@ import coil.request.ImageRequest
 
 @Composable
 fun rememberImageRequest(
-  data: Any?
+  data: Any?,
+  builder: (ImageRequest.Builder.() -> Unit)? = null
 ): ImageRequest {
   val context = LocalContext.current
   return remember(data) {
     ImageRequest.Builder(context)
       .data(data)
       .crossfade(true)
+      .apply { builder?.invoke(this) }
       .build()
   }
 }

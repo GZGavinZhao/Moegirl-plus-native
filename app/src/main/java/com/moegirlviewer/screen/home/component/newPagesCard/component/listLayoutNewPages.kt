@@ -82,7 +82,7 @@ private fun Item(
       model = rememberImageRequest(imageUrl ?: R.drawable.moemoji),
       placeholder = painterResource(id = R.drawable.placeholder),
       contentDescription = null,
-      contentScale = ContentScale.Crop,
+      contentScale = if (imageUrl != null) ContentScale.Crop else ContentScale.Inside,
       alignment = if (imageUrl != null) Alignment.TopCenter else Alignment.Center
     )
 

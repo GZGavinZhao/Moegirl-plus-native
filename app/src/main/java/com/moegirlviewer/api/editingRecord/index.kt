@@ -106,7 +106,7 @@ object EditingRecordApi {
       this["continue"] = "grccontinue||"
       this["generator"] = "recentchanges"
       this["piprop"] = "thumbnail"
-      this["pithumbsize"] = "200"
+      this["pithumbsize"] = "500"
       this["pilimit"] = "20"
       this["exsentences"] = "10"
       this["exlimit"] = "20"
