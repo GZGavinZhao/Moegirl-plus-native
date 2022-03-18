@@ -8,6 +8,7 @@ object CategoryApi {
   suspend fun search(
     categoryName: String,
     thumbSize: Int,
+    sort: CategoryApiPagesSort = CategoryApiPagesSort.DESCENDING,
     continueKey: CategorySearchResultBean.Continue? = null
   ) = moeRequest(
     entity = CategorySearchResultBean::class.java,
@@ -23,6 +24,8 @@ object CategoryApi {
       this["gcmlimit"] = "50"
       this["pithumbsize"] = thumbSize
       this["clshow"] = "!hidden"
+      this["gcmdir"] = sort.sortDir
+      this["gcmsort"] = sort.sortMethod
       if (continueKey != null) {
         if (continueKey.`continue` != null) this["continue"] = continueKey.`continue`
         if (continueKey.gcmcontinue != null) this["gcmcontinue"] = continueKey.gcmcontinue
@@ -47,4 +50,14 @@ object CategoryApi {
       if (continueKey != null) this["cmcontinue"] = continueKey
     }
   )
+}
+
+enum class CategoryApiPagesSort(
+  val sortMethod: String,
+  val sortDir: String
+) {
+  ASCENDING("sortkey", "ascending"),
+  DESCENDING("sortkey", "descending"),
+  NEWER("timestamp", "newer"),
+  OLDER("timestamp", "older")
 }
