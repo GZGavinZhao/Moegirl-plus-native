@@ -19,9 +19,11 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
+import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
@@ -32,7 +34,7 @@ import com.moegirlviewer.util.gotoArticlePage
 fun ListLayoutNewPages(
   pageList: List<NewPagesBean.Query.MapValue>
 ) {
-  val pagerState = rememberPagerState(0)
+  val pagerState = rememberFromMemory("pagerState") { PagerState(0) }
   val chunkedPageList = remember(pageList) { pageList.chunked(3) }
 
   HorizontalPager(

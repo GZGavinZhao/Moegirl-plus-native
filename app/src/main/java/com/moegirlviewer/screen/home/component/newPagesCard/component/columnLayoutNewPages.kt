@@ -1,10 +1,7 @@
 package com.moegirlviewer.screen.home.component.newPagesCard.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
+import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.background2
@@ -29,10 +27,12 @@ import com.moegirlviewer.util.gotoArticlePage
 fun ColumnLayoutNewPages(
   pageList: List<NewPagesBean.Query.MapValue>
 ) {
+  val scrollState = rememberFromMemory("scrollState") { ScrollState(0) }
+
   Row(
     modifier = Modifier
       .padding(10.dp)
-      .horizontalScroll(rememberScrollState())
+      .horizontalScroll(scrollState)
   ) {
     for ((index, item) in pageList.withIndex()) {
       Item(
@@ -89,12 +89,14 @@ private fun Item(
 
     StyledText(
       modifier = Modifier
-        .padding(top = 5.dp),
+        .padding(top = 5.dp)
+        .width(120.dp),
       text = title,
       fontSize = 13.sp,
       color = themeColors.secondary,
       maxLines = 2,
-      overflow = TextOverflow.Ellipsis
+      overflow = TextOverflow.Ellipsis,
+      textAlign = TextAlign.Center
     )
   }
 }
