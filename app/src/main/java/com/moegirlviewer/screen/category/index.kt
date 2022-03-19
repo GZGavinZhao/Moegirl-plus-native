@@ -18,6 +18,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,10 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.OnSwipeLoading
-import com.moegirlviewer.component.BackButton
-import com.moegirlviewer.component.ListWithMovableHeader
-import com.moegirlviewer.component.RippleColorScope
-import com.moegirlviewer.component.ScrollLoadListFooter
+import com.moegirlviewer.component.*
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.article.ArticleRouteArguments
@@ -84,7 +82,7 @@ fun CategoryScreen(
           categoryName = arguments.categoryName,
           categories = if (arguments.parentCategories != null)
             arguments.parentCategories + listOf(arguments.categoryName) else
-            emptyList()
+            emptyList(),
         )
       }
     ) {
@@ -197,6 +195,14 @@ private fun ComposedHeader(
           color = themeColors.onPrimary
         )
       },
+      actions = {
+        AppHeaderIcon(
+          image = Icons.Filled.Search,
+          onClick = {
+            Globals.navController.navigate("search")
+          }
+        )
+      }
     )
 
     if (categories.isNotEmpty()) {
