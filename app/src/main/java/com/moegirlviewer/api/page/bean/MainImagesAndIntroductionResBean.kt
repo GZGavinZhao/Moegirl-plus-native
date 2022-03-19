@@ -1,13 +1,19 @@
 package com.moegirlviewer.api.page.bean
 
-data class MainImagesResBean(
+data class MainImagesAndIntroductionResBean(
   val batchcomplete: String,
+  val limits: Limits,
   val query: Query
 ) {
+  data class Limits(
+    val extracts: Int
+  )
+
   data class Query(
     val pages: Map<Int, MapValue>
   ) {
     data class MapValue(
+      val extract: String,
       val ns: Int,
       val pageid: Int,
       val pageimage: String? = null,

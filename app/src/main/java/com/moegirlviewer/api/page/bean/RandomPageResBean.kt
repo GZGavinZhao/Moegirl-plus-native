@@ -1,6 +1,6 @@
 package com.moegirlviewer.api.page.bean
 
-data class GetRandomPageResBean(
+data class RandomPageResBean(
   val batchcomplete: String,
   val `continue`: Continue,
   val limits: Limits,

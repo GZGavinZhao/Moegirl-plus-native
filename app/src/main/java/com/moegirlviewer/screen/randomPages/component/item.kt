@@ -23,7 +23,7 @@ import androidx.compose.ui.zIndex
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import com.moegirlviewer.R
-import com.moegirlviewer.api.page.bean.GetRandomPageResBean
+import com.moegirlviewer.api.page.bean.RandomPageResBean
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.background2
@@ -182,7 +182,7 @@ class RandomPageItemState {
       stiffness = Spring.StiffnessMediumLow * 2
     )
   )
-  private var viewData: GetRandomPageResBean.Query.MapValue? by mutableStateOf(null)
+  private var viewData: RandomPageResBean.Query.MapValue? by mutableStateOf(null)
   var appearAnimationValue = Animatable(0f)
   var status by mutableStateOf(RandomPageItemStatus.INITIAL)
   var otherState: RandomPageItemState? by mutableStateOf(null)
@@ -228,7 +228,7 @@ class RandomPageItemState {
     status = RandomPageItemStatus.RISEN
   }
 
-  suspend fun reset(viewData: GetRandomPageResBean.Query.MapValue?) {
+  suspend fun reset(viewData: RandomPageResBean.Query.MapValue?) {
     otherSwipeProgress = 0f
     status = RandomPageItemStatus.INITIAL
     this.viewData = viewData

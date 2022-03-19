@@ -56,7 +56,7 @@ suspend fun getRecommendationPages(
     .query?.pages?.values?.map { it.title } ?: emptyList()
 
   val randomPagesOfMaximalCategory = pagesOfMaximalCategory.randomList(5)
-  val randomPagesWithMainImage = PageApi.getMainImage(
+  val randomPagesWithMainImage = PageApi.getMainImageAndIntroduction(
     *randomPagesOfMaximalCategory.toTypedArray(),
     size = Globals.activity.resources.displayMetrics.widthPixels
   )
@@ -65,6 +65,7 @@ suspend fun getRecommendationPages(
       RecommendationPage(
         pageName = it.title,
         imageUrl = it.thumbnail?.source,
+        introduction = it.extract
       )
     }
 
@@ -85,5 +86,6 @@ class RecommendationPagesResult(
 
 class RecommendationPage(
   val pageName: String,
-  val imageUrl: String?
+  val imageUrl: String?,
+  val introduction: String
 )

@@ -5,10 +5,8 @@ import com.moegirlviewer.api.page.bean.*
 import com.moegirlviewer.request.MoeRequestMethod
 import com.moegirlviewer.request.moeRequest
 import com.moegirlviewer.util.Globals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
 
 object PageApi {
   suspend fun getTruePageName(
@@ -42,16 +40,21 @@ object PageApi {
     }
   )
 
-  suspend fun getMainImage(
+  suspend fun getMainImageAndIntroduction(
     vararg pageName: String,
     size: Int = 500
   ) = moeRequest(
-    entity = MainImagesResBean::class.java,
+    entity = MainImagesAndIntroductionResBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
-      this["prop"] = "pageimages"
+      this["prop"] = "extracts|pageimages"
       this["titles"] = pageName.joinToString("|")
       this["pithumbsize"] = size.toString()
+      this["exsentences"] = "10"
+      this["exlimit"] = "max"
+      this["exintro"] = 1
+      this["explaintext"] = 1
+      this["exsectionformat"] = "plain"
     }
   )
 
@@ -100,9 +103,10 @@ object PageApi {
 
   suspend fun getRandomPage(
     count: Int = 1,
+    mainImageSize: Int = Globals.activity.resources.displayMetrics.widthPixels,
     continueKey: String? = null
   ) = moeRequest(
-    entity = GetRandomPageResBean::class.java,
+    entity = RandomPageResBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
       this["prop"] = "extracts|pageimages"
@@ -114,7 +118,7 @@ object PageApi {
       this["exsectionformat"] = "plain"
       this["grnnamespace"] = "0"
       this["grnfilterredir"] = "nonredirects"
-      this["pithumbsize"] = Globals.activity.resources.displayMetrics.widthPixels
+      this["pithumbsize"] = mainImageSize
       this["grnlimit"] = count
       if (continueKey != null) {
         this["continue"] = "grncontinue||"

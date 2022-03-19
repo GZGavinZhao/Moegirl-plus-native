@@ -17,6 +17,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.rememberImageRequest
@@ -94,6 +95,7 @@ fun RecommendationCard(
           Item(
             title = item.pageName,
             imageUrl = item.imageUrl,
+            introduction = if (item.introduction != "") item.introduction else null,
             onClick = { gotoArticlePage(item.pageName) }
           )
         }
@@ -105,7 +107,7 @@ fun RecommendationCard(
 @Composable
 private fun Item(
   title: String,
-//  introduction: String? = null,
+  introduction: String? = null,
   imageUrl: String? = null,
   onClick: () -> Unit,
 ) {
@@ -144,13 +146,13 @@ private fun Item(
           overflow = TextOverflow.Ellipsis
         )
 
-  //      StyledText(
-  //        text = introduction ?: stringResource(id = R.string.noIntroduction),
-  //        fontSize = 14.sp,
-  //        color = if (introduction != null) themeColors.text.secondary else themeColors.text.tertiary,
-  //        maxLines = 2,
-  //        overflow = TextOverflow.Ellipsis,
-  //      )
+        StyledText(
+          text = introduction ?: stringResource(id = R.string.noIntroduction),
+          fontSize = 14.sp,
+          color = if (introduction != null) themeColors.text.secondary else themeColors.text.tertiary,
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis,
+        )
       }
     }
   }

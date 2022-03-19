@@ -6,12 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.moegirlviewer.api.page.PageApi
-import com.moegirlviewer.api.page.bean.GetRandomPageResBean
+import com.moegirlviewer.api.page.bean.RandomPageResBean
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.randomPages.component.RandomPageItemState
 import com.moegirlviewer.screen.randomPages.component.RandomPageItemStatus
 import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.printDebugLog
 import com.moegirlviewer.util.printRequestErr
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -21,7 +20,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalMaterialApi::class)
 class RandomPagesScreenModal @Inject constructor() : ViewModel() {
   val coroutineScope = CoroutineScope(Dispatchers.Main)
-  var pageList by mutableStateOf(emptyList<GetRandomPageResBean.Query.MapValue>())
+  var pageList by mutableStateOf(emptyList<RandomPageResBean.Query.MapValue>())
   var status by mutableStateOf(LoadStatus.INITIAL)
   var continueKey: String? = null
   val randomPageItemStates = listOf(
@@ -33,7 +32,10 @@ class RandomPagesScreenModal @Inject constructor() : ViewModel() {
   fun loadPageList() = coroutineScope.launch {
     try {
       status = LoadStatus.LOADING
-      val res = PageApi.getRandomPage(20, continueKey)
+      val res = PageApi.getRandomPage(
+        count = 20,
+        continueKey = continueKey
+      )
       pageList = pageList + res.query.pages.values
       continueKey = res.`continue`.grncontinue
       status = LoadStatus.SUCCESS
@@ -43,7 +45,7 @@ class RandomPagesScreenModal @Inject constructor() : ViewModel() {
     }
   }
 
-  fun popFirstFromPageList(): GetRandomPageResBean.Query.MapValue? {
+  fun popFirstFromPageList(): RandomPageResBean.Query.MapValue? {
     val newPageList = pageList.toMutableList()
     val poppedItem = newPageList.removeFirstOrNull()
     pageList = newPageList

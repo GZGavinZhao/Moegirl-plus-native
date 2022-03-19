@@ -7,20 +7,15 @@ import androidx.compose.ui.node.Ref
 import androidx.lifecycle.ViewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.R
-import com.moegirlviewer.api.page.PageApi
-import com.moegirlviewer.api.page.bean.GetRandomPageResBean
 import com.moegirlviewer.compable.remember.MemoryStore
 import com.moegirlviewer.component.articleView.ArticleViewRef
-import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.component.RandomPageCardState
 import com.moegirlviewer.screen.home.component.RecommendationCardState
 import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCardState
 import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 class HomeScreenModel @Inject constructor() : ViewModel() {

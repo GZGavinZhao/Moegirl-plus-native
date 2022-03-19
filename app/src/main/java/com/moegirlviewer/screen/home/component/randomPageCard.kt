@@ -1,6 +1,5 @@
 package com.moegirlviewer.screen.home.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -14,21 +13,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
 import com.moegirlviewer.R
 import com.moegirlviewer.api.page.PageApi
-import com.moegirlviewer.api.page.bean.GetRandomPageResBean
+import com.moegirlviewer.api.page.bean.RandomPageResBean
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.HomeScreenCardState
-import com.moegirlviewer.screen.home.HomeScreenModel
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
@@ -128,7 +122,7 @@ fun RandomPageCard(
 }
 
 class RandomPageCardState : HomeScreenCardState() {
-  var pageData by mutableStateOf<GetRandomPageResBean.Query.MapValue?>(null)
+  var pageData by mutableStateOf<RandomPageResBean.Query.MapValue?>(null)
   var status by mutableStateOf(LoadStatus.INITIAL)
 
   override suspend fun reload() {

@@ -104,7 +104,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
     coroutineScope.launch {
       val mainPageUrl = try {
-        PageApi.getMainImage(truePageName!!, size = 250).query.pages.values.first().thumbnail?.source
+        PageApi.getMainImageAndIntroduction(truePageName!!, size = 250).query.pages.values.first().thumbnail?.source
       } catch (e: MoeRequestException) { null }
 
       Globals.room.browsingRecord().insertItem(BrowsingRecord(
