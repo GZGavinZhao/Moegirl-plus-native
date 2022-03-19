@@ -24,6 +24,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.api.page.bean.GetRandomPageResBean
 import com.moegirlviewer.compable.remember.rememberImageRequest
+import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.HomeScreenCardState
@@ -45,80 +46,83 @@ fun RandomPageCard(
   val scope = rememberCoroutineScope()
   var imageLoaded by rememberSaveable { mutableStateOf(false) }
 
-  CardContainer(
-    icon = ImageVector.vectorResource(R.drawable.dice_5),
-    title = stringResource(id = R.string.randomArticle),
-    moreLink = remember { MoreLink(
-      title = Globals.context.getString(R.string.moreRandomArticle),
+  RippleColorScope(color = themeColors.secondary) {
+
+    CardContainer(
+      icon = ImageVector.vectorResource(R.drawable.dice_5),
+      title = stringResource(id = R.string.randomArticle),
+      moreLink = remember { MoreLink(
+        title = Globals.context.getString(R.string.moreRandomArticle),
+        onClick = {
+          Globals.navController.navigate("randomPages")
+        }
+      ) },
+      loadStatus = state.status,
       onClick = {
-        Globals.navController.navigate("randomPages")
+        if (state.status == LoadStatus.SUCCESS) gotoArticlePage(state.pageData!!.title)
+      },
+      onReload = {
+        scope.launch { state.reload() }
       }
-    ) },
-    loadStatus = state.status,
-    onClick = {
-      if (state.status == LoadStatus.SUCCESS) gotoArticlePage(state.pageData!!.title)
-    },
-    onReload = {
-      scope.launch { state.reload() }
-    }
-  ) {
-    if (state.pageData != null) {
-      Column(
-        modifier = Modifier
-          .fillMaxWidth()
-      ) {
-        if (state.pageData!!.thumbnail != null) {
-          AsyncImage(
+    ) {
+      if (state.pageData != null) {
+        Column(
+          modifier = Modifier
+            .fillMaxWidth()
+        ) {
+          if (state.pageData!!.thumbnail != null) {
+            AsyncImage(
+              modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp),
+              model = rememberImageRequest(state.pageData!!.thumbnail!!.source),
+              contentDescription = null,
+              contentScale = ContentScale.Crop,
+              alignment = if (imageLoaded) Alignment.TopCenter else Alignment.Center,
+              onSuccess = { imageLoaded = true }
+            )
+          } else {
+            Box(
+              modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .background(themeColors.background2),
+              contentAlignment = Alignment.Center
+            ) {
+              StyledText(
+                text = stringResource(id = R.string.noImage),
+                fontSize = 20.sp,
+                color = themeColors.text.tertiary
+              )
+            }
+          }
+
+          Column(
             modifier = Modifier
+              .padding(10.dp)
               .fillMaxWidth()
-              .height(300.dp),
-            model = rememberImageRequest(state.pageData!!.thumbnail!!.source),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            alignment = if (imageLoaded) Alignment.TopCenter else Alignment.Center,
-            onSuccess = { imageLoaded = true }
-          )
-        } else {
-          Box(
-            modifier = Modifier
-              .fillMaxWidth()
-              .height(300.dp)
-              .background(themeColors.background2),
-            contentAlignment = Alignment.Center
           ) {
             StyledText(
-              text = stringResource(id = R.string.noImage),
-              fontSize = 20.sp,
-              color = themeColors.text.tertiary
+              text = state.pageData!!.title,
+              fontSize = 20.sp
+            )
+
+            StyledText(
+              modifier = Modifier
+                .padding(top = 10.dp),
+              text = if (state.pageData!!.extract != "") state.pageData!!.extract else stringResource(id = R.string.noIntroduction),
+              fontSize = 15.sp,
+              color = if (state.pageData!!.extract != "") themeColors.text.primary else themeColors.text.tertiary
             )
           }
         }
-
-        Column(
+      } else {
+        Spacer(
           modifier = Modifier
-            .padding(10.dp)
             .fillMaxWidth()
-        ) {
-          StyledText(
-            text = state.pageData!!.title,
-            fontSize = 20.sp
-          )
-
-          StyledText(
-            modifier = Modifier
-              .padding(top = 10.dp),
-            text = if (state.pageData!!.extract != "") state.pageData!!.extract else stringResource(id = R.string.noIntroduction),
-            fontSize = 15.sp,
-            color = if (state.pageData!!.extract != "") themeColors.text.primary else themeColors.text.tertiary
-          )
-        }
+            .height(350.dp)
+        )
       }
-    } else {
-      Spacer(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(350.dp)
-      )
     }
   }
 }
@@ -130,8 +134,15 @@ class RandomPageCardState : HomeScreenCardState() {
   override suspend fun reload() {
     status = LoadStatus.LOADING
     try {
-      val res = PageApi.getRandomPage()
-      pageData = res.query.pages.values.first()
+      val res = PageApi.getRandomPage(10)
+      // 尽量使用既有图片又有介绍的，如果没有就找有图片的，如果全不符合条件则随机使用一个
+      pageData = res.query.pages.values
+        .filter { it.thumbnail != null && it.extract != "" }
+        .randomOrNull() ?:
+          res.query.pages.values
+            .filter { it.thumbnail != null }
+            .randomOrNull() ?:
+              res.query.pages.values.random()
       status = LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {
       status = LoadStatus.FAIL

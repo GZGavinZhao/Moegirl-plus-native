@@ -201,7 +201,7 @@ class ArticleViewState(
         if (isCategoryPage) {
           val collectedCategoryData = collectCategoryDataFromHtml(articleData.parse.text._asterisk)
           Globals.navController.replace(CategoryRouteArguments(
-            categoryName = truePageName.replaceFirst(Regex("(Category|分类|分類):"), ""),
+            categoryName = truePageName.replaceFirst(categoryPageNamePrefixRegex, ""),
             parentCategories = collectedCategoryData.parentCategories,
             categoryExplainPageName = collectedCategoryData.categoryExplainPageName
           ))

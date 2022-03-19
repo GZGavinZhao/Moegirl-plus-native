@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
 import com.moegirlviewer.theme.background2
@@ -60,7 +61,7 @@ fun BrowsingHistoryScreenItem(
             modifier = Modifier
               .width(70.dp)
               .height(90.dp),
-            model = record.imgUrl,
+            model = rememberImageRequest(data = record.imgUrl),
             contentDescription = null,
             contentScale = ContentScale.Fit
           )

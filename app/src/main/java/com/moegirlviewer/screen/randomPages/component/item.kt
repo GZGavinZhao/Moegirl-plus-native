@@ -24,6 +24,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import com.moegirlviewer.R
 import com.moegirlviewer.api.page.bean.GetRandomPageResBean
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
@@ -125,7 +126,7 @@ internal fun BoxScope.RandomPageItem(
             modifier = Modifier
               .fillMaxWidth()
               .height(300.dp),
-            model = state.imageUrl,
+            model = rememberImageRequest(data = state.imageUrl),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             alignment = if (imageLoaded) Alignment.TopCenter else Alignment.Center,

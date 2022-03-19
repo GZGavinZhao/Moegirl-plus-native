@@ -13,6 +13,7 @@ import com.moegirlviewer.compable.remember.MemoryStore
 import com.moegirlviewer.component.articleView.ArticleViewRef
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.component.RandomPageCardState
+import com.moegirlviewer.screen.home.component.RecommendationCardState
 import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCardState
 import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,6 +33,7 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
 
   val randomPageCardState = RandomPageCardState()
   val newPagesCardState = NewPagesCardState()
+  val recommendationCardState = RecommendationCardState()
 
   private var twoPressBackFlag = false
   fun triggerForTwoPressToExit() {
@@ -52,7 +54,8 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
     cardsDataStatus = LoadStatus.LOADING
     listOf(
       launch { randomPageCardState.reload() },
-      launch { newPagesCardState.reload() }
+      launch { newPagesCardState.reload() },
+      launch { recommendationCardState.reload() }
     ).forEach { it.join() }
     cardsDataStatus = LoadStatus.SUCCESS
   }

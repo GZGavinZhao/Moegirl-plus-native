@@ -1,6 +1,7 @@
 package com.moegirlviewer.api.category
 
 import com.moegirlviewer.api.category.bean.CategorySearchResultBean
+import com.moegirlviewer.api.category.bean.PageCategoriesBean
 import com.moegirlviewer.api.category.bean.SubCategoriesBean
 import com.moegirlviewer.request.moeRequest
 
@@ -9,6 +10,7 @@ object CategoryApi {
     categoryName: String,
     thumbSize: Int,
     sort: CategoryApiPagesSort = CategoryApiPagesSort.DESCENDING,
+    limit: Int = 50,
     continueKey: CategorySearchResultBean.Continue? = null
   ) = moeRequest(
     entity = CategorySearchResultBean::class.java,
@@ -21,7 +23,7 @@ object CategoryApi {
       this["gcmtitle"] = "Category:$categoryName"
       this["gcmprop"] = "sortkey|sortkeyprefix"
       this["gcmnamespace"] = "0"
-      this["gcmlimit"] = "50"
+      this["gcmlimit"] = limit
       this["pithumbsize"] = thumbSize
       this["clshow"] = "!hidden"
       this["gcmdir"] = sort.sortDir
@@ -40,7 +42,6 @@ object CategoryApi {
     entity = SubCategoriesBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
-      this["format"] = "json"
       this["list"] = "categorymembers"
       this["cmtitle"] = "Category:$categoryName"
       this["cmprop"] = "title"
@@ -48,6 +49,19 @@ object CategoryApi {
       this["cmlimit"] = 100
       this["continue"] = "-||"
       if (continueKey != null) this["cmcontinue"] = continueKey
+    }
+  )
+
+  suspend fun getPageCategories(
+    pages: List<String>,
+  ) = moeRequest(
+    entity = PageCategoriesBean::class.java,
+    params = mutableMapOf<String, Any>().apply {
+      this["action"] = "query"
+      this["prop"] = "categories"
+      this["titles"] = pages.joinToString("|")
+      this["clshow"] = "!hidden"
+      this["cllimit"] = 500
     }
   )
 }

@@ -58,6 +58,9 @@ fun NewPagesCard(
       state.status == LoadStatus.FAIL && state.newPageList.isEmpty() -> LoadStatus.FAIL
       else -> null
     },
+    onReload = {
+     scope.launch { state.reload() }
+    },
     rightContent = {
       Row() {
         for (item in state.viewModes) {
@@ -108,7 +111,7 @@ class NewPagesCardState : HomeScreenCardState() {
     try {
       val res = EditingRecordApi.getNewPages(continueKey)
       newPageList = (if (reload) emptyList() else newPageList) + res.query.pages
-        .filter { it.key != -1 }
+        .filter { it.key > -1 }
         .values.sortedBy { it.pageid }
       continueKey = res.`continue`.grccontinue
       status = LoadStatus.SUCCESS

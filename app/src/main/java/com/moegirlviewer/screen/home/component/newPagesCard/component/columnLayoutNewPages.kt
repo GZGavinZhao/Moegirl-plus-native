@@ -2,10 +2,12 @@ package com.moegirlviewer.screen.home.component.newPagesCard.component
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -18,6 +20,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
 import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.compable.remember.rememberImageRequest
+import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
@@ -27,20 +30,23 @@ import com.moegirlviewer.util.gotoArticlePage
 fun ColumnLayoutNewPages(
   pageList: List<NewPagesBean.Query.MapValue>
 ) {
+  val themeColors = MaterialTheme.colors
   val scrollState = rememberFromMemory("scrollState") { ScrollState(0) }
 
-  Row(
-    modifier = Modifier
-      .padding(10.dp)
-      .horizontalScroll(scrollState)
-  ) {
-    for ((index, item) in pageList.withIndex()) {
-      Item(
-        title = item.title,
-        imageUrl = item.thumbnail?.source,
-        isFirstItem = index == 0,
-        onClick = { gotoArticlePage(item.title) }
-      )
+  RippleColorScope(color = themeColors.secondary) {
+    Row(
+      modifier = Modifier
+        .padding(10.dp)
+        .horizontalScroll(scrollState)
+    ) {
+      for ((index, item) in pageList.withIndex()) {
+        Item(
+          title = item.title,
+          imageUrl = item.thumbnail?.source,
+          isFirstItem = index == 0,
+          onClick = { gotoArticlePage(item.title) }
+        )
+      }
     }
   }
 }
@@ -56,7 +62,7 @@ private fun Item(
 
   Column(
     modifier = Modifier
-      .padding(start = if (isFirstItem) 0.dp else 10.dp)
+      .padding(start = if (isFirstItem) 0.dp else 10.dp, top = 10.dp)
       .clickable { onClick() },
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -64,7 +70,8 @@ private fun Item(
       AsyncImage(
         modifier = Modifier
           .width(120.dp)
-          .height(160.dp),
+          .height(160.dp)
+          .clip(RoundedCornerShape(10.dp)),
         model = rememberImageRequest(imageUrl),
         placeholder = painterResource(id = R.drawable.placeholder),
         contentDescription = null,

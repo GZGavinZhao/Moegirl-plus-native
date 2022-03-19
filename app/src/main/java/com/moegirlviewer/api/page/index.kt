@@ -7,6 +7,7 @@ import com.moegirlviewer.request.moeRequest
 import com.moegirlviewer.util.Globals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 
 object PageApi {
@@ -42,51 +43,45 @@ object PageApi {
   )
 
   suspend fun getMainImage(
-    pageName: String,
+    vararg pageName: String,
     size: Int = 500
-  ): MainImagesResBean.Query.MapValue.Thumbnail? {
-    val res = moeRequest(
-      entity = MainImagesResBean::class.java,
-      params = mutableMapOf<String, Any>().apply {
-        this["action"] = "query"
-        this["prop"] = "pageimages"
-        this["titles"] = pageName
-        this["pithumbsize"] = size.toString()
-      }
-    )
-
-    return res.query.pages.values.toList().first().thumbnail
-  }
-
-  suspend fun getImagesUrl(imageNames: List<String>): Map<String, String> {
-    return withContext(Dispatchers.IO) {
-       val defers = imageNames.chunked(50).map {
-        async {
-          moeRequest(
-            entity = ImageInfoResBean::class.java,
-            method = MoeRequestMethod.POST,
-            params = mutableMapOf<String, Any>().apply {
-              this["action"] = "query"
-              this["prop"] = "imageinfo"
-              this["iiprop"] = "url"
-              this["titles"] = it.joinToString("|") { "${Constants.filePrefix}$it" }
-            }
-          )
-        }
-      }
-
-      defers
-        .map { it.await() }
-        .flatMap { (it.query?.pages?.values) ?: emptyList() }
-        .fold(mutableMapOf()) { result, item ->
-          val fileName = item.title.replaceFirst(Constants.filePrefix, "")
-          if (item.imageinfo != null && item.imageinfo.isNotEmpty()) {
-            val fileUrl = item.imageinfo[0].url
-            result[fileName] = fileUrl
-          }
-          result
-        }
+  ) = moeRequest(
+    entity = MainImagesResBean::class.java,
+    params = mutableMapOf<String, Any>().apply {
+      this["action"] = "query"
+      this["prop"] = "pageimages"
+      this["titles"] = pageName.joinToString("|")
+      this["pithumbsize"] = size.toString()
     }
+  )
+
+  suspend fun getImagesUrl(imageNames: List<String>): Map<String, String> = coroutineScope {
+     val defers = imageNames.chunked(50).map {
+      async {
+        moeRequest(
+          entity = ImageInfoResBean::class.java,
+          method = MoeRequestMethod.POST,
+          params = mutableMapOf<String, Any>().apply {
+            this["action"] = "query"
+            this["prop"] = "imageinfo"
+            this["iiprop"] = "url"
+            this["titles"] = it.joinToString("|") { "${Constants.filePrefix}$it" }
+          }
+        )
+      }
+    }
+
+    defers
+      .map { it.await() }
+      .flatMap { (it.query?.pages?.values) ?: emptyList() }
+      .fold(mutableMapOf()) { result, item ->
+        val fileName = item.title.replaceFirst(Constants.filePrefix, "")
+        if (item.imageinfo != null && item.imageinfo.isNotEmpty()) {
+          val fileUrl = item.imageinfo[0].url
+          result[fileName] = fileUrl
+        }
+        result
+      }
   }
 
   suspend fun getPageInfo(pageName: String): PageInfoResBean.Query.MapValue {

@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.util.isMoegirl
 
 // 这个页面本身不在路由中
@@ -34,7 +35,7 @@ fun SplashScreen(
       modifier = Modifier
         .fillMaxSize()
         .scale(state.imageScale.value),
-      model = state.splashImage.imageData,
+      model = rememberImageRequest(data = state.splashImage.imageData),
       contentDescription = null,
       contentScale = ContentScale.Crop
     )

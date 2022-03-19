@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.styled.StyledText
@@ -70,7 +71,7 @@ fun CommonDrawerHeader(
         modifier = Modifier
           .width(avatarSize.dp)
           .height(avatarSize.dp),
-        model = if (isLoggedIn) Constants.avatarUrl + userName else R.drawable.akari,
+        model = rememberImageRequest(data = if (isLoggedIn) Constants.avatarUrl + userName else R.drawable.akari),
         contentDescription = null
       )
     }

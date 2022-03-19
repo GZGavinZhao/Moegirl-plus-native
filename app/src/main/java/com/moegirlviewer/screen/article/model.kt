@@ -64,7 +64,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
       Globals.context.getString(R.string.app_name)
     )
       .replace("_", " ")
-      .replace(Regex("""^(Category|分类|分類):"""), "${Globals.context.getString(R.string.category)}：")
+      .replace(categoryPageNamePrefixRegex, "${Globals.context.getString(R.string.category)}：")
   )
   val pageId get() = articleData?.parse?.pageid
 
@@ -104,7 +104,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
     coroutineScope.launch {
       val mainPageUrl = try {
-        PageApi.getMainImage(truePageName!!, 250)?.source
+        PageApi.getMainImage(truePageName!!, size = 250).query.pages.values.first().thumbnail?.source
       } catch (e: MoeRequestException) { null }
 
       Globals.room.browsingRecord().insertItem(BrowsingRecord(

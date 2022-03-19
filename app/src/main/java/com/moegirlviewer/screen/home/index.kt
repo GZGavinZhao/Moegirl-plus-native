@@ -33,6 +33,7 @@ import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.drawer.CommonDrawer
 import com.moegirlviewer.screen.home.component.RandomPageCard
+import com.moegirlviewer.screen.home.component.RecommendationCard
 import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCard
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.store.AccountStore
@@ -193,6 +194,7 @@ private fun ComposedCardsHomePage() {
     ) {
       RandomPageCard(model.randomPageCardState)
       NewPagesCard(model.newPagesCardState)
+      RecommendationCard(model.recommendationCardState)
     }
   }
 }

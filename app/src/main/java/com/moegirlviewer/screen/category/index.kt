@@ -47,10 +47,7 @@ import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.category.component.CategoryScreenItem
 import com.moegirlviewer.screen.category.component.SubCategoryList
 import com.moegirlviewer.theme.text
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.Italic
-import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.navigate
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -146,7 +143,7 @@ fun CategoryScreen(
             pageName = item.title,
             thumbnail = item.thumbnail,
             // 貌似是mw的bug，有时获取到的分类下页面的数据，页面的所有分类居然是null
-            categories = (item.categories ?: emptyList()).map { it.title.replaceFirst(Regex("^(分类|分類|Category):"), "") },
+            categories = (item.categories ?: emptyList()).map { it.title.replaceFirst(categoryPageNamePrefixRegex, "") },
             onClick = {
               Globals.navController.navigate(ArticleRouteArguments(
                 pageName = item.title

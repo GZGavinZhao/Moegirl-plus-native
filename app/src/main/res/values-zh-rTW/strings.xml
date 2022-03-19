@@ -78,6 +78,7 @@
     <string name="author">作者</string>
     <string name="selected">已選擇</string>
     <string name="sent">已傳送</string>
+    <string name="recommendation">推薦</string>
 
     <string name="year">年</string>
     <string name="month">月</string>
@@ -190,6 +191,8 @@
     <string name="shareFailed">分享失敗</string>
     <string name="moreRandomArticle">更多隨機條目</string>
     <string name="newArticles">最新條目</string>
+    <string name="becauseYouRead">因你閱讀</string>
+    <string name="viewMore">檢視更多</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>
@@ -291,6 +294,7 @@
     <string name="blockedByCloudflareHint">連線失敗，請更改您的地區代理節點</string>
     <string name="codeHighlightTimeoutHint">程式碼過長，高亮功能因處理超時已自動關閉，請合理使用段落編輯功能</string>
     <string name="sendThankHint">確定要向該修訂記錄的編輯者傳送感謝嗎？</string>
+    <string name="noRecommendationPageHint">還沒有推薦，先去看看其他條目吧</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤銷[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|討論]]）的版本%2$s</string>

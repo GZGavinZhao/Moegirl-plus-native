@@ -15,6 +15,7 @@ import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.util.Globals
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
@@ -89,7 +90,7 @@ fun parseCommentHtml(
                     AsyncImage(
                       modifier = Modifier
                         .fillMaxSize(),
-                      model = imageUrl,
+                      model = rememberImageRequest(imageUrl),
                       contentDescription = null,
                       placeholder = painterResource(R.drawable.placeholder)
                     )

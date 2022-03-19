@@ -22,6 +22,7 @@ import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
@@ -227,7 +228,7 @@ private fun ImageItem(
       modifier = Modifier
         .fillMaxSize()
         .clickable { onClick() },
-      model = splashImage.imageData,
+      model = rememberImageRequest(data = splashImage.imageData),
       contentDescription = null,
       contentScale = ContentScale.Crop
     )

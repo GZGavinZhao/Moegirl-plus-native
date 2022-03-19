@@ -17,6 +17,7 @@ import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.moegirlviewer.R
 import com.moegirlviewer.api.category.bean.CategorySearchResultBean
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
@@ -77,9 +78,8 @@ fun CategoryScreenItem(
         AsyncImage(
           modifier = Modifier
             .width(120.dp)
-            .height(max(150f, (120f / thumbnail.width * thumbnail.height)).dp)
-          ,
-          model = thumbnail.source,
+            .height(max(150f, (120f / thumbnail.width * thumbnail.height)).dp),
+          model = rememberImageRequest(data = thumbnail.source),
           contentDescription = null,
         )
       } else {

@@ -9,9 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +20,7 @@ import androidx.compose.ui.unit.TextUnit
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.NospzGothicMoeFamily
+import java.util.*
 
 @Composable
 fun StyledText(
@@ -126,4 +125,61 @@ fun StyledText(
     },
     style = style ?: LocalTextStyle.current,
   )
+}
+
+@Composable
+fun AnnotatedString.Builder.clickableText(
+  text: String,
+  tag: String,
+  annotation: String = "",
+  style: SpanStyle = SpanStyle()
+) {
+  val themeColors = MaterialTheme.colors
+
+  withStyle(SpanStyle(
+    color = themeColors.secondary,
+    textDecoration = TextDecoration.Underline
+  ).merge(style)) {
+    pushStringAnnotation(tag, annotation)
+    append(text)
+    pop()
+  }
+}
+
+@Composable
+fun rememberLinkedTextScope() = remember {
+  LinkedTextScope()
+}
+
+class LinkedTextScope {
+  private val handlers = mutableMapOf<String, (annotation: String) -> Unit>()
+
+  @Composable
+  fun AnnotatedString.Builder.linkedText(
+    text: String,
+    annotation: String = "",
+    style: SpanStyle = SpanStyle(),
+    onClick: (annotation: String) -> Unit,
+  ) {
+    val themeColors = MaterialTheme.colors
+
+    withStyle(SpanStyle(
+      color = themeColors.secondary,
+      textDecoration = TextDecoration.Underline
+    ).merge(style)) {
+      val uuid = UUID.randomUUID().toString()
+      handlers[uuid] = onClick
+      pushStringAnnotation(uuid, annotation)
+      append(text)
+      pop()
+    }
+  }
+
+  fun AnnotatedString.clickAcceptor(offset: Int) {
+    for (item in handlers) {
+      getStringAnnotations(item.key, offset, offset).firstOrNull()?.let {
+        handlers[item.key]?.invoke(it.item)
+      }
+    }
+  }
 }

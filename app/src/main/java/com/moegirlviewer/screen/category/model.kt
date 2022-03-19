@@ -9,6 +9,7 @@ import com.moegirlviewer.api.category.CategoryApi
 import com.moegirlviewer.api.category.bean.CategorySearchResultBean
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.categoryPageNamePrefixRegex
 import com.moegirlviewer.util.printRequestErr
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
@@ -34,7 +35,7 @@ class CategoryScreenModal @Inject constructor() : ViewModel() {
       val res = CategoryApi.search(
         categoryName = routeArguments.categoryName,
         thumbSize = 360,
-        continueKeyOfPages
+        continueKey =  continueKeyOfPages
       )
 
       if (res.query == null) {
@@ -70,7 +71,7 @@ class CategoryScreenModal @Inject constructor() : ViewModel() {
       )
 
       val categories = res.query.categorymembers.map {
-        it.title.replaceFirst(Regex("^(分类|分類|Category):"), "")
+        it.title.replaceFirst(categoryPageNamePrefixRegex, "")
       }
 
       val continueKey = res.`continue`?.cmcontinue

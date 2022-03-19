@@ -27,6 +27,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.store.SettingsStore
@@ -81,7 +82,7 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
           modifier = Modifier
             .fillMaxSize()
             .scale(model.imageScale.value),
-          model = reversedSplashImageList[currentPage].imageData,
+          model = rememberImageRequest(data = reversedSplashImageList[currentPage].imageData),
           contentDescription = null,
           contentScale = ContentScale.Crop
         )

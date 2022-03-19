@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import coil.request.ImageRequest
+import com.moegirlviewer.R
 
 @Composable
 fun rememberImageRequest(
@@ -15,6 +16,7 @@ fun rememberImageRequest(
     ImageRequest.Builder(context)
       .data(data)
       .crossfade(true)
+      .error(R.drawable.broken_image)
       .apply { builder?.invoke(this) }
       .build()
   }

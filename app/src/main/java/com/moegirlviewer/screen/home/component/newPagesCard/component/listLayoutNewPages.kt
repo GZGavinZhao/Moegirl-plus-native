@@ -25,6 +25,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
 import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.compable.remember.rememberImageRequest
+import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.gotoArticlePage
@@ -70,45 +71,47 @@ private fun Item(
 ) {
   val themeColors = MaterialTheme.colors
 
-  Row(
-    modifier = Modifier
-      .clickable { onClick() }
-      .padding(horizontal = 10.dp, vertical = 5.dp)
-      .height(60.dp),
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    AsyncImage(
+  RippleColorScope(color = themeColors.secondary) {
+    Row(
       modifier = Modifier
-        .size(60.dp)
-        .clip(RoundedCornerShape(10.dp)),
-      model = rememberImageRequest(imageUrl ?: R.drawable.moemoji),
-      placeholder = painterResource(id = R.drawable.placeholder),
-      contentDescription = null,
-      contentScale = if (imageUrl != null) ContentScale.Crop else ContentScale.Inside,
-      alignment = if (imageUrl != null) Alignment.TopCenter else Alignment.Center
-    )
-
-    Column(
-      modifier = Modifier
-        .padding(start = 10.dp)
-        .weight(1f)
+        .clickable { onClick() }
+        .padding(horizontal = 10.dp, vertical = 5.dp)
         .height(60.dp),
-      verticalArrangement = Arrangement.SpaceEvenly
+      verticalAlignment = Alignment.CenterVertically
     ) {
-      StyledText(
-        text = title,
-        fontWeight = FontWeight.Bold,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+      AsyncImage(
+        modifier = Modifier
+          .size(60.dp)
+          .clip(RoundedCornerShape(10.dp)),
+        model = rememberImageRequest(imageUrl ?: R.drawable.moemoji),
+        placeholder = painterResource(id = R.drawable.placeholder),
+        contentDescription = null,
+        contentScale = if (imageUrl != null) ContentScale.Crop else ContentScale.Inside,
+        alignment = if (imageUrl != null) Alignment.TopCenter else Alignment.Center
       )
 
-      StyledText(
-        text = introduction ?: stringResource(id = R.string.noIntroduction),
-        fontSize = 14.sp,
-        color = if (introduction != null) themeColors.text.secondary else themeColors.text.tertiary,
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis,
-      )
+      Column(
+        modifier = Modifier
+          .padding(start = 10.dp)
+          .weight(1f)
+          .height(60.dp),
+        verticalArrangement = Arrangement.SpaceEvenly
+      ) {
+        StyledText(
+          text = title,
+          fontWeight = FontWeight.Bold,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis
+        )
+
+        StyledText(
+          text = introduction ?: stringResource(id = R.string.noIntroduction),
+          fontSize = 14.sp,
+          color = if (introduction != null) themeColors.text.secondary else themeColors.text.tertiary,
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis,
+        )
+      }
     }
   }
 }

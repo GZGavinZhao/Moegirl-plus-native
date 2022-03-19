@@ -197,3 +197,16 @@ fun InputStream.readAllBytes(): ByteArray {
     return o.toByteArray()
   }
 }
+
+fun <T> List<T>.randomList(count: Int): List<T> {
+  if (this.size <= count) return this
+  val randomIndexes = mutableListOf<Int>()
+  val randomRange = 0 until this.size
+  while (randomIndexes.size != count) {
+    val randomIndex = randomRange.random()
+    if (randomIndexes.contains(randomIndex).not()) randomIndexes.add(randomIndex)
+  }
+  return randomIndexes.map { this[it] }
+}
+
+val categoryPageNamePrefixRegex = Regex("^([Cc]ategory|分类|分類):")
