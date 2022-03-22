@@ -149,6 +149,9 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
         articleViewRef.value!!.htmlWebViewRef!!.injectScript("""
           document.getElementById('app-background').style.display = 'block'
           document.getElementById('app-background-top-padding').style.height = '${Constants.topAppBarHeight + Globals.statusBarHeight}px'
+          document.body.style.maxHeight = '100%'
+          document.body.style.overflowY = 'hidden'
+          document.documentElement.style.overflowY = 'hidden'
         """.trimIndent())
       }
     }

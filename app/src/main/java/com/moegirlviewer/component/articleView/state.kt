@@ -1,7 +1,6 @@
 package com.moegirlviewer.component.articleView
 
 import android.os.Parcelable
-import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -224,6 +223,20 @@ class ArticleViewState(
         }
       } catch (e: MoeRequestException) {
         printRequestErr(e, "加载文章失败")
+        val getCrossWikiTitleFromErrorMessageRegex = Regex(""""萌百:(.+?)"""")
+        when {
+          e is MoeRequestWikiException && e.code == "missingtitle" -> props.onArticleMissed?.invoke()
+          e is MoeRequestWikiException && e.code == "invalidtitle" && e.message.contains(getCrossWikiTitleFromErrorMessageRegex) -> {
+            val crossWikiTitle = getCrossWikiTitleFromErrorMessageRegex.find(e.message)?.groupValues?.get(1)
+            if (crossWikiTitle != null) {
+              openHttpUrl("https://zh.moegirl.org.cn/$crossWikiTitle")
+              Globals.navController.popBackStack()
+            } else {
+              props.onArticleError?.invoke()
+              status = LoadStatus.FAIL
+            }
+          }
+        }
         if (e is MoeRequestWikiException && e.code == "missingtitle") {
           props.onArticleMissed?.invoke()
         } else {

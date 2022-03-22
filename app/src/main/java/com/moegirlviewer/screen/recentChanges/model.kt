@@ -74,14 +74,16 @@ class RecentChangesScreenModel @Inject constructor() : ViewModel() {
   suspend fun toggleMode() {
     if (status == LoadStatus.LOADING) return
     SettingsStore.recentChanges.setValue { this.isWatchListMode = !this.isWatchListMode }
-    changesList = emptyList()
-    loadList()
-    val isWatchListMode = SettingsStore.recentChanges.getValue { this.isWatchListMode }.first()
+
+    val isWatchListMode = !SettingsStore.recentChanges.getValue { this.isWatchListMode }.first()
     val allListStr = Globals.context.getString(R.string.allList)
     val watchListStr = Globals.context.getString(R.string.watchList)
     toast(Globals.context.getString(R.string.toggleToXXMode,
       if (isWatchListMode) watchListStr else allListStr
     ))
+
+    changesList = emptyList()
+    loadList()
   }
 
   private val chineseWeeks = Gson().fromJson(Globals.context.getString(R.string.jsonArray_chineseWeeks), Array<String>::class.java)
