@@ -193,6 +193,7 @@
     <string name="newArticles">最新條目</string>
     <string name="becauseYouRead">因你閱讀</string>
     <string name="viewMore">檢視更多</string>
+    <string name="ofCategory">所屬分類</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>

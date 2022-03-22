@@ -27,7 +27,7 @@ import com.moegirlviewer.util.noRippleClickable
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CardContainer(
+fun HomeCardContainer(
   icon: ImageVector,
   title: String,
   minHeight: Dp = 300.dp,
@@ -87,48 +87,70 @@ fun CardContainer(
       }
     }
 
-    Card(
+    HomeCard(
+      minHeight = minHeight,
+      loadStatus = loadStatus,
+      onClick = onClick,
+      onReload = onReload,
+      content = content
+    )
+  }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun HomeCard(
+  modifier: Modifier = Modifier,
+  minHeight: Dp = 300.dp,
+  loadStatus: LoadStatus? = null,
+  onClick: (() -> Unit)? = null,
+  onReload: (() -> Unit)? = null,
+  content: @Composable () -> Unit
+) {
+  val themeColors = MaterialTheme.colors
+
+  Card(
+    modifier = Modifier
+      .then(modifier)
+      .defaultMinSize(
+        minHeight = minHeight
+      )
+      .padding(top = 15.dp)
+      .fillMaxWidth(),
+    elevation = 2.dp,
+    shape = RoundedCornerShape(10.dp),
+    onClick = { onClick?.invoke() }
+  ) {
+    Box(
       modifier = Modifier
-        .defaultMinSize(
-          minHeight = minHeight
-        )
-        .padding(top = 15.dp)
-        .fillMaxWidth(),
-      elevation = 2.dp,
-      shape = RoundedCornerShape(10.dp),
-      onClick = { onClick?.invoke() }
+        .animateContentSize()
     ) {
-      Box(
-        modifier = Modifier
-          .animateContentSize()
-      ) {
-        content()
+      content()
 
-        if (loadStatus != null) {
-          this@Column.AnimatedVisibility(
+      if (loadStatus != null) {
+        AnimatedVisibility(
+          modifier = Modifier
+            .matchParentSize(),
+          visible = loadStatus != LoadStatus.SUCCESS,
+          enter = fadeIn(),
+          exit = fadeOut()
+        ) {
+          Box(
             modifier = Modifier
-              .matchParentSize(),
-            visible = loadStatus != LoadStatus.SUCCESS,
-            enter = fadeIn(),
-            exit = fadeOut()
+              .matchParentSize()
+              .background(themeColors.background.copy(alpha = 0.8f)),
+            contentAlignment = Alignment.Center
           ) {
-            Box(
-              modifier = Modifier
-                .matchParentSize()
-                .background(themeColors.background.copy(alpha = 0.8f)),
-              contentAlignment = Alignment.Center
-            ) {
-              if (loadStatus == LoadStatus.LOADING || loadStatus == LoadStatus.INIT_LOADING) {
-                StyledCircularProgressIndicator()
-              }
+            if (loadStatus == LoadStatus.LOADING || loadStatus == LoadStatus.INIT_LOADING) {
+              StyledCircularProgressIndicator()
+            }
 
-              if (loadStatus == LoadStatus.FAIL) {
-                ReloadButton(
-                  modifier = Modifier
-                    .matchParentSize(),
-                  onClick = { onReload?.invoke() }
-                )
-              }
+            if (loadStatus == LoadStatus.FAIL) {
+              ReloadButton(
+                modifier = Modifier
+                  .matchParentSize(),
+                onClick = { onReload?.invoke() }
+              )
             }
           }
         }

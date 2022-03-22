@@ -2,7 +2,6 @@ package com.moegirlviewer.screen.home.component.newPagesCard
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
@@ -15,29 +14,22 @@ import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
-import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.HomeScreenCardState
-import com.moegirlviewer.screen.home.component.CardContainer
+import com.moegirlviewer.screen.home.component.HomeCardContainer
 import com.moegirlviewer.screen.home.component.newPagesCard.component.ColumnLayoutNewPages
 import com.moegirlviewer.screen.home.component.newPagesCard.component.ListLayoutNewPages
 import com.moegirlviewer.screen.home.component.newPagesCard.component.TextLayoutNewPages
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.noRippleClickable
 import com.moegirlviewer.util.printRequestErr
 import kotlinx.coroutines.launch
-import kotlin.math.min
 
 @Composable
 fun NewPagesCard(
@@ -49,7 +41,7 @@ fun NewPagesCard(
     initial = NewPagesCardViewMode.LIST
   )
 
-  CardContainer(
+  HomeCardContainer(
     icon = Icons.Filled.FiberNew,
     title = stringResource(id = R.string.newArticles),
     minHeight = 150.dp,

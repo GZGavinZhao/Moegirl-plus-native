@@ -130,7 +130,8 @@ internal fun BoxScope.RandomPageItem(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             alignment = if (imageLoaded) Alignment.TopCenter else Alignment.Center,
-            onSuccess = { imageLoaded = true }
+            onSuccess = { imageLoaded = true },
+            onLoading = { imageLoaded = false }
           )
         } else {
           Box(

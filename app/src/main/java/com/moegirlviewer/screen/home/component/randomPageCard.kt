@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -38,11 +39,9 @@ fun RandomPageCard(
 ) {
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
-  var imageLoaded by rememberSaveable { mutableStateOf(false) }
 
   RippleColorScope(color = themeColors.secondary) {
-
-    CardContainer(
+    HomeCardContainer(
       icon = ImageVector.vectorResource(R.drawable.dice_5),
       title = stringResource(id = R.string.randomArticle),
       moreLink = remember { MoreLink(
@@ -60,6 +59,7 @@ fun RandomPageCard(
       }
     ) {
       if (state.pageData != null) {
+        var imageLoaded by rememberSaveable { mutableStateOf(false) }
         Column(
           modifier = Modifier
             .fillMaxWidth()
@@ -72,7 +72,9 @@ fun RandomPageCard(
               model = rememberImageRequest(state.pageData!!.thumbnail!!.source),
               contentDescription = null,
               contentScale = ContentScale.Crop,
+              placeholder = painterResource(id = R.drawable.placeholder),
               alignment = if (imageLoaded) Alignment.TopCenter else Alignment.Center,
+              onLoading = { imageLoaded = false },
               onSuccess = { imageLoaded = true }
             )
           } else {

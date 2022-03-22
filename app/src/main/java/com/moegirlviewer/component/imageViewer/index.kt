@@ -121,7 +121,8 @@ fun ImageViewer(
         contentDescription = null,
         model = imageRequest,
         contentScale = ContentScale.FillWidth,
-        onSuccess = { imageLoaded = true }
+        onSuccess = { imageLoaded = true },
+        onLoading = { imageLoaded = false }
       )
     }
 

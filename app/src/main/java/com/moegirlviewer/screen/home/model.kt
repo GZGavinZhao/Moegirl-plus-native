@@ -11,6 +11,7 @@ import com.moegirlviewer.compable.remember.MemoryStore
 import com.moegirlviewer.component.articleView.ArticleViewRef
 import com.moegirlviewer.screen.home.component.RandomPageCardState
 import com.moegirlviewer.screen.home.component.RecommendationCardState
+import com.moegirlviewer.screen.home.component.TopCardState
 import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCardState
 import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,7 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
   val swipeRefreshState = SwipeRefreshState(true)
   var cardsDataStatus by mutableStateOf(LoadStatus.INITIAL)
 
+  val topCardState = TopCardState()
   val randomPageCardState = RandomPageCardState()
   val newPagesCardState = NewPagesCardState()
   val recommendationCardState = RecommendationCardState()
@@ -50,7 +52,8 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
     listOf(
       launch { randomPageCardState.reload() },
       launch { newPagesCardState.reload() },
-      launch { recommendationCardState.reload() }
+      launch { recommendationCardState.reload() },
+      launch { topCardState.reload() }
     ).forEach { it.join() }
     cardsDataStatus = LoadStatus.SUCCESS
   }

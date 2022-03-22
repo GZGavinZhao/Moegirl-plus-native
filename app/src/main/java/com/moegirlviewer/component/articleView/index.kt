@@ -39,6 +39,7 @@ class ArticleViewProps(
   val readingRecord: ReadingRecord? = null,
   val injectedStyles: List<String>? = null,
   val injectedScripts: List<String>? = null,
+  val visibleLoadStatusIndicator: Boolean = true,
   val linkDisabled: Boolean = false,
   val fullHeight: Boolean = false,  // 用于外部容器代理滚动的模式
   val inDialogMode: Boolean = false,
@@ -144,7 +145,7 @@ fun ArticleView(
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .then(if (props.fullHeight) Modifier.height(max(minContentHeightOfFullHeightMode, state.contentHeight).dp) else Modifier.fillMaxHeight())
+      .then(if (props.fullHeight) Modifier.height(state.contentHeight.dp) else Modifier.fillMaxHeight())
   ) {
     HtmlWebView(
       messageHandlers = state.defaultMessageHandlers + (props.messageHandlers ?: emptyMap()),
@@ -153,7 +154,7 @@ fun ArticleView(
       shouldInterceptRequest = { webView, request -> state.shouldInterceptRequest(webView, request) }
     )
 
-    if (state.status != LoadStatus.SUCCESS) {
+    if (props.visibleLoadStatusIndicator && state.status != LoadStatus.SUCCESS) {
       Box(
         modifier = Modifier
           .noRippleClickable { }

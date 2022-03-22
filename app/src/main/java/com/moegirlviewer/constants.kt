@@ -10,7 +10,8 @@ class SourceConstants(
   val shareUrl: String,
   val registerUrl: String,
   val appDownloadUrl: String,
-  val filePrefix: String
+  val filePrefix: String,
+  val topCardContentPageName: String
 )
 
 private val sourceConstants = when (BuildConfig.FLAVOR_source) {
@@ -24,7 +25,8 @@ private val sourceConstants = when (BuildConfig.FLAVOR_source) {
     shareUrl = "https://mzh.moegirl.org.cn/index.php?curid=",
     registerUrl = "https://mzh.moegirl.org.cn/index.php?title=Special:创建账户",
     appDownloadUrl = "https://www.coolapk.com/apk/247471",
-    filePrefix = "File:"
+    filePrefix = "File:",
+    topCardContentPageName = "User:東東君/app/homeTopCard"
   )
 
   "hmoe" -> SourceConstants(
@@ -37,7 +39,8 @@ private val sourceConstants = when (BuildConfig.FLAVOR_source) {
     shareUrl = "https://www.hmoegirl.com/index.php?curid=",
     registerUrl = "https://www.hmoegirl.com/index.php?title=%E7%89%B9%E6%AE%8A:%E5%88%9B%E5%BB%BA%E8%B4%A6%E6%88%B7&returnto=Mainpage",
     appDownloadUrl = "",
-    filePrefix = "文件:"
+    filePrefix = "文件:",
+    topCardContentPageName = ""
   )
 
   else -> error("数据源'${BuildConfig.FLAVOR_source}'的常量集未配置！")
@@ -54,6 +57,7 @@ object Constants {
   val registerUrl = sourceConstants.registerUrl
 //  val appDownloadUrl = sourceConstants.appDownloadUrl
   val filePrefix = sourceConstants.filePrefix
+  val topCardContentPageName = sourceConstants.topCardContentPageName
 
   val topAppBarHeight = 56
   val articleCacheDirPath = "article_cache"

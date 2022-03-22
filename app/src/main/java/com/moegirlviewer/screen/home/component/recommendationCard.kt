@@ -42,7 +42,7 @@ fun RecommendationCard(
   val scope = rememberCoroutineScope()
   val themeColors = MaterialTheme.colors
 
-  CardContainer(
+  HomeCardContainer(
     icon = Icons.Filled.Stars,
     title = stringResource(id = R.string.recommendation),
     minHeight = 100.dp,
@@ -74,7 +74,7 @@ fun RecommendationCard(
             )
             append("（")
             linkedText(
-              text = stringResource(id = R.string.category) + "：" + state.recommendationPages!!.sourceCategoryName,
+              text = stringResource(id = R.string.ofCategory) + "：" + state.recommendationPages!!.sourceCategoryName,
               onClick = { gotoArticlePage("Category:" + state.recommendationPages!!.sourceCategoryName) }
             )
             append("）")

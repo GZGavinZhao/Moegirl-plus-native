@@ -34,6 +34,7 @@ import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.drawer.CommonDrawer
 import com.moegirlviewer.screen.home.component.RandomPageCard
 import com.moegirlviewer.screen.home.component.RecommendationCard
+import com.moegirlviewer.screen.home.component.TopCard
 import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCard
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.store.AccountStore
@@ -192,8 +193,9 @@ private fun ComposedCardsHomePage() {
       modifier = Modifier
         .verticalScroll(rememberScrollState())
     ) {
-      RandomPageCard(model.randomPageCardState)
+      TopCard(model.topCardState)
       NewPagesCard(model.newPagesCardState)
+      RandomPageCard(model.randomPageCardState)
       RecommendationCard(model.recommendationCardState)
     }
   }

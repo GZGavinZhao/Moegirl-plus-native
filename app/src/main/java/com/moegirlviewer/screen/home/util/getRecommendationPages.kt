@@ -43,10 +43,11 @@ suspend fun getRecommendationPages(
 
   // 取分类列表里中间的分类
   // 为什么不取最大的：最大的一般为“人物”、“声优”这种较广的分类，无法正确反映用户偏好
-  val medianCategoryName = countedCategories.run {
-    val medianIndex = round((this.size / 2).toFloat()).toInt()
-    this[medianIndex].name.replaceFirst(categoryPageNamePrefixRegex, "")
+  val medianCategoryFullName = countedCategories.run {
+    val medianIndex = round(((this.size - 1) / 2).toFloat()).toInt()
+    this[medianIndex].name
   }
+  val medianCategoryName = medianCategoryFullName.replaceFirst(categoryPageNamePrefixRegex, "")
   val pagesOfMaximalCategory = CategoryApi.search(
     categoryName = medianCategoryName,
     sort = CategoryApiPagesSort.values().random(),
@@ -72,7 +73,7 @@ suspend fun getRecommendationPages(
   return RecommendationPagesResult(
     sourceCategoryName = medianCategoryName,
     sourcePageName = pageCategories.first {
-      it.categories!!.any { it.title == countedCategories.last().name }
+      it.categories!!.any { it.title == medianCategoryFullName }
     }.title,
     body = randomPagesWithMainImage
   )

@@ -165,7 +165,6 @@ class LinkedTextScope {
 
     withStyle(SpanStyle(
       color = themeColors.secondary,
-      textDecoration = TextDecoration.Underline
     ).merge(style)) {
       val uuid = UUID.randomUUID().toString()
       handlers[uuid] = onClick
