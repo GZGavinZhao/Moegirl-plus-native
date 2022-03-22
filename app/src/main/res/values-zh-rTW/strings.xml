@@ -79,6 +79,7 @@
     <string name="selected">已選擇</string>
     <string name="sent">已傳送</string>
     <string name="recommendation">推薦</string>
+    <string name="card">卡片</string>
 
     <string name="year">年</string>
     <string name="month">月</string>
@@ -194,6 +195,7 @@
     <string name="becauseYouRead">因你閱讀</string>
     <string name="viewMore">檢視更多</string>
     <string name="ofCategory">所屬分類</string>
+    <string name="webPage">網頁</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>
@@ -217,7 +219,7 @@
     <string name="inputSummaryPlease">請輸入摘要</string>
     <string name="imageSavedToAlbum">圖片已儲存至相簿</string>
     <string name="markAllAsReaded">標記所有為已讀</string>
-    <string name="toggleRecentChangesMode">切換為%1$s模式</string>
+    <string name="toggleToXXMode">切換為%1$s模式</string>
     <string name="toggleRecentChangeDetail">%1$s詳細記錄(共%2$s次編輯)</string>
     <string name="searchResultTotal">共搜尋到%1$s條結果。</string>
     <string name="searchResultRedirectTitle">「%1$s」指向該頁面</string>

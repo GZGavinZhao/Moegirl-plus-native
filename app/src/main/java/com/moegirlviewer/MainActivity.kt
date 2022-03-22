@@ -105,7 +105,6 @@ class MainActivity : ComponentActivity() {
       val splashImageMode = SettingsStore.common.getValue { this.splashImageMode }.first()
       val isShowSplashScreen = !hasDeepLink &&
         !hasShortcutAction &&
-//        homeScreenReady.isActive &&
         (isMoegirl(splashImageMode != SplashImageMode.OFF, true))
 
       if (isShowSplashScreen) {
@@ -294,11 +293,6 @@ private suspend fun ComponentActivity.withSplashScreen(
     delay(3000)
     complete()
   }
-
-//  launch {
-//    homeScreenReady.await()
-//    complete()
-//  }
 
   application.initializeOnCreate()
   initializeOnCreate()

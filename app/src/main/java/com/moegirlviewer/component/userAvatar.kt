@@ -27,7 +27,9 @@ fun UserAvatar(
       .then(modifier)
       .clip(CircleShape)
       .noRippleClickable { onClick?.invoke() },
-    model = rememberImageRequest(Constants.avatarUrl + userName),
+    model = rememberImageRequest(Constants.avatarUrl + userName) {
+      error(R.drawable.akari)
+    },
     placeholder = painterResource(R.drawable.akari),
     contentDescription = null
   )

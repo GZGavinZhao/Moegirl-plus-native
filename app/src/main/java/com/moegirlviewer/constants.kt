@@ -40,7 +40,7 @@ private val sourceConstants = when (BuildConfig.FLAVOR_source) {
     registerUrl = "https://www.hmoegirl.com/index.php?title=%E7%89%B9%E6%AE%8A:%E5%88%9B%E5%BB%BA%E8%B4%A6%E6%88%B7&returnto=Mainpage",
     appDownloadUrl = "",
     filePrefix = "文件:",
-    topCardContentPageName = ""
+    topCardContentPageName = "User:東東君/app/homeTopCard"
   )
 
   else -> error("数据源'${BuildConfig.FLAVOR_source}'的常量集未配置！")

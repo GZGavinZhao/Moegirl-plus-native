@@ -119,7 +119,7 @@ fun RandomPageActionButton(
           }),
         painter = rememberAsyncImagePainter(usingIcon),
         contentDescription = null,
-        tint = themeColors.onPrimary
+        tint = if (themeColors.isLight) themeColors.onPrimary else themeColors.secondary
       )
     }
   }

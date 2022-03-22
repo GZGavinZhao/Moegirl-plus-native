@@ -23,7 +23,6 @@ data class CommonSettings(
   var stopMediaOnLeave: Boolean = false,
   var syntaxHighlight: Boolean = true,
   var darkThemeBySystem: Boolean = false,
-  var cardsHomePage: Boolean = true,
   var useSpecialCharSupportedFontInApp: Boolean = false,
   var useSpecialCharSupportedFontInArticle: Boolean = false,
   var splashImageMode: SplashImageMode = SplashImageMode.NEW,
@@ -50,7 +49,8 @@ data class RecentChangesSettings(
 
 //  var randomPage: Boolean = true,
 data class CardsHomePageSettings(
-  var newPagesCardViewMode: NewPagesCardViewMode = NewPagesCardViewMode.LIST
+  var newPagesCardViewMode: NewPagesCardViewMode = NewPagesCardViewMode.LIST,
+  var useCardsHome: Boolean = true,
 ) : Settings()
 
 // 一些杂项，基本不算是设置，只是用来记录的持久化变量

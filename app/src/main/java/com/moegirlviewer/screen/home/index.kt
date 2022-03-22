@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.home
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,8 +11,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,10 +41,7 @@ import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CardsHomePageSettings
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.background2
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.HmoeSplashImageManager
-import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.navigate
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -56,14 +53,14 @@ fun HomeScreen() {
   val model: HomeScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
   val drawerRef = remember { Ref<CustomDrawerRef>() }
-  val isUseCardsHomePage by SettingsStore.common.getValue { cardsHomePage }.collectAsState(initial = true)
+  val isUseCardsHome by SettingsStore.cardsHomePage.getValue { useCardsHome }.collectAsState(initial = true)
 
-  LaunchedEffect(true) {
-    if (isUseCardsHomePage) {
+  LaunchedEffect(isUseCardsHome) {
+    if (isUseCardsHome) {
       if (model.cardsDataStatus == LoadStatus.INITIAL) model.loadCardsData()
     } else {
-      if (HomeScreenModel.needReload || model.articleViewRef.value!!.loadStatus == LoadStatus.LOADING) {
-        model.articleViewRef.value!!.reload(true)
+      if (HomeScreenModel.needReload || model.articleViewRef.value?.loadStatus == LoadStatus.LOADING) {
+        model.articleViewRef.value?.reload?.invoke(true)
         HomeScreenModel.needReload = false
       }
     }
@@ -85,29 +82,25 @@ fun HomeScreen() {
             )
           },
         ) {
-          if (isUseCardsHomePage) {
-            ComposedCardsHomePage()
-          } else {
-            ArticleView(
-              props = ArticleViewProps(
-                pageName = "Mainpage",
-                ref = model.articleViewRef,
-                onArticleRendered = {
-                  scope.launch {
-                    delay(500)
-                    homeScreenReady.complete(true)
-                  }
-                }
+          Crossfade(
+            targetState = isUseCardsHome
+          ) {
+            if (it) {
+              ComposedCardsHomePage()
+            } else {
+              ArticleView(
+                props = ArticleViewProps(
+                  pageName = "Mainpage",
+                  ref = model.articleViewRef,
+                )
               )
-            )
+            }
           }
         }
       }
     }
   }
 }
-
-val homeScreenReady = CompletableDeferred<Boolean>()
 
 @Composable
 fun ComposedTopAppBar(
@@ -116,6 +109,7 @@ fun ComposedTopAppBar(
   val scope = rememberCoroutineScope()
   val themeColors = MaterialTheme.colors
   val waitingNotificationTotal by AccountStore.waitingNotificationTotal.collectAsState(0)
+  val isUseCardsHome by SettingsStore.cardsHomePage.getValue { useCardsHome }.collectAsState(initial = true)
 
   StyledTopAppBar(
     navigationIcon = {
@@ -159,6 +153,19 @@ fun ComposedTopAppBar(
       )
     },
     actions = {
+      AppHeaderIcon(
+        image = if (isUseCardsHome) Icons.Filled.Layers else Icons.Filled.TextSnippet,
+        onClick = {
+          scope.launch {
+            SettingsStore.cardsHomePage.setValue { useCardsHome = !useCardsHome }
+            toast(Globals.context.getString(
+              R.string.toggleToXXMode,
+              Globals.context.getString(if (isUseCardsHome) R.string.webPage else R.string.card)
+            ))
+          }
+        }
+      )
+
       AppHeaderIcon(
         image = Icons.Filled.Search,
         onClick = {

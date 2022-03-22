@@ -11,7 +11,6 @@ import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.watchList.WatchListApi
 import com.moegirlviewer.request.MoeRequestException
-import com.moegirlviewer.room.watchingPage.WatchingPage
 import com.moegirlviewer.screen.recentChanges.util.RawRecentChanges
 import com.moegirlviewer.screen.recentChanges.util.RecentChanges
 import com.moegirlviewer.screen.recentChanges.util.processRecentChanges
@@ -80,7 +79,7 @@ class RecentChangesScreenModel @Inject constructor() : ViewModel() {
     val isWatchListMode = SettingsStore.recentChanges.getValue { this.isWatchListMode }.first()
     val allListStr = Globals.context.getString(R.string.allList)
     val watchListStr = Globals.context.getString(R.string.watchList)
-    toast(Globals.context.getString(R.string.toggleRecentChangesMode,
+    toast(Globals.context.getString(R.string.toggleToXXMode,
       if (isWatchListMode) watchListStr else allListStr
     ))
   }
