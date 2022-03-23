@@ -2,10 +2,7 @@ package com.moegirlviewer.screen.category
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -13,30 +10,26 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.icons.filled.Sort
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
+import com.moegirlviewer.api.category.CategoryApiPagesSort
 import com.moegirlviewer.compable.OnSwipeLoading
 import com.moegirlviewer.component.*
 import com.moegirlviewer.component.styled.StyledText
@@ -175,8 +168,11 @@ private fun ComposedHeader(
   categoryName: String,
   categories: List<String>
 ) {
+  val model: CategoryScreenModal = hiltViewModel()
   val themeColors = MaterialTheme.colors
+  val scope = rememberCoroutineScope()
   val scrollState = rememberScrollState()
+  var visibleSortMenu by remember { mutableStateOf(false) }
 
   LaunchedEffect(true) {
     scrollState.animateScrollTo(scrollState.maxValue)
@@ -197,11 +193,52 @@ private fun ComposedHeader(
       },
       actions = {
         AppHeaderIcon(
-          image = Icons.Filled.Search,
+          image = Icons.Filled.Sort,
           onClick = {
-            Globals.navController.navigate("search")
+            visibleSortMenu = true
           }
         )
+
+        @Composable
+        fun Item(
+          sort: CategoryApiPagesSort,
+          text: String,
+        ) {
+          DropdownMenuItem(
+            onClick = {
+              visibleSortMenu = false
+              model.categorySort = sort
+              scope.launch { model.loadPages(true) }
+            }
+          ) {
+            StyledText(
+              text = text,
+              color = Color.Unspecified
+            )
+          }
+        }
+
+        DropdownMenu(
+          expanded = visibleSortMenu,
+          onDismissRequest = { visibleSortMenu = false }
+        ) {
+          Item(
+            sort = CategoryApiPagesSort.NEWER,
+            text = stringResource(id = R.string.newerUpdate)
+          )
+          Item(
+            sort = CategoryApiPagesSort.OLDER,
+            text = stringResource(id = R.string.olderUpdate)
+          )
+          Item(
+            sort = CategoryApiPagesSort.ASCENDING,
+            text = stringResource(id = R.string.alphabetAsc)
+          )
+          Item(
+            sort = CategoryApiPagesSort.DESCENDING,
+            text = stringResource(id = R.string.alphabetDesc)
+          )
+        }
       }
     )
 

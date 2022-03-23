@@ -196,6 +196,10 @@
     <string name="viewMore">檢視更多</string>
     <string name="ofCategory">所屬分類</string>
     <string name="webPage">網頁</string>
+    <string name="newerUpdate">最新更新</string>
+    <string name="olderUpdate">最舊更新</string>
+    <string name="alphabetAsc">字母升序</string>
+    <string name="alphabetDesc">字母降序</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>

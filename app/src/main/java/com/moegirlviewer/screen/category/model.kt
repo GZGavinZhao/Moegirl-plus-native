@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.moegirlviewer.api.category.CategoryApi
+import com.moegirlviewer.api.category.CategoryApiPagesSort
 import com.moegirlviewer.api.category.bean.CategorySearchResultBean
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.util.LoadStatus
@@ -22,12 +23,21 @@ class CategoryScreenModal @Inject constructor() : ViewModel() {
   var statusOfPages by mutableStateOf(LoadStatus.INITIAL)
   var continueKeyOfPages: CategorySearchResultBean.Continue? = null
   val lazyListState = LazyListState()
+  var categorySort by mutableStateOf(CategoryApiPagesSort.NEWER)
 
   var subCategories by mutableStateOf(emptyList<String>())
   var statusOfSubCategories by mutableStateOf(LoadStatus.INITIAL)
   var continueKeyOfSubCategories: String? = null
 
-  suspend fun loadPages() {
+  suspend fun loadPages(
+    reload: Boolean = false
+  ) {
+    if (reload) {
+      statusOfPages = LoadStatus.INITIAL
+      continueKeyOfPages = null
+      pages = emptyList()
+    }
+
     if (LoadStatus.isCannotLoad(statusOfPages)) return
     statusOfPages = LoadStatus.LOADING
 
@@ -35,7 +45,8 @@ class CategoryScreenModal @Inject constructor() : ViewModel() {
       val res = CategoryApi.search(
         categoryName = routeArguments.categoryName,
         thumbSize = 360,
-        continueKey =  continueKeyOfPages
+        continueKey =  continueKeyOfPages,
+        sort = categorySort
       )
 
       if (res.query == null) {
