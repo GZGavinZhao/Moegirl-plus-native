@@ -17,6 +17,7 @@ import coil.request.ImageRequest
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.commentEmotionList.getHmoeEmotionByName
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
 import org.jsoup.Jsoup
@@ -34,7 +35,6 @@ fun parseCommentHtml(
   val elements = htmlDoc.body().childNodes()
 
   val commentElements = mutableListOf<CommentElement>()
-  var incrementIdForInlineContent = 0
 
   fun traversal(elements: List<Node>) {
     for (item in elements) {
@@ -57,50 +57,29 @@ fun parseCommentHtml(
             item.childNode(0) is TextNode -> commentElements.add(aTagParser(item))
 
             item.tagName() == "img" -> {
-              var widthAttr = item.attr("width")
-              var heightAttr = item.attr("height")
+              val widthAttr = item.attr("width")
+              val heightAttr = item.attr("height")
               val imageUrl = item.attr("src").correctImgUrl()
 
-              // 如果img标签上没有width或height属性，这里尝试手动获取一下大小
-              if (widthAttr == "" || heightAttr == "") {
-                val imageSize = probeImageSize(imageUrl)
-                widthAttr = imageSize.width.toString()
-                heightAttr = imageSize.height.toString()
-              }
+              commentElements.add(createImageInlineContent(
+                density = density,
+                maxImageWidth = maxImageWidth,
+                width = widthAttr.toIntOrNull(),
+                height = heightAttr.toIntOrNull(),
+                imageUrl = imageUrl
+              ))
+            }
 
-              var width = widthAttr.toInt().dp
-              var height = heightAttr.toInt().dp
+            item.hasClass("emos") -> {
+              val emotionName = item.classNames().first { it.contains("emoji") }
+              val emotion = getHmoeEmotionByName(emotionName) ?: continue
 
-              if (width.value > maxImageWidth) {
-                height *= maxImageWidth / width.value
-                width = maxImageWidth.dp
-              }
-
-              val inlineContent = InlineTextContent(
-                placeholder = Placeholder(
-                  width = density.run { width.toSp() },
-                  height = density.run { height.toSp() },
-                  placeholderVerticalAlign = PlaceholderVerticalAlign.Bottom
-                ),
-                children = {
-                  Box(
-                    modifier = Modifier
-                      .fillMaxSize()
-                  ) {
-                    AsyncImage(
-                      modifier = Modifier
-                        .fillMaxSize(),
-                      model = rememberImageRequest(imageUrl),
-                      contentDescription = null,
-                      placeholder = painterResource(R.drawable.placeholder)
-                    )
-                  }
-                }
-              )
-
-              commentElements.add(CommentInlineContent(
-                id = (++incrementIdForInlineContent).toString(),
-                content = inlineContent
+              commentElements.add(createImageInlineContent(
+                density = density,
+                maxImageWidth = maxImageWidth,
+                width = 20,
+                height = 20,
+                imageUrl = emotion.imageUrl
               ))
             }
 
@@ -208,6 +187,58 @@ private fun probeImageSize(imageUrl: String): ImageSize {
   Globals.imageLoader.enqueue(request)
 
   return runBlocking { completableDeferred.await() }
+}
+
+private var incrementIdForInlineContent = 0
+
+private fun createImageInlineContent(
+  density: Density,
+  width: Int? = null,
+  height: Int? = null,
+  maxImageWidth: Int,
+  imageUrl: String
+): CommentInlineContent {
+  var finalWidth = width
+  var finalHeight = height
+
+  if (finalWidth == null || finalHeight == null) {
+    val imageSize = probeImageSize(imageUrl)
+    finalWidth = imageSize.width
+    finalHeight = imageSize.height
+  }
+
+
+  if (finalWidth > maxImageWidth) {
+    finalHeight = finalHeight * maxImageWidth / finalWidth
+    finalWidth = maxImageWidth
+  }
+
+  val inlineContent = InlineTextContent(
+    placeholder = Placeholder(
+      width = density.run { finalWidth.dp.toSp() },
+      height = density.run { finalHeight.dp.toSp() },
+      placeholderVerticalAlign = PlaceholderVerticalAlign.Bottom
+    ),
+    children = {
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+      ) {
+        AsyncImage(
+          modifier = Modifier
+            .fillMaxSize(),
+          model = rememberImageRequest(imageUrl),
+          contentDescription = null,
+          placeholder = painterResource(R.drawable.placeholder)
+        )
+      }
+    }
+  )
+
+  return CommentInlineContent(
+    id = (++incrementIdForInlineContent).toString(),
+    content = inlineContent
+  )
 }
 
 private fun String.correctImgUrl(): String {

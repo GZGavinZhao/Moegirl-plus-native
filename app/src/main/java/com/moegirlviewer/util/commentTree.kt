@@ -4,8 +4,7 @@ import androidx.compose.ui.unit.Density
 import com.moegirlviewer.api.comment.bean.CommentsBean
 import com.moegirlviewer.component.nativeCommentContent.util.CommentElement
 import com.moegirlviewer.component.nativeCommentContent.util.parseCommentHtml
-import com.moegirlviewer.screen.comment.component.commentItem.commentItemLeftPadding
-import com.moegirlviewer.screen.comment.component.commentItem.commentItemRightPadding
+import com.moegirlviewer.screen.comment.component.commentItem.maxCommentImageWidthReduction
 import kotlin.math.floor
 
 typealias Comment = CommentsBean.Flowthread.Post
@@ -107,8 +106,7 @@ private fun Comment.toRootCommentNode(commentsData: List<Comment>): CommentNode 
 private fun parseComment(text: String): List<CommentElement> {
   // 屏幕宽度 - 评论item组件左边距(50) - 右边距(10)，组件见：screen/comment/component/commentItem
   val maxImageWidth =
-    floor((Globals.activity.resources.displayMetrics.widthPixels / Globals.activity.resources.displayMetrics.density).toDouble()).toInt()
-      - commentItemLeftPadding - commentItemRightPadding
+    floor((Globals.activity.resources.displayMetrics.widthPixels / Globals.activity.resources.displayMetrics.density).toDouble()).toInt() - maxCommentImageWidthReduction
 
   return parseCommentHtml(
     html = text,

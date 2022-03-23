@@ -202,7 +202,7 @@ fun CommentScreenCommentItem(
 
       Column(
         modifier = Modifier
-          .padding(vertical = 10.dp, horizontal = 15.dp),
+          .padding(vertical = 10.dp, horizontal = commentItemContainerHorizontal.dp),
         verticalArrangement = Arrangement.Center
       ) {
         ComposedHeader(
@@ -514,5 +514,7 @@ private fun String.eraseTargetUserName(): String {
   return this.replace(Regex("""^@<a[\s\S]+?</a>"""), "")
 }
 
-val commentItemLeftPadding = 50
-val commentItemRightPadding = 10
+private const val commentItemContainerHorizontal = 15
+private const val commentItemLeftPadding = 50
+private const val commentItemRightPadding = 10
+const val maxCommentImageWidthReduction = commentItemContainerHorizontal * 2 + commentItemLeftPadding + commentItemRightPadding
