@@ -468,6 +468,12 @@ private fun ComposedCommentReply(
       .fillMaxWidth()
       .background(if (isDarkTheme) themeColors.background else Color(0xffededed))
       .padding(10.dp)
+      .noRippleClickable {
+        Globals.navController.navigate(CommentReplyRouteArguments(
+          pageId = pageId,
+          commentId = commentData.id
+        ))
+      }
   ) {
     for (item in replyList.take(3)) {
       StyledText(
@@ -494,13 +500,7 @@ private fun ComposedCommentReply(
 
     StyledText(
       modifier = Modifier
-        .padding(top = 3.dp)
-        .noRippleClickable {
-          Globals.navController.navigate(CommentReplyRouteArguments(
-            pageId = pageId,
-            commentId = commentData.id
-          ))
-        },
+        .padding(top = 3.dp),
       text = stringResource(id = R.string.replyTotal, replyList.size) + " >",
       color = themeColors.secondary,
       fontSize = 13.sp,
