@@ -160,7 +160,7 @@ fun ComposedTopAppBar(
             SettingsStore.cardsHomePage.setValue { useCardsHome = !useCardsHome }
             toast(Globals.context.getString(
               R.string.toggleToXXMode,
-              Globals.context.getString(if (isUseCardsHome) R.string.webPage else R.string.card)
+              Globals.context.getString(if (isUseCardsHome) R.string.card else R.string.webPage)
             ))
           }
         }

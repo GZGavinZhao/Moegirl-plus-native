@@ -119,6 +119,7 @@ fun HomeCard(
       .fillMaxWidth(),
     elevation = 2.dp,
     shape = RoundedCornerShape(10.dp),
+    enabled = onClick != null,
     onClick = { onClick?.invoke() }
   ) {
     Box(

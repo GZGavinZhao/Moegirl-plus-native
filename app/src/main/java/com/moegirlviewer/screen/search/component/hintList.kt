@@ -1,5 +1,9 @@
 package com.moegirlviewer.screen.search.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -59,7 +63,21 @@ fun ColumnScope.SearchScreenHintList() {
       .weight(1f)
       .verticalScroll(rememberScrollState())
   ) {
-    if (status == LoadStatus.LOADING) {
+    AnimatedVisibility(
+      visible = status == LoadStatus.LOADING,
+      enter = expandVertically(
+        expandFrom = Alignment.Top,
+        animationSpec = tween(
+          durationMillis = 200
+        )
+      ),
+      exit = shrinkVertically(
+        shrinkTowards = Alignment.Top,
+        animationSpec = tween(
+          durationMillis = 200
+        )
+      )
+    ) {
       StyleLinearProgressIndicator()
     }
 
