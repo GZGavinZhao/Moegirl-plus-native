@@ -126,4 +126,14 @@ object PageApi {
       }
     }
   )
+
+  suspend fun purgePage(
+    pageName: String
+  ) = moeRequest(
+    entity = PurgePageResultBean::class.java,
+    params = mapOf(
+      "action" to "purge",
+      "titles" to pageName
+    )
+  )
 }

@@ -154,9 +154,8 @@ class EditScreenModel @Inject constructor() : ViewModel() {
     val backupRoom = Globals.room.backupRecord()
     val backupRecord = backupRoom.getItem(BackupRecordType.EDIT_CONTENT, backupId).first() ?: return
 
-    val lastEditDateTimestamp = EditApi.getTimestampOfLastEdit(routeArguments.pageName)
-    val lastEditDate = if (lastEditDateTimestamp != null) {
-      parseMoegirlNormalTimestamp(lastEditDateTimestamp).plusHours(8)
+    val lastEditDate = if (baseDateISOForEdit != null) {
+      parseMoegirlNormalTimestamp(baseDateISOForEdit!!).plusHours(8)
     } else {
       LocalDateTime.MIN
     }
