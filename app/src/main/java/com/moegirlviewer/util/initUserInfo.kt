@@ -23,7 +23,9 @@ suspend fun initNecessaryUserInfo() {
 
 suspend fun initDeferrableUserInfo() = coroutineScope {
   launch {
-    if (!refreshWatchList()) {
+    try {
+      refreshWatchList()
+    } catch (e: MoeRequestException) {
       printPlainLog("刷新监视列表失败")
     }
   }

@@ -27,7 +27,7 @@ val moeOkHttpClient = OkHttpClient.Builder()
   .build()
 
 suspend fun <T> moeRequest(
-  params: Map<String, Any>,
+  params: Map<String, Any> = emptyMap(),
   method: MoeRequestMethod = MoeRequestMethod.GET,
   baseUrl: String = Constants.apiUrl,
   entity: Class<T>? = null,
@@ -94,7 +94,7 @@ suspend fun <T> moeRequest(
     }
   }
 
-  response.bodyContentHandle(entity)
+  response.body!!.string().bodyContentHandle(entity)
 }
 
 enum class MoeRequestMethod {

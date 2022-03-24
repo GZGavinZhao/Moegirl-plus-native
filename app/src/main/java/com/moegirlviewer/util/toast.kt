@@ -5,10 +5,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-val scope = CoroutineScope(Dispatchers.Main)
+private val scope = CoroutineScope(Dispatchers.Main)
 
-fun toast(text: String) {
-  scope.launch {
-    Toast.makeText(Globals.context, text, Toast.LENGTH_LONG).show()
-  }
+fun toast(text: String) = scope.launch {
+  Toast.makeText(Globals.context, text, Toast.LENGTH_LONG).show()
 }

@@ -12,11 +12,12 @@ import kotlinx.coroutines.withContext
 import okhttp3.Response
 
 
-internal suspend fun <T> Response.bodyContentHandle(
-  entity: Class<T>?,
+suspend fun <T> String.bodyContentHandle(
+  entity: Class<T>? = null,
   unknownErrorHandle: (suspend (bodyContent: String?) -> T)? = null
 ): T {
-  val bodyContent = body!!.string()
+  val bodyContent = this
+  if (entity == String::class.java) return bodyContent as T
 
   return when(probeMoeResponseType(bodyContent)) {
     MoeResponseType.DATA -> {
@@ -24,11 +25,7 @@ internal suspend fun <T> Response.bodyContentHandle(
     }
 
     MoeResponseType.ERROR -> {
-      throw body!!.toMoeRequestError(bodyContent)
-    }
-
-    MoeResponseType.POLL -> {
-      bodyContent as T
+      throw bodyContent.toMoeRequestError()
     }
 
     MoeResponseType.TX_CAPTCHA -> {

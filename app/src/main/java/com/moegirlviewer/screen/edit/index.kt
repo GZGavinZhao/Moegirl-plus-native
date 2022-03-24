@@ -1,6 +1,7 @@
 package com.moegirlviewer.screen.edit
 
-import androidx.compose.foundation.layout.Column
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
@@ -11,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,6 +44,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @Composable
 fun EditScreen(arguments: EditRouteArguments) {
   val model: EditScreenModel = hiltViewModel()
+  val configuration = LocalConfiguration.current
 
   SideEffect {
     model.routeArguments = arguments
@@ -90,16 +93,37 @@ fun EditScreen(arguments: EditRouteArguments) {
           )
         }
       ) {
-        HorizontalPager(
-          count = 2,
-          userScrollEnabled = false,
-          state = model.pagerState,
-//          dragEnabled = false
-        ) { currentIndex ->
-          if (currentIndex == 0) {
-            EditScreenWikitextEditor()
-          } else {
-            EditScreenPreview()
+        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+          HorizontalPager(
+            count = 2,
+            userScrollEnabled = false,
+            state = model.pagerState,
+          ) { currentIndex ->
+            if (currentIndex == 0) {
+              EditScreenWikitextEditor()
+            } else {
+              EditScreenPreview()
+            }
+          }
+        } else {
+          Row(
+            modifier = Modifier
+              .fillMaxSize()
+          ) {
+            Box(
+              modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+            ) {
+              EditScreenWikitextEditor()
+            }
+            Box(
+              modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+            ) {
+              EditScreenPreview()
+            }
           }
         }
       }

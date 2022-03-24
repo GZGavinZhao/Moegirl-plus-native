@@ -1,10 +1,18 @@
 package com.moegirlviewer.api.watchList
 
+import com.moegirlviewer.Constants
 import com.moegirlviewer.api.watchList.bean.RawWatchListBean
 import com.moegirlviewer.api.watchList.bean.RecentChangesOfWatchList
 import com.moegirlviewer.api.watchList.bean.WatchTokenBean
 import com.moegirlviewer.request.MoeRequestMethod
+import com.moegirlviewer.request.MoeRequestWikiException
+import com.moegirlviewer.request.moeOkHttpClient
 import com.moegirlviewer.request.moeRequest
+import com.moegirlviewer.request.util.bodyContentHandle
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.Request
+import org.jsoup.Jsoup
 
 object WatchListApi {
   suspend fun setWatchStatus(pageName: String, watch: Boolean) = moeRequest(
@@ -47,17 +55,15 @@ object WatchListApi {
     )
   }
 
-  suspend fun getRawWatchList(continueKey: String? = null) = moeRequest(
-    entity = RawWatchListBean::class.java,
-    params = mutableMapOf<String, Any>().apply {
-      this["action"] = "query"
-      this["format"] = "json"
-      this["list"] = "watchlistraw"
-      this["continue"] = "-||"
-      this["wrlimit"] = 500
-      if (continueKey != null) this["wrcontinue"] = continueKey
-    }
-  )
+  suspend fun getRawWatchList(): List<String> {
+    val rawHtml = moeRequest(
+      entity = String::class.java,
+      baseUrl = Constants.mainUrl + "/Special:%E7%BC%96%E8%BE%91%E7%9B%91%E8%A7%86%E5%88%97%E8%A1%A8/raw",
+    )
+
+    val htmlDoc = Jsoup.parse(rawHtml)
+    return htmlDoc.getElementById("mw-input-wpTitles")!!.text().split("\n")
+  }
 }
 
 private suspend fun getWatchToken(): String {

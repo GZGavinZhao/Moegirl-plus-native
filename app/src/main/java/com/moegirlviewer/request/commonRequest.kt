@@ -22,21 +22,19 @@ class CommonRequestException(
   cause = cause
 )
 
-suspend fun <T> Request.send(entity: Class<T>): T {
-  return withContext(Dispatchers.IO) {
-    val res = try {
-      moeOkHttpClient.newCall(this@send).execute()
-    } catch (e: Exception) {
-      throw CommonRequestException(
-        message = e.message,
-        cause = e,
-      )
-    }
+suspend fun <T> Request.send(entity: Class<T>): T = withContext(Dispatchers.IO) {
+  val res = try {
+    moeOkHttpClient.newCall(this@send).execute()
+  } catch (e: Exception) {
+    throw CommonRequestException(
+      message = e.message,
+      cause = e,
+    )
+  }
 
-    if (res.isSuccessful) {
-      Gson().fromJson(res.body!!.string(), entity)
-    } else {
-      throw CommonRequestException(res.message)
-    }
+  if (res.isSuccessful) {
+    Gson().fromJson(res.body!!.string(), entity)
+  } else {
+    throw CommonRequestException(res.message)
   }
 }

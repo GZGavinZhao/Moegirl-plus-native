@@ -285,7 +285,7 @@
     <string name="emptySearchKeywordHint">搜尋關鍵詞不能為空</string>
     <string name="hasBackupHint">因為您上次編輯後未提交，自動生成了一個備份。是否要恢復此備份(%1$s)</string>
     <string name="expiredBackupHint">這是一個過期的備份(備份時間後頁面出現新的編輯)，恢復後請謹慎提交。</string>
-    <string name="txBlocked">請求被防火牆攔截</string>
+    <string name="txBlocked">請求被防火牆攔截，請稍候訪問，不要頻繁重新整理</string>
     <string name="txCaptchaExitHint">關閉驗證資料將無法正常獲取，是否返回返回重新驗證？</string>
     <string name="commentContentCopiedHint">已複製評論內容</string>
     <string name="deleteBrowsingRecordHint">是否要刪除該條記錄？</string>
