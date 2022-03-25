@@ -54,6 +54,7 @@ class ArticleViewState(
   var context: ComposableContext,
   var props: ArticleViewProps,
 ) {
+  val coroutineScope = CoroutineScope(Dispatchers.Main)
   var articleData by mutableStateOf<ArticleData?>(null)
   var status by mutableStateOf(LoadStatus.INITIAL)
   var contentHeight by mutableStateOf(0f)
@@ -337,7 +338,7 @@ class ArticleViewState(
 
         if (props.linkDisabled) return@to
         // 明明没用到协程，有时候却报“方法必须在主线程调用”，暂时没搞明白，先套个withContext
-        scope.launch {
+        coroutineScope.launch {
           withContext(Dispatchers.Main) {
             Globals.navController.navigate(ArticleRouteArguments(
               pageName = pageName,
@@ -353,7 +354,7 @@ class ArticleViewState(
         val clickedIndex = linkData.get("clickedIndex").asInt
 
         val images = Gson().fromJson(imagesJsonArr, Array<MoegirlImage>::class.java)
-        scope.launch {
+        coroutineScope.launch {
           Globals.commonLoadingDialog.show(CommonLoadingDialogProps(
             title = Globals.context.getString(R.string.gettingImageUrl),
           ))
@@ -383,7 +384,7 @@ class ArticleViewState(
 
       if (linkType == "anchor") {
         val id = linkData.get("id").asString
-        scope.launch {
+        coroutineScope.launch {
           htmlWebViewRef.value!!.injectScript(
             "moegirl.method.link.gotoAnchor('$id', -${props.contentTopPadding.value})"
           )
@@ -401,7 +402,7 @@ class ArticleViewState(
 
         if (props.linkDisabled) return@to
 
-        scope.launch {
+        coroutineScope.launch {
           val isLoggedIn = AccountStore.isLoggedIn.first()
           if (!isLoggedIn) {
             Globals.commonAlertDialog.show(CommonAlertDialogProps(
@@ -453,7 +454,7 @@ class ArticleViewState(
 
     "loaded" to {
       if (articleHtml != "") {
-        scope.launch {
+        coroutineScope.launch {
           delay(props.renderDelay)
           status = LoadStatus.SUCCESS
           props.onArticleRendered?.invoke()
@@ -479,7 +480,7 @@ class ArticleViewState(
       val requestParams = it.get("data").asJsonObject
       val callbackId = it.get("callbackId").asInt
 
-      scope.launch {
+      coroutineScope.launch {
         try {
           val httpUrl = url.toHttpUrl().newBuilder()
           val formBody = FormBody.Builder()
@@ -532,7 +533,7 @@ class ArticleViewState(
       val token = it.get("token").asString
 
       try {
-        scope.launch {
+        coroutineScope.launch {
           val willUpdateContent = AccountApi.poll(pollId, answer, token).toUnicodeForInjectScriptInWebView()
           htmlWebViewRef.value!!.injectScript(
             "moegirl.method.poll.updatePollContent('$pollId', '$willUpdateContent')"

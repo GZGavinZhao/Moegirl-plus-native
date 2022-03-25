@@ -1,0 +1,30 @@
+{
+  "easyGoVersion": "1.0",
+  "client": "koharubiyori.hmoegirl",
+  "logicEntities": [
+    {
+      "head": {
+        "function": "magicwindow",
+        "required": "true"
+      },
+      "body": {
+        "mode": "0",
+        "defaultDualActivities": {
+          "mainPages": "com.moegirlviewer.MainActivity"
+        },
+        "transActivities": [],
+        "Activities": [
+          {
+            "name": "com.moegirlviewer.MainActivity",
+            "defaultFullScreen": "true"
+          }
+        ],
+        "UX": {
+          "supportRotationUxCompat": "false",
+          "isDraggable": "true",
+          "supportDraggingToFullScreen": "PAD|FOLD"
+        }
+      }
+    }
+  ]
+}

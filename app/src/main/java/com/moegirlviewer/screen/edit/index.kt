@@ -1,9 +1,11 @@
 package com.moegirlviewer.screen.edit
 
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Autorenew
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -93,37 +95,15 @@ fun EditScreen(arguments: EditRouteArguments) {
           )
         }
       ) {
-        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-          HorizontalPager(
-            count = 2,
-            userScrollEnabled = false,
-            state = model.pagerState,
-          ) { currentIndex ->
-            if (currentIndex == 0) {
-              EditScreenWikitextEditor()
-            } else {
-              EditScreenPreview()
-            }
-          }
-        } else {
-          Row(
-            modifier = Modifier
-              .fillMaxSize()
-          ) {
-            Box(
-              modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-            ) {
-              EditScreenWikitextEditor()
-            }
-            Box(
-              modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-            ) {
-              EditScreenPreview()
-            }
+        HorizontalPager(
+          count = 2,
+          userScrollEnabled = false,
+          state = model.pagerState,
+        ) { currentIndex ->
+          if (currentIndex == 0) {
+            EditScreenWikitextEditor()
+          } else {
+            EditScreenPreview()
           }
         }
       }
@@ -138,6 +118,7 @@ private fun ComposedHeader(
   editType: EditType
 ) {
   val model: EditScreenModel = hiltViewModel()
+  val configuration = LocalConfiguration.current
   val themeColors = MaterialTheme.colors
 
   LaunchedEffect(model.selectedTabIndex) {
@@ -154,6 +135,7 @@ private fun ComposedHeader(
     EditType.SECTION -> stringResource(id = R.string.editSection)
     EditType.NEW_PAGE -> stringResource(id = R.string.create)
   }
+
 
   Surface(
     elevation = 5.dp
