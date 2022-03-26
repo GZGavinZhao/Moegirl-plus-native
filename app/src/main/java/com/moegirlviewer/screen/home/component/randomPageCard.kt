@@ -12,6 +12,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
@@ -108,7 +109,10 @@ fun RandomPageCard(
                 .padding(top = 10.dp),
               text = if (state.pageData!!.extract != "") state.pageData!!.extract else stringResource(id = R.string.noIntroduction),
               fontSize = 15.sp,
-              color = if (state.pageData!!.extract != "") themeColors.text.primary else themeColors.text.tertiary
+              lineHeight = 25.sp,
+              color = if (state.pageData!!.extract != "") themeColors.text.primary else themeColors.text.tertiary,
+              maxLines = 5,
+              overflow = TextOverflow.Ellipsis
             )
           }
         }

@@ -36,8 +36,10 @@ fun ColumnLayoutNewPages(
   RippleColorScope(color = themeColors.secondary) {
     Row(
       modifier = Modifier
-        .padding(10.dp)
-        .horizontalScroll(scrollState)
+        .height(220.dp)
+        .padding(top = 10.dp, bottom = 5.dp, start = 10.dp, end = 10.dp)
+        .horizontalScroll(scrollState),
+      verticalAlignment = Alignment.CenterVertically
     ) {
       for ((index, item) in pageList.withIndex()) {
         Item(
@@ -62,7 +64,9 @@ private fun Item(
 
   Column(
     modifier = Modifier
-      .padding(start = if (isFirstItem) 0.dp else 10.dp, top = 10.dp)
+      .height(210.dp)
+      .padding(start = if (isFirstItem) 0.dp else 10.dp)
+      .clip(RoundedCornerShape(10.dp))
       .clickable { onClick() },
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -70,7 +74,7 @@ private fun Item(
       AsyncImage(
         modifier = Modifier
           .width(120.dp)
-          .height(160.dp)
+          .height(170.dp)
           .clip(RoundedCornerShape(10.dp)),
         model = rememberImageRequest(imageUrl),
         placeholder = painterResource(id = R.drawable.placeholder),
@@ -82,8 +86,9 @@ private fun Item(
       Box(
         modifier = Modifier
           .width(120.dp)
-          .height(160.dp)
-          .background(themeColors.background2),
+          .height(170.dp)
+          .background(themeColors.background2)
+          .clip(RoundedCornerShape(10.dp)),
         contentAlignment = Alignment.Center
       ) {
         StyledText(
@@ -93,17 +98,21 @@ private fun Item(
       }
     }
 
-
-    StyledText(
+    Box(
       modifier = Modifier
-        .padding(top = 5.dp)
-        .width(120.dp),
-      text = title,
-      fontSize = 13.sp,
-      color = themeColors.secondary,
-      maxLines = 2,
-      overflow = TextOverflow.Ellipsis,
-      textAlign = TextAlign.Center
-    )
+        .weight(1f),
+      contentAlignment = Alignment.Center
+    ) {
+      StyledText(
+        modifier = Modifier
+          .width(120.dp),
+        text = title,
+        fontSize = 13.sp,
+        color = themeColors.secondary,
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+        textAlign = TextAlign.Center
+      )
+    }
   }
 }

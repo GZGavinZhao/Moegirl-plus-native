@@ -65,7 +65,8 @@ fun CarouseCard(
       Box(
         modifier = Modifier
           .fillMaxSize()
-          .height(250.dp),
+          .height(250.dp)
+          .noRippleClickable { gotoArticlePage(item.pageName) },
         contentAlignment = Alignment.BottomCenter
       ) {
         AsyncImage(
@@ -80,8 +81,7 @@ fun CarouseCard(
           modifier = Modifier
             .fillMaxWidth()
             .height(40.dp)
-            .background(Color.White.copy(alpha = 0.8f))
-            .noRippleClickable { gotoArticlePage(item.pageName) },
+            .background(Color.White.copy(alpha = 0.8f)),
           contentAlignment = Alignment.Center
         ) {
           StyledText(
