@@ -1,6 +1,7 @@
 package com.moegirlviewer.screen.home.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
@@ -22,6 +23,7 @@ import com.google.accompanist.pager.PagerState
 import com.moegirlviewer.R
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.compable.remember.rememberImageRequest
+import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.HomeScreenCardState
@@ -55,43 +57,45 @@ fun CarouseCard(
     loadStatus = state.status,
     minHeight = 250.dp
   ) {
-    HorizontalPager(
-      count = state.imageList.size,
-      state = state.pagerState,
-      userScrollEnabled = false
-    ) { currentPage ->
-      val item = state.imageList[currentPage]
-
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .height(250.dp)
-          .noRippleClickable { gotoArticlePage(item.pageName) },
-        contentAlignment = Alignment.BottomCenter
-      ) {
-        AsyncImage(
-          modifier = Modifier
-            .fillMaxSize(),
-          model = rememberImageRequest(item.imageUrl),
-          contentDescription = null,
-          contentScale = ContentScale.Crop
-        )
+    RippleColorScope(color = themeColors.secondary) {
+      HorizontalPager(
+        count = state.imageList.size,
+        state = state.pagerState,
+        userScrollEnabled = false
+      ) { currentPage ->
+        val item = state.imageList[currentPage]
 
         Box(
           modifier = Modifier
-            .fillMaxWidth()
-            .height(40.dp)
-            .background(Color.White.copy(alpha = 0.8f)),
-          contentAlignment = Alignment.Center
+            .fillMaxSize()
+            .height(250.dp)
+            .clickable { gotoArticlePage(item.pageName) },
+          contentAlignment = Alignment.BottomCenter
         ) {
-          StyledText(
-            text = item.intro,
-            color = themeColors.secondary,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center
+          AsyncImage(
+            modifier = Modifier
+              .fillMaxSize(),
+            model = rememberImageRequest(item.imageUrl),
+            contentDescription = null,
+            contentScale = ContentScale.Crop
           )
+
+          Box(
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(40.dp)
+              .background(Color.White.copy(alpha = 0.8f)),
+            contentAlignment = Alignment.Center
+          ) {
+            StyledText(
+              text = item.intro,
+              color = Color(51, 102, 204),
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+              fontSize = 16.sp,
+              textAlign = TextAlign.Center
+            )
+          }
         }
       }
     }
