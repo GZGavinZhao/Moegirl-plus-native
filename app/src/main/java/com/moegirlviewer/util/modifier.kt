@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,6 +23,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.shimmer
+import com.moegirlviewer.theme.background2
 import kotlinx.coroutines.delay
 import kotlin.math.PI
 import kotlin.math.abs
@@ -104,4 +109,14 @@ fun Modifier.imeBottomPadding() = composed {
   val ime = LocalWindowInsets.current.ime
   val paddingValue = min(ime.layoutInsets.bottom.toDp(), ime.bottom.toDp())
   padding(bottom = paddingValue)
+}
+
+fun Modifier.styledPlaceholder() = composed {
+  val themeColors = MaterialTheme.colors
+
+  placeholder(
+    visible = true,
+    color = themeColors.background2,
+    highlight = PlaceholderHighlight.shimmer(themeColors.background)
+  )
 }

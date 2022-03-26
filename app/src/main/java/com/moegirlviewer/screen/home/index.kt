@@ -32,10 +32,7 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.drawer.CommonDrawer
-import com.moegirlviewer.screen.home.component.CarouseCard
-import com.moegirlviewer.screen.home.component.RandomPageCard
-import com.moegirlviewer.screen.home.component.RecommendationCard
-import com.moegirlviewer.screen.home.component.TopCard
+import com.moegirlviewer.screen.home.component.*
 import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCard
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.store.AccountStore
@@ -201,14 +198,20 @@ private fun ComposedCardsHomePage() {
       modifier = Modifier
         .verticalScroll(rememberScrollState())
     ) {
-      if (isMoegirl()) {
-        TopCard(model.topCardState)
+      if (model.cardsDataStatus == LoadStatus.INIT_LOADING) {
+        CardPlaceholder()
+        CardPlaceholder()
+        CardPlaceholder()
       } else {
-        CarouseCard(model.carouseCard)
+        if (isMoegirl()) {
+          TopCard(model.topCardState)
+        } else {
+          CarouseCard(model.carouseCard)
+        }
+        NewPagesCard(model.newPagesCardState)
+        RandomPageCard(model.randomPageCardState)
+        RecommendationCard(model.recommendationCardState)
       }
-      NewPagesCard(model.newPagesCardState)
-      RandomPageCard(model.randomPageCardState)
-      RecommendationCard(model.recommendationCardState)
     }
   }
 }
