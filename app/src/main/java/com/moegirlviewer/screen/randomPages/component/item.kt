@@ -77,8 +77,8 @@ internal fun BoxScope.RandomPageItem(
   val swipeAnimationYOffset = 100.dp * swipeProgress
   val appearAnimationYOffset = 100.dp * (1 - state.appearAnimationValue.value)
   val animationAlpha = when(state.status) {
-    RandomPageItemStatus.INITIAL -> 0.25f * state.appearAnimationValue.value
-    RandomPageItemStatus.APPEARED -> 0.25f + (0.75f * state.otherSwipeProgress)
+    RandomPageItemStatus.INITIAL -> 0.2f * state.appearAnimationValue.value
+    RandomPageItemStatus.APPEARED -> 0.2f + (0.8f * state.otherSwipeProgress)
     RandomPageItemStatus.RISEN -> 1f * (1 - swipeProgress)
     else -> 1f
   }

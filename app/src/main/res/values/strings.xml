@@ -200,6 +200,7 @@
     <string name="olderUpdate">最旧更新</string>
     <string name="alphabetAsc">字母升序</string>
     <string name="alphabetDesc">字母降序</string>
+    <string name="highQualityArticle">优质条目</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>

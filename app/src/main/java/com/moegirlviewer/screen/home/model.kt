@@ -9,6 +9,7 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.MemoryStore
 import com.moegirlviewer.component.articleView.ArticleViewRef
+import com.moegirlviewer.screen.home.component.CarouseCardState
 import com.moegirlviewer.screen.home.component.RandomPageCardState
 import com.moegirlviewer.screen.home.component.RecommendationCardState
 import com.moegirlviewer.screen.home.component.TopCardState
@@ -28,6 +29,7 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
   var cardsDataStatus by mutableStateOf(LoadStatus.INITIAL)
 
   val topCardState = TopCardState()
+  val carouseCard = CarouseCardState()
   val randomPageCardState = RandomPageCardState()
   val newPagesCardState = NewPagesCardState()
   val recommendationCardState = RecommendationCardState()
@@ -50,10 +52,14 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
   suspend fun loadCardsData() = coroutineScope {
     cardsDataStatus = LoadStatus.LOADING
     listOf(
+      launch {
+        if (isMoegirl())
+          topCardState.reload() else
+          carouseCard.reload()
+      },
       launch { randomPageCardState.reload() },
       launch { newPagesCardState.reload() },
       launch { recommendationCardState.reload() },
-      launch { topCardState.reload() }
     ).forEach { it.join() }
     cardsDataStatus = LoadStatus.SUCCESS
   }

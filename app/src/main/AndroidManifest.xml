@@ -21,6 +21,7 @@
             android:windowSoftInputMode="adjustResize"
             android:resizeableActivity="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.MoegirlPlus.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
