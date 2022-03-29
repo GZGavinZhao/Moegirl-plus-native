@@ -50,7 +50,7 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
   }
 
   suspend fun loadCardsData() = coroutineScope {
-    cardsDataStatus = LoadStatus.INIT_LOADING
+    cardsDataStatus = LoadStatus.LOADING
     listOf(
       launch {
         if (isMoegirl())

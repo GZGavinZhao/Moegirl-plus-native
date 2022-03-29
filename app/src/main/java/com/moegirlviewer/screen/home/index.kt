@@ -198,7 +198,7 @@ private fun ComposedCardsHomePage() {
       modifier = Modifier
         .verticalScroll(rememberScrollState())
     ) {
-      if (model.cardsDataStatus == LoadStatus.INIT_LOADING) {
+      if (model.cardsDataStatus == LoadStatus.LOADING) {
         CardPlaceholder()
         CardPlaceholder()
         CardPlaceholder()
