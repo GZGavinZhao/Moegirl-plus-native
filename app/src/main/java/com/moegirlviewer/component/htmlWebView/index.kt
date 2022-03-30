@@ -173,7 +173,7 @@ class HtmlWebViewRef(
 )
 
 data class HtmlWebViewContent(
-  val body: String,
+  val body: String = "",
   val title: String? = null,
   val fullBody: Boolean = false,  // 如果为true，则完全使用body字段的内容作为webview的内容，忽略下面的所有参数
   val injectedStyles: List<String>? = null,

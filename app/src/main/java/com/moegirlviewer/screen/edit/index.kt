@@ -7,10 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Autorenew
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +34,7 @@ import com.moegirlviewer.util.computeMd5
 import com.moegirlviewer.util.imeBottomPadding
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class)
 @InternalCoroutinesApi
@@ -46,6 +44,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @Composable
 fun EditScreen(arguments: EditRouteArguments) {
   val model: EditScreenModel = hiltViewModel()
+  val scope = rememberCoroutineScope()
   val configuration = LocalConfiguration.current
 
   SideEffect {
@@ -73,14 +72,20 @@ fun EditScreen(arguments: EditRouteArguments) {
     }
   }
   
-  BackHandler(model.wikitextTextFieldValue.text != model.originalWikiText) {
-    Globals.commonAlertDialog.show(CommonAlertDialogProps(
-      content = { StyledText(stringResource(id = R.string.editleaveHint)) },
-      secondaryButton = ButtonConfig.cancelButton(),
-      onPrimaryButtonClick = {
+  BackHandler(true) {
+    scope.launch {
+      if (model.wikiEditorState.getTextContent() != model.originalWikiText) {
+        Globals.commonAlertDialog.show(CommonAlertDialogProps(
+          content = { StyledText(stringResource(id = R.string.editleaveHint)) },
+          secondaryButton = ButtonConfig.cancelButton(),
+          onPrimaryButtonClick = {
+            Globals.navController.popBackStack()
+          }
+        ))
+      } else {
         Globals.navController.popBackStack()
       }
-    ))
+    }
   }
 
   model.memoryStore.Provider {

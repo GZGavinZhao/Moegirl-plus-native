@@ -8,8 +8,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -23,6 +21,7 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebView
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewContent
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.component.wikiEditor.WikiEditorState
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.request.MoeRequestTimeoutException
 import com.moegirlviewer.room.backupRecord.BackupRecord
@@ -51,7 +50,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
   var selectedTabIndex by mutableStateOf(0)
   val pagerState = PagerState()
 
-  var wikitextTextFieldValue by mutableStateOf(TextFieldValue())
+  val wikiEditorState = WikiEditorState()
   var originalWikiText = ""
   var wikitextStatus by mutableStateOf(LoadStatus.INITIAL)
   val focusRequester = FocusRequester()
@@ -83,7 +82,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
           val res = EditApi.getWikitext(routeArguments.preload!!)
           val getPreloadContentRegex = Regex("""<includeonly>([\s\S]+)</includeonly>""")
           val preloadContent = getPreloadContentRegex.find(res.parse.wikitext._asterisk)?.groupValues?.get(1)
-          wikitextTextFieldValue = TextFieldValue(preloadContent ?: "")
+          wikiEditorState.setTextContent(preloadContent ?: "")
           wikitextStatus = LoadStatus.SUCCESS
         } catch (e: MoeRequestException) {
           printRequestErr(e, "加载预加载模版内容失败")
@@ -105,7 +104,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
 
     try {
       val res = EditApi.getWikitext(routeArguments.pageName, routeArguments.section)
-      wikitextTextFieldValue = TextFieldValue(res.parse.wikitext._asterisk)
+      wikiEditorState.setTextContent(res.parse.wikitext._asterisk)
       originalWikiText = res.parse.wikitext._asterisk
       wikitextStatus = LoadStatus.SUCCESS
     } catch(e: MoeRequestException) {
@@ -117,7 +116,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
   suspend fun loadPreview() {
     previewStatus = LoadStatus.LOADING
     try {
-      val res = EditApi.getPreview(wikitextTextFieldValue.text, routeArguments.pageName)
+      val res = EditApi.getPreview(wikiEditorState.getTextContent(), routeArguments.pageName)
       previewHtml = res.parse.text._asterisk
       previewStatus = LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {
@@ -126,20 +125,21 @@ class EditScreenModel @Inject constructor() : ViewModel() {
     }
   }
 
-  fun insertWikitext(insertText: QuickInsertText) {
-    val currentContent = wikitextTextFieldValue.text
-    val location = wikitextTextFieldValue.selection.end
-    val before = currentContent.substring(0, location)
-    val after = currentContent.substring(location)
-    val newLocation = location + insertText.text.length - insertText.minusOffset
-
-    wikitextTextFieldValue = wikitextTextFieldValue.copy(
-      text = before + insertText.text + after,
-      selection = TextRange(
-        newLocation - insertText.selectionMinusOffset,
-        newLocation
-      )
+  suspend fun insertWikitext(insertText: QuickInsertText) {
+    val cursorPosition = wikiEditorState.getPosition()
+    val newCursorPosition = cursorPosition.copy(
+      ch = cursorPosition.ch + insertText.text.length - insertText.minusOffset
     )
+
+    wikiEditorState.insertTextAtCursor(insertText.text)
+    if (insertText.selectionMinusOffset == 0) {
+      wikiEditorState.setCursorPosition(newCursorPosition)
+    } else {
+      val selectionStartPosition = newCursorPosition.copy(
+        ch = newCursorPosition.ch - 2
+      )
+      wikiEditorState.setSelection(selectionStartPosition, newCursorPosition)
+    }
   }
 
   suspend fun makeBackup(content: String) {
@@ -166,7 +166,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
 
     fun handleOnCheckRecovery() {
       fun restoreBackup() = coroutineScope.launch {
-        wikitextTextFieldValue = wikitextTextFieldValue.copy(backupRecord.content)
+        wikiEditorState.setTextContent(backupRecord.content)
         toast(Globals.context.getString(R.string.backupRestored))
         Globals.commonAlertDialog.hide()
         backupRoom.deleteItem(backupRecord)
@@ -218,10 +218,12 @@ class EditScreenModel @Inject constructor() : ViewModel() {
         text = Globals.context.getString(R.string.viewDiff),
         onClick = {
           checkBackupFlag = true
-          Globals.navController.navigate(CompareTextRouteArguments(
-            formText = wikitextTextFieldValue.text,
-            toText = backupRecord.content
-          ))
+          coroutineScope.launch {
+            Globals.navController.navigate(CompareTextRouteArguments(
+              formText = wikiEditorState.getTextContent(),
+              toText = backupRecord.content
+            ))
+          }
         }
       )
     ))
@@ -232,7 +234,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
    */
   suspend fun submit(summary: String, minor: Boolean): Boolean {
     var fullSummary = ""
-    var wikitext = wikitextTextFieldValue.text
+    var wikitext = wikiEditorState.getTextContent()
     val getTitleRegex = Regex("""^=+(.+?)=+\s*""")
 
     if (!isNewSection) {

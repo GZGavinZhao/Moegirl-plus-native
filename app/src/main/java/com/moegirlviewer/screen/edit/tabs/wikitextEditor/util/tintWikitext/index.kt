@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.withStyle
 import com.moegirlviewer.util.Italic
-
+// 这里的代码暂时用不上了
 internal val linearParsingMarkupList = listOf(
   PairWikitextMarkup(
     startText = "[[",
