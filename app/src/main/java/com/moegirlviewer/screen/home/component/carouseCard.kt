@@ -39,7 +39,6 @@ fun CarouseCard(
   val themeColors = MaterialTheme.colors
 
   LaunchedEffect(true) {
-
     suspend fun loop() {
       delay(3000)
       if (state.status == LoadStatus.SUCCESS) {
