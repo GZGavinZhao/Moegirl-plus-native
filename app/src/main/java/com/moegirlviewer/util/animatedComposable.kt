@@ -2,16 +2,30 @@ package com.moegirlviewer.util
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
+import com.moegirlviewer.component.Center
 import com.moegirlviewer.util.Animation.*
-import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
+
+class TransitionPayload {
+  private var _wrapper: @Composable (animationProgress: Float) -> Unit = {}
+  var EnterTransition.wrapper
+    get() = _wrapper
+    set(value) { _wrapper = value }
+}
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.animatedComposable(
@@ -39,8 +53,9 @@ fun NavGraphBuilder.animatedComposable(
   )
 }
 
-private val routeMetas = mutableMapOf<String, RouteMeta>()
+val routeMetas = mutableMapOf<String, RouteMeta>()
 
+@OptIn(InternalAnimationApi::class)
 @ExperimentalAnimationApi
 private fun getTransitions(animation: Animation): Transitions = when(animation) {
   SLIDE -> {
@@ -51,13 +66,29 @@ private fun getTransitions(animation: Animation): Transitions = when(animation) 
         slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec)
       },
       popExitTransition = {
-        slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec)
+        slideOutOfContainer(
+          towards = AnimatedContentScope.SlideDirection.Right,
+          animationSpec = animationSpec,
+        )
       },
       assistExitTransition = {
-        slideOutOfContainer(towards = AnimatedContentScope.SlideDirection.Left, animationSpec)
+        SLIDE.animationDecorationBoxes.assistExitTransition = createMaskDecoration(tween(animationSpec.durationMillis))
+        slideOutOfContainer(
+          towards = AnimatedContentScope.SlideDirection.Left,
+          animationSpec = animationSpec,
+          targetOffset = { (0.2 * it).roundToInt() }
+        )
       },
       assistPopEnterTransition = {
-        slideIntoContainer(AnimatedContentScope.SlideDirection.Right, animationSpec)
+        SLIDE.animationDecorationBoxes.assistPopEnterTransition = createMaskDecoration(
+          animationSpec = tween(animationSpec.durationMillis),
+          reversed = true
+        )
+        slideIntoContainer(
+          towards = AnimatedContentScope.SlideDirection.Right,
+          animationSpec = animationSpec,
+          initialOffset = { (0.2 * it).roundToInt() }
+        )
       }
     )
   }
@@ -164,7 +195,9 @@ private fun getTransitions(animation: Animation): Transitions = when(animation) 
   }
 }
 
-enum class Animation() {
+enum class Animation(
+  val animationDecorationBoxes: NavigationAnimationDecorationBoxes = NavigationAnimationDecorationBoxes()
+) {
   SLIDE,
   PUSH,
   FADE,
@@ -175,6 +208,15 @@ enum class Animation() {
 
 class RouteMeta(
   val animation: Animation
+)
+
+typealias DecorationBox = @Composable AnimatedVisibilityScope.() -> Unit
+
+data class NavigationAnimationDecorationBoxes(
+  var enterTransition: DecorationBox? = null,
+  var popExitTransition: DecorationBox? = null,
+  var assistExitTransition: DecorationBox? = null,
+  var assistPopEnterTransition: DecorationBox? = null
 )
 
 @ExperimentalAnimationApi
@@ -189,7 +231,7 @@ private val AnimatedContentScope<NavBackStackEntry>.initialRouteMeta: RouteMeta 
   return routeMetas[routeName]!!
 }
 
-private fun getRouteName(route: String): String {
+fun getRouteName(route: String): String {
   return route.split("?")[0]
 }
 
@@ -221,6 +263,27 @@ private class Transitions(
       popExitTransition = popExitTransition,
       assistExitTransition = assistExitTransition,
       assistPopEnterTransition = assistPopEnterTransition
+    )
+  }
+}
+
+private fun createMaskDecoration(
+  animationSpec: AnimationSpec<Float>,
+  reversed: Boolean = false
+): @Composable AnimatedVisibilityScope.() -> Unit = {
+  val animationValue = remember { Animatable(if (reversed) 1f else 0f) }
+
+  LaunchedEffect(true) {
+    animationValue.animateTo(
+      animationSpec = animationSpec,
+      targetValue = if (reversed) 0f else 1f
+    )
+  }
+
+  Center {
+    Spacer(modifier = Modifier
+      .fillMaxSize()
+      .background(Color.Black.copy(alpha = 0.75f * animationValue.value))
     )
   }
 }

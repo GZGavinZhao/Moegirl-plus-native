@@ -12,7 +12,7 @@ fun printPlainLog(message: String, error: Exception? = null) {
   error?.printStackTrace()
 }
 
-fun printDebugLog(vararg messages: Any) {
+fun printDebugLog(vararg messages: Any?) {
   if (messages.size == 1) {
     Log.d("------------ debug -------------", messages[0].toString())
     return

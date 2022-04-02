@@ -87,8 +87,8 @@ private fun Item(
         modifier = Modifier
           .width(120.dp)
           .height(170.dp)
-          .background(themeColors.background2)
-          .clip(RoundedCornerShape(10.dp)),
+          .clip(RoundedCornerShape(10.dp))
+          .background(themeColors.background2),
         contentAlignment = Alignment.Center
       ) {
         StyledText(

@@ -17,8 +17,8 @@ fun ComponentActivity.initializeOnCreate() {
   }
 
   val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-  val scale = resources.displayMetrics.density
-  val statusBarHeight = resources.getDimensionPixelSize(resourceId) / scale
+  val density = resources.displayMetrics.density
+  val statusBarHeight = resources.getDimensionPixelSize(resourceId) / density
 
   Globals.statusBarHeight = statusBarHeight
 }

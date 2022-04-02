@@ -26,6 +26,7 @@ import coil.request.ImageRequest
 import com.moegirlviewer.util.consumptionOptionalDetectTransformGestures
 import com.moegirlviewer.util.noRippleClickable
 import kotlinx.coroutines.launch
+import java.lang.Float.max
 
 @OptIn(ExperimentalFoundationApi::class, coil.annotation.ExperimentalCoilApi::class)
 @Composable
@@ -74,9 +75,9 @@ fun ImageViewer(
         }
         .pointerInput(Unit) {
           this.consumptionOptionalDetectTransformGestures { centroid, pan, zoom, rotation ->
-            val maxTranslateX = java.lang.Float.max(0f, containerWidth * (scale.value - 1) * 0.5f)
+            val maxTranslateX = max(0f, containerWidth * (scale.value - 1) * 0.5f)
             val maxTranslateY =
-              java.lang.Float.max(0f, (imageHeight * scale.value - containerHeight) * 0.5f)
+              max(0f, (imageHeight * scale.value - containerHeight) * 0.5f)
 
             var nextScale = scale.value
             var nextTranslateX = translateX.value
