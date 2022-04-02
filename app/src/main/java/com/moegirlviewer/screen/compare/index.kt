@@ -142,19 +142,19 @@ private fun ComposedHeader(
           )
         },
         actions = {
+          AppHeaderIcon(
+            image = Icons.Filled.FavoriteBorder,
+            iconSize = 27.dp,
+            onClick = {
+              model.sendThank()
+            }
+          )
+
           if (isLoggedIn && !model.isCompareTextMode) {
             AppHeaderIcon(
               image = Icons.Filled.LowPriority,
               onClick = {
                 showUndoDialog(model)
-              }
-            )
-
-            AppHeaderIcon(
-              image = Icons.Filled.FavoriteBorder,
-              iconSize = 27.dp,
-              onClick = {
-                model.sendThank()
               }
             )
           }
