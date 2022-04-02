@@ -77,7 +77,7 @@ fun ImageViewerScreen(
     Box(
       modifier = Modifier
         .fillMaxSize()
-        .offset((-20).dp, (-70).dp),
+        .offset((-70).dp, (-22).dp),
       contentAlignment = Alignment.BottomEnd
     ) {
       Icon(
