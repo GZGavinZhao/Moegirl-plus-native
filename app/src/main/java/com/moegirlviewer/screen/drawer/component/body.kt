@@ -3,6 +3,8 @@ package com.moegirlviewer.screen.drawer.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
@@ -18,21 +20,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.ImagePainter
 import com.moegirlviewer.R
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.component.RippleColorScope
-import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.contribution.ContributionRouteArguments
+import com.moegirlviewer.screen.drawer.CommonDrawerState
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
@@ -41,15 +41,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun CommonDrawerBody(
   modifier: Modifier = Modifier,
-  drawerRef: CustomDrawerRef
+  commonDrawerState: CommonDrawerState
 ) {
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
   val isLoggedIn by AccountStore.isLoggedIn.collectAsState(initial = false)
   val userNameOfCurrentAccount by AccountStore.userName.collectAsState(initial = "")
 
-  fun withDrawerClosed(exec: () -> Unit) {
-    drawerRef.close()
+  fun withDrawerClosed(exec: () -> Unit) = scope.launch {
+    commonDrawerState.close()
     exec()
   }
 
@@ -69,6 +69,7 @@ fun CommonDrawerBody(
     Column(
       modifier = Modifier
         .fillMaxWidth()
+        .verticalScroll(rememberScrollState())
         .then(modifier)
     ) {
       Item(

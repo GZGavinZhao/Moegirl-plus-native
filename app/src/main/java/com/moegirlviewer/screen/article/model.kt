@@ -17,10 +17,12 @@ import com.moegirlviewer.component.articleView.ArticleInfo
 import com.moegirlviewer.component.articleView.ArticleViewRef
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.customDrawer.CustomDrawerState
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
 import com.moegirlviewer.room.watchingPage.WatchingPage
+import com.moegirlviewer.screen.drawer.CommonDrawerState
 import com.moegirlviewer.screen.edit.EditRouteArguments
 import com.moegirlviewer.screen.edit.EditType
 import com.moegirlviewer.store.AccountStore
@@ -36,6 +38,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   val coroutineScope = CoroutineScope(Dispatchers.Main)
   val cachedWebViews = CachedWebViews()
   val memoryStore = MemoryStore()
+  val catalogDrawerState = CustomDrawerState()
   val articleViewRef = Ref<ArticleViewRef>()
   lateinit var routeArguments: ArticleRouteArguments
 

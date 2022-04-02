@@ -12,9 +12,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,13 +26,14 @@ import com.moegirlviewer.R
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.articleView.ArticleCatalog
 import com.moegirlviewer.component.customDrawer.CustomDrawer
-import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.customDrawer.CustomDrawerSide
+import com.moegirlviewer.component.customDrawer.CustomDrawerState
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.sideBorder
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
@@ -39,16 +41,16 @@ fun ArticleScreenCatalog(
   catalogData: List<ArticleCatalog>,
   statusBarPadding: Boolean = true,
   onSectionClick: (sectionId: String) -> Unit,
-  ref: Ref<CustomDrawerRef>? = null,
+  customDrawerState: CustomDrawerState = remember { CustomDrawerState() },
   content: @Composable () -> Unit
 ) {
   val themeColors = MaterialTheme.colors
 
   CustomDrawer(
+    state = customDrawerState,
     width = (LocalConfiguration.current.screenWidthDp * 0.55).dp,
     side = CustomDrawerSide.RIGHT,
     alwaysDelayInitialize = true,
-    ref = ref,
     drawerContent = {
       Column(
         modifier = Modifier
@@ -56,7 +58,7 @@ fun ArticleScreenCatalog(
       ) {
         ComposedHeader(
           statusBarPadding = statusBarPadding,
-          drawerRef = it
+          customDrawerState = customDrawerState
         )
 
         RippleColorScope(color = themeColors.secondary) {
@@ -86,9 +88,10 @@ fun ArticleScreenCatalog(
 @Composable
 private fun ComposedHeader(
   statusBarPadding: Boolean,
-  drawerRef: CustomDrawerRef
+  customDrawerState: CustomDrawerState
 ) {
   val themeColors = MaterialTheme.colors
+  val scope = rememberCoroutineScope()
 
   Row(
     modifier = Modifier
@@ -114,7 +117,7 @@ private fun ComposedHeader(
     RippleColorScope(color = themeColors.onPrimary) {
       IconButton(
         onClick = {
-          drawerRef.close()
+          scope.launch { customDrawerState.close() }
         }
       ) {
         Icon(

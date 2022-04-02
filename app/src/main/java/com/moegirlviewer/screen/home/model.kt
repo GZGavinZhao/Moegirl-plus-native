@@ -9,6 +9,7 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.MemoryStore
 import com.moegirlviewer.component.articleView.ArticleViewRef
+import com.moegirlviewer.screen.drawer.CommonDrawerState
 import com.moegirlviewer.screen.home.component.CarouseCardState
 import com.moegirlviewer.screen.home.component.RandomPageCardState
 import com.moegirlviewer.screen.home.component.RecommendationCardState
@@ -24,6 +25,7 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
   val coroutineScope = CoroutineScope(Dispatchers.Main)
   val cachedWebViews = CachedWebViews()
   val memoryStore = MemoryStore()
+  val commonDrawerState = CommonDrawerState()
   val articleViewRef = Ref<ArticleViewRef>()
   val swipeRefreshState = SwipeRefreshState(true)
   var cardsDataStatus by mutableStateOf(LoadStatus.INITIAL)

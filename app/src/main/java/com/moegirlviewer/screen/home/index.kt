@@ -11,12 +11,16 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Layers
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.TextSnippet
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.node.Ref
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,22 +30,19 @@ import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
-import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
-import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.drawer.CommonDrawer
+import com.moegirlviewer.screen.drawer.CommonDrawerState
 import com.moegirlviewer.screen.home.component.*
 import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCard
-import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.store.AccountStore
-import com.moegirlviewer.store.CardsHomePageSettings
 import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.theme.background2
-import com.moegirlviewer.util.*
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.delay
+import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.isMoegirl
+import com.moegirlviewer.util.toast
 import kotlinx.coroutines.launch
 
 
@@ -49,8 +50,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen() {
   val model: HomeScreenModel = hiltViewModel()
-  val scope = rememberCoroutineScope()
-  val drawerRef = remember { Ref<CustomDrawerRef>() }
+  val configuration = LocalConfiguration.current
   val isUseCardsHome by SettingsStore.cardsHomePage.getValue { useCardsHome }.collectAsState(initial = true)
 
   LaunchedEffect(isUseCardsHome) {
@@ -69,14 +69,14 @@ fun HomeScreen() {
   }
 
   CommonDrawer(
-    ref = drawerRef
+    state = model.commonDrawerState,
   ) {
     model.memoryStore.Provider {
       model.cachedWebViews.Provider {
         Scaffold(
           topBar = {
             ComposedTopAppBar(
-              drawerRef = drawerRef,
+              commonDrawerState = model.commonDrawerState,
             )
           },
         ) {
@@ -102,7 +102,7 @@ fun HomeScreen() {
 
 @Composable
 fun ComposedTopAppBar(
-  drawerRef: Ref<CustomDrawerRef>
+  commonDrawerState: CommonDrawerState
 ) {
   val scope = rememberCoroutineScope()
   val themeColors = MaterialTheme.colors
@@ -139,7 +139,7 @@ fun ComposedTopAppBar(
         AppHeaderIcon(
           image = Icons.Filled.Menu,
           onClick = {
-            scope.launch { drawerRef.value!!.open.invoke() }
+            scope.launch { commonDrawerState.open() }
           }
         )
       }

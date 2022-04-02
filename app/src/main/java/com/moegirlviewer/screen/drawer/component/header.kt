@@ -22,8 +22,8 @@ import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.RippleColorScope
-import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.screen.drawer.CommonDrawerState
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.*
@@ -33,7 +33,7 @@ const val avatarSize = 75
 
 @Composable
 fun CommonDrawerHeader(
-  drawerRef: CustomDrawerRef
+  commonDrawerState: CommonDrawerState
 ) {
   val statusBarHeight = Globals.statusBarHeight
   val themeColors = MaterialTheme.colors
@@ -45,7 +45,7 @@ fun CommonDrawerHeader(
 
   fun handleOnClickAvatarOrHintText() {
     scope.launch {
-      drawerRef.close()
+      commonDrawerState.close()
       if (isLoggedIn) {
         gotoUserPage(userName!!)
       } else {

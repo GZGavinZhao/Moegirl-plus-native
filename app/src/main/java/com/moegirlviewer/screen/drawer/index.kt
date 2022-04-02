@@ -8,16 +8,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.painterResource
 import com.moegirlviewer.R
 import com.moegirlviewer.component.customDrawer.CustomDrawer
-import com.moegirlviewer.component.customDrawer.CustomDrawerRef
+import com.moegirlviewer.component.customDrawer.CustomDrawerState
 import com.moegirlviewer.screen.drawer.component.CommonDrawerBody
 import com.moegirlviewer.screen.drawer.component.CommonDrawerFooter
 import com.moegirlviewer.screen.drawer.component.CommonDrawerHeader
@@ -25,19 +25,19 @@ import com.moegirlviewer.screen.drawer.component.CommonDrawerHeader
 @ExperimentalMaterialApi
 @Composable
 fun CommonDrawer(
-  ref: Ref<CustomDrawerRef>? = null,
+  state: CommonDrawerState = remember { CommonDrawerState() },
   content: @Composable () -> Unit
 ) {
   val themeColors = MaterialTheme.colors
 
   CustomDrawer(
-    ref = ref,
+    state = state.customDrawerState,
     drawerContent = {
       Column(
         modifier = Modifier
           .background(color = themeColors.background),
       ) {
-        CommonDrawerHeader(it)
+        CommonDrawerHeader(state)
         Box(
           modifier = Modifier
             .fillMaxWidth()
@@ -65,10 +65,10 @@ fun CommonDrawer(
             CommonDrawerBody(
               modifier = Modifier
                 .weight(1f),
-              drawerRef = it
+              commonDrawerState = state
             )
             CommonDrawerFooter(
-              drawerRef = it
+              commonDrawerState = state
             )
           }
         }
@@ -76,5 +76,17 @@ fun CommonDrawer(
     }
   ) {
     content()
+  }
+}
+
+class CommonDrawerState {
+  val customDrawerState = CustomDrawerState()
+
+  suspend fun open() {
+    customDrawerState.open()
+  }
+
+  suspend fun close() {
+    customDrawerState.close()
   }
 }

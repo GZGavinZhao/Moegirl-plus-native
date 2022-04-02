@@ -6,7 +6,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.node.Ref
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -15,7 +14,6 @@ import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.compable.remember.rememberDebouncedManualEffector
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
-import com.moegirlviewer.component.customDrawer.CustomDrawerRef
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.article.component.catalog.ArticleScreenCatalog
@@ -43,7 +41,6 @@ fun ArticleScreen(
   val scope = rememberCoroutineScope()
   val model: ArticleScreenModel = hiltViewModel()
   val statusBarHeight = Globals.statusBarHeight
-  val catalogRef = Ref<CustomDrawerRef>()
 
   SideEffect {
     model.routeArguments = arguments
@@ -120,7 +117,7 @@ fun ArticleScreen(
       model.cachedWebViews.Provider {
         ArticleScreenCatalog(
           catalogData = model.catalogData,
-          ref = catalogRef,
+          customDrawerState = model.catalogDrawerState,
           onSectionClick = { model.jumpToAnchor(it) }
         ) {
           Scaffold(
@@ -151,7 +148,9 @@ fun ArticleScreen(
                         scope.launch { model.togglePageIsInWatchList() }
                       }
                       SHOW_CATALOG -> {
-                        catalogRef.value!!.open()
+                        scope.launch {
+                          model.catalogDrawerState.open()
+                        }
                       }
                       SHARE -> { model.share() }
                       GOTO_ADD_SECTION -> {
