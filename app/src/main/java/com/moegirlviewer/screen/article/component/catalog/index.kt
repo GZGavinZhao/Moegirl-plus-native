@@ -151,7 +151,7 @@ private fun SectionItem(
       text = (if (level >= 3) "- " else "") + name,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      fontSize = if (level < 3) 16.sp else 14.sp,
+      fontSize = if (level < 3) 18.sp else 16.sp,
       color = if (level < 3) themeColors.secondary else themeColors.text.secondary
     )
   }
