@@ -42,9 +42,12 @@ fun CarouseCard(
 
     suspend fun loop() {
       delay(3000)
-      var nextPage = state.pagerState.currentPage + 1
-      if (nextPage == state.pagerState.pageCount) nextPage = 0
-      state.pagerState.animateScrollToPage(nextPage)
+      if (state.status == LoadStatus.SUCCESS) {
+        var nextPage = state.pagerState.currentPage + 1
+        if (nextPage == state.pagerState.pageCount) nextPage = 0
+        state.pagerState.animateScrollToPage(nextPage)
+      }
+
       loop()
     }
 

@@ -160,6 +160,35 @@ private fun getTransitions(animation: Animation): Transitions = when(animation) 
     )
   }
 
+  EXPANDED -> {
+    val animationSpec = TweenSpec<Float>(
+      durationMillis = 350,
+    )
+
+    Transitions.helpful(
+      enterTransition = {
+        fadeIn(animationSpec) +
+          scaleIn(
+            animationSpec = animationSpec,
+            initialScale = 0.5f
+          )
+      },
+      popExitTransition = {
+        fadeOut(animationSpec) +
+          scaleOut(
+            animationSpec = animationSpec,
+            targetScale = 0.5f
+          )
+      },
+      assistExitTransition = {
+        fadeOut(snap(animationSpec.durationMillis))
+      },
+      assistPopEnterTransition = {
+        fadeIn(snap(0))
+      },
+    )
+  }
+
   NONE -> Transitions.helpful(
     enterTransition = {
       EnterTransition.None
@@ -201,6 +230,7 @@ enum class Animation(
   SLIDE,
   PUSH,
   FADE,
+  EXPANDED,
   NONE,
 
   ONLY_CATEGORY_PAGE

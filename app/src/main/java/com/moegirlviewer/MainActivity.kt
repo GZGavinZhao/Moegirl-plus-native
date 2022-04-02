@@ -181,7 +181,7 @@ private fun Routes(navController: NavHostController) {
     animatedComposable(
       route = ImageViewerRouteArguments::class.java.formattedRouteName,
       arguments = ImageViewerRouteArguments::class.java.formattedArguments,
-      animation = Animation.FADE
+      animation = Animation.EXPANDED
     ) { ImageViewerScreen(it.arguments!!.toRouteArguments()) }
 
     animatedComposable(

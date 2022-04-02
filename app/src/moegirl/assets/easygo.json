@@ -1,0 +1,15 @@
+{
+  "easyGoVersion": "1.0",
+  "client": "com.moegirlviewer",
+  "logicEntities": [
+    {
+      "head": {
+        "function": "magicwindow",
+        "required": "true"
+      },
+      "body": {
+        "mode": "0"
+      }
+    }
+  ]
+}

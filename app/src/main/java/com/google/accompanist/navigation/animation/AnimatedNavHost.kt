@@ -228,7 +228,7 @@ public fun AnimatedNavHost(
             val targetScreenEntry = transitionsInProgress.last()
             val isTargetScreenEntry = currentEntry == targetScreenEntry
 
-            val routeMeta = routeMetas[getRouteName(currentEntry.destination.route!!)]!!
+            val routeMeta = routeMetas[getRouteName(targetScreenEntry.destination.route!!)]!!
             val animationDecorationBox = routeMeta.animation.animationDecorationBoxes
             val isPush = !composeNavigator.isPop.value
             val usingDecorationBox = when {
