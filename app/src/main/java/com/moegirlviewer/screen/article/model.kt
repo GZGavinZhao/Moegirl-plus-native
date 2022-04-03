@@ -1,11 +1,14 @@
 package com.moegirlviewer.screen.article
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.material.SwipeableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.page.PageApi
@@ -50,8 +53,11 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   var isWatched by mutableStateOf(false)
   var visibleFindBar by mutableStateOf(false)
   var visibleCommentButton by mutableStateOf(false)
+  var articleLoadStatus by mutableStateOf(LoadStatus.INITIAL)
   // 是否允许编辑，null表示权限检测中
   var editAllowed by mutableStateOf<Boolean?>(null)
+  var swipeRefreshState = SwipeRefreshState(true)
+  var scrollState = ScrollState(0)
 
   // 真实页面名
   val truePageName get() = articleData?.parse?.title ?:

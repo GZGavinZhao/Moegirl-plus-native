@@ -27,6 +27,7 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
   val memoryStore = MemoryStore()
   val commonDrawerState = CommonDrawerState()
   val articleViewRef = Ref<ArticleViewRef>()
+  var articleLoadStatus by mutableStateOf(LoadStatus.INITIAL)
   val swipeRefreshState = SwipeRefreshState(true)
   var cardsDataStatus by mutableStateOf(LoadStatus.INITIAL)
 

@@ -1,6 +1,10 @@
 package com.moegirlviewer.screen.home
 
+import ArticleErrorMask
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -25,24 +29,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
+import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
+import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.screen.article.component.ArticleLoadingMask
 import com.moegirlviewer.screen.drawer.CommonDrawer
 import com.moegirlviewer.screen.drawer.CommonDrawerState
 import com.moegirlviewer.screen.home.component.*
 import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCard
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.isMoegirl
-import com.moegirlviewer.util.toast
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
 
@@ -50,11 +55,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen() {
   val model: HomeScreenModel = hiltViewModel()
-  val configuration = LocalConfiguration.current
-  val isUseCardsHome by SettingsStore.cardsHomePage.getValue { useCardsHome }.collectAsState(initial = true)
+  val isUseCardsHome by SettingsStore.cardsHomePage.getValue { useCardsHome }.collectAsState(initial = null)
 
+  if (isUseCardsHome == null) return
   LaunchedEffect(isUseCardsHome) {
-    if (isUseCardsHome) {
+    if (isUseCardsHome!!) {
       if (model.cardsDataStatus == LoadStatus.INITIAL) model.loadCardsData()
     } else {
       if (HomeScreenModel.needReload || model.articleViewRef.value?.loadStatus == LoadStatus.LOADING) {
@@ -81,17 +86,12 @@ fun HomeScreen() {
           },
         ) {
           Crossfade(
-            targetState = isUseCardsHome
+            targetState = isUseCardsHome!!
           ) {
             if (it) {
               ComposedCardsHomePage()
             } else {
-              ArticleView(
-                props = ArticleViewProps(
-                  pageName = "Mainpage",
-                  ref = model.articleViewRef,
-                )
-              )
+              ComposedArticleView()
             }
           }
         }
@@ -212,6 +212,70 @@ private fun ComposedCardsHomePage() {
         RandomPageCard(model.randomPageCardState)
         RecommendationCard(model.recommendationCardState)
       }
+    }
+  }
+}
+
+@Composable
+private fun ComposedArticleView() {
+  val model: HomeScreenModel = hiltViewModel()
+  val scope = rememberCoroutineScope()
+
+  LaunchedEffect(model.articleLoadStatus) {
+    model.swipeRefreshState.isRefreshing = model.articleLoadStatus == LoadStatus.LOADING
+  }
+
+  SwipeRefresh(
+    state = model.swipeRefreshState,
+    onRefresh = {
+      scope.launch { model.articleViewRef.value!!.reload(true) }
+    },
+    indicator = { state, refreshTriggerDistance ->
+      StyledSwipeRefreshIndicator(
+        state = state,
+        refreshTriggerDistance = refreshTriggerDistance
+      )
+    }
+  ) {
+    Center {
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .verticalScroll(rememberScrollState()),
+        contentAlignment = Alignment.Center
+      ) {
+        ArticleView(
+          props = ArticleViewProps(
+            pageName = "Mainpage",
+            ref = model.articleViewRef,
+            fullHeight = true,
+            visibleLoadStatusIndicator = false,
+            onStatusChanged = { model.articleLoadStatus = it }
+          )
+        )
+      }
+    }
+
+    AnimatedVisibility(
+      visible = model.articleLoadStatus == LoadStatus.LOADING,
+      enter = fadeIn(),
+      exit = fadeOut()
+    ) {
+      ArticleLoadingMask()
+    }
+
+    AnimatedVisibility(
+      visible = model.articleLoadStatus == LoadStatus.FAIL,
+      enter = fadeIn(),
+      exit = fadeOut()
+    ) {
+      ArticleErrorMask(
+        onClick = {
+          scope.launch {
+            model.articleViewRef.value!!.reload(true)
+          }
+        }
+      )
     }
   }
 }

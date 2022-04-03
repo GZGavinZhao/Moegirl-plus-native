@@ -81,9 +81,6 @@ fun ArticleView(
   val scope = rememberCoroutineScope()
   val themeColors = MaterialTheme.colors
   val state = ArticleViewState.remember(props)
-  val minContentHeightOfFullHeightMode = LocalConfiguration.current.screenHeightDp -
-    Constants.topAppBarHeight -
-    Globals.statusBarHeight
 
   SideEffect {
     props.ref?.value = ArticleViewRef(
