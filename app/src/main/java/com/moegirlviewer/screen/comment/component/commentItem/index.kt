@@ -6,7 +6,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.forEachGesture
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -20,12 +23,14 @@ import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.node.Ref
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
@@ -56,14 +61,18 @@ import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import com.moegirlviewer.util.CommentTree.Companion.replyList
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 import java.time.LocalDateTime
 
 class CommentScreenCommentItemRef(
   val show: suspend () -> Unit
 )
 
+@OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -180,16 +189,25 @@ fun CommentScreenCommentItem(
       .padding(bottom = 1.dp)
       .fillMaxWidth()
       .background(themeColors.surface)
-      // 这里有问题，会被内部的clickableText挡住，应该用pointerInput手动检测手势，设置由父组件优先处理手势，如果不满足长按条件则不消耗手势，放行给子组件处理
-      .combinedClickable(
-        enabled = true,
-        onClick = {},
-        onLongClick = {
-          copyContentToClipboard(getTextFromHtml(commentData.text.eraseTargetUserName()))
-          vibrate()
-          toast(Globals.context.getString(R.string.commentContentCopiedHint))
+      // 这里不能用普通的clickable，会被内部的clickableText挡住
+      .pointerInput(null) {
+        forEachGesture {
+          awaitPointerEventScope {
+            val event = awaitFirstDown(false)
+            try {
+              withTimeout(viewConfiguration.longPressTimeoutMillis) {
+                waitForUpOrCancellation()
+              }
+            } catch (e: PointerEventTimeoutCancellationException) {
+              // 满足长按时间，执行业务代码
+              copyContentToClipboard(getTextFromHtml(commentData.text.eraseTargetUserName()))
+              vibrate()
+              toast(Globals.context.getString(R.string.commentContentCopiedHint))
+              event.consumeDownChange()
+            }
+          }
         }
-      )
+      }
   ) {
     Box(
       modifier = Modifier

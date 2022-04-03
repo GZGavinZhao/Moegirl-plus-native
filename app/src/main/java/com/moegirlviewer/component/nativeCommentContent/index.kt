@@ -1,11 +1,13 @@
 package com.moegirlviewer.component.nativeCommentContent
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -16,9 +18,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.component.nativeCommentContent.util.*
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.article.ArticleRouteArguments
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.navigate
-import com.moegirlviewer.util.openHttpUrl
+import com.moegirlviewer.util.*
 
 @Composable
 fun NativeCommentContent(

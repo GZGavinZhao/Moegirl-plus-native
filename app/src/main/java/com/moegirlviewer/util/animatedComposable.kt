@@ -20,13 +20,6 @@ import com.moegirlviewer.component.Center
 import com.moegirlviewer.util.Animation.*
 import kotlin.math.roundToInt
 
-class TransitionPayload {
-  private var _wrapper: @Composable (animationProgress: Float) -> Unit = {}
-  var EnterTransition.wrapper
-    get() = _wrapper
-    set(value) { _wrapper = value }
-}
-
 @ExperimentalAnimationApi
 fun NavGraphBuilder.animatedComposable(
   route: String,

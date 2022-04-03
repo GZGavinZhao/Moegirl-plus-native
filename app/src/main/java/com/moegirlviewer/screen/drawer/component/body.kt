@@ -49,7 +49,7 @@ fun CommonDrawerBody(
   val userNameOfCurrentAccount by AccountStore.userName.collectAsState(initial = "")
 
   fun withDrawerClosed(exec: () -> Unit) = scope.launch {
-    commonDrawerState.close()
+    launch { commonDrawerState.close() }
     exec()
   }
 
