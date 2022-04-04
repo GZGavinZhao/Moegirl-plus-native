@@ -19,10 +19,11 @@ fun MoegirlPlusTheme(
   val useSpecialCharSupportedFontInApp by SettingsStore.common.getValue { this.useSpecialCharSupportedFontInApp }.collectAsState(
     initial = false
   )
-  val colors = isMoegirl(
-    if (isUseDarkMode()) MoegirlDarkColorPalette else MoegirlLightColorPalette,
-    if (isUseDarkMode()) HmoeDarkColorPalette else HmoeLightColorPalette
-  )
+//  val colors = isMoegirl(
+//    if (isUseDarkMode()) MoegirlDarkColorPalette else MoegirlLightColorPalette,
+//    if (isUseDarkMode()) HmoeDarkColorPalette else HmoeLightColorPalette
+//  )
+  val colors = getPureColorPalette()
   val typography = remember(useSpecialCharSupportedFontInApp) {
     Typography(
       body1 = Typography.body1.copy(

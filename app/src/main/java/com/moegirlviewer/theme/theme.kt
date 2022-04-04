@@ -6,6 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import com.moegirlviewer.util.darken
+import com.moegirlviewer.util.isMoegirl
 import com.moegirlviewer.util.lighten
 
 @SuppressLint("ConflictingOnColor")
@@ -65,6 +66,28 @@ val HmoeDarkColorPalette = darkColors(
   onSurface = Color(0xffBFBFBF)
 )
 
+@SuppressLint("ConflictingOnColor")
+@Composable
+fun getPureColorPalette(): Colors {
+  val themeTextColors = MaterialTheme.colors.text
+
+  return remember {
+    lightColors(
+      primary = Color.White,
+      primaryVariant = isMoegirl(GreenPrimary, OrangePrimary),
+      secondary = isMoegirl(GreenPrimary, OrangePrimary),
+
+      onPrimary = themeTextColors.primary,
+      onSecondary = Color.White
+    )
+  }
+}
+
+//val pureColorPalette = lightColors(
+//  primary = Color.White,
+//  primaryVariant = isMoegirl(GreenPrimary, OrangePrimary),
+//  secondary = isMoegirl(GreenPrimary, OrangePrimary),
+//)
 
 class TextColors(
   val primary: Color,
@@ -76,9 +99,9 @@ class TextColors(
 val Colors.text
   @Composable get() =
     if (!isUseDarkMode()) TextColors(
-      primary = Color(0xff323232),
-      secondary = Color(0xff797979),
-      tertiary = Color(0xffD0D0D0)
+      primary = TextPrimary,
+      secondary = TextSecondary,
+      tertiary = TextTertiary
     ) else TextColors(
       primary = Color(0xffBFBFBF),
       secondary = Color(0xFFA2A2A2),
