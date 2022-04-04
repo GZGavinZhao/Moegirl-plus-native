@@ -101,7 +101,7 @@ fun RandomPageActionButton(
     Box(
       modifier = Modifier
         .fillMaxSize()
-        .background(themeColors.primary)
+        .background(themeColors.secondary)
         .clickable {
           if (rotationAnimationValue.isRunning) return@clickable
           showAnimation()
@@ -119,7 +119,7 @@ fun RandomPageActionButton(
           }),
         painter = rememberAsyncImagePainter(usingIcon),
         contentDescription = null,
-        tint = if (themeColors.isLight) themeColors.onPrimary else themeColors.secondary
+        tint = themeColors.onSecondary
       )
     }
   }

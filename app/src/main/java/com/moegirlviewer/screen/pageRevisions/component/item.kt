@@ -96,7 +96,7 @@ private fun ComposedTitle(
     if (diffSize != null) {
       StyledText(
         text = (if (diffSize > 0) "+" else "") + diffSize,
-        color = if (diffSize >= 0) themeColors.secondary else RedAccent,
+        color = if (diffSize >= 0) themeColors.primaryVariant else RedAccent,
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold
       )
@@ -204,7 +204,7 @@ private fun ComposedFooter(
             },
           text = stringResource(id = R.string.current),
           fontSize = 13.sp,
-          color = themeColors.secondary
+          color = themeColors.primaryVariant
         )
       }
 
@@ -228,7 +228,7 @@ private fun ComposedFooter(
             },
           text = stringResource(id = R.string.before),
           fontSize = 13.sp,
-          color = themeColors.secondary
+          color = themeColors.primaryVariant
         )
       }
     }

@@ -124,9 +124,9 @@ fun ArticleView(
       state.htmlWebViewRef.value!!.injectScript("""
         moegirl.config.nightTheme.${'$'}enabled = ${!themeColors.isLight}
         document.querySelector('html').style.cssText = `
-          --color-primary: ${themeColors.primary.toCssRgbaString()};
-          --color-dark: ${themeColors.primary.darken(0.3F).toCssRgbaString()};
-          --color-light: ${themeColors.primary.lighten(0.3F).toCssRgbaString()};
+          --color-primary: ${themeColors.primaryVariant.toCssRgbaString()};
+          --color-dark: ${themeColors.primaryVariant.darken(0.3F).toCssRgbaString()};
+          --color-light: ${themeColors.primaryVariant.lighten(0.3F).toCssRgbaString()};
         `
         ${if (props.inDialogMode && !themeColors.isLight)
           "document.body.style.backgroundColor = '${themeColors.surface.toCssRgbaString()}'"

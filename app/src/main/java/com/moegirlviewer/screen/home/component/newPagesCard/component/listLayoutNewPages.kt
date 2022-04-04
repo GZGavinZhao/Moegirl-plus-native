@@ -71,7 +71,7 @@ private fun Item(
 ) {
   val themeColors = MaterialTheme.colors
 
-  RippleColorScope(color = themeColors.secondary) {
+  RippleColorScope(color = themeColors.primaryVariant) {
     Row(
       modifier = Modifier
         .clickable { onClick() }

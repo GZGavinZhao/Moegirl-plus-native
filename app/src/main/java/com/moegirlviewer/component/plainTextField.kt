@@ -47,7 +47,7 @@ fun PlainTextField(
   visualTransformation: VisualTransformation = VisualTransformation.None,
   onTextLayout: (TextLayoutResult) -> Unit = {},
   interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-  cursorBrush: Brush = SolidColor(MaterialTheme.colors.secondary),
+  cursorBrush: Brush = SolidColor(MaterialTheme.colors.primaryVariant),
   decorationBox: (@Composable (@Composable () -> Unit) -> Unit) = { it() }
 ) {
   val finalTextStyle = textStyle.copy(
@@ -117,7 +117,7 @@ fun PlainTextField(
   visualTransformation: VisualTransformation = VisualTransformation.None,
   onTextLayout: (TextLayoutResult) -> Unit = {},
   interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-  cursorBrush: Brush = SolidColor(MaterialTheme.colors.secondary),
+  cursorBrush: Brush = SolidColor(MaterialTheme.colors.primaryVariant),
   decorationBox: (@Composable (@Composable () -> Unit) -> Unit) = { it() }
 ) {
   val finalTextStyle = textStyle.copy(
@@ -180,7 +180,7 @@ private fun TextFieldDecoration(
 ) {
   val themeColors = MaterialTheme.colors
   val underlineHeight by animateDpAsState(if (focused) 2.dp else 1.dp)
-  val underlineColor by animateColorAsState(if (focused) themeColors.secondary else themeColors.text.tertiary)
+  val underlineColor by animateColorAsState(if (focused) themeColors.primaryVariant else themeColors.text.tertiary)
 
   Column() {
     Box(

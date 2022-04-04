@@ -4,6 +4,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
 import androidx.compose.material.Typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.font.FontFamily
@@ -19,11 +20,11 @@ fun MoegirlPlusTheme(
   val useSpecialCharSupportedFontInApp by SettingsStore.common.getValue { this.useSpecialCharSupportedFontInApp }.collectAsState(
     initial = false
   )
-//  val colors = isMoegirl(
-//    if (isUseDarkMode()) MoegirlDarkColorPalette else MoegirlLightColorPalette,
-//    if (isUseDarkMode()) HmoeDarkColorPalette else HmoeLightColorPalette
-//  )
-  val colors = getPureColorPalette()
+  val colors = isMoegirl(
+    if (isUseDarkMode()) MoegirlDarkColorPalette else getPureColorPalette(),
+    if (isUseDarkMode()) HmoeDarkColorPalette else HmoeLightColorPalette
+  )
+
   val typography = remember(useSpecialCharSupportedFontInApp) {
     Typography(
       body1 = Typography.body1.copy(
@@ -41,7 +42,7 @@ fun MoegirlPlusTheme(
   MaterialTheme(
     colors = colors,
     typography = typography,
-    shapes = Shapes,
+    shapes = if (isPureTheme()) PureThemeShapes else ColorfulThemeShapes,
     content = {
       CompositionLocalProvider(
         LocalTextSelectionColors provides textSelectionColors,
@@ -50,3 +51,6 @@ fun MoegirlPlusTheme(
     }
   )
 }
+
+@Composable
+fun isPureTheme() = true

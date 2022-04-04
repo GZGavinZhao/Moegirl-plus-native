@@ -16,6 +16,6 @@ fun StyleLinearProgressIndicator(
     modifier = Modifier
       .fillMaxWidth()
       .then(modifier),
-    color = themeColors.secondary
+    color = themeColors.primaryVariant
   )
 }

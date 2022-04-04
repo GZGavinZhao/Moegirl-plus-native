@@ -48,7 +48,7 @@ suspend fun showRecentChangesOptionsDialog(): RecentChangesSettings? {
           text = buildAnnotatedString {
             append(stringResource(id = R.string.timeRange) + "：")
             withStyle(SpanStyle(
-              color = themeColors.secondary,
+              color = themeColors.primaryVariant,
               fontWeight = FontWeight.Bold
             )) {
               append(settings.daysAgo.toString())
@@ -72,7 +72,7 @@ suspend fun showRecentChangesOptionsDialog(): RecentChangesSettings? {
           text = buildAnnotatedString {
             append(stringResource(id = R.string.maxShownNumber) + "：")
             withStyle(SpanStyle(
-              color = themeColors.secondary,
+              color = themeColors.primaryVariant,
               fontWeight = FontWeight.Bold
             )) {
               append(settings.totalLimit.toString())

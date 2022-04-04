@@ -41,7 +41,7 @@ fun RandomPageCard(
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
 
-  RippleColorScope(color = themeColors.secondary) {
+  RippleColorScope(color = themeColors.primaryVariant) {
     HomeCardContainer(
       icon = ImageVector.vectorResource(R.drawable.dice_5),
       title = stringResource(id = R.string.randomArticle),

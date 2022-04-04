@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,6 +31,7 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.contribution.component.ContributionItem
 import com.moegirlviewer.theme.background2
+import com.moegirlviewer.theme.elevation
 import com.moegirlviewer.util.LoadStatus
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
@@ -115,61 +117,66 @@ private fun ComposedHeader(
   val scope = rememberCoroutineScope()
   val themeColors = MaterialTheme.colors
 
-  Column() {
-    StyledTopAppBar(
-      title = {
-        StyledText(
-          text = stringResource(id = R.string.userContribution) + "：" + userName,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-          color = themeColors.onPrimary
-        )
-      }
-    )
-
-    RippleColorScope(color = themeColors.onPrimary) {
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(40.dp)
-          .background(themeColors.primary),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Center(
-          modifier = Modifier
-            .fillMaxHeight()
-            .weight(1f)
-            .clickable {
-              scope.launch { model.showDatePickerDialog() }
-            }
-        ) {
+  Surface(
+    elevation = if (MaterialTheme.elevation) 3.dp else 0.dp,
+  ) {
+    Column() {
+      StyledTopAppBar(
+        elevation = 0.dp,
+        title = {
           StyledText(
-            text = model.startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-            color = themeColors.onPrimary,
-            fontSize = 16.sp
+            text = stringResource(id = R.string.userContribution) + "：" + userName,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = themeColors.onPrimary
           )
         }
+      )
 
-        StyledText(
+      RippleColorScope(color = themeColors.onPrimary) {
+        Row(
           modifier = Modifier
-            .padding(horizontal = 10.dp),
-          text = "-",
-          color = themeColors.onPrimary
-        )
-
-        Center(
-          modifier = Modifier
-            .fillMaxHeight()
-            .weight(1f)
-            .clickable {
-              scope.launch { model.showDatePickerDialog(false) }
-            }
+            .fillMaxWidth()
+            .height(40.dp)
+            .background(themeColors.primary),
+          verticalAlignment = Alignment.CenterVertically
         ) {
+          Center(
+            modifier = Modifier
+              .fillMaxHeight()
+              .weight(1f)
+              .clickable {
+                scope.launch { model.showDatePickerDialog() }
+              }
+          ) {
+            StyledText(
+              text = model.startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+              color = themeColors.onPrimary,
+              fontSize = 16.sp
+            )
+          }
+
           StyledText(
-            text = model.endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-            color = themeColors.onPrimary,
-            fontSize = 16.sp
+            modifier = Modifier
+              .padding(horizontal = 10.dp),
+            text = "-",
+            color = themeColors.onPrimary
           )
+
+          Center(
+            modifier = Modifier
+              .fillMaxHeight()
+              .weight(1f)
+              .clickable {
+                scope.launch { model.showDatePickerDialog(false) }
+              }
+          ) {
+            StyledText(
+              text = model.endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+              color = themeColors.onPrimary,
+              fontSize = 16.sp
+            )
+          }
         }
       }
     }

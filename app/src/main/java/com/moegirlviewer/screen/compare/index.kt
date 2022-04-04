@@ -3,6 +3,7 @@ package com.moegirlviewer.screen.compare
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LowPriority
@@ -162,7 +163,14 @@ private fun ComposedHeader(
       )
 
       TabRow(
-        selectedTabIndex = model.selectedTabIndex
+        selectedTabIndex = model.selectedTabIndex,
+        indicator = { tabPositions ->
+          TabRowDefaults.Indicator(
+            modifier = Modifier.tabIndicatorOffset(tabPositions[model.selectedTabIndex]),
+            color = themeColors.primaryVariant,
+            height = 3.dp
+          )
+        }
       ) {
         titles.forEachIndexed { index, title ->
           Tab(

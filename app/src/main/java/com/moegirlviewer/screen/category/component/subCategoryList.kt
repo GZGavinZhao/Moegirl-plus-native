@@ -110,7 +110,7 @@ fun SubCategoryList() {
                   },
                 text = item,
                 fontSize = 15.sp,
-                color = themeColors.secondary
+                color = themeColors.primaryVariant
               )
             }
           }
@@ -128,7 +128,7 @@ fun SubCategoryList() {
             ) {
               StyledText(
                 text = stringResource(id = R.string.loadMore),
-                color = themeColors.secondary,
+                color = themeColors.primaryVariant,
                 fontSize = 15.sp
               )
             }

@@ -38,7 +38,7 @@ fun OnComposeWillCreate(
   val navController = rememberAnimatedNavController()
   val overScrollConfig = remember {
     OverScrollConfiguration(
-      glowColor = themeColors.secondary
+      glowColor = themeColors.primaryVariant
     )
   }
   val imageLoader = remember {

@@ -41,7 +41,7 @@ fun UserTail(
         modifier = Modifier
           .noRippleClickable { gotoArticlePage("User_talk:$userName") },
         text = stringResource(id = R.string.talk),
-        color = themeColors.secondary
+        color = themeColors.primaryVariant
       )
       StyledText(
         text = " | ",
@@ -53,7 +53,7 @@ fun UserTail(
             Globals.navController.navigate(ContributionRouteArguments(userName = userName))
           },
         text = stringResource(id = R.string.contribution),
-        color = themeColors.secondary
+        color = themeColors.primaryVariant
       )
       StyledText(
         text = ")",

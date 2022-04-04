@@ -221,7 +221,7 @@ private fun ImageItem(
       .height(200.dp)
       .border(
         width = animatedBorderWidth,
-        color = themeColors.secondary
+        color = themeColors.primaryVariant
       )
   ) {
     AsyncImage(
@@ -253,7 +253,7 @@ private fun ImageItem(
               .alpha(0.5f),
             imageVector = ImageVector.vectorResource(id = R.drawable.eye),
             contentDescription = null,
-            tint = themeColors.secondary.copy(alpha = 0.8f),
+            tint = themeColors.primaryVariant.copy(alpha = 0.8f),
           )
         }
       }

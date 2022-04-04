@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.view.View
 import android.webkit.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.gson.JsonObject
@@ -58,7 +60,6 @@ fun HtmlWebView(
   }
 
   fun reloadWebView() {
-    val bgColor = if (isInDarkTheme) "#252526" else "white"
     val contentValue = content.value!!
 
     val htmlDocument = if (contentValue.fullBody) {
@@ -68,7 +69,6 @@ fun HtmlWebView(
         title = contentValue.title,
         injectedFiles = contentValue.injectedFiles ?: emptyList(),
         injectedStyles = listOf(
-          "body { background-color: $bgColor }",
           *contentValue.injectedStyles?.toTypedArray() ?: emptyArray()
         ),
         injectedScripts = listOf(
@@ -109,6 +109,7 @@ fun HtmlWebView(
   LaunchedEffect(true) {
     val webView = webViewRef.value!!
     webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+    webView.setBackgroundColor(android.graphics.Color.TRANSPARENT)
 
     with (webView.settings) {
       this.allowFileAccess = true

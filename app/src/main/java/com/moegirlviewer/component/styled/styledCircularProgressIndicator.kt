@@ -14,6 +14,6 @@ fun StyledCircularProgressIndicator(
 
   CircularProgressIndicator(
     modifier = Modifier,
-    color = themeColors.secondary
+    color = themeColors.primaryVariant
   )
 }

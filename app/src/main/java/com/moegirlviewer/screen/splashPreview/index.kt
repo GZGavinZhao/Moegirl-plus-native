@@ -151,8 +151,8 @@ private fun ComposedHeader(
       Checkbox(
         checked = selectedSplashImages.contains(currentSplashImage.key),
         colors = CheckboxDefaults.colors(
-          checkedColor = themeColors.onPrimary,
-          uncheckedColor = themeColors.onPrimary,
+          checkedColor = themeColors.onSecondary,
+          uncheckedColor = themeColors.onSecondary,
           checkmarkColor = themeColors.secondary
         ),
         onCheckedChange = { select ->

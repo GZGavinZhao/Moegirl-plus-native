@@ -19,6 +19,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.component.styled.StyledTextButton
 
 @Composable
 fun ArticleErrorMask(
@@ -31,7 +32,7 @@ fun ArticleErrorMask(
     modifier = Modifier
       .background(themeColors.background)
   ) {
-    TextButton(
+    StyledTextButton(
       modifier = Modifier
         .fillMaxSize(),
       onClick = onClick,
@@ -50,7 +51,7 @@ fun ArticleErrorMask(
           modifier = Modifier
             .padding(top = 10.dp),
           text = stringResource(id = R.string.loadFail),
-          color = themeColors.secondary,
+          color = themeColors.primaryVariant,
           fontSize = 18.sp,
           fontWeight = FontWeight.Bold
         )

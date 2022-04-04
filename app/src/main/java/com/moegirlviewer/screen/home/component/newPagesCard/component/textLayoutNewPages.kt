@@ -23,7 +23,7 @@ fun TextLayoutNewPages(
 
   val annotatedString = buildAnnotatedString {
     for ((index, item) in pageList.take(40).withIndex()) {
-      withStyle(SpanStyle(color = themeColors.secondary)) {
+      withStyle(SpanStyle(color = themeColors.primaryVariant)) {
         pushStringAnnotation("link", item.title)
         append(item.title)
         pop()

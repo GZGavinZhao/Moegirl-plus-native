@@ -60,7 +60,7 @@ fun HomeCardContainer(
             .size(density.run { 25.sp.toDp() }),
           imageVector = icon,
           contentDescription = null,
-          tint = themeColors.secondary
+          tint = themeColors.primaryVariant
         )
 
         StyledText(
@@ -68,7 +68,7 @@ fun HomeCardContainer(
             .padding(start = 10.dp),
           text = title,
           fontSize = 20.sp,
-          color = themeColors.secondary,
+          color = themeColors.primaryVariant,
           fontWeight = FontWeight.Bold
         )
       }
@@ -78,7 +78,7 @@ fun HomeCardContainer(
           modifier = Modifier
             .noRippleClickable { moreLink.onClick() },
           text = moreLink.title + " →",
-          color = themeColors.secondary,
+          color = themeColors.primaryVariant,
           fontSize = 16.sp,
           fontWeight = FontWeight.Bold
         )

@@ -137,7 +137,7 @@ fun AnnotatedString.Builder.clickableText(
   val themeColors = MaterialTheme.colors
 
   withStyle(SpanStyle(
-    color = themeColors.secondary,
+    color = themeColors.primaryVariant,
     textDecoration = TextDecoration.Underline
   ).merge(style)) {
     pushStringAnnotation(tag, annotation)
@@ -164,7 +164,7 @@ class LinkedTextScope {
     val themeColors = MaterialTheme.colors
 
     withStyle(SpanStyle(
-      color = themeColors.secondary,
+      color = themeColors.primaryVariant,
     ).merge(style)) {
       val uuid = UUID.randomUUID().toString()
       handlers[uuid] = onClick

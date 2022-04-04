@@ -91,8 +91,8 @@ fun SearchResultItem(
         modifier = Modifier
           .padding(top = 5.dp)
           .fillMaxWidth()
-          .sideBorder(BorderSide.TOP, 2.dp, themeColors.secondary)
-          .sideBorder(BorderSide.BOTTOM, 2.dp, themeColors.secondary)
+          .sideBorder(BorderSide.TOP, 2.dp, themeColors.primaryVariant)
+          .sideBorder(BorderSide.BOTTOM, 2.dp, themeColors.primaryVariant)
           .padding(vertical = 5.dp)
       ) {
         SearchContent(
@@ -133,7 +133,7 @@ private fun ComposedHeader(
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       textAlign = TextAlign.Right,
-      color = themeColors.secondary,
+      color = themeColors.primaryVariant,
       style = TextStyle(
         textGeometricTransform = remember { TextGeometricTransform.Italic() }
       )
@@ -169,7 +169,7 @@ private fun SearchContent(
               if (it is Element && it.hasClass("searchmatch")) {
                 withStyle(
                   style = SpanStyle(
-                    background = themeColors.secondaryVariant
+                    background = themeColors.primaryVariant.copy(alpha = 0.2f)
                   )
                 ) {
                   append(it.text())

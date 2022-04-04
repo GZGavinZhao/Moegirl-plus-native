@@ -212,7 +212,7 @@ fun CommentEditor(
             ) {
               StyledText(
                 text = stringResource(id = R.string.publish),
-                color = themeColors.secondary
+                color = themeColors.primaryVariant
               )
             }
           }

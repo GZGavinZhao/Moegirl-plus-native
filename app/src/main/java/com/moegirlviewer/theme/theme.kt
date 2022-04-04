@@ -5,16 +5,16 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import com.moegirlviewer.util.darken
 import com.moegirlviewer.util.isMoegirl
 import com.moegirlviewer.util.lighten
 
 @SuppressLint("ConflictingOnColor")
 val MoegirlLightColorPalette = lightColors(
-  primary = GreenPrimary,
-  primaryVariant = GreenLight,
-  secondary = GreenPrimary,
-  secondaryVariant = GreenLight,
+  primary = GreenPrimary,       // 主颜色
+  primaryVariant = GreenPrimary,  // 强调颜色，深色主题时等于主颜色，纯白主题时等于app默认主题色，黑暗模式时等于app黑暗对比色
+  secondary = GreenPrimary,     // 可交互内容颜色，目前等同于强调颜色
   background = Color.White,
   error = RedAccent,
 
@@ -25,9 +25,8 @@ val MoegirlLightColorPalette = lightColors(
 @SuppressLint("ConflictingOnColor")
 val MoegirlDarkColorPalette = darkColors(
   primary = Color(0xff3A3A3B),
-  primaryVariant = Color(0xff3A3A3B).lighten(0.2f),
+  primaryVariant = GreenSecondary,
   secondary = GreenSecondary,
-  secondaryVariant = GreenSecondary.darken(0.2f),
   background = Color(0xff252526),
   surface = Color(0xff3A3A3B),
 
@@ -39,26 +38,20 @@ val MoegirlDarkColorPalette = darkColors(
 @SuppressLint("ConflictingOnColor")
 val HmoeLightColorPalette = lightColors(
   primary = OrangePrimary,
-  primaryVariant = OrangeLight,
+  primaryVariant = OrangePrimary,
   secondary = OrangePrimary,
-  secondaryVariant = OrangeLight,
   background = Color.White,
   error = RedAccent,
 
   onPrimary = Color.White,
-//  onSurface = Color(0xff323232),
-
-//  onSecondary = Color.White,
   surface = Color.White,
-//  onBackground = Color.Black,
 )
 
 @SuppressLint("ConflictingOnColor")
 val HmoeDarkColorPalette = darkColors(
   primary = Color(0xff3A3A3B),
-  primaryVariant = Color(0xff3A3A3B).lighten(0.2f),
+  primaryVariant = Color(0xffffE686),
   secondary = Color(0xffffE686),
-  secondaryVariant = GreenSecondary.darken(0.2f),
   background = Color(0xff252526),
   surface = Color(0xff3A3A3B),
 
@@ -83,17 +76,13 @@ fun getPureColorPalette(): Colors {
   }
 }
 
-//val pureColorPalette = lightColors(
-//  primary = Color.White,
-//  primaryVariant = isMoegirl(GreenPrimary, OrangePrimary),
-//  secondary = isMoegirl(GreenPrimary, OrangePrimary),
-//)
-
 class TextColors(
   val primary: Color,
   val secondary: Color,
   val tertiary: Color
 )
+
+val MaterialTheme.elevation @Composable get() = isPureTheme()
 
 // 文字主题正确方式是应该用Material.Typography和LocalTextStyle的，刚开始没搞懂，现在要改工作量太大，就这样吧_(:з」∠)_
 val Colors.text
@@ -124,6 +113,8 @@ fun isUseDarkMode(): Boolean {
 // 目前compose的text组件对于黑暗模式下仍旧使用浅色主题的适配好像有问题，无论主题是否是light类型，文字都会被强制反转色相，这里先注释
 //  val darkThemeBySystem by SettingsStore.common.getValue { this.darkThemeBySystem }.collectAsState(initial = false)
 //  return isSystemInDarkTheme() && darkThemeBySystem
+  MaterialTheme
+
   return isSystemInDarkTheme()
 //  return false
 }

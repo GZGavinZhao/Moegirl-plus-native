@@ -215,7 +215,7 @@ fun CommentScreenCommentItem(
     ) {
       Spacer(modifier = Modifier
         .matchParentSize()
-        .background(themeColors.secondary.copy(alpha = animatedMaskAlpha))
+        .background(themeColors.primaryVariant.copy(alpha = animatedMaskAlpha))
       )
 
       Column(
@@ -344,7 +344,7 @@ private fun ComposedCommentContent(
           tag = annotationTagNameOfTargetUserName,
           annotation = replyCommentData.target.id,
           textStyle = SpanStyle(
-            color = themeColors.secondary
+            color = themeColors.primaryVariant
           )
         ),
         CommentText("：")
@@ -361,7 +361,7 @@ private fun ComposedCommentContent(
         commentElements = commentData.parsedText,
         prefixContents = replyTargetContent ?: emptyList(),
         linkedTextStyle = SpanStyle(
-          color = themeColors.secondary,
+          color = themeColors.primaryVariant,
           textDecoration = TextDecoration.Underline
         ),
         onAnnotatedTextClick = {
@@ -395,14 +395,14 @@ private fun ComposedCommentContent(
                 .size(17.dp),
               imageVector = Icons.Outlined.ThumbUp,
               contentDescription = null,
-              tint = themeColors.secondary
+              tint = themeColors.primaryVariant
             )
             else -> Icon(
               modifier = Modifier
                 .size(17.dp),
               imageVector = Icons.Filled.ThumbUp,
               contentDescription = null,
-              tint = themeColors.secondary
+              tint = themeColors.primaryVariant
             )
           }
 
@@ -411,7 +411,7 @@ private fun ComposedCommentContent(
               .padding(start = 5.dp, top = 2.5.dp),
             text = likeNumber.toString(),
             color = if (likeNumber > 0)
-              themeColors.secondary else
+              themeColors.primaryVariant else
               themeColors.text.tertiary,
             fontSize = 13.sp
           )
@@ -430,14 +430,14 @@ private fun ComposedCommentContent(
                 .size(18.dp),
               imageVector = ImageVector.vectorResource(id = R.drawable.reply),
               contentDescription = null,
-              tint = themeColors.secondary
+              tint = themeColors.primaryVariant
             )
 
             StyledText(
               modifier = Modifier
                 .padding(start = 2.dp),
               text = stringResource(id = R.string.reply),
-              color = themeColors.secondary,
+              color = themeColors.primaryVariant,
               fontSize = 13.sp
             )
           }
@@ -499,13 +499,13 @@ private fun ComposedCommentReply(
           .padding(bottom = 2.dp),
         fontSize = 14.sp,
         text = buildAnnotatedString {
-          withStyle(SpanStyle(color = themeColors.secondary)) {
+          withStyle(SpanStyle(color = themeColors.primaryVariant)) {
             append(item.username)
           }
 
           if (item.target.id != commentData.id) {
             append(" ${stringResource(id = R.string.reply)} ")
-            withStyle(SpanStyle(color = themeColors.secondary)) {
+            withStyle(SpanStyle(color = themeColors.primaryVariant)) {
               append(item.target.username)
             }
           }
@@ -520,7 +520,7 @@ private fun ComposedCommentReply(
       modifier = Modifier
         .padding(top = 3.dp),
       text = stringResource(id = R.string.replyTotal, replyList.size) + " >",
-      color = themeColors.secondary,
+      color = themeColors.primaryVariant,
       fontSize = 13.sp,
       fontWeight = FontWeight.Bold
     )

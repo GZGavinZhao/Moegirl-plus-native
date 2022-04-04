@@ -19,6 +19,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import com.moegirlviewer.R
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.component.styled.StyledTextButton
 import com.moegirlviewer.util.toEpochMilli
 import kotlinx.coroutines.CompletableDeferred
 import java.time.LocalDate
@@ -95,7 +96,7 @@ fun CommonDatePickerDialog(
             .matchParentSize(),
           contentAlignment = Alignment.TopEnd
         ) {
-          TextButton(
+          StyledTextButton(
             onClick = {
               state.visible = false
               state.onCheck?.invoke()

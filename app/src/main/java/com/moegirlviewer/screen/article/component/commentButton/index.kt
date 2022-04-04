@@ -97,7 +97,7 @@ private fun ButtonBody(
     Box(
       modifier = Modifier
         .fillMaxSize()
-        .background(themeColors.primary),
+        .background(if (themeColors.isLight) themeColors.secondary else themeColors.primary),
       contentAlignment = Alignment.Center
     ) {
       Box(
@@ -109,7 +109,7 @@ private fun ButtonBody(
             .size(28.dp),
           imageVector = Icons.Filled.Comment,
           contentDescription = null,
-          tint = themeColors.onPrimary
+          tint = if (themeColors.isLight) themeColors.onSecondary else themeColors.onPrimary
         )
       }
 
@@ -119,7 +119,7 @@ private fun ButtonBody(
       ) {
         StyledText(
           text = text,
-          color = themeColors.onPrimary,
+          color = if (themeColors.isLight) themeColors.onSecondary else themeColors.onPrimary,
           fontSize = 13.sp,
         )
       }

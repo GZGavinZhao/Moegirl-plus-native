@@ -67,7 +67,7 @@ fun NewPagesCard(
               },
             imageVector = item.value,
             contentDescription = null,
-            tint = if (viewMode == item.key) themeColors.secondary else themeColors.text.tertiary
+            tint = if (viewMode == item.key) themeColors.primaryVariant else themeColors.text.tertiary
           )
         }
       }

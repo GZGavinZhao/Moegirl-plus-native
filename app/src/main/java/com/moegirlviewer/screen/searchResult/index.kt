@@ -70,7 +70,7 @@ fun SearchResultScreen(
       )
     }
   ) {
-    RippleColorScope(color = themeColors.secondary) {
+    RippleColorScope(color = themeColors.primaryVariant) {
       LazyColumn(
         modifier = Modifier
           .fillMaxSize(),

@@ -54,7 +54,7 @@ fun RecentChangesDetailItem(
   Column(
     modifier = Modifier
       .padding(top = 5.dp, start = 3.5.dp)
-      .sideBorder(BorderSide.LEFT, 5.dp, if (diffSize >= 0) themeColors.secondary else RedAccent)
+      .sideBorder(BorderSide.LEFT, 5.dp, if (diffSize >= 0) themeColors.primaryVariant else RedAccent)
       .padding(horizontal = 10.dp)
   ) {
     ComposedHeader(
@@ -87,8 +87,8 @@ fun ComposedHeader(
     "log" to "(${Globals.context.getString(R.string.log)})"
   ) }[type]!!
   val titlePrefixColor = remember { mapOf(
-    "new" to themeColors.secondary,
-    "edit" to themeColors.secondary,
+    "new" to themeColors.primaryVariant,
+    "edit" to themeColors.primaryVariant,
     "log" to Color(0xff9E9E9E)
   ) }[type]!!
 
@@ -100,7 +100,7 @@ fun ComposedHeader(
     if (type != "log") {
       StyledText(
         text = (if (diffSize > 0) "+" else "") + diffSize,
-        color = if (diffSize >= 0) themeColors.secondary else RedAccent,
+        color = if (diffSize >= 0) themeColors.primaryVariant else RedAccent,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp
       )
@@ -202,7 +202,7 @@ private fun ComposedFooter(
             },
           text = stringResource(id = R.string.current),
           fontSize = 13.sp,
-          color = themeColors.secondary
+          color = themeColors.primaryVariant
         )
       }
 
@@ -226,7 +226,7 @@ private fun ComposedFooter(
             },
           text = stringResource(id = R.string.before),
           fontSize = 13.sp,
-          color = themeColors.secondary
+          color = themeColors.primaryVariant
         )
       }
     }

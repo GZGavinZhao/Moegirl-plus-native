@@ -22,6 +22,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.moegirlviewer.R
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.component.styled.StyledTextButton
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.visibility
@@ -164,7 +165,7 @@ fun CommonAlertDialogUI(
             .fillMaxWidth(),
           horizontalArrangement = Arrangement.SpaceBetween
         ) {
-          TextButton(
+          StyledTextButton(
             modifier = Modifier
               .visibility(leftButton != null),
             enabled = leftButton != null,
@@ -182,7 +183,7 @@ fun CommonAlertDialogUI(
 
           Row() {
             if (secondaryButton != null) {
-              TextButton(
+              StyledTextButton(
                 modifier = Modifier
                   .padding(end = 5.dp),
                 onClick = {
@@ -198,13 +199,13 @@ fun CommonAlertDialogUI(
               }
             }
 
-            TextButton(
+            StyledTextButton(
               onClick = onPrimaryButtonClick
             ) {
               StyledText(
                 text = primaryButtonText ?: stringResource(R.string.check),
                 fontWeight = FontWeight.Bold,
-                color = themeColors.secondary
+                color = themeColors.primaryVariant
               )
             }
           }

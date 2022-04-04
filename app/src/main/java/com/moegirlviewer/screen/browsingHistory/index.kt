@@ -157,7 +157,7 @@ private fun Title(
       modifier = Modifier
         .padding(start = 5.dp),
       text = text,
-      color = themeColors.secondary,
+      color = themeColors.primaryVariant,
       fontSize = 16.sp
     )
 
@@ -165,7 +165,7 @@ private fun Title(
       .padding(top = 3.dp, end = 10.dp)
       .height(2.dp)
       .fillMaxWidth()
-      .background(themeColors.secondary)
+      .background(themeColors.primaryVariant)
     )
   }
 }

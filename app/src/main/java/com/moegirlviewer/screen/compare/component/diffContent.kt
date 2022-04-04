@@ -93,7 +93,7 @@ private fun ComposedHeader(
           .noRippleClickable { gotoUserPage(userName) },
         text = userName,
         fontSize = 14.sp,
-        color = themeColors.secondary
+        color = themeColors.primaryVariant
       )
 
       UserTail(userName)
@@ -146,7 +146,7 @@ private fun ColumnScope.DiffContentBody(
           .padding(end = 10.dp, bottom = 10.dp)
           .height(3.dp)
           .fillMaxWidth()
-          .background(themeColors.secondary)
+          .background(themeColors.primaryVariant)
         )
 
         line.rows.forEachIndexed { _, row ->

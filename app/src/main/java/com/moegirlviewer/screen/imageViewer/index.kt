@@ -27,6 +27,7 @@ import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.component.imageViewer.ImageViewer
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.util.Globals
@@ -55,6 +56,10 @@ fun ImageViewerScreen(
     model.routeArguments = arguments
     model.pagerState.scrollToPage(arguments.initialIndex)
   }
+
+  StatusBar(
+    darkIcons = false
+  )
 
   Box(
     modifier = Modifier

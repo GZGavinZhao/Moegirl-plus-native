@@ -30,7 +30,7 @@ fun CapsuleCheckbox(
         .height(34.dp)
         .clip(CircleShape)
         .clickable { onCheckedChange(!checked) }
-        .background(if (themeColors.isLight) themeColors.primary else themeColors.background)
+        .background(if (themeColors.isLight) themeColors.secondary else themeColors.background)
         .padding(horizontal = 3.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
@@ -42,8 +42,8 @@ fun CapsuleCheckbox(
         Checkbox(
           checked = checked,
           colors = CheckboxDefaults.colors(
-            checkedColor = if (themeColors.isLight) themeColors.onPrimary else themeColors.surface,
-            uncheckedColor = if (themeColors.isLight) themeColors.onPrimary else themeColors.surface,
+            checkedColor = if (themeColors.isLight) themeColors.onSecondary else themeColors.surface,
+            uncheckedColor = if (themeColors.isLight) themeColors.onSecondary else themeColors.surface,
             checkmarkColor = themeColors.secondary
           ),
           onCheckedChange = onCheckedChange
@@ -54,7 +54,7 @@ fun CapsuleCheckbox(
         modifier = Modifier
           .padding(end = 5.dp),
         text = text,
-        color = themeColors.onPrimary,
+        color = themeColors.onSecondary,
         fontSize = 14.sp
       )
     }

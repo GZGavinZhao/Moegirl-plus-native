@@ -61,7 +61,7 @@ fun ArticleScreenCatalog(
           customDrawerState = customDrawerState
         )
 
-        RippleColorScope(color = themeColors.secondary) {
+        RippleColorScope(color = themeColors.primaryVariant) {
           Column(
             modifier = Modifier
               .padding(vertical = 5.dp, horizontal = 10.dp)
@@ -155,7 +155,7 @@ private fun SectionItem(
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       fontSize = if (level < 3) 18.sp else 16.sp,
-      color = if (level < 3) themeColors.secondary else themeColors.text.secondary
+      color = if (level < 3) themeColors.primaryVariant else themeColors.text.secondary
     )
   }
 }

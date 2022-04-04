@@ -8,6 +8,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.component.styled.StyledTextButton
 
 @Composable
 fun ReloadButton(
@@ -17,14 +18,14 @@ fun ReloadButton(
 ) {
   val themeColors = MaterialTheme.colors
 
-  TextButton(
+  StyledTextButton(
     modifier = modifier,
     onClick = onClick
   ) {
     StyledText(
       text = text,
       fontSize = 15.sp,
-      color = themeColors.secondary
+      color = themeColors.primaryVariant
     )
   }
 }

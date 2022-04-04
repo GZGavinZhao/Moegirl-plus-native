@@ -65,7 +65,7 @@ fun CommonDrawerBody(
     }
   }
 
-  RippleColorScope(themeColors.secondary) {
+  RippleColorScope(themeColors.primaryVariant) {
     Column(
       modifier = Modifier
         .fillMaxWidth()
@@ -164,7 +164,7 @@ private fun Item(
           .height(28.dp),
         imageVector = icon,
         contentDescription = null,
-        tint = themeColors.secondary
+        tint = themeColors.primaryVariant
       )
     } else {
       Image(

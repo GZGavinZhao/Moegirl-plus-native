@@ -163,8 +163,8 @@ private fun ComposedTitle(
     "log" to "(${Globals.context.getString(R.string.log)})"
   ) }[type]!!
   val titlePrefixColor = remember { mapOf(
-    "new" to themeColors.secondary,
-    "edit" to themeColors.secondary,
+    "new" to themeColors.primaryVariant,
+    "edit" to themeColors.primaryVariant,
     "log" to Color(0xff9E9E9E)
   ) }[type]!!
   var textWidth by remember { mutableStateOf(0f) }
@@ -178,7 +178,7 @@ private fun ComposedTitle(
     if (type != "log") {
       StyledText(
         text = (if (totalDiffSize > 0) "+" else "") + totalDiffSize,
-        color = if (totalDiffSize >= 0) themeColors.secondary else RedAccent,
+        color = if (totalDiffSize >= 0) themeColors.primaryVariant else RedAccent,
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold
       )
@@ -220,7 +220,7 @@ private fun ComposedTitle(
           Spacer(modifier = Modifier
             .height(5.dp)
             .width(textWidth.dp)
-            .background(themeColors.secondary)
+            .background(themeColors.primaryVariant)
           )
         }
       }
@@ -335,14 +335,14 @@ private fun ComposedFooter(
             .size(20.dp),
           imageVector = if (visibleDetails) Icons.Filled.ArrowDropDown else Icons.Filled.ArrowRight,
           contentDescription = null,
-          tint = themeColors.secondary
+          tint = themeColors.primaryVariant
         )
         StyledText(
           text = stringResource(id = R.string.toggleRecentChangeDetail,
             stringResource(id = if (visibleDetails) R.string.collapse else R.string.expand),
             totalNumberOfEdit
           ),
-          color = themeColors.secondary,
+          color = themeColors.primaryVariant,
           fontSize = 14.sp
         )
       }
@@ -373,7 +373,7 @@ private fun ComposedFooter(
                 .noRippleClickable { gotoUserPage(firstUserName) },
               text = stringResource(id = R.string.talk),
               fontSize = 11.sp,
-              color = themeColors.secondary
+              color = themeColors.primaryVariant
             )
             StyledText(
               text = " | ",
@@ -387,7 +387,7 @@ private fun ComposedFooter(
                 },
               text = stringResource(id = R.string.contribution),
               fontSize = 11.sp,
-              color = themeColors.secondary
+              color = themeColors.primaryVariant
             )
           }
         }
@@ -429,7 +429,7 @@ private fun RightFloatedButtons(
           },
         imageVector = Icons.Filled.CompareArrows,
         contentDescription = null,
-        tint = themeColors.secondary
+        tint = themeColors.primaryVariant
       )
     }
 
@@ -443,7 +443,7 @@ private fun RightFloatedButtons(
         },
       imageVector = Icons.Filled.History,
       contentDescription = null,
-      tint = themeColors.secondary
+      tint = themeColors.primaryVariant
     )
   }
 }

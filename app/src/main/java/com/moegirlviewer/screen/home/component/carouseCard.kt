@@ -59,7 +59,7 @@ fun CarouseCard(
     loadStatus = state.status,
     minHeight = 250.dp
   ) {
-    RippleColorScope(color = themeColors.secondary) {
+    RippleColorScope(color = themeColors.primaryVariant) {
       HorizontalPager(
         count = state.imageList.size,
         state = state.pagerState,

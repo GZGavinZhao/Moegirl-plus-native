@@ -42,7 +42,7 @@ fun ArticleLoadingMask() {
         modifier = Modifier
           .padding(top = 10.dp),
         text = stringResource(id = R.string.articleLoading) + "...",
-        color = themeColors.secondary,
+        color = themeColors.primaryVariant,
         fontSize = 18.sp,
         fontWeight = FontWeight.Bold
       )

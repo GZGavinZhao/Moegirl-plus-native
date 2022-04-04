@@ -37,6 +37,7 @@ import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.category.component.CategoryScreenItem
 import com.moegirlviewer.screen.category.component.SubCategoryList
+import com.moegirlviewer.theme.elevation
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
@@ -90,7 +91,7 @@ fun CategoryScreen(
               append(stringResource(id = R.string.categoryNameMappedPage) + "：")
               pushStringAnnotation("link", "")
               withStyle(SpanStyle(
-                color = themeColors.secondary,
+                color = themeColors.primaryVariant,
                 fontWeight = FontWeight.Bold
               )) {
                 append(arguments.categoryExplainPageName)
@@ -178,113 +179,118 @@ private fun ComposedHeader(
     scrollState.animateScrollTo(scrollState.maxValue)
   }
 
-  Column() {
-    StyledTopAppBar(
-      navigationIcon = {
-        BackButton()
-      },
-      title = {
-        StyledText(
-          text = "${stringResource(id = R.string.category)}：${categoryName}",
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-          color = themeColors.onPrimary
-        )
-      },
-      actions = {
-        AppHeaderIcon(
-          image = Icons.Filled.Sort,
-          onClick = {
-            visibleSortMenu = true
-          }
-        )
-
-        @Composable
-        fun Item(
-          sort: CategoryApiPagesSort,
-          text: String,
-        ) {
-          DropdownMenuItem(
+  Surface(
+    elevation = if (MaterialTheme.elevation) 3.dp else 0.dp
+  ) {
+    Column() {
+      StyledTopAppBar(
+        elevation = 0.dp,
+        navigationIcon = {
+          BackButton()
+        },
+        title = {
+          StyledText(
+            text = "${stringResource(id = R.string.category)}：${categoryName}",
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = themeColors.onPrimary
+          )
+        },
+        actions = {
+          AppHeaderIcon(
+            image = Icons.Filled.Sort,
             onClick = {
-              visibleSortMenu = false
-              model.categorySort = sort
-              scope.launch { model.loadPages(true) }
+              visibleSortMenu = true
             }
+          )
+
+          @Composable
+          fun Item(
+            sort: CategoryApiPagesSort,
+            text: String,
           ) {
-            StyledText(
-              text = text,
-              color = Color.Unspecified
+            DropdownMenuItem(
+              onClick = {
+                visibleSortMenu = false
+                model.categorySort = sort
+                scope.launch { model.loadPages(true) }
+              }
+            ) {
+              StyledText(
+                text = text,
+                color = Color.Unspecified
+              )
+            }
+          }
+
+          DropdownMenu(
+            expanded = visibleSortMenu,
+            onDismissRequest = { visibleSortMenu = false }
+          ) {
+            Item(
+              sort = CategoryApiPagesSort.NEWER,
+              text = stringResource(id = R.string.newerUpdate)
+            )
+            Item(
+              sort = CategoryApiPagesSort.OLDER,
+              text = stringResource(id = R.string.olderUpdate)
+            )
+            Item(
+              sort = CategoryApiPagesSort.ASCENDING,
+              text = stringResource(id = R.string.alphabetAsc)
+            )
+            Item(
+              sort = CategoryApiPagesSort.DESCENDING,
+              text = stringResource(id = R.string.alphabetDesc)
             )
           }
         }
+      )
 
-        DropdownMenu(
-          expanded = visibleSortMenu,
-          onDismissRequest = { visibleSortMenu = false }
-        ) {
-          Item(
-            sort = CategoryApiPagesSort.NEWER,
-            text = stringResource(id = R.string.newerUpdate)
-          )
-          Item(
-            sort = CategoryApiPagesSort.OLDER,
-            text = stringResource(id = R.string.olderUpdate)
-          )
-          Item(
-            sort = CategoryApiPagesSort.ASCENDING,
-            text = stringResource(id = R.string.alphabetAsc)
-          )
-          Item(
-            sort = CategoryApiPagesSort.DESCENDING,
-            text = stringResource(id = R.string.alphabetDesc)
-          )
-        }
-      }
-    )
-
-    if (categories.isNotEmpty()) {
-      RippleColorScope(color = themeColors.onPrimary) {
-        Row(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(40.dp)
-            .background(themeColors.primary)
-            .horizontalScroll(scrollState),
-          verticalAlignment = Alignment.CenterVertically
-        ) {
-          for (item in categories) {
-            Box(
-              modifier = Modifier
-                .clickable {
-                  if (item != categories.last()) Globals.navController.navigate(
-                    ArticleRouteArguments(
-                      pageName = "Category:$item",
-                      displayName = Globals.context.getString(R.string.category) + "：$item"
-                    )
-                  )
-                }
-                .fillMaxHeight()
-                .padding(horizontal = 17.dp),
-              contentAlignment = Alignment.Center
-            ) {
-              StyledText(
-                text = item,
-                color = themeColors.onPrimary
-              )
-            }
-
-            if (item != categories.last()) {
+      if (categories.isNotEmpty()) {
+        RippleColorScope(color = themeColors.onPrimary) {
+          Row(
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(40.dp)
+              .background(themeColors.primary)
+              .horizontalScroll(scrollState),
+            verticalAlignment = Alignment.CenterVertically
+          ) {
+            for (item in categories) {
               Box(
                 modifier = Modifier
-                  .offset(y = 1.dp)
+                  .clickable {
+                    if (item != categories.last()) Globals.navController.navigate(
+                      ArticleRouteArguments(
+                        pageName = "Category:$item",
+                        displayName = Globals.context.getString(R.string.category) + "：$item"
+                      )
+                    )
+                  }
+                  .fillMaxHeight()
+                  .padding(horizontal = 17.dp),
+                contentAlignment = Alignment.Center
               ) {
-                Icon(
-                  modifier = Modifier
-                    .size(30.dp),
-                  imageVector = Icons.Filled.ChevronRight,
-                  contentDescription = null,
-                  tint = themeColors.onPrimary
+                StyledText(
+                  text = item,
+                  color = themeColors.onPrimary
                 )
+              }
+
+              if (item != categories.last()) {
+                Box(
+                  modifier = Modifier
+                    .offset(y = 1.dp)
+                ) {
+                  Icon(
+                    modifier = Modifier
+                      .size(30.dp),
+                    imageVector = Icons.Filled.ChevronRight,
+                    contentDescription = null,
+                    tint = themeColors.onPrimary
+                  )
+                }
               }
             }
           }

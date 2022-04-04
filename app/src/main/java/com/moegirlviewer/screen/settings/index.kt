@@ -40,7 +40,7 @@ fun SettingsScreen() {
   val themeColors = MaterialTheme.colors
 
   val switchColors = SwitchDefaults.colors(
-    checkedThumbColor = themeColors.secondary,
+    checkedThumbColor = themeColors.primaryVariant,
     uncheckedTrackAlpha = 0.54f,
     uncheckedTrackColor = themeColors.text.tertiary
   )
@@ -205,7 +205,7 @@ fun SettingsScreen() {
         StyledText(
           text = "User:東東君",
           fontSize = 14.sp,
-          color = themeColors.secondary,
+          color = themeColors.primaryVariant,
           textDecoration = TextDecoration.Underline
         )
       }
@@ -222,6 +222,6 @@ private fun Title(stringResourceId: Int) {
       .padding(top = 10.dp, start = 10.dp, bottom = 5.dp),
     text = stringResource(id = stringResourceId),
     fontSize = 16.sp,
-    color = themeColors.secondary
+    color = themeColors.primaryVariant
   )
 }

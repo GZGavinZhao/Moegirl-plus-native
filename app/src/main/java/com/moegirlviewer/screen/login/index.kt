@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.screen.login.component.LoginScreenTextField
@@ -36,6 +37,10 @@ import kotlinx.coroutines.launch
 fun LoginScreen() {
   val model: LoginScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
+
+  StatusBar(
+    darkIcons = false
+  )
 
   Scaffold() {
     RippleColorScope(Color.White) {

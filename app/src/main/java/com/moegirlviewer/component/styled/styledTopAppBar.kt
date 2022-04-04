@@ -14,15 +14,17 @@ import androidx.compose.ui.zIndex
 import com.google.accompanist.insets.statusBarsPadding
 import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.component.BackButton
+import com.moegirlviewer.theme.elevation
+import com.moegirlviewer.theme.isPureTheme
 
 @Composable
 fun StyledTopAppBar(
   modifier: Modifier = Modifier,
   backgroundColor: Color = MaterialTheme.colors.primary,
   contentColor: Color = contentColorFor(backgroundColor),
-  elevation: Dp = 0.dp,
+  elevation: Dp = if (MaterialTheme.elevation) 3.dp else 0.dp,
   statusBarBackgroundColor: Color = backgroundColor,
-  statusBarDarkIcons: Boolean = false,
+  statusBarDarkIcons: Boolean = isPureTheme(),
   title: @Composable () -> Unit,
   navigationIcon: (@Composable () -> Unit) = { BackButton() },
   actions: (@Composable (RowScope.() -> Unit))? = null,

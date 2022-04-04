@@ -118,9 +118,9 @@ class ArticleViewState(
       """.trimIndent() else ""}
       
       :root {
-        --color-primary: ${context.themeColors.primary.toCssRgbaString()};
-        --color-dark: ${context.themeColors.primary.darken(0.3F).toCssRgbaString()};
-        --color-light: ${context.themeColors.primary.lighten(0.3F).toCssRgbaString()};
+        --color-primary: ${context.themeColors.primaryVariant.toCssRgbaString()};
+        --color-dark: ${context.themeColors.primaryVariant.darken(0.3F).toCssRgbaString()};
+        --color-light: ${context.themeColors.primaryVariant.lighten(0.3F).toCssRgbaString()};
       }
     """.trimIndent()
 

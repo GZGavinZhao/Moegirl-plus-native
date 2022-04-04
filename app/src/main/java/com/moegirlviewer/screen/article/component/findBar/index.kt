@@ -23,6 +23,7 @@ import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.PlainTextField
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.component.styled.StyledTextButton
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.autoFocus
@@ -94,7 +95,7 @@ fun ArticleScreenFindBar(
             )
           )
 
-          TextButton(
+          StyledTextButton(
             modifier = Modifier
               .padding(end = 2.dp),
             onClick = { onFindNext() }

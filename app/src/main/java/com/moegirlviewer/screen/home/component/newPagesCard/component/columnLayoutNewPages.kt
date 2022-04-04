@@ -33,7 +33,7 @@ fun ColumnLayoutNewPages(
   val themeColors = MaterialTheme.colors
   val scrollState = rememberFromMemory("scrollState") { ScrollState(0) }
 
-  RippleColorScope(color = themeColors.secondary) {
+  RippleColorScope(color = themeColors.primaryVariant) {
     Row(
       modifier = Modifier
         .height(220.dp)
@@ -108,7 +108,7 @@ private fun Item(
           .width(120.dp),
         text = title,
         fontSize = 13.sp,
-        color = themeColors.secondary,
+        color = themeColors.primaryVariant,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         textAlign = TextAlign.Center

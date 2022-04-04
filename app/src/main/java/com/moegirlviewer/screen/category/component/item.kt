@@ -62,11 +62,11 @@ fun CategoryScreenItem(
                 modifier = Modifier
                   .padding(end = 5.dp, bottom = 5.dp)
                   .clickable { onCategoryClick(item) }
-                  .background(themeColors.primary)
+                  .background(themeColors.secondary)
                   .padding(3.dp)
                 ,
                 text = item,
-                color = themeColors.onPrimary,
+                color = themeColors.onSecondary,
                 fontSize = 10.sp
               )
             }
