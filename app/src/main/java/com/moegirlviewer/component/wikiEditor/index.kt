@@ -11,6 +11,8 @@ import com.google.gson.Gson
 import com.moegirlviewer.component.htmlWebView.HtmlWebView
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewContent
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
+import com.moegirlviewer.theme.TextColors
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.ProguardIgnore
 import com.moegirlviewer.util.toCssRgbaString
 import com.moegirlviewer.util.toUnicodeForInjectScriptInWebView
@@ -23,10 +25,17 @@ fun WikiEditor(
   onTextChange: ((String) -> Unit)? = null
 ) {
   val themeColors = MaterialTheme.colors
+  val themeTextColors = themeColors.text
   val scope = rememberCoroutineScope()
 
   LaunchedEffect(true) {
-    state.init(themeColors)
+    state.init(themeColors, themeTextColors)
+  }
+
+  LaunchedEffect(themeColors.isLight) {
+    state.htmlWebViewRef.value!!.injectScript("""
+        document.querySelector('.CodeMirror').style.color = '${themeTextColors.primary.toCssRgbaString()}'
+      """.trimIndent())
   }
 
   HtmlWebView(
@@ -51,7 +60,7 @@ class WikiEditorState {
   internal val htmlWebViewRef = Ref<HtmlWebViewRef>()
   internal var lastSettingContent = ""
 
-  internal fun init(themeColors: Colors) {
+  internal fun init(themeColors: Colors, themeTextColors: TextColors) {
     val style = """
       .CodeMirror-line::selection, 
       .CodeMirror-line>span::selection, 
@@ -67,6 +76,10 @@ class WikiEditorState {
       body {
         caret-color: ${themeColors.primaryVariant.toCssRgbaString()};
         font-size: 16px;
+      }
+      
+      .CodeMirror {
+        color: ${themeTextColors.primary.toCssRgbaString()}
       }
     """.trimIndent()
 
