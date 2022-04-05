@@ -104,7 +104,7 @@ fun CommonDatePickerDialog(
           ) {
             StyledText(
               text = stringResource(id = R.string.check),
-              color = themeColors.onPrimary,
+              color = themeColors.onSecondary,
             )
           }
         }

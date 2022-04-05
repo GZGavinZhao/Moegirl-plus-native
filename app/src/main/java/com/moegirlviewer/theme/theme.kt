@@ -11,11 +11,12 @@ import com.moegirlviewer.util.isMoegirl
 val MoegirlLightColorPalette = lightColors(
   primary = GreenPrimary,       // 主颜色
   primaryVariant = GreenPrimary,  // 强调颜色，深色主题时等于主颜色，纯白主题时等于app默认主题色，黑暗模式时等于app黑暗对比色
-  secondary = GreenPrimary,     // 可交互内容颜色，目前等同于强调颜色
+  secondary = GreenPrimary,     // 可交互内容颜色，目前等同于强调颜色，另：不要使用contentColor()
   background = Color.White,
   error = RedAccent,
 
   onPrimary = Color.White,
+  onSecondary = Color.White,
   surface = Color.White,
 )
 
@@ -28,6 +29,7 @@ val MoegirlDarkColorPalette = darkColors(
   surface = Color(0xff3A3A3B),
 
   onPrimary = Color(0xffBFBFBF),
+  onSecondary = Color(0xffBFBFBF),
   onSurface = Color(0xffBFBFBF)
 )
 
@@ -41,6 +43,7 @@ val HmoeLightColorPalette = lightColors(
   error = RedAccent,
 
   onPrimary = Color.White,
+  onSecondary = Color.White,
   surface = Color.White,
 )
 
@@ -53,6 +56,7 @@ val HmoeDarkColorPalette = darkColors(
   surface = Color(0xff3A3A3B),
 
   onPrimary = Color(0xffBFBFBF),
+  onSecondary = Color(0xffBFBFBF),
   onSurface = Color(0xffBFBFBF)
 )
 
