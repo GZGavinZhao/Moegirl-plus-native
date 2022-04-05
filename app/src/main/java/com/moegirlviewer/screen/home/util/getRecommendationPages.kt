@@ -54,7 +54,7 @@ suspend fun getRecommendationPages(
     limit = 500,
     thumbSize = 1,
   )
-    .query?.pages?.values?.map { it.title } ?: emptyList()
+    .query?.pages?.values?.map { it.title } ?: return null
 
   val randomPagesOfMaximalCategory = pagesOfMaximalCategory.randomList(5)
   val randomPagesWithMainImage = PageApi.getMainImageAndIntroduction(

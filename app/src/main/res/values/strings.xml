@@ -202,6 +202,7 @@
     <string name="alphabetDesc">字母降序</string>
     <string name="highQualityArticle">优质条目</string>
     <string name="articleLoading">条目加载中</string>
+    <string name="showSplashScreen">显示启动屏</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>
@@ -240,6 +241,7 @@
     <string name="searchInBrowsingHistory">搜索浏览历史...</string>
     <string name="noSearchingResult">什么也没搜到_(:з」∠)_</string>
     <string name="selectSplashScreenImage">启动屏设置</string>
+    <string name="usePureTheme">使用浅色主题</string>
 
     <!-- 长提示（基本上只会在一个地方使用） -->
     <string name="noSummaryOnCurrentEdit">该编辑未填写摘要</string>

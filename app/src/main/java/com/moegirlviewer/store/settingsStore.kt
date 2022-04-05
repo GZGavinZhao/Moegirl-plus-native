@@ -7,8 +7,9 @@ import com.google.gson.Gson
 import com.moegirlviewer.DataStoreName
 import com.moegirlviewer.screen.article.ReadingRecord
 import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCardViewMode
+import com.moegirlviewer.screen.splashSetting.SplashImageMode
 import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.ProguardIgnore
+import com.moegirlviewer.util.isMoegirl
 import com.moegirlviewer.util.splashImageList
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -25,16 +26,10 @@ data class CommonSettings(
   var darkThemeBySystem: Boolean = false,
   var useSpecialCharSupportedFontInApp: Boolean = false,
   var useSpecialCharSupportedFontInArticle: Boolean = false,
+  var usePureTheme: Boolean = !isMoegirl(),
   var splashImageMode: SplashImageMode = SplashImageMode.NEW,
-  var selectedSplashImages: List<String> = listOf(splashImageList.last().key)
+  var selectedSplashImages: List<String> = listOf(splashImageList.last().key),
 ) : Settings()
-
-enum class SplashImageMode {
-  NEW,
-  OFF,
-  RANDOM,
-  CUSTOM_RANDOM
-}
 
 // 最近更改右上角按钮打开的设置
 data class RecentChangesSettings(
@@ -99,3 +94,4 @@ class SettingsStoreClient<T : Settings>(
     }
   }
 }
+

@@ -202,6 +202,7 @@
     <string name="alphabetDesc">字母降序</string>
     <string name="highQualityArticle">優質條目</string>
     <string name="articleLoading">條目載入中</string>
+    <string name="showSplashScreen">顯示啟動屏</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>
@@ -242,6 +243,7 @@
     <string name="darkThemeBySystem">適配深色模式(實驗性)</string>
     <string name="darkThemeBySystemHelpText">部分條目會有文字看不清的情況</string>
     <string name="selectSplashScreenImage">啟動屏設定</string>
+    <string name="usePureTheme">使用淺色主題</string>
 
     <!-- 長提示（基本上只會在一個地方使用） -->
     <string name="noSummaryOnCurrentEdit">該編輯未填寫摘要</string>

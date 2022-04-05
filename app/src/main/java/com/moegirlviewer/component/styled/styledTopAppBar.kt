@@ -15,7 +15,8 @@ import com.google.accompanist.insets.statusBarsPadding
 import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.theme.elevation
-import com.moegirlviewer.theme.isPureTheme
+import com.moegirlviewer.theme.isUsePureTheme
+import com.moegirlviewer.util.printDebugLog
 
 @Composable
 fun StyledTopAppBar(
@@ -24,7 +25,7 @@ fun StyledTopAppBar(
   contentColor: Color = contentColorFor(backgroundColor),
   elevation: Dp = if (MaterialTheme.elevation) 3.dp else 0.dp,
   statusBarBackgroundColor: Color = backgroundColor,
-  statusBarDarkIcons: Boolean = isPureTheme(),
+  statusBarDarkIcons: Boolean = isUsePureTheme(),
   title: @Composable () -> Unit,
   navigationIcon: (@Composable () -> Unit) = { BackButton() },
   actions: (@Composable (RowScope.() -> Unit))? = null,

@@ -60,7 +60,7 @@ import com.moegirlviewer.screen.splashPreview.SplashPreviewRouteArguments
 import com.moegirlviewer.screen.splashPreview.SplashPreviewScreen
 import com.moegirlviewer.screen.splashSetting.SplashSettingScreen
 import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.store.SplashImageMode
+import com.moegirlviewer.screen.splashSetting.SplashImageMode
 import com.moegirlviewer.theme.MoegirlPlusTheme
 import com.moegirlviewer.util.*
 import com.moegirlviewer.util.RouteArguments.Companion.formattedArguments
@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
       val splashImageMode = SettingsStore.common.getValue { this.splashImageMode }.first()
       val isShowSplashScreen = !hasDeepLink &&
         !hasShortcutAction &&
-        (isMoegirl(splashImageMode != SplashImageMode.OFF, true))
+        splashImageMode != SplashImageMode.OFF
 
       if (isShowSplashScreen) {
         withSplashScreen(

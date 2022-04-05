@@ -88,7 +88,7 @@ fun CustomDrawer(
         modifier = Modifier
           .fillMaxSize()
           .background(
-            color = Color(0f, 0f, 0f, 0.5f * state.animationProgress),
+            color = Color.Black.copy(alpha = 0.5f * state.animationProgress),
           )
           .noRippleClickable {
             scope.launch { state.close() }
@@ -160,9 +160,10 @@ class CustomDrawerState {
 
   val animationProgress get(): Float {
     if (!this::anchors.isInitialized) return 0f
-    return if (swipableStateRestored)
+    val progress = if (swipableStateRestored)
       1 - swipeableState.offset.value / anchors.keys.first() else
       0f
+    return progress.coerceIn(0f, 1f)
   }
 
   suspend fun open() {

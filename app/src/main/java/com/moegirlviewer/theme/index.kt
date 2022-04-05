@@ -4,13 +4,16 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Shapes
 import androidx.compose.material.Typography
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.font.FontFamily
+import com.moegirlviewer.store.CommonSettings
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.NospzGothicMoeFamily
 import com.moegirlviewer.util.isMoegirl
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.forEach
 
 @Composable
 fun MoegirlPlusTheme(
@@ -20,10 +23,12 @@ fun MoegirlPlusTheme(
   val useSpecialCharSupportedFontInApp by SettingsStore.common.getValue { this.useSpecialCharSupportedFontInApp }.collectAsState(
     initial = false
   )
-  val colors = isMoegirl(
-    if (isUseDarkMode()) MoegirlDarkColorPalette else getPureColorPalette(),
-    if (isUseDarkMode()) HmoeDarkColorPalette else HmoeLightColorPalette
-  )
+
+  val colors = when {
+    isUseDarkMode() -> isMoegirl(MoegirlDarkColorPalette, HmoeDarkColorPalette)
+    isUsePureTheme() -> getPureColorPalette()
+    else -> isMoegirl(MoegirlLightColorPalette, HmoeLightColorPalette)
+  }
 
   val typography = remember(useSpecialCharSupportedFontInApp) {
     Typography(
@@ -42,7 +47,7 @@ fun MoegirlPlusTheme(
   MaterialTheme(
     colors = colors,
     typography = typography,
-    shapes = if (isPureTheme()) PureThemeShapes else ColorfulThemeShapes,
+//    shapes = if (isUsePureTheme()) PureThemeShapes else ColorfulThemeShapes,
     content = {
       CompositionLocalProvider(
         LocalTextSelectionColors provides textSelectionColors,
@@ -52,5 +57,13 @@ fun MoegirlPlusTheme(
   )
 }
 
+private var cachedUsePureTheme by mutableStateOf(false)
 @Composable
-fun isPureTheme() = true
+fun isUsePureTheme(): Boolean {
+  LaunchedEffect(true) {
+    SettingsStore.common.getValue { this.usePureTheme }
+      .collect { cachedUsePureTheme = it }
+  }
+
+  return cachedUsePureTheme
+}

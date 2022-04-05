@@ -31,7 +31,6 @@ import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.settings.component.SettingsScreenItem
 import com.moegirlviewer.screen.splashPreview.SplashPreviewRouteArguments
 import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.store.SplashImageMode
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
@@ -259,4 +258,11 @@ private fun ImageItem(
       }
     }
   }
+}
+
+enum class SplashImageMode {
+  NEW,
+  OFF,
+  RANDOM,
+  CUSTOM_RANDOM
 }

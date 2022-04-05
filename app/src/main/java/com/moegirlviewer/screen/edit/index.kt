@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Autorenew
 import androidx.compose.material.icons.filled.Done
@@ -166,7 +167,14 @@ private fun ComposedHeader(
       )
 
       TabRow(
-        selectedTabIndex = model.selectedTabIndex
+        selectedTabIndex = model.selectedTabIndex,
+        indicator = { tabPositions ->
+          TabRowDefaults.Indicator(
+            modifier = Modifier.tabIndicatorOffset(tabPositions[model.selectedTabIndex]),
+            color = themeColors.primaryVariant,
+            height = 3.dp
+          )
+        }
       ) {
         titles.forEachIndexed { index, title ->
           Tab(

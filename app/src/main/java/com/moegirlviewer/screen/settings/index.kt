@@ -25,6 +25,7 @@ import com.moegirlviewer.screen.settings.component.SettingsScreenItem
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommonSettings
 import com.moegirlviewer.store.SettingsStore
+import com.moegirlviewer.screen.splashSetting.SplashImageMode
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.gotoUserPage
@@ -117,8 +118,8 @@ fun SettingsScreen() {
         }
       }
 
+      Title(R.string._interface)
       if (isMoegirl()) {
-        Title(R.string._interface)
         SettingsScreenItem(
           title = stringResource(id = R.string.useSpecialCharSupportedFontInApp),
           subtext = stringResource(id = R.string.useSpecialCharSupportedFontInAppHelpText),
@@ -143,7 +144,46 @@ fun SettingsScreen() {
             Globals.navController.navigate("splashSetting")
           }
         )
+      } else {
+        SettingsScreenItem(
+          title = stringResource(id = R.string.showSplashScreen),
+          innerVerticalPadding = false,
+          onClick = {
+            setSettingItem {
+              // H萌娘只用NEW代表开启启动屏，OFF代表关闭，其他值不使用
+              this.splashImageMode = if (this.splashImageMode == SplashImageMode.NEW)
+                SplashImageMode.OFF else SplashImageMode.NEW
+            }
+          }
+        ) {
+          Switch(
+            checked = commonSettings.splashImageMode == SplashImageMode.NEW,
+            colors = switchColors,
+            onCheckedChange = {
+              setSettingItem {
+                this.splashImageMode = if (it) SplashImageMode.OFF else SplashImageMode.NEW
+              }
+            }
+          )
+        }
       }
+
+      SettingsScreenItem(
+        title = stringResource(id = R.string.usePureTheme),
+        innerVerticalPadding = false,
+        onClick = {
+          setSettingItem { this.usePureTheme = !this.usePureTheme }
+        }
+      ) {
+        Switch(
+          checked = commonSettings.usePureTheme,
+          colors = switchColors,
+          onCheckedChange = {
+            setSettingItem { this.usePureTheme = it }
+          }
+        )
+      }
+
 //      SettingsScreenItem(
 //        title = stringResource(id = R.string.darkThemeBySystem),
 //        subtext = stringResource(id = R.string.darkThemeBySystemHelpText),
@@ -160,22 +200,22 @@ fun SettingsScreen() {
 //        )
 //      }
 
-      Title(R.string.edit)
-      SettingsScreenItem(
-        title = stringResource(id = R.string.syntaxHighlight),
-        subtext = stringResource(id = R.string.syntaxHighlightHelpText),
-        onClick = {
-          setSettingItem { this.syntaxHighlight = !this.syntaxHighlight }
-        }
-      ) {
-        Switch(
-          checked = commonSettings.syntaxHighlight,
-          colors = switchColors,
-          onCheckedChange = {
-            setSettingItem { this.syntaxHighlight = it }
-          }
-        )
-      }
+//      Title(R.string.edit)
+//      SettingsScreenItem(
+//        title = stringResource(id = R.string.syntaxHighlight),
+//        subtext = stringResource(id = R.string.syntaxHighlightHelpText),
+//        onClick = {
+//          setSettingItem { this.syntaxHighlight = !this.syntaxHighlight }
+//        }
+//      ) {
+//        Switch(
+//          checked = commonSettings.syntaxHighlight,
+//          colors = switchColors,
+//          onCheckedChange = {
+//            setSettingItem { this.syntaxHighlight = it }
+//          }
+//        )
+//      }
 
       Title(R.string.account)
       SettingsScreenItem(

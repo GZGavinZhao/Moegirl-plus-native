@@ -106,10 +106,6 @@ fun ArticleScreen(
     }
   }
 
-  StatusBar(
-    darkIcons = false
-  )
-
   CommonDrawer {
     model.memoryStore.Provider {
       model.cachedWebViews.Provider {
