@@ -97,7 +97,6 @@ private fun ComposedHeader(
         singleLine = true,
         onValueChange = onSearchInputValChange,
         placeholder = stringResource(id = R.string.searchInBrowsingHistory),
-        cursorBrush = SolidColor(themeColors.onPrimary),
         textStyle = TextStyle(
           color = themeColors.onPrimary,
           fontSize = 18.sp
