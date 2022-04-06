@@ -7,7 +7,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.insets.imePadding
 import com.moegirlviewer.screen.search.component.SearchScreenHeader
 import com.moegirlviewer.screen.search.component.SearchScreenHintList
 import com.moegirlviewer.screen.search.component.SearchScreenRecentSearch

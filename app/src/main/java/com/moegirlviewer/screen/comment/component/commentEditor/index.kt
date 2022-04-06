@@ -13,10 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.CodeOff
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -210,6 +207,14 @@ fun CommentEditor(
                 .noRippleClickable { onSubmit() },
               contentAlignment = Alignment.Center
             ) {
+//              Icon(
+//                modifier = Modifier
+//                  .size(25.dp),
+//                imageVector = Icons.Filled.Send,
+//                contentDescription = null,
+//                tint = themeColors.secondary
+//              )
+
               StyledText(
                 text = stringResource(id = R.string.publish),
                 color = themeColors.primaryVariant

@@ -1,9 +1,8 @@
 package com.moegirlviewer.util
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -15,21 +14,15 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerInputScope
-import androidx.compose.ui.input.pointer.consumeAllChanges
-import androidx.compose.ui.input.pointer.positionChangeConsumed
-import androidx.compose.ui.input.pointer.positionChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
-import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 import com.moegirlviewer.theme.background2
 import kotlinx.coroutines.delay
-import kotlin.math.PI
-import kotlin.math.abs
+import java.lang.Integer.max
 
 fun Modifier.sideBorder(
   side: BorderSide,
@@ -106,9 +99,10 @@ fun Modifier.autoFocus(delayMs: Long = 0) = composed {
 // 这里做个限制，不允许大于真实输入法的高度
 // 猜测是和导航栏有关，但是使用全面屏后用imePadding仍然会高出一小截
 fun Modifier.imeBottomPadding() = composed {
-  val ime = LocalWindowInsets.current.ime
-  val paddingValue = min(ime.layoutInsets.bottom.toDp(), ime.bottom.toDp())
-  padding(bottom = paddingValue)
+  val imePaddingValue = WindowInsets.ime.getBottom(LocalDensity.current) -
+    WindowInsets.navigationBars.getBottom(LocalDensity.current)
+//  val paddingValue = min(ime.layoutInsets.bottom.toDp(), ime.bottom.toDp())
+  padding(bottom = LocalDensity.current.run { max(0, imePaddingValue).toDp() })
 }
 
 fun Modifier.styledPlaceholder() = composed {

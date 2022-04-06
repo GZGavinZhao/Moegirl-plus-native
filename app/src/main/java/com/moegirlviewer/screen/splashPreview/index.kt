@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -60,64 +60,68 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
       .noRippleClickable {
         visibleInfoBar = !visibleInfoBar
       },
-    topBar = {
-      if (visibleInfoBar) ComposedHeader(reversedSplashImageList[pagerState.currentPage])
-    },
     bottomBar = {
       if (visibleInfoBar) ComposedFooter()
     }
   ) {
-    HorizontalPager(
-      count = reversedSplashImageList.size,
-      state = pagerState,
-    ) { currentPage ->
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .alpha(model.contentAlpha.value)
-          .clip(RectangleShape),
-        contentAlignment = Alignment.BottomCenter
-      ) {
-        AsyncImage(
-          modifier = Modifier
-            .fillMaxSize()
-            .scale(model.imageScale.value),
-          model = rememberImageRequest(data = reversedSplashImageList[currentPage].imageData),
-          contentDescription = null,
-          contentScale = ContentScale.Crop
-        )
-
-        Spacer(
-          modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.2f)
-            .background(
-              brush = remember {
-                Brush.verticalGradient(
-                  listOf(
-                    Color.Transparent,
-                    Color.Black.copy(alpha = 0.5f)
-                  )
-                )
-              }
-            ),
-        )
-
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+    ) {
+      HorizontalPager(
+        count = reversedSplashImageList.size,
+        state = pagerState,
+      ) { currentPage ->
         Box(
           modifier = Modifier
             .fillMaxSize()
-            .offset(y = (-70).dp),
+            .alpha(model.contentAlpha.value)
+            .clip(RectangleShape),
           contentAlignment = Alignment.BottomCenter
         ) {
-          Image(
+          AsyncImage(
             modifier = Modifier
-              .width(174.dp)
-              .height(55.dp),
-            painter = painterResource(id = R.drawable.site_name),
-            contentDescription = null
+              .fillMaxSize()
+              .scale(model.imageScale.value),
+            model = rememberImageRequest(data = reversedSplashImageList[currentPage].imageData),
+            contentDescription = null,
+            contentScale = ContentScale.Crop
           )
+
+          Spacer(
+            modifier = Modifier
+              .fillMaxWidth()
+              .fillMaxHeight(0.2f)
+              .background(
+                brush = remember {
+                  Brush.verticalGradient(
+                    listOf(
+                      Color.Transparent,
+                      Color.Black.copy(alpha = 0.5f)
+                    )
+                  )
+                }
+              ),
+          )
+
+          Box(
+            modifier = Modifier
+              .fillMaxSize()
+              .offset(y = (-70).dp),
+            contentAlignment = Alignment.BottomCenter
+          ) {
+            Image(
+              modifier = Modifier
+                .width(174.dp)
+                .height(55.dp),
+              painter = painterResource(id = R.drawable.site_name),
+              contentDescription = null
+            )
+          }
         }
       }
+
+      if (visibleInfoBar) ComposedHeader(reversedSplashImageList[pagerState.currentPage])
     }
   }
 }

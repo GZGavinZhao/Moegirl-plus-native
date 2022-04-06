@@ -1,6 +1,5 @@
 package com.moegirlviewer.component
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListScope
@@ -8,15 +7,13 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.min
-import com.google.accompanist.insets.statusBarsHeight
+import androidx.compose.ui.zIndex
 
 @Composable
 fun ListWithMovableHeader(
@@ -75,7 +72,7 @@ fun ListWithMovableHeader(
     if (statusBarMask) {
       Spacer(modifier = Modifier
         .zIndex(2f)
-        .statusBarsHeight()
+        .windowInsetsTopHeight(WindowInsets.statusBars)
         .fillMaxWidth()
         .background(themeColors.primary)
       )

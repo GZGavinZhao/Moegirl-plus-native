@@ -44,7 +44,7 @@ fun CommonDrawerHeader(
 
   fun handleOnClickAvatarOrHintText() {
     scope.launch {
-      commonDrawerState.close()
+      launch { commonDrawerState.close() }
       if (isLoggedIn) {
         gotoUserPage(userName!!)
       } else {

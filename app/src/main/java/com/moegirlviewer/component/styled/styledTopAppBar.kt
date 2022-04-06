@@ -11,12 +11,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.google.accompanist.insets.statusBarsPadding
 import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.theme.elevation
 import com.moegirlviewer.theme.isUsePureTheme
-import com.moegirlviewer.util.printDebugLog
 
 @Composable
 fun StyledTopAppBar(
