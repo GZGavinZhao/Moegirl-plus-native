@@ -70,8 +70,6 @@ class ArticleViewRef(
   val htmlWebViewRef: HtmlWebViewRef?,
   val enableAllMedia: suspend () -> Unit,
   val disableAllMedia: suspend () -> Unit,
-  val enableSpecialCharSupportedFont: suspend () -> Unit,
-  val disableSpecialCharSupportedFont: suspend () -> Unit,
 )
 
 @Composable
@@ -90,8 +88,6 @@ fun ArticleView(
       htmlWebViewRef = state.htmlWebViewRef.value,
       enableAllMedia = { state.enableAllMedia() },
       disableAllMedia = { state.disableAllMedia() },
-      enableSpecialCharSupportedFont = { state.enableSpecialCharSupportedFont() },
-      disableSpecialCharSupportedFont = { state.disableSpecialCharSupportedFont() }
     )
   }
 

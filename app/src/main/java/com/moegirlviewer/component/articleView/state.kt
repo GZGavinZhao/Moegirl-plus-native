@@ -88,6 +88,12 @@ class ArticleViewState(
     )
 
     val useSpecialCharSupportedFont = SettingsStore.common.getValue { this.useSpecialCharSupportedFontInArticle }.first()
+    val useSerifFont = SettingsStore.common.getValue { useSerifFontInArticle }.first()
+    val usingFonts = mutableListOf<String>().apply {
+      if (useSpecialCharSupportedFont) add("NospzGothicMoe")
+      if (useSerifFont) add("serif")
+    }
+      .map { "\"$it\"" }.joinToString { ", " }
 
     val styles = """
       @font-face {
@@ -96,9 +102,7 @@ class ArticleViewState(
       }     
 
       body {
-        ${if (useSpecialCharSupportedFont) """
-          font-family: sans-serif, "NospzGothicMoe";
-        """ else ""}
+        font-family: ${if (usingFonts != "") usingFonts else "initial"};
         padding-top: ${props.contentTopPadding.value}px;
         word-break: ${if (props.inDialogMode) "break-all" else "initial"};
         ${if (props.inDialogMode) """
@@ -251,6 +255,7 @@ class ArticleViewState(
   suspend fun checkUserConfig() {
     val heimu = SettingsStore.common.getValue { this.heimu }.first()
     val useSpecialCharSupportedFont = SettingsStore.common.getValue { this.useSpecialCharSupportedFontInArticle }.first()
+    val userSerifFont = SettingsStore.common.getValue { this.useSerifFontInArticle }.first()
     // stopMediaOnLeave没法在这里处理，articleView不知道什么时候离开页面，这部分逻辑写在了articleScreen
 //    val stopMediaOnLeave = SettingsStore.stopAudioOnLeave.first()
 
@@ -259,11 +264,13 @@ class ArticleViewState(
       context.userConfig.heimu = heimu
     }
 
-    if (useSpecialCharSupportedFont != context.userConfig.useSpecialCharSupportedFont) {
-      if (useSpecialCharSupportedFont)
-        enableSpecialCharSupportedFont() else
-        disableSpecialCharSupportedFont()
+    if (
+      useSpecialCharSupportedFont != context.userConfig.useSpecialCharSupportedFont ||
+      userSerifFont != context.userConfig.userSerifFont
+    ) {
+      resetFonts()
       context.userConfig.useSpecialCharSupportedFont = useSpecialCharSupportedFont
+      context.userConfig.userSerifFont = userSerifFont
     }
   }
 
@@ -278,15 +285,17 @@ class ArticleViewState(
     htmlWebViewRef.value!!.injectScript(enableAllIframeJsStr)
   }
 
-  suspend fun enableSpecialCharSupportedFont() {
-    htmlWebViewRef.value!!.injectScript("""
-      document.body.style.fontFamily = 'sans-serif, "NospzGothicMoe"'
-    """.trimIndent())
-  }
+  suspend fun resetFonts() {
+    val useSpecialCharSupportedFont = SettingsStore.common.getValue { this.useSpecialCharSupportedFontInArticle }.first()
+    val useSerifFont = SettingsStore.common.getValue { useSerifFontInArticle }.first()
+    val usingFonts = mutableListOf<String>().apply {
+      if (useSpecialCharSupportedFont) add("NospzGothicMoe")
+      if (useSerifFont) add("serif")
+    }
+      .map { "\"$it\"" }.joinToString { ", " }
 
-  suspend fun disableSpecialCharSupportedFont() {
     htmlWebViewRef.value!!.injectScript("""
-      document.body.style.fontFamily = 'initial'
+      document.body.style.fontFamily = '${if (usingFonts != "") usingFonts else "initial"}'
     """.trimIndent())
   }
 
@@ -596,7 +605,8 @@ class MoegirlImage(
 @Parcelize
 class ArticleViewUserConfig(
   var heimu: Boolean = CommonSettings().heimu,
-  var useSpecialCharSupportedFont: Boolean = CommonSettings().useSpecialCharSupportedFontInArticle
+  var useSpecialCharSupportedFont: Boolean = CommonSettings().useSpecialCharSupportedFontInArticle,
+  var userSerifFont: Boolean = CommonSettings().useSerifFontInArticle
 ) : Parcelable
 
 const val disableAllIframeJsStr = """

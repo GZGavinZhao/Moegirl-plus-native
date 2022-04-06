@@ -118,6 +118,22 @@ fun SettingsScreen() {
         }
       }
 
+      SettingsScreenItem(
+        title = stringResource(id = R.string.useSerifFont),
+        subtext = stringResource(id = R.string.useSerifFontHelpText),
+        onClick = {
+          setSettingItem { this.useSerifFontInArticle = !this.useSerifFontInArticle }
+        }
+      ) {
+        Switch(
+          checked = commonSettings.useSerifFontInArticle,
+          colors = switchColors,
+          onCheckedChange = {
+            setSettingItem { this.useSerifFontInArticle = it }
+          }
+        )
+      }
+
       Title(R.string._interface)
       if (isMoegirl()) {
         SettingsScreenItem(

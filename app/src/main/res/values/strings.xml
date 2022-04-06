@@ -203,6 +203,7 @@
     <string name="highQualityArticle">优质条目</string>
     <string name="articleLoading">条目加载中</string>
     <string name="showSplashScreen">显示启动屏</string>
+    <string name="useSerifFont">使用衬线字体</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>
@@ -306,6 +307,7 @@
     <string name="codeHighlightTimeoutHint">代码过长，高亮功能因处理超时已自动关闭，请合理使用段落编辑功能</string>
     <string name="sendThankHint">确定要向该修订记录的编辑者发送感谢吗？</string>
     <string name="noRecommendationPageHint">还没有推荐，先去看看其他条目吧</string>
+    <string name="useSerifFontHelpText">可以理解为印刷体，据说更便于阅读</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤销[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|讨论]]）的版本%2$s</string>
