@@ -1,8 +1,5 @@
 package com.moegirlviewer.util
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.painter.Painter
-import coil.compose.rememberImagePainter
 import com.moegirlviewer.R
 
 open class SplashImage(
@@ -192,6 +189,13 @@ val splashImageList = listOf(
     key = "_2022_1",
     resId = R.mipmap.splash_2022_1,
     title = Globals.context.getString(R.string.splashImageTitle_2022_1),
+    author = "千夨chia",
+    season = "2022年春"
+  ),
+  MoegirlSplashImage(
+    key = "_2022_1_1",
+    resId = R.mipmap.splash_2022_1_1,
+    title = Globals.context.getString(R.string.splashImageTitle_2022_1_1),
     author = "千夨chia",
     season = "2022年春"
   )

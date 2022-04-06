@@ -126,6 +126,10 @@ class ArticleViewState(
         --color-dark: ${context.themeColors.primaryVariant.darken(0.3F).toCssRgbaString()};
         --color-light: ${context.themeColors.primaryVariant.lighten(0.3F).toCssRgbaString()};
       }
+      
+      :root::selection {
+        background-color: ${context.themeColors.primaryVariant.copy(0.2f).toCssRgbaString()};
+      }
     """.trimIndent()
 
     val cookieManager = CookieManager.getInstance()
@@ -257,7 +261,6 @@ class ArticleViewState(
     val useSpecialCharSupportedFont = SettingsStore.common.getValue { this.useSpecialCharSupportedFontInArticle }.first()
     val userSerifFont = SettingsStore.common.getValue { this.useSerifFontInArticle }.first()
     // stopMediaOnLeave没法在这里处理，articleView不知道什么时候离开页面，这部分逻辑写在了articleScreen
-//    val stopMediaOnLeave = SettingsStore.stopAudioOnLeave.first()
 
     if (heimu != context.userConfig.heimu) {
       htmlWebViewRef.value!!.injectScript("moegirl.config.heimu.\$enabled = $heimu")

@@ -158,7 +158,7 @@ fun SplashSettingScreen() {
 
       FlowRow(
         modifier = Modifier
-          .padding(horizontal = 10.dp)
+          .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
           .fillMaxWidth(),
         mainAxisAlignment = MainAxisAlignment.SpaceEvenly,
         lastLineMainAxisAlignment = MainAxisAlignment.Start,
