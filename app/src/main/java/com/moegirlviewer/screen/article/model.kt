@@ -35,6 +35,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class ArticleScreenModel @Inject constructor() : ViewModel() {
@@ -272,13 +274,12 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   }
 
   suspend fun jumpToAnchor(anchor: String) {
-    val minusOffset = Constants.topAppBarHeight + Globals.statusBarHeight
-//    coroutineScope.launch {
-
-    //      articleViewRef.value!!.htmlWebViewRef!!.injectScript(
-//        "moegirl.method.link.gotoAnchor('$anchor', -$minusOffset)"
-//      )
-//    }
+    val minusOffset = (Constants.topAppBarHeight + Globals.statusBarHeight)
+    val anchorPosition = articleViewRef.value!!.htmlWebViewRef!!.injectScript("moegirl.method.link.getAnchorPosition('$anchor')").toFloatOrNull()?.roundToInt()
+    if (anchorPosition != null) {
+      val scrollValue = (anchorPosition * Globals.activity.resources.displayMetrics.density - minusOffset).roundToInt()
+      scrollState.animateScrollTo(scrollValue)
+    }
   }
 
   fun share() {
