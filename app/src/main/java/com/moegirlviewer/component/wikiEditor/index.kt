@@ -65,7 +65,7 @@ class WikiEditorState {
       .CodeMirror-line::selection, 
       .CodeMirror-line>span::selection, 
       .CodeMirror-line>span>span::selection {
-        background-color: ${themeColors.primaryVariant.copy(alpha = 0.2f).toCssRgbaString()} !important;
+        background-color: ${themeColors.primaryVariant.copy(alpha = 0.3f).toCssRgbaString()} !important;
       }
 
       /* 这段代码不生效，经过测试CodeMirror会检测是否为移动端，如果是的话就不会使用自定义的光标。可能是使用自定义光标会有问题，但这里还是姑且保留一下 */

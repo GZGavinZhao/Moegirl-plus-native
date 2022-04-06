@@ -127,8 +127,8 @@ class ArticleViewState(
         --color-light: ${context.themeColors.primaryVariant.lighten(0.3F).toCssRgbaString()};
       }
       
-      :root::selection {
-        background-color: ${context.themeColors.primaryVariant.copy(0.2f).toCssRgbaString()};
+      ::selection {
+        background-color: ${context.themeColors.primaryVariant.copy(0.3f).toCssRgbaString()};
       }
     """.trimIndent()
 
