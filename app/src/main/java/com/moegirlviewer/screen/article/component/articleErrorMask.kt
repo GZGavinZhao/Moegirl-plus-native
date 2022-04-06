@@ -20,6 +20,7 @@ import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTextButton
+import com.moegirlviewer.util.isMoegirl
 
 @Composable
 fun ArticleErrorMask(
@@ -43,7 +44,7 @@ fun ArticleErrorMask(
         AsyncImage(
           modifier = Modifier
             .width((configuration.screenWidthDp * 0.6).dp),
-          model = rememberImageRequest(R.drawable.article_error),
+          model = rememberImageRequest(isMoegirl(R.drawable.article_error, R.drawable.empty)),
           contentDescription = null
         )
 

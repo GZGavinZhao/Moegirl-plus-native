@@ -59,6 +59,7 @@ fun ArticleScreen(
   arguments: ArticleRouteArguments,
   ) {
   val model: ArticleScreenModel = hiltViewModel()
+  val scope = rememberCoroutineScope()
 
   SideEffect {
     model.routeArguments = arguments
@@ -112,7 +113,9 @@ fun ArticleScreen(
         ArticleScreenCatalog(
           catalogData = model.catalogData,
           customDrawerState = model.catalogDrawerState,
-          onSectionClick = { model.jumpToAnchor(it) }
+          onSectionClick = {
+            scope.launch { model.jumpToAnchor(it) }
+          }
         ) {
           Scaffold(
             modifier = Modifier

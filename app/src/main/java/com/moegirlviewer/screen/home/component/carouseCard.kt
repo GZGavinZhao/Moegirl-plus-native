@@ -53,9 +53,11 @@ fun CarouseCard(
     loop()
   }
 
-  HomeCardContainer(
-    icon = Icons.Filled.HotelClass,
-    title = stringResource(id = R.string.highQualityArticle),
+  HomeCard(
+    modifier = Modifier
+      .padding(15.dp),
+//    icon = Icons.Filled.HotelClass,
+//    title = stringResource(id = R.string.highQualityArticle),
     loadStatus = state.status,
     minHeight = 250.dp
   ) {
@@ -69,6 +71,7 @@ fun CarouseCard(
 
         Box(
           modifier = Modifier
+//              .padding(15.dp)
             .fillMaxSize()
             .height(250.dp)
             .clickable { gotoArticlePage(item.pageName) },

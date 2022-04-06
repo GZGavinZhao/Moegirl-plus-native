@@ -271,13 +271,14 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     }
   }
 
-  fun jumpToAnchor(anchor: String) {
+  suspend fun jumpToAnchor(anchor: String) {
     val minusOffset = Constants.topAppBarHeight + Globals.statusBarHeight
-    coroutineScope.launch {
-      articleViewRef.value!!.htmlWebViewRef!!.injectScript(
-        "moegirl.method.link.gotoAnchor('$anchor', -$minusOffset)"
-      )
-    }
+//    coroutineScope.launch {
+
+    //      articleViewRef.value!!.htmlWebViewRef!!.injectScript(
+//        "moegirl.method.link.gotoAnchor('$anchor', -$minusOffset)"
+//      )
+//    }
   }
 
   fun share() {

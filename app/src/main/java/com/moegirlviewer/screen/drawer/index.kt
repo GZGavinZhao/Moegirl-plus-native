@@ -14,7 +14,9 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.moegirlviewer.R
 import com.moegirlviewer.component.customDrawer.CustomDrawer
 import com.moegirlviewer.component.customDrawer.CustomDrawerState
@@ -29,9 +31,11 @@ fun CommonDrawer(
   content: @Composable () -> Unit
 ) {
   val themeColors = MaterialTheme.colors
+  val configuration = LocalConfiguration.current
 
   CustomDrawer(
     state = state.customDrawerState,
+    width = (configuration.screenWidthDp * 0.8).dp,
     drawerContent = {
       Column(
         modifier = Modifier

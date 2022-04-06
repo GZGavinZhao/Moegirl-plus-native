@@ -24,8 +24,6 @@ fun TopCard(
   val scope = rememberCoroutineScope()
 
   HomeCard(
-    modifier = Modifier
-      .padding(15.dp),
     loadStatus = state.status,
     onReload = {
       scope.launch { state.reload() }
