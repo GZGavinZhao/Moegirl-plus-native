@@ -305,9 +305,11 @@
     <string name="cloudflareValidationHint">被WAF攔截，需要驗證後才能繼續獲取資料，請稍後</string>
     <string name="blockedByCloudflareHint">連線失敗，請更改您的地區代理節點</string>
     <string name="codeHighlightTimeoutHint">程式碼過長，高亮功能因處理超時已自動關閉，請合理使用段落編輯功能</string>
-    <string name="sendThankHint">確定要向該修訂記錄的編輯者傳送感謝嗎？</string>
     <string name="noRecommendationPageHint">還沒有推薦，先去看看其他條目吧</string>
     <string name="useSerifFontHelpText">可以理解為印刷體，據說更便於閱讀</string>
+    <string name="sendThankTitle">公開向編輯者傳送感謝</string>
+    <string name="sendThankExplanation">感謝是對編輯者貢獻的鼓勵和讚許，是對其編輯工作表達謝意的一種方式，您確定要向該修訂記錄的編輯者傳送感謝嗎？</string>
+    <string name="thankSelfHint">你不能感謝你自己</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤銷[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|討論]]）的版本%2$s</string>

@@ -114,7 +114,7 @@ fun CustomDrawer(
             thresholds = { _, _ -> FractionalThreshold(0.3f) },
             orientation = Orientation.Horizontal,
             resistance = null,
-            velocityThreshold = SwipeableDefaults.VelocityThreshold / 2,
+            velocityThreshold = SwipeableDefaults.VelocityThreshold / 4,
           ),
         contentAlignment = if (isLeftSide) Alignment.TopStart else Alignment.TopEnd
       ) {

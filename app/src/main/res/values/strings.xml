@@ -305,9 +305,11 @@
     <string name="cloudflareValidationHint">被WAF拦截，需要验证后才能继续获取数据，请稍后</string>
     <string name="blockedByCloudflareHint">连接失败，请更改您的地区代理节点</string>
     <string name="codeHighlightTimeoutHint">代码过长，高亮功能因处理超时已自动关闭，请合理使用段落编辑功能</string>
-    <string name="sendThankHint">确定要向该修订记录的编辑者发送感谢吗？</string>
     <string name="noRecommendationPageHint">还没有推荐，先去看看其他条目吧</string>
     <string name="useSerifFontHelpText">可以理解为印刷体，据说更便于阅读</string>
+    <string name="sendThankTitle">公开向编辑者发送感谢</string>
+    <string name="sendThankExplanation">感谢是对编辑者贡献的鼓励和赞许，是对其编辑工作表达谢意的一种方式，您确定要向该修订记录的编辑者发送感谢吗？</string>
+    <string name="thankSelfHint">你不能感谢你自己</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤销[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|讨论]]）的版本%2$s</string>

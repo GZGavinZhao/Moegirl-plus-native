@@ -34,6 +34,7 @@ class CommonAlertDialogProps(
   val leftButton: ButtonConfig? = null,
   val closeOnDismiss: Boolean = true,
   val closeOnAction: Boolean = true,
+  val hideTitle: Boolean = false,
   val onDismiss: (() -> Unit)? = null,
   val onPrimaryButtonClick: (() -> Unit)? = null,
   val content: (@Composable () -> Unit)? = null,
@@ -87,6 +88,7 @@ fun CommonAlertDialog(
     title = props.title,
     secondaryButton = props.secondaryButton,
     leftButton = props.leftButton,
+    hideTitle = props.hideTitle,
     onDismiss = {
       if (props.closeOnDismiss) visible = false
       props.onDismiss?.invoke()
@@ -112,6 +114,7 @@ fun CommonAlertDialogUI(
   secondaryButton: ButtonConfig? = null,
   leftButton: ButtonConfig? = null,
   closeOnAction: Boolean = true,
+  hideTitle: Boolean = false,
   onDismiss: () -> Unit,
   onPrimaryButtonClick: () -> Unit,
   onRequestClose: (() -> Unit)? = null,
@@ -143,13 +146,17 @@ fun CommonAlertDialogUI(
           modifier = Modifier
             .padding(horizontal = 20.dp)
         ) {
-          StyledText(
-            modifier = Modifier
-              .padding(vertical = 18.dp),
-            text = title ?: stringResource(id = R.string.alert),
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
-          )
+          if (!hideTitle) {
+            StyledText(
+              modifier = Modifier
+                .padding(vertical = 18.dp),
+              text = title ?: stringResource(id = R.string.alert),
+              fontWeight = FontWeight.Bold,
+              fontSize = 18.sp
+            )
+          } else {
+            Spacer(modifier = Modifier.padding(18.dp))
+          }
 
           CompositionLocalProvider(
             LocalTextStyle provides defaultTextStyle

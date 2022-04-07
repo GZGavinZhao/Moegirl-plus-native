@@ -1,9 +1,17 @@
 package com.moegirlviewer.screen.compare
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
@@ -102,7 +110,28 @@ class CompareScreenModel @Inject constructor() : ViewModel() {
 
   fun sendThank() {
     Globals.commonAlertDialog.show(CommonAlertDialogProps(
-      content = { StyledText(stringResource(id = R.string.sendThankHint)) },
+      hideTitle = true,
+      content = {
+        Column(
+          horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          Image(
+            painter = painterResource(id = R.drawable.thank_illustration),
+            contentDescription = null
+          )
+
+          StyledText(
+            modifier = Modifier
+              .padding(top = 20.dp, bottom = 15.dp),
+            text = stringResource(R.string.sendThankTitle),
+            fontWeight = FontWeight.Bold
+          )
+
+          StyledText(
+            text = stringResource(id = R.string.sendThankExplanation)
+          )
+        }
+      },
       secondaryButton = ButtonConfig.cancelButton(),
       onPrimaryButtonClick = {
         coroutineScope.launch {
@@ -114,7 +143,7 @@ class CompareScreenModel @Inject constructor() : ViewModel() {
             toast(Globals.context.getString(R.string.sent))
           } catch (e: MoeRequestException) {
             printRequestErr(e, "发送编辑感谢失败")
-            toast(e.message)
+            toast(if (e.code == "invalidrecipient") Globals.context.getString(R.string.thankSelfHint) else e.message)
           } finally {
             Globals.commonLoadingDialog.hide()
           }
