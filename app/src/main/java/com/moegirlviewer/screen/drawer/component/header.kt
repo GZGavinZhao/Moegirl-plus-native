@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -73,7 +74,7 @@ fun CommonDrawerHeader(
         model = rememberImageRequest(data = if (isLoggedIn) Constants.avatarUrl + userName else R.drawable.akari) {
           error(R.drawable.akari)
         },
-        contentDescription = null
+        contentDescription = null,
       )
     }
   }
@@ -107,13 +108,14 @@ fun CommonDrawerHeader(
             Brush.horizontalGradient(
               listOf(
                 themeColors.primaryVariant,
-                themeColors.primaryVariant.copy(alpha = 0.75f)
+                themeColors.primaryVariant.copy(alpha = 0.65f)
               )
             )
           }
         ),
       painter = painterResource(id = R.drawable.drawer_top_bg),
       contentDescription = null,
+      contentScale = ContentScale.FillHeight
     )
 
     Column(
