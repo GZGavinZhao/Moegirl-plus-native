@@ -120,4 +120,4 @@ class DateTitleItemAdapter(
 
 class DataItemAdapter(
   val data: RecentChanges,
-) : ListItemRenderAdapter(data.revid)
+) : ListItemRenderAdapter(data.revid.toString() + data.users.first().name)

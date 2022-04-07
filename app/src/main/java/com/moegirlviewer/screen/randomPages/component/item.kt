@@ -149,14 +149,9 @@ internal fun BoxScope.RandomPageItem(
           }
         }
 
-        Divider(
-          modifier = Modifier
-            .padding(top = 10.dp, bottom = 10.dp)
-            .width(100.dp)
-        )
-
         Column(
           modifier = Modifier
+            .padding(10.dp)
             .fillMaxWidth()
         ) {
           StyledText(
@@ -164,9 +159,13 @@ internal fun BoxScope.RandomPageItem(
             fontSize = 20.sp
           )
 
-          StyledText(
+          Divider(
             modifier = Modifier
-              .padding(top = 10.dp),
+              .padding(top = 10.dp, bottom = 10.dp)
+              .width(100.dp)
+          )
+
+          StyledText(
             text = if (state.introduction ?: "" != "") state.introduction!! else stringResource(id = R.string.noIntroduction),
             fontSize = 15.sp,
             color = if (state.introduction ?: "" != "") themeColors.text.primary else themeColors.text.tertiary,
