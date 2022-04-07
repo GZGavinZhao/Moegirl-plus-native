@@ -207,17 +207,12 @@ fun CommentEditor(
                 .noRippleClickable { onSubmit() },
               contentAlignment = Alignment.Center
             ) {
-//              Icon(
-//                modifier = Modifier
-//                  .size(25.dp),
-//                imageVector = Icons.Filled.Send,
-//                contentDescription = null,
-//                tint = themeColors.secondary
-//              )
-
-              StyledText(
-                text = stringResource(id = R.string.publish),
-                color = themeColors.primaryVariant
+              Icon(
+                modifier = Modifier
+                  .size(25.dp),
+                imageVector = Icons.Filled.Send,
+                contentDescription = null,
+                tint = themeColors.secondary
               )
             }
           }
