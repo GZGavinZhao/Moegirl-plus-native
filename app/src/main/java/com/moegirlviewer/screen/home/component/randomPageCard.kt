@@ -2,6 +2,7 @@ package com.moegirlviewer.screen.home.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -104,9 +105,13 @@ fun RandomPageCard(
               fontSize = 20.sp
             )
 
-            StyledText(
+            Divider(
               modifier = Modifier
-                .padding(top = 10.dp),
+                .padding(top = 10.dp, bottom = 10.dp)
+                .width(100.dp)
+            )
+
+            StyledText(
               text = if (state.pageData!!.extract != "") state.pageData!!.extract else stringResource(id = R.string.noIntroduction),
               fontSize = 15.sp,
               lineHeight = 25.sp,

@@ -149,9 +149,14 @@ internal fun BoxScope.RandomPageItem(
           }
         }
 
+        Divider(
+          modifier = Modifier
+            .padding(top = 10.dp, bottom = 10.dp)
+            .width(100.dp)
+        )
+
         Column(
           modifier = Modifier
-            .padding(10.dp)
             .fillMaxWidth()
         ) {
           StyledText(
