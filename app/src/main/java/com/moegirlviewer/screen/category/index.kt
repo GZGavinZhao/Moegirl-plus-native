@@ -37,6 +37,7 @@ import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.category.component.CategoryScreenItem
 import com.moegirlviewer.screen.category.component.SubCategoryList
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.elevation
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
@@ -210,6 +211,8 @@ private fun ComposedHeader(
             text: String,
           ) {
             DropdownMenuItem(
+              modifier = Modifier
+                .then(if (sort == model.categorySort) Modifier.background(themeColors.background2) else Modifier),
               onClick = {
                 visibleSortMenu = false
                 model.categorySort = sort

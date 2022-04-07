@@ -60,17 +60,20 @@ object EditingRecordApi {
   )
 
   suspend fun getPageRevisions(
-    pageName: String,
-    continueKey: String? = null
+    pageName: String? = null,
+    pageId: Int? = null,
+    continueKey: String? = null,
+    limit: Int = 10
   ) = moeRequest(
     entity = PageRevisionsBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
       this["prop"] = "revisions"
       this["continue"] = "||"
-      this["titles"] = pageName
+      if (pageName != null) this["titles"] = pageName
+      if (pageId != null) this["pageids"] = pageId
       this["rvprop"] = "timestamp|user|comment|ids|flags|size"
-      this["rvlimit"] = "10"
+      this["rvlimit"] = limit
       if (continueKey != null) this["rvcontinue"] = continueKey
     }
   )

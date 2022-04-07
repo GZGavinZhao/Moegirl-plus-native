@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.api.watchList.WatchListApi
 import com.moegirlviewer.compable.remember.MemoryStore
@@ -96,8 +97,6 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   // 用于记录离开页面前是否所有媒体被禁用，如果禁用了，回来后不管stopMediaOnLeave是否开启，都要调用articleViewRef.enableAllMedia()
   // 否则页面内嵌的iframe无法正常使用，因为是通过将iframe的src清空实现的停止播放
   var isMediaDisabled = false
-
-  val isHistoryVersion get() = routeArguments.revId != null
 
   fun handleOnArticleLoaded(articleData: ArticleData, articleInfo: ArticleInfo) {
     this.articleData = articleData
@@ -229,10 +228,18 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   suspend fun checkEditAllowed() {
     if (!AccountStore.isLoggedIn.first()) return
 
-    if (isHistoryVersion) {
-      editAllowed = false
-      toast(Globals.context.getString(R.string.historyModeEditDisabledHint))
-      return
+    if (routeArguments.revId != null) {
+      val lastEditingRecordRes = EditingRecordApi.getPageRevisions(
+        pageName = routeArguments.pageName,
+        pageId = routeArguments.pageId
+      )
+
+      val lastEditingRecord = lastEditingRecordRes.query.pages.values.first().revisions?.first() ?: return
+      if (lastEditingRecord.revid != routeArguments.revId) {
+        editAllowed = false
+        toast(Globals.context.getString(R.string.historyModeEditDisabledHint))
+        return
+      }
     }
 
     try {

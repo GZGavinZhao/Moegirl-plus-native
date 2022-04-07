@@ -72,6 +72,6 @@ enum class CategoryApiPagesSort(
 ) {
   ASCENDING("sortkey", "ascending"),
   DESCENDING("sortkey", "descending"),
-  NEWER("timestamp", "newer"),
-  OLDER("timestamp", "older")
+  NEWER("timestamp", "older"),    // 这里没反
+  OLDER("timestamp", "newer")
 }

@@ -32,7 +32,10 @@ class PageRevisionsScreenModel @Inject constructor() : ViewModel() {
     if (refresh) continueKey = null
 
     try {
-      val res = EditingRecordApi.getPageRevisions(routeArguments.pageName, continueKey)
+      val res = EditingRecordApi.getPageRevisions(
+        pageName = routeArguments.pageName,
+        continueKey = continueKey
+      )
       if (res.query.pages.values.first().missing != null) {
         status = LoadStatus.EMPTY
         return
