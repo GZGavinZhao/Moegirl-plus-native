@@ -40,7 +40,7 @@ fun ListLayoutNewPages(
 
   HorizontalPager(
     modifier = Modifier
-      .height(220.dp),
+      .height(235.dp),
     state = pagerState,
     count = chunkedPageList.size,
     itemSpacing = (-20).dp
@@ -75,7 +75,7 @@ private fun Item(
     Row(
       modifier = Modifier
         .clickable { onClick() }
-        .padding(horizontal = 10.dp, vertical = 5.dp)
+        .padding(horizontal = 10.dp, vertical = 7.5.dp)
         .height(60.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {

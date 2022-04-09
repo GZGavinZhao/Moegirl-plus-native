@@ -36,8 +36,8 @@ fun ColumnLayoutNewPages(
   RippleColorScope(color = themeColors.primaryVariant) {
     Row(
       modifier = Modifier
-        .height(220.dp)
-        .padding(top = 10.dp, bottom = 5.dp, start = 10.dp, end = 10.dp)
+        .height(235.dp)
+        .padding(top = 15.dp, bottom = 10.dp, start = 10.dp, end = 10.dp)
         .horizontalScroll(scrollState),
       verticalAlignment = Alignment.CenterVertically
     ) {
@@ -73,8 +73,8 @@ private fun Item(
     if (imageUrl != null) {
       AsyncImage(
         modifier = Modifier
-          .width(120.dp)
-          .height(170.dp)
+          .width(122.dp)
+          .height(175.dp)
           .clip(RoundedCornerShape(10.dp)),
         model = rememberImageRequest(imageUrl),
         placeholder = painterResource(id = R.drawable.placeholder),

@@ -69,6 +69,7 @@ class TopCardState : HomeScreenCardState() {
     
     ul.gallery li img:not(foo) {
       width: 90px !important;
+      height: 130px;
     }
   """.trimIndent())
 
