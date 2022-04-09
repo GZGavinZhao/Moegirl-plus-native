@@ -121,6 +121,7 @@ fun ImageViewerScreen(
           .offset(20.dp, (-20).dp)
           .width((configuration.screenWidthDp * 0.6).dp)
           .zIndex(1f),
+        verticalArrangement = Arrangement.Center
       ) {
         StyledText(
           text = stringResource(id = R.string.gallery) + "：${model.pagerState.currentPage + 1} / ${arguments.images.size}",

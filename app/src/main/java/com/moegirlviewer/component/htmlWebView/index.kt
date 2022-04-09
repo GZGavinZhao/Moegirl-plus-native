@@ -1,26 +1,41 @@
 package com.moegirlviewer.component.htmlWebView
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import android.view.View
-import android.webkit.*
+import android.webkit.JavascriptInterface
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.node.Ref
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.component.htmlWebView.utils.createHtmlDocument
+import com.moegirlviewer.component.htmlWebView.utils.createWebViewTrackDrawable
+import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LocalCachedWebViews
 import com.moegirlviewer.util.toUnicodeForInjectScriptInWebView
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest
+import com.tencent.smtt.export.external.interfaces.WebResourceResponse
+import com.tencent.smtt.sdk.WebView
+import com.tencent.smtt.sdk.WebViewClient
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.roundToInt
 
 private const val assetsBaseUrl = "file:///android_asset/"
 
@@ -44,6 +59,7 @@ fun HtmlWebView(
   onScrollChanged: HtmlWebViewScrollChangeHandler? = null
 ) {
   val isInDarkTheme = false
+  val density = LocalDensity.current
   val scope = rememberCoroutineScope()
   val content = rememberFromMemory("content") { Ref<HtmlWebViewContent>() }
   val webViewRef = remember { Ref<WebView>() }
@@ -110,6 +126,9 @@ fun HtmlWebView(
     val webView = webViewRef.value!!
     webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
     webView.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+    val trackDrawable = createWebViewTrackDrawable(density)
+    webView.x5WebViewExtension?.setVerticalTrackDrawable(trackDrawable)
+    webView.x5WebViewExtension?.setVerticalScrollBarDrawable(trackDrawable)
 
     with (webView.settings) {
       this.allowFileAccess = true

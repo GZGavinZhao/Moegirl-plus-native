@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.contribution
 
+import android.os.Build
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +11,7 @@ import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.editingRecord.bean.UserContributionBean
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.util.*
+import com.tencent.smtt.utils.i
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +60,8 @@ class ContributionScreenModel @Inject constructor() : ViewModel() {
   }
 
   suspend fun showDatePickerDialog(isStartDate: Boolean = true) {
+    if (Build.VERSION.SDK_INT < 26) return
+
     val result = Globals.commonDatePickerDialog.show(
       initialValue = if (isStartDate) startDate else endDate,
       minDate = LocalDate.of(2010, 1, 1),

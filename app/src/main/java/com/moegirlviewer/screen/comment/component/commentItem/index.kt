@@ -111,15 +111,12 @@ fun CommentScreenCommentItem(
     try {
       checkIsLoggedIn(Globals.context.getString(R.string.likeLoginHint))
       val isLiked = commentData.myatt == 1
-      Globals.commonLoadingDialog.show()
       CommentStore.setLike(pageId, commentData.id, !isLiked)
     } catch (e: MoeRequestException) {
       printRequestErr(e, "点赞操作失败")
       toast(e.message)
     } catch (e: NotLoggedInException) {
       printPlainLog(e.message ?: "", e)
-    } finally {
-      Globals.commonLoadingDialog.hide()
     }
   }
 

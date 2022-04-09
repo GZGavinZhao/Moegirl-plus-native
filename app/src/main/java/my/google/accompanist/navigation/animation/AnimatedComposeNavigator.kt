@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.accompanist.navigation.animation
+package my.google.accompanist.navigation.animation
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi

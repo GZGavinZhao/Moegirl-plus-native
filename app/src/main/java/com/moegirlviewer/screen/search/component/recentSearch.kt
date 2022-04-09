@@ -147,7 +147,7 @@ private fun RecordItem(
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .height(42.dp)
+      .height(45.dp)
       .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.text.tertiary)
       .combinedClickable(
         onClick = onClick,

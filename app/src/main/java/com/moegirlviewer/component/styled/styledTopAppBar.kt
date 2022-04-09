@@ -3,8 +3,8 @@ package com.moegirlviewer.component.styled
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -15,6 +15,8 @@ import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.theme.elevation
 import com.moegirlviewer.theme.isUsePureTheme
+import com.moegirlviewer.util.Globals
+import kotlinx.coroutines.delay
 
 @Composable
 fun StyledTopAppBar(
@@ -39,14 +41,14 @@ fun StyledTopAppBar(
     Spacer(modifier = modifier
       .fillMaxWidth()
       .background(statusBarBackgroundColor)
-      .statusBarsPadding()
+      .padding(top = Globals.statusBarHeight.dp)
       .absoluteOffset(0.dp, 0.dp)
       .zIndex(1f)
     )
 
     TopAppBar(
       modifier = Modifier
-        .statusBarsPadding()
+        .padding(top = Globals.statusBarHeight.dp)
         .then(modifier),
       backgroundColor = backgroundColor,
       contentColor = contentColor,

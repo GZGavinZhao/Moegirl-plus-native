@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -20,7 +18,6 @@ import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTextButton
-import com.moegirlviewer.util.isMoegirl
 
 @Composable
 fun ArticleErrorMask(
@@ -44,7 +41,7 @@ fun ArticleErrorMask(
         AsyncImage(
           modifier = Modifier
             .width((configuration.screenWidthDp * 0.6).dp),
-          model = rememberImageRequest(isMoegirl(R.drawable.article_error, R.drawable.empty)),
+          model = rememberImageRequest(R.drawable.article_error),
           contentDescription = null
         )
 

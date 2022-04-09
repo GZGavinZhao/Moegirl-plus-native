@@ -39,7 +39,7 @@ fun SubCategoryList() {
 
   Surface(
     modifier = Modifier
-      .padding(10.dp)
+      .padding(15.dp)
       .fillMaxWidth(),
     elevation = 2.dp
   ) {
@@ -84,7 +84,7 @@ fun SubCategoryList() {
           modifier = Modifier
             .sideBorder(BorderSide.TOP, 1.dp, themeColors.text.tertiary)
             .fillMaxWidth()
-            .padding(vertical = 5.dp, horizontal = 10.dp)
+            .padding(vertical = 7.dp, horizontal = 10.dp)
         ) {
           for (item in model.subCategories) {
             Row(
@@ -109,7 +109,7 @@ fun SubCategoryList() {
                     ))
                   },
                 text = item,
-                fontSize = 15.sp,
+                fontSize = 15.5.sp,
                 color = themeColors.primaryVariant
               )
             }

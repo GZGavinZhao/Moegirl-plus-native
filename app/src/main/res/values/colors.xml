@@ -8,4 +8,5 @@
 
     <color name="dark_mode_primary">#FF3A3A3B</color>
     <color name="dark_mode_secondary">#ff0DBC79</color>
+    <color name="hmoe_dark_mode_secondary">#ffE686</color>
 </resources>

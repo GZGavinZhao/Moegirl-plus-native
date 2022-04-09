@@ -21,7 +21,7 @@ import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
-import java.lang.Float.max
+import kotlin.math.max
 
 @Composable
 fun CategoryScreenItem(

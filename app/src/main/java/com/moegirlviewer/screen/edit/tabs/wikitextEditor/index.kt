@@ -1,37 +1,28 @@
 package com.moegirlviewer.screen.edit.tabs.wikitextEditor
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.moegirlviewer.R
-import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.component.Center
-import com.moegirlviewer.component.PlainTextField
 import com.moegirlviewer.component.ReloadButton
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.component.wikiEditor.WikiEditor
-import com.moegirlviewer.component.wikiEditor.WikiEditorState
 import com.moegirlviewer.screen.edit.EditScreenModel
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.component.QuickInsertBar
-import com.moegirlviewer.screen.edit.tabs.wikitextEditor.util.tintWikitext.TintedWikitext
-import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.util.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.first
+import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.LoadStatus
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import kotlin.system.measureTimeMillis
 
 @InternalCoroutinesApi
 @FlowPreview

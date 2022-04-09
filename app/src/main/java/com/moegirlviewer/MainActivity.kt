@@ -1,8 +1,9 @@
 package com.moegirlviewer
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
-import android.webkit.WebView
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -17,8 +18,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.moegirlviewer.compable.statusBarLocked
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.initialization.OnComposeWillCreate
 import com.moegirlviewer.initialization.initializeOnCreate
@@ -57,18 +58,20 @@ import com.moegirlviewer.screen.searchResult.SearchResultScreen
 import com.moegirlviewer.screen.settings.SettingsScreen
 import com.moegirlviewer.screen.splashPreview.SplashPreviewRouteArguments
 import com.moegirlviewer.screen.splashPreview.SplashPreviewScreen
+import com.moegirlviewer.screen.splashSetting.SplashImageMode
 import com.moegirlviewer.screen.splashSetting.SplashSettingScreen
 import com.moegirlviewer.store.SettingsStore
-import com.moegirlviewer.screen.splashSetting.SplashImageMode
 import com.moegirlviewer.theme.MoegirlPlusTheme
 import com.moegirlviewer.util.*
 import com.moegirlviewer.util.RouteArguments.Companion.formattedArguments
 import com.moegirlviewer.util.RouteArguments.Companion.formattedRouteName
 import com.moegirlviewer.view.ComposeWithSplashScreenView
+import com.tencent.smtt.sdk.WebView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import my.google.accompanist.navigation.animation.AnimatedNavHost
 
 @AndroidEntryPoint
 @ExperimentalMaterialApi
@@ -85,6 +88,10 @@ class MainActivity : ComponentActivity() {
     Globals.context = applicationContext
     Globals.activity = this
     Globals.httpUserAgent = getHttpUserAgent()
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+    }
 
     @Composable
     fun ContentBody() {
@@ -178,7 +185,7 @@ private fun Routes(navController: NavHostController) {
     animatedComposable(
       route = ImageViewerRouteArguments::class.java.formattedRouteName,
       arguments = ImageViewerRouteArguments::class.java.formattedArguments,
-      animation = Animation.EXPANDED
+      animation = Animation.FADE
     ) { ImageViewerScreen(it.arguments!!.toRouteArguments()) }
 
     animatedComposable(
@@ -252,6 +259,7 @@ private suspend fun ComponentActivity.withSplashScreen(
   content: @Composable () -> Unit
 ) = coroutineScope {
   useFullScreenLayout()
+  statusBarLocked = true
 
   val usingSplashImage = if (isMoegirl()) {
     when(splashImageMode) {
@@ -278,6 +286,7 @@ private suspend fun ComponentActivity.withSplashScreen(
 
   suspend fun complete() {
     mainWithSplashView.hideSplashScreen()
+    statusBarLocked = false
     useFreeStatusBarLayout()
   }
 

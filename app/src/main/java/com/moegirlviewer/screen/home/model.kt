@@ -9,6 +9,7 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.MemoryStore
 import com.moegirlviewer.component.articleView.ArticleViewRef
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.drawer.CommonDrawerState
 import com.moegirlviewer.screen.home.component.CarouseCardState
 import com.moegirlviewer.screen.home.component.RandomPageCardState
@@ -28,7 +29,7 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
   val commonDrawerState = CommonDrawerState()
   val articleViewRef = Ref<ArticleViewRef>()
   var articleLoadStatus by mutableStateOf(LoadStatus.INITIAL)
-  val swipeRefreshState = SwipeRefreshState(true)
+  val swipeRefreshState = SwipeRefreshState(false)
   var cardsDataStatus by mutableStateOf(LoadStatus.INITIAL)
 
   val topCardState = TopCardState()
@@ -54,16 +55,27 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
 
   suspend fun loadCardsData() = coroutineScope {
     cardsDataStatus = LoadStatus.LOADING
-    listOf(
-      launch {
-        if (isMoegirl())
-          topCardState.reload() else
-          carouseCard.reload()
+    val reloadList = listOf<suspend () -> Unit>(
+      { if (isMoegirl())
+        topCardState.reload() else
+        carouseCard.reload()
       },
-      launch { randomPageCardState.reload() },
-      launch { newPagesCardState.reload() },
-      launch { recommendationCardState.reload() },
-    ).forEach { it.join() }
+      { randomPageCardState.reload() },
+      { newPagesCardState.reload() },
+      { recommendationCardState.reload() }
+    )
+
+    if (isMoegirl()) {
+      // 萌百不能用并发，会导致被waf
+      try {
+        for (item in reloadList) item()
+      } catch (e: MoeRequestException) { }
+    } else {
+      reloadList
+        .map { launch { it() } }
+        .forEach { it.join() }
+    }
+
     cardsDataStatus = LoadStatus.SUCCESS
   }
 

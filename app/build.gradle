@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "com.moegirlviewer"
-        minSdk 26
+        minSdk 24
         targetSdk 31
         versionCode 2223
         versionName "2.3.6"
@@ -75,6 +75,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility "1.8"
         targetCompatibility "1.8"
     }
@@ -90,8 +91,6 @@ android {
         kotlinCompilerVersion kotlin_version
     }
     packagingOptions {
-        exclude '/META-INF/INDEX.LIST'
-        exclude "META-INF/io.netty.versions.properties"
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
@@ -104,6 +103,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation 'androidx.activity:activity-compose:1.4.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.compose.ui:ui:$compose_version"
@@ -116,8 +116,9 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
-    def accompanist_version = '0.24.5-alpha'
-    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+    def accompanist_version = '0.24.6-alpha'
+    // 由于这个库没有提供修改页面层级的参数，需要修改源码，这里将源码复制到项目中了
+//    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
     implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
@@ -131,13 +132,16 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
 
     implementation "com.squareup.okhttp3:okhttp:4.9.3"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
-    implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
     implementation "com.google.dagger:hilt-android:2.35"
+    implementation 'com.google.code.gson:gson:2.8.8'
     implementation "com.github.franmontiel:PersistentCookieJar:v1.0.1"
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC3'
+//    implementation "io.github.vanpra.compose-material-dialogs:core:0.7.0"
+//    implementation "io.github.vanpra.compose-material-dialogs:datetime:0.7.0"
+    implementation 'com.tencent.tbs:tbssdk:44176'
 
     def coilVersion = "2.0.0-rc01"
     implementation "io.coil-kt:coil-compose:$coilVersion"

@@ -28,13 +28,15 @@ object PageApi {
 
   suspend fun getPageContent(
     pageName: String? = null,
-    revId: Int? = null
+    revId: Int? = null,
+    previewMode: Boolean = false,
   ) = moeRequest(
     entity = PageContentResBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "parse"
       this["redirects"] = "1"
       this["prop"] = "text|categories|templates|sections|images|displaytitle"
+      if (previewMode) this["preview"] = "1"
       if (pageName != null && revId == null) this["page"] = pageName
       if (revId != null) this["oldid"] = revId
     }

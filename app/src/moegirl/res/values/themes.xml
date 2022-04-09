@@ -9,7 +9,7 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@drawable/pre_splash_screen</item>
-<!--        <item name="android:background">@drawable/launch_background</item>-->
+<!--        <item name="android:windowFullscreen">true</item>-->
         <!-- Customize your theme here. -->
     </style>
 

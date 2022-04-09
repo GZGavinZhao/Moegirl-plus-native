@@ -26,7 +26,7 @@ import coil.request.ImageRequest
 import com.moegirlviewer.util.consumptionOptionalDetectTransformGestures
 import com.moegirlviewer.util.noRippleClickable
 import kotlinx.coroutines.launch
-import java.lang.Float.max
+import kotlin.math.max
 
 @OptIn(ExperimentalFoundationApi::class, coil.annotation.ExperimentalCoilApi::class)
 @Composable

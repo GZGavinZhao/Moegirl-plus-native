@@ -221,7 +221,7 @@ private fun ComposedHeader(
             ) {
               StyledText(
                 text = text,
-                color = Color.Unspecified
+                color = themeColors.text.primary
               )
             }
           }

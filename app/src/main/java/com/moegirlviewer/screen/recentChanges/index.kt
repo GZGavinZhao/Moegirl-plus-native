@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.recentChanges
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +22,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
+import com.moegirlviewer.component.EmptyContent
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
@@ -34,6 +36,7 @@ import com.moegirlviewer.util.LoadStatus
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun RecentChangesScreen() {
   val model: RecentChangesScreenModel = hiltViewModel()
@@ -145,6 +148,12 @@ fun RecentChangesScreen() {
               status = model.status,
               errorText = stringResource(id = R.string.loadErrToSwipeRetry)
             )
+          }
+        }
+
+        if (model.status == LoadStatus.EMPTY) {
+          item(key = "empty") {
+            EmptyContent()
           }
         }
       }

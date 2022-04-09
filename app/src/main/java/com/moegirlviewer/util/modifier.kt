@@ -99,10 +99,12 @@ fun Modifier.autoFocus(delayMs: Long = 0) = composed {
 // 这里做个限制，不允许大于真实输入法的高度
 // 猜测是和导航栏有关，但是使用全面屏后用imePadding仍然会高出一小截
 fun Modifier.imeBottomPadding() = composed {
-  val imePaddingValue = WindowInsets.ime.getBottom(LocalDensity.current) -
-    WindowInsets.navigationBars.getBottom(LocalDensity.current)
-//  val paddingValue = min(ime.layoutInsets.bottom.toDp(), ime.bottom.toDp())
-  padding(bottom = LocalDensity.current.run { max(0, imePaddingValue).toDp() })
+  LocalDensity.current.let {
+    val imePaddingValue = WindowInsets.ime.getBottom(it) -
+      WindowInsets.navigationBars.getBottom(it)
+    val paddingValue = it.run { max(0, imePaddingValue).toDp() }
+    padding(bottom = paddingValue)
+  }
 }
 
 fun Modifier.styledPlaceholder() = composed {

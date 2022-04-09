@@ -21,7 +21,7 @@ fun AppHeaderIcon(
   modifier: Modifier = Modifier,
   image: ImageVector,
   iconSize: Dp = 29.dp,
-  iconColor: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
+  iconColor: Color = LocalContentColor.current,
   onClick: () -> Unit,
 ) {
   IconButton(
@@ -42,7 +42,7 @@ fun AppHeaderIcon(
 @Composable
 fun BackButton(
   modifier: Modifier = Modifier,
-  iconColor: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
+  iconColor: Color = LocalContentColor.current,
 ) {
   AppHeaderIcon(
     modifier = Modifier

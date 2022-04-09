@@ -1,13 +1,12 @@
 package com.moegirlviewer.screen.searchResult.component
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -26,9 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
-import coil.compose.ImagePainter
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.bean.SearchResultBean
 import com.moegirlviewer.compable.remember.rememberImageRequest
@@ -40,12 +36,12 @@ import com.moegirlviewer.util.sideBorder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
-import java.lang.Float
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.OptIn
 import kotlin.String
 import kotlin.Unit
+import kotlin.math.min
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -193,7 +189,7 @@ private fun SearchContent(
             modifier = Modifier
               .padding(start = 5.dp, end = 3.dp)
               .fillMaxWidth()
-              .height(Float.min(120f, (100f / imageSource.width * imageSource.height)).dp),
+              .height(min(120f, (100f / imageSource.width * imageSource.height)).dp),
             model = rememberImageRequest(imageSource.source),
             placeholder = painterResource(id = R.drawable.placeholder),
             contentDescription = null,

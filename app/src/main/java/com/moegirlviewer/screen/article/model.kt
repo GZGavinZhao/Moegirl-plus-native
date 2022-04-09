@@ -59,8 +59,8 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   var articleLoadStatus by mutableStateOf(LoadStatus.INITIAL)
   // 是否允许编辑，null表示权限检测中
   var editAllowed by mutableStateOf<Boolean?>(null)
-  var swipeRefreshState = SwipeRefreshState(true)
-  var scrollState = ScrollState(0)
+//  var swipeRefreshState = SwipeRefreshState(false)
+//  var scrollState = ScrollState(0)
 
   // 真实页面名
   val truePageName get() = articleData?.parse?.title ?:
@@ -281,11 +281,18 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   }
 
   suspend fun jumpToAnchor(anchor: String) {
-    val minusOffset = (Constants.topAppBarHeight + Globals.statusBarHeight)
-    val anchorPosition = articleViewRef.value!!.htmlWebViewRef!!.injectScript("moegirl.method.link.getAnchorPosition('$anchor')").toFloatOrNull()?.roundToInt()
-    if (anchorPosition != null) {
-      val scrollValue = (anchorPosition * Globals.activity.resources.displayMetrics.density - minusOffset).roundToInt()
-      scrollState.animateScrollTo(scrollValue)
+//    val minusOffset = (Constants.topAppBarHeight + Globals.statusBarHeight)
+//    val anchorPosition = articleViewRef.value!!.htmlWebViewRef!!.injectScript("moegirl.method.link.getAnchorPosition('$anchor')").toFloatOrNull()?.roundToInt()
+//    if (anchorPosition != null) {
+//      val scrollValue = (anchorPosition * Globals.activity.resources.displayMetrics.density - minusOffset).roundToInt()
+//      scrollState.animateScrollTo(scrollValue)
+//    }
+
+    val minusOffset = Constants.topAppBarHeight + Globals.statusBarHeight
+    coroutineScope.launch {
+      articleViewRef.value!!.htmlWebViewRef!!.injectScript(
+        "moegirl.method.link.gotoAnchor('$anchor', -$minusOffset)"
+      )
     }
   }
 

@@ -16,12 +16,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.node.Ref
 import androidx.navigation.NavHostController
-import coil.ComponentRegistry
 import coil.compose.LocalImageLoader
-import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import my.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.moegirlviewer.component.commonDialog.*
 import com.moegirlviewer.request.moeOkHttpClient
 import com.moegirlviewer.util.Globals

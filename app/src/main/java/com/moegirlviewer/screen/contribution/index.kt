@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.contribution
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -36,6 +37,7 @@ import com.moegirlviewer.util.LoadStatus
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalMaterialApi
 @Composable
 fun ContributionScreen(arguments: ContributionRouteArguments) {

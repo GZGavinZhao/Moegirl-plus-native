@@ -107,7 +107,7 @@ private fun Item(
   ) {
     Box(
       modifier = Modifier
-        .height(42.dp)
+        .height(45.dp)
         .fillMaxWidth()
         .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.text.tertiary)
         .clickable { onClick?.invoke() }

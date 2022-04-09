@@ -1,6 +1,7 @@
 package com.moegirlviewer.screen.article
 
 import ArticleErrorMask
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -53,6 +54,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalMaterialApi
 @Composable
 fun ArticleScreen(
@@ -221,109 +223,111 @@ private fun ComposedArticleView(
     }
   }
 
-  val oldScrollValue = rememberSaveable { mutableListOf(0) }
-  FirstTimeSkippedLaunchedEffect(model.scrollState.value) {
-    if (model.articleLoadStatus != LoadStatus.SUCCESS) return@FirstTimeSkippedLaunchedEffect
-
-    val oldValue = oldScrollValue.first()
-    val value = model.scrollState.value
-
-    model.visibleHeader = value < 80 || value < oldValue
-    model.visibleCommentButton = value < oldValue
-    scope.launch {
-      debouncedManualEffector.trigger(ReadingRecord(
-        pageName = model.truePageName!!,
-        progress = value.toFloat() / model.articleViewRef.value!!.htmlWebViewRef!!.webView.contentHeight,
-        scrollY = value
-      ))
-    }
-
-    oldScrollValue[0] = value
-  }
-
-//  val handleOnScrollChanged: HtmlWebViewScrollChangeHandler = { _, top, _, oldTop ->
-//    model.visibleHeader = top < 80 || top < oldTop
-//    model.visibleCommentButton = top < oldTop
+//  val oldScrollValue = rememberSaveable { mutableListOf(0) }
+//  FirstTimeSkippedLaunchedEffect(model.scrollState.value) {
+//    if (model.articleLoadStatus != LoadStatus.SUCCESS) return@FirstTimeSkippedLaunchedEffect
+//
+//    val oldValue = oldScrollValue.first()
+//    val value = model.scrollState.value
+//
+//    model.visibleHeader = value < 80 || value < oldValue
+//    model.visibleCommentButton = value < oldValue
 //    scope.launch {
 //      debouncedManualEffector.trigger(ReadingRecord(
 //        pageName = model.truePageName!!,
-//        progress = top.toFloat() / model.articleViewRef.value!!.htmlWebViewRef!!.webView.contentHeight,
-//        scrollY = top
+//        progress = value.toFloat() / model.articleViewRef.value!!.htmlWebViewRef!!.webView.contentHeight,
+//        scrollY = value
 //      ))
 //    }
+//
+//    oldScrollValue[0] = value
 //  }
 
-  LaunchedEffect(model.articleLoadStatus) {
-    model.swipeRefreshState.isRefreshing = model.articleLoadStatus == LoadStatus.LOADING
-  }
-
-  SwipeRefresh(
-    state = model.swipeRefreshState,
-    onRefresh = {
-      scope.launch { model.articleViewRef.value!!.reload(true) }
-    },
-    indicator = { state, refreshTriggerDistance ->
-      val headerHeight = Globals.statusBarHeight + Constants.topAppBarHeight
-
-      if (model.scrollState.value == 0) {
-        StyledSwipeRefreshIndicator(
-          modifier = Modifier
-            .padding(top = headerHeight.dp),
-          state = state,
-          refreshTriggerDistance = refreshTriggerDistance
-        )
-      }
-    }
-  ) {
-    Center {
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .verticalScroll(model.scrollState),
-        contentAlignment = Alignment.Center
-      ) {
-        ArticleView(
-          props = ArticleViewProps(
-            pageName = arguments.pageName,
-            pageId = arguments.pageId,
-            revId = arguments.revId,
-            editAllowed = model.editAllowed ?: false,
-            visibleLoadStatusIndicator = false,
-            contentTopPadding = (Constants.topAppBarHeight + Globals.statusBarHeight).dp,
-            addCategories = model.truePageName != "H萌娘:官方群组",
-//            onScrollChanged = handleOnScrollChanged,
-            onArticleLoaded = { data, info -> model.handleOnArticleLoaded(data, info) },
-            onArticleRendered = { model.handleOnArticleRendered() },
-            onArticleMissed = { model.handleOnArticleMissed() },
-            onStatusChanged = { model.articleLoadStatus = it },
-            emitCatalogData = { model.catalogData = it },
-            ref = model.articleViewRef,
-          )
-        )
-      }
-
-      AnimatedVisibility(
-        visible = model.articleLoadStatus == LoadStatus.LOADING,
-        enter = fadeIn(),
-        exit = fadeOut()
-      ) {
-        ArticleLoadingMask()
-      }
-
-      AnimatedVisibility(
-        visible = model.articleLoadStatus == LoadStatus.FAIL,
-        enter = fadeIn(),
-        exit = fadeOut()
-      ) {
-        ArticleErrorMask(
-          onClick = {
-            scope.launch { model.articleViewRef.value!!.reload(true) }
-          }
-        )
-      }
+  val handleOnScrollChanged: HtmlWebViewScrollChangeHandler = { _, top, _, oldTop ->
+    model.visibleHeader = top < 80 || top < oldTop
+    model.visibleCommentButton = top < oldTop
+    scope.launch {
+      debouncedManualEffector.trigger(ReadingRecord(
+        pageName = model.truePageName!!,
+        progress = top.toFloat() / model.articleViewRef.value!!.htmlWebViewRef!!.webView.contentHeight,
+        scrollY = top
+      ))
     }
   }
 
+//  LaunchedEffect(model.articleLoadStatus) {
+//    model.swipeRefreshState.isRefreshing = model.articleLoadStatus == LoadStatus.LOADING
+//  }
+
+//  SwipeRefresh(
+//    state = model.swipeRefreshState,
+//    swipeEnabled = model.articleLoadStatus != LoadStatus.LOADING,
+//    onRefresh = {
+//      scope.launch { model.articleViewRef.value!!.reload(true) }
+//    },
+//    indicator = { state, refreshTriggerDistance ->
+//      val headerHeight = Globals.statusBarHeight + Constants.topAppBarHeight
+//
+//      if (model.scrollState.value == 0) {
+//        StyledSwipeRefreshIndicator(
+//          modifier = Modifier
+//            .padding(top = headerHeight.dp),
+//          state = state,
+//          refreshTriggerDistance = refreshTriggerDistance
+//        )
+//      }
+//    }
+//  ) {
+//
+//  }
+
+  Center {
+//    Box(
+//      modifier = Modifier
+//        .fillMaxSize()
+//        .verticalScroll(model.scrollState),
+//      contentAlignment = Alignment.Center
+//    ) {
+      ArticleView(
+        props = ArticleViewProps(
+          pageName = arguments.pageName,
+          pageId = arguments.pageId,
+          revId = arguments.revId,
+          editAllowed = model.editAllowed ?: false,
+          visibleLoadStatusIndicator = false,
+          contentTopPadding = (Constants.topAppBarHeight + Globals.statusBarHeight).dp,
+          addCategories = model.truePageName != "H萌娘:官方群组",
+          onScrollChanged = handleOnScrollChanged,
+          onArticleLoaded = { data, info -> model.handleOnArticleLoaded(data, info) },
+          onArticleRendered = { model.handleOnArticleRendered() },
+          onArticleMissed = { model.handleOnArticleMissed() },
+          onStatusChanged = { model.articleLoadStatus = it },
+          emitCatalogData = { model.catalogData = it },
+          ref = model.articleViewRef,
+        )
+      )
+//    }
+
+    AnimatedVisibility(
+      visible = model.articleLoadStatus == LoadStatus.LOADING,
+      enter = fadeIn(),
+      exit = fadeOut()
+    ) {
+      ArticleLoadingMask()
+    }
+
+    AnimatedVisibility(
+      visible = model.articleLoadStatus == LoadStatus.FAIL,
+      enter = fadeIn(),
+      exit = fadeOut()
+    ) {
+      ArticleErrorMask(
+        onClick = {
+          scope.launch { model.articleViewRef.value!!.reload(true) }
+        }
+      )
+    }
+  }
 }
 
 class ReadingRecord(

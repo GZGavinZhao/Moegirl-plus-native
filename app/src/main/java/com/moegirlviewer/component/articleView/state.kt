@@ -1,10 +1,6 @@
 package com.moegirlviewer.component.articleView
 
 import android.os.Parcelable
-import android.webkit.CookieManager
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
-import android.webkit.WebView
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
@@ -40,6 +36,10 @@ import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommonSettings
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.*
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest
+import com.tencent.smtt.export.external.interfaces.WebResourceResponse
+import com.tencent.smtt.sdk.CookieManager
+import com.tencent.smtt.sdk.WebView
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.parcelize.Parcelize
@@ -93,12 +93,12 @@ class ArticleViewState(
       if (useSpecialCharSupportedFont) add("NospzGothicMoe")
       if (useSerifFont) add("serif")
     }
-      .map { "\"$it\"" }.joinToString { ", " }
+      .joinToString(", ")
 
     val styles = """
       @font-face {
         font-family: "NospzGothicMoe";
-        src: url("font/nospz_gothic_moe.ttf");
+        src: url("nospz_gothic_moe.ttf");
       }     
 
       body {
@@ -204,7 +204,7 @@ class ArticleViewState(
         val pageInfo = PageApi.getPageInfo(truePageName)
         val isCategoryPage = MediaWikiNamespace.CATEGORY.code == pageInfo.ns
 
-        val articleData = PageApi.getPageContent(truePageName, revId)
+        val articleData = PageApi.getPageContent(truePageName, revId, previewMode = props.previewMode)
 
         if (isCategoryPage) {
           val collectedCategoryData = collectCategoryDataFromHtml(articleData.parse.text._asterisk)
@@ -295,7 +295,7 @@ class ArticleViewState(
       if (useSpecialCharSupportedFont) add("NospzGothicMoe")
       if (useSerifFont) add("serif")
     }
-      .map { "\"$it\"" }.joinToString { ", " }
+      .joinToString(", ")
 
     htmlWebViewRef.value!!.injectScript("""
       document.body.style.fontFamily = '${if (usingFonts != "") usingFonts else "initial"}'

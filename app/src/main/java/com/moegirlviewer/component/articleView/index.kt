@@ -10,10 +10,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.node.Ref
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.moegirlviewer.Constants
 import com.moegirlviewer.api.page.bean.PageContentResBean
 import com.moegirlviewer.api.page.bean.PageInfoResBean
 import com.moegirlviewer.component.ReloadButton
@@ -25,7 +23,6 @@ import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.screen.article.ReadingRecord
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
-import kotlin.math.max
 
 typealias ArticleData = PageContentResBean
 typealias ArticleInfo = PageInfoResBean.Query.MapValue
@@ -47,6 +44,7 @@ class ArticleViewProps(
   val addCopyright: Boolean = false,
   val addCategories: Boolean = true,
   val cacheEnabled: Boolean = false,
+  val previewMode: Boolean = false,   // 这个参数对应的就是api的preview参数，没有其他功能，使用这个会获得不带缓存的渲染结果
   val contentTopPadding: Dp = 0.dp,
   val renderDelay: Long = 0,
   val messageHandlers: HtmlWebViewMessageHandlers? = null,

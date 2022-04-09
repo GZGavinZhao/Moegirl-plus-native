@@ -2,18 +2,18 @@ package com.moegirlviewer.screen.splash
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
-import com.moegirlviewer.util.SplashImage
-import com.moegirlviewer.util.isMoegirl
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 
 class SplashScreenState(
   // compose的动画需要compose的协程上下文
   private val composeCoroutineScope: CoroutineScope,
-  internal val splashImage: SplashImage
+  internal val splashImage: SplashImage,
 ) {
-  internal val contentAlpha = Animatable(0f)
-  internal val imageScale = Animatable(1.2f)
+  val contentAlpha = Animatable(0f)
+  val imageScale = Animatable(1.2f)
 
   suspend fun showAppearAnimation() = withContext(composeCoroutineScope.coroutineContext) {
     if (isMoegirl()) {

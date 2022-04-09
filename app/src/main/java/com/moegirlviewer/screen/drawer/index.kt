@@ -35,7 +35,6 @@ fun CommonDrawer(
 
   CustomDrawer(
     state = state.customDrawerState,
-    width = (configuration.screenWidthDp * 0.8).dp,
     drawerContent = {
       Column(
         modifier = Modifier

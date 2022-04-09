@@ -9,12 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.Constants
+import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
 import com.moegirlviewer.component.articleView.ArticleViewRef
+import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.HomeScreenCardState
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.isMoegirl
+import com.moegirlviewer.util.printRequestErr
 import kotlinx.coroutines.launch
 
 @Composable
@@ -40,6 +43,7 @@ fun TopCard(
         ref = state.articleViewRef,
         pageName = Constants.topCardContentPageName,
         visibleLoadStatusIndicator = false,
+        previewMode = true,
         injectedStyles = state.injectedStyles,
         onStatusChanged = { state.status = it },
         fullHeight = true,
@@ -50,16 +54,36 @@ fun TopCard(
 }
 
 class TopCardState : HomeScreenCardState() {
-  var status by mutableStateOf(LoadStatus.INITIAL)
+  var status by mutableStateOf(LoadStatus.LOADING)
+  var isContentPageUpdated by mutableStateOf(false)
   val articleViewRef = Ref<ArticleViewRef>()
   val injectedStyles = listOf("""
     body { 
       padding-bottom: 0;
       margin-top: 1em;
     }
+    
+    ul.gallery li:not(foo) {
+      width: 90px;
+    }
+    
+    ul.gallery li img:not(foo) {
+      width: 90px !important;
+    }
   """.trimIndent())
 
+//  suspend fun purgePage() {
+//    isContentPageUpdated = false
+//    try {
+//      PageApi.purgePage(Constants.topCardContentPageName)
+//      isContentPageUpdated = true
+//    } catch (e: MoeRequestException) {
+//      printRequestErr(e, "刷新topCard内容页面失败")
+//    }
+//  }
+
   override suspend fun reload() {
+//    purgePage()
     articleViewRef.value?.reload?.invoke(true)
   }
 }

@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.search
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import com.moegirlviewer.screen.search.component.SearchScreenHintList
 import com.moegirlviewer.screen.search.component.SearchScreenRecentSearch
 import com.moegirlviewer.util.imeBottomPadding
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalFoundationApi
 @Composable
 fun SearchScreen() {

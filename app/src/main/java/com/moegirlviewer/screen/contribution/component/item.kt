@@ -120,7 +120,7 @@ private fun SummaryContent(
   ) {
     StyledText(
       modifier = Modifier
-        .padding(top = 5.dp, start = 10.dp, end = 25.dp),
+        .padding(top = 10.dp, start = 10.dp, end = 25.dp),
       fontSize = 14.sp,
       text = buildAnnotatedString {
         if (summary.section != null) {
@@ -157,7 +157,7 @@ private fun ComposedFooter(
 
   Row(
     modifier = Modifier
-      .padding(top = 10.dp)
+      .padding(top = 15.dp)
       .fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceBetween,
   ) {

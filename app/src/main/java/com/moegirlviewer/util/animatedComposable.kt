@@ -15,7 +15,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
-import com.google.accompanist.navigation.animation.composable
+import my.google.accompanist.navigation.animation.composable
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.util.Animation.*
 import kotlin.math.roundToInt

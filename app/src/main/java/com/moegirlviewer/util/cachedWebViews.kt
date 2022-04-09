@@ -1,7 +1,7 @@
 package com.moegirlviewer.util
 
-import android.webkit.WebView
 import androidx.compose.runtime.*
+import com.tencent.smtt.sdk.WebView
 
 private typealias CachedWebViewMapContainer = MutableMap<String, WebView>
 

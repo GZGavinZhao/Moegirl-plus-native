@@ -89,7 +89,7 @@ fun CommonDrawerFooter(
       )
 
       StyledText(
-        text = stringResource(R.string.exitApp),
+        text = stringResource(R.string.exit),
         color = themeColors.text.secondary
       )
     }

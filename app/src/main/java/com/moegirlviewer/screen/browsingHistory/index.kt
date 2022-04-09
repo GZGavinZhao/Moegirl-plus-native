@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.browsingHistory
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
+import com.moegirlviewer.component.EmptyContent
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
@@ -33,10 +36,12 @@ import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.vibrate
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalFoundationApi
 @Composable
 fun BrowsingHistoryScreen() {
   val model: BrowsingHistoryScreenModel = hiltViewModel()
+  val configuration = LocalConfiguration.current
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
 
@@ -85,16 +90,19 @@ fun BrowsingHistoryScreen() {
       }
 
       LoadStatus.EMPTY -> {
-        Box(
-          modifier = Modifier.fillMaxSize(),
-          contentAlignment = Alignment.Center
-        ) {
-          StyledText(
-            text = stringResource(id = R.string.noRecord),
-            fontSize = 18.sp,
-            color = themeColors.text.tertiary
-          )
-        }
+        EmptyContent(
+          message = stringResource(id = R.string.noRecord),
+        )
+//        Box(
+//          modifier = Modifier.fillMaxSize(),
+//          contentAlignment = Alignment.Center
+//        ) {
+//          StyledText(
+//            text = stringResource(id = R.string.noRecord),
+//            fontSize = 18.sp,
+//            color = themeColors.text.tertiary
+//          )
+//        }
       }
 
       else -> {

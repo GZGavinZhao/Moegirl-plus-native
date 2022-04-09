@@ -29,13 +29,19 @@ fun WikiEditor(
   val scope = rememberCoroutineScope()
 
   LaunchedEffect(true) {
-    state.init(themeColors, themeTextColors)
+    if (!state.isInitialized) {
+      state.init(themeColors, themeTextColors)
+    }
   }
 
   LaunchedEffect(themeColors.isLight) {
     state.htmlWebViewRef.value!!.injectScript("""
-        document.querySelector('.CodeMirror').style.color = '${themeTextColors.primary.toCssRgbaString()}'
+        document.querySelector('.CodeMirror')?.style.color = '${themeTextColors.primary.toCssRgbaString()}'
       """.trimIndent())
+  }
+
+  LaunchedEffect(true) {
+    state.htmlWebViewRef.value!!.injectScript("window.remakeEditor()")
   }
 
   HtmlWebView(
@@ -59,6 +65,7 @@ fun WikiEditor(
 class WikiEditorState {
   internal val htmlWebViewRef = Ref<HtmlWebViewRef>()
   internal var lastSettingContent = ""
+  var isInitialized = false
 
   internal fun init(themeColors: Colors, themeTextColors: TextColors) {
     val style = """
@@ -88,6 +95,7 @@ class WikiEditorState {
       _postMessage('onLoaded')
     """.trimIndent()
 
+    isInitialized = true
     htmlWebViewRef.value!!.updateContent {
       HtmlWebViewContent(
         title = "wikiEditor",

@@ -1,16 +1,15 @@
 package com.moegirlviewer.initialization
 
 import android.os.Build
-import android.webkit.WebSettings
-import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.isDebugEnv
 import com.moegirlviewer.util.useFreeStatusBarLayout
+import com.tencent.smtt.sdk.WebView
 
 fun ComponentActivity.initializeOnCreate() {
   WebView.setWebContentsDebuggingEnabled(isDebugEnv())
-  WebView.enableSlowWholeDocumentDraw()
+//  WebView.enableSlowWholeDocumentDraw()
 
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
     window.decorView.isForceDarkAllowed = false

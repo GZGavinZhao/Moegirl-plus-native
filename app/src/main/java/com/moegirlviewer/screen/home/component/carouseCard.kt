@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.HotelClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,7 @@ import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.HomeScreenCardState
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 
 @OptIn(ExperimentalPagerApi::class)
@@ -37,6 +39,7 @@ fun CarouseCard(
   state: CarouseCardState,
 ) {
   val themeColors = MaterialTheme.colors
+  val scope = rememberCoroutineScope()
 
   LaunchedEffect(true) {
     suspend fun loop() {
@@ -56,10 +59,11 @@ fun CarouseCard(
   HomeCard(
     modifier = Modifier
       .padding(15.dp),
-//    icon = Icons.Filled.HotelClass,
-//    title = stringResource(id = R.string.highQualityArticle),
     loadStatus = state.status,
-    minHeight = 250.dp
+    minHeight = 250.dp,
+    onReload = {
+      scope.launch { state.reload() }
+    }
   ) {
     RippleColorScope(color = themeColors.primaryVariant) {
       HorizontalPager(
@@ -88,8 +92,9 @@ fun CarouseCard(
           Box(
             modifier = Modifier
               .fillMaxWidth()
-              .height(40.dp)
-              .background(Color.White.copy(alpha = 0.8f)),
+              .height(42.dp)
+              .background(Color.White.copy(alpha = 0.8f))
+              .blur(5.dp),
             contentAlignment = Alignment.Center
           ) {
             StyledText(
@@ -116,7 +121,7 @@ class CarouseCardState : HomeScreenCardState() {
   override suspend fun reload() {
     status = LoadStatus.LOADING
     try {
-      val res = PageApi.getPageContent("Template:首页/典范条目")
+      val res = PageApi.getPageContent("Template:首页/典范条目", previewMode = true)
       val htmlContent = res.parse.text._asterisk
       val htmlDoc = Jsoup.parse(htmlContent)
 

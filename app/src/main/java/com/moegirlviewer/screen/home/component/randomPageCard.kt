@@ -102,7 +102,7 @@ fun RandomPageCard(
           ) {
             StyledText(
               text = state.pageData!!.title,
-              fontSize = 20.sp
+              fontSize = 22.sp
             )
 
             Divider(

@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.MoegirlPlus" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/dark_mode_secondary</item>
-        <item name="colorSecondary">@color/dark_mode_secondary</item>
+        <item name="colorPrimary">@color/hmoe_dark_mode_secondary</item>
+        <item name="colorSecondary">@color/hmoe_dark_mode_secondary</item>
         <!-- Status bar color. -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowTranslucentStatus">false</item>

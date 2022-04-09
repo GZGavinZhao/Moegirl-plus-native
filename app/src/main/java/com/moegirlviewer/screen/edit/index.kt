@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.edit
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
@@ -8,6 +9,7 @@ import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Autorenew
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -29,6 +31,8 @@ import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.edit.tabs.preview.EditScreenPreview
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.EditScreenWikitextEditor
 import com.moegirlviewer.screen.edit.util.showSubmitDialogOfEdit
+import com.moegirlviewer.theme.isUseDarkMode
+import com.moegirlviewer.theme.isUsePureTheme
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.computeMd5
@@ -37,6 +41,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(FlowPreview::class)
 @InternalCoroutinesApi
 @ExperimentalComposeUiApi
@@ -73,21 +78,21 @@ fun EditScreen(arguments: EditRouteArguments) {
     }
   }
   
-  BackHandler(true) {
-    scope.launch {
-      if (model.wikiEditorState.getTextContent() != model.originalWikiText) {
-        Globals.commonAlertDialog.show(CommonAlertDialogProps(
-          content = { StyledText(stringResource(id = R.string.editleaveHint)) },
-          secondaryButton = ButtonConfig.cancelButton(),
-          onPrimaryButtonClick = {
-            Globals.navController.popBackStack()
-          }
-        ))
-      } else {
-        Globals.navController.popBackStack()
-      }
-    }
-  }
+//  BackHandler(true) {
+//    scope.launch {
+//      if (model.wikiEditorState.getTextContent() != model.originalWikiText) {
+//        Globals.commonAlertDialog.show(CommonAlertDialogProps(
+//          content = { StyledText(stringResource(id = R.string.editleaveHint)) },
+//          secondaryButton = ButtonConfig.cancelButton(),
+//          onPrimaryButtonClick = {
+//            Globals.navController.popBackStack()
+//          }
+//        ))
+//      } else {
+//        Globals.navController.popBackStack()
+//      }
+//    }
+//  }
 
   model.memoryStore.Provider {
     model.cachedWebViews.Provider {
@@ -158,6 +163,13 @@ private fun ComposedHeader(
         },
         actions = {
           AppHeaderIcon(
+            image = Icons.Filled.Search,
+            onClick = {
+              Globals.navController.navigate("search")
+            }
+          )
+
+          AppHeaderIcon(
             image = Icons.Filled.Done,
             onClick = {
               showSubmitDialogOfEdit(model)
@@ -171,7 +183,7 @@ private fun ComposedHeader(
         indicator = { tabPositions ->
           TabRowDefaults.Indicator(
             modifier = Modifier.tabIndicatorOffset(tabPositions[model.selectedTabIndex]),
-            color = themeColors.primaryVariant,
+            color = if (!isUsePureTheme() && !isUseDarkMode()) Color.White else themeColors.primaryVariant,
             height = 3.dp
           )
         }

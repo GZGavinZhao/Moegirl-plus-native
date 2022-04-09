@@ -33,7 +33,7 @@ fun ArticleLoadingMask() {
     ) {
       AsyncImage(
         modifier = Modifier
-          .width((configuration.screenWidthDp * 0.55).dp),
+          .width((configuration.screenWidthDp * 0.4).dp),
         model = rememberImageRequest(R.drawable.article_loading),
         contentDescription = null
       )

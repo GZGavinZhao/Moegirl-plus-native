@@ -57,6 +57,12 @@ class RecentChangesScreenModel @Inject constructor() : ViewModel() {
         ).query.recentchanges.map { RawRecentChanges(it) }
       }
 
+      if (rawChangesData.isEmpty()) {
+        changesList = emptyList()
+        status = LoadStatus.EMPTY
+        return
+      }
+
       val changeListOfDays = processRecentChanges(rawChangesData)
         // 添加日期，并将所有项转化为适配器
         .flatMap {

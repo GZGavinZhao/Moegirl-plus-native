@@ -112,7 +112,6 @@ object CommentStore {
     commentId: String,
     like: Boolean = true
   ) {
-    CommentApi.toggleLike(commentId, like)
     val currentPageComments = getCommentsByPageId(pageId).first()
     val foundItem = currentPageComments.getCommentById(commentId)
     val foundPopularItem = currentPageComments.getCommentById(commentId, true)
@@ -126,6 +125,7 @@ object CommentStore {
     }
 
     store[pageId]!!.update { it.copy() }
+    CommentApi.toggleLike(commentId, like)
   }
 
   suspend fun addComment(

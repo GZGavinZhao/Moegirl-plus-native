@@ -6,16 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.net.Uri
+import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
+import com.moegirlviewer.BuildConfig
 import com.moegirlviewer.Constants
 import com.moegirlviewer.DataSource
 import com.moegirlviewer.R
@@ -33,6 +32,7 @@ import java.security.MessageDigest
 import java.time.*
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.reflect.KProperty
 
 @Target(AnnotationTarget.CLASS)
 annotation class ProguardIgnore
@@ -91,8 +91,6 @@ fun Float.toDp(): Dp {
   return (this / LocalDensity.current.density).dp
 }
 
-class InitRef<T>(var value: T)
-
 fun getTextFromHtml(html: String): String {
   return html
     .replace(Regex("""(<.+?>|<\\/.+?>)"""), "")
@@ -114,7 +112,11 @@ fun copyContentToClipboard(content: String) {
 
 fun vibrate() {
   val vibrator = Globals.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-  vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+  if (Build.VERSION.SDK_INT >= 26) {
+    vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+  } else {
+    vibrator.vibrate(50)
+  }
 }
 
 fun gotoArticlePage(pageName: String) {

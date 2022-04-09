@@ -71,7 +71,7 @@ fun getPureColorPalette(): Colors {
       primaryVariant = isMoegirl(GreenPrimary, OrangePrimary),
       secondary = isMoegirl(GreenPrimary, OrangePrimary),
 
-      onPrimary = themeTextColors.primary,
+      onPrimary = Color(0xff666666),
       onSecondary = Color.White
     )
   }

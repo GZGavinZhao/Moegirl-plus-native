@@ -30,7 +30,7 @@ import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.noRippleClickable
-import java.lang.Float.max
+import kotlin.math.max
 
 @OptIn(ExperimentalCoilApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -156,7 +156,7 @@ internal fun BoxScope.RandomPageItem(
         ) {
           StyledText(
             text = state.title ?: "",
-            fontSize = 20.sp
+            fontSize = 22.sp
           )
 
           Divider(
@@ -168,6 +168,7 @@ internal fun BoxScope.RandomPageItem(
           StyledText(
             text = if (state.introduction ?: "" != "") state.introduction!! else stringResource(id = R.string.noIntroduction),
             fontSize = 15.sp,
+            lineHeight = 25.sp,
             color = if (state.introduction ?: "" != "") themeColors.text.primary else themeColors.text.tertiary,
             maxLines = 5,
             overflow = TextOverflow.Ellipsis

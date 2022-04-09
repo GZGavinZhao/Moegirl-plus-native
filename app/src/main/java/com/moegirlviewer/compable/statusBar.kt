@@ -1,38 +1,38 @@
 package com.moegirlviewer.compable
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.moegirlviewer.util.printDebugLog
 
 @Composable
 fun StatusBar(
   visible: Boolean = true,
   backgroundColor: Color = Color.Transparent,
-  darkIcons: Boolean = false
+  darkIcons: Boolean = false,
 ) {
   val systemUiController = rememberSystemUiController()
+  val statusBarLockedShadow = statusBarLocked   // state必须出现在composable函数的上下文中，才能正确触发组件重渲染
 
   SideEffect {
-//    if (
-//      visible != CachedStatusBarConfig.visible ||
-//      backgroundColor != CachedStatusBarConfig.backgroundColor ||
-//      darkIcons != CachedStatusBarConfig.darkIcons
-//    ) {
-//      printDebugLog("run")
+    if (statusBarLockedShadow) return@SideEffect
+
+    if (
+      visible != CachedStatusBarConfig.visible ||
+      backgroundColor != CachedStatusBarConfig.backgroundColor ||
+      darkIcons != CachedStatusBarConfig.darkIcons
+    ) {
       systemUiController.isStatusBarVisible = visible
       systemUiController.setStatusBarColor(
         color = backgroundColor,
         darkIcons = darkIcons
       )
 
-//      with(CachedStatusBarConfig) {
-//        this.visible = visible
-//        this.backgroundColor = backgroundColor
-//        this.darkIcons = darkIcons
-//      }
-//    }
+      with(CachedStatusBarConfig) {
+        this.visible = visible
+        this.backgroundColor = backgroundColor
+        this.darkIcons = darkIcons
+      }
+    }
   }
 }
 
@@ -41,3 +41,5 @@ private object CachedStatusBarConfig {
   var backgroundColor = Color.Transparent
   var darkIcons = false
 }
+
+var statusBarLocked by mutableStateOf(false)

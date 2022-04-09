@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 // 这里的代码主要是为了统一“最近更改”和“监视列表下最近更改”的数据类型，以及合并同页面编辑，为数据添加编辑用户字段
 
 fun processRecentChanges(list: List<RawRecentChanges>): List<List<RecentChanges>> {
+  if (list.isEmpty()) return emptyList()
   return list
     .chunkedByDate()
     .map { it.withDetails().withUsers() }

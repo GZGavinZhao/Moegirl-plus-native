@@ -22,6 +22,7 @@ import coil.compose.AsyncImage
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.EmptyContent
+import com.moegirlviewer.component.EmptyContentImageSizeType
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.rememberLinkedTextScope
@@ -32,6 +33,7 @@ import com.moegirlviewer.screen.home.util.getRecommendationPages
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.gotoArticlePage
+import com.moegirlviewer.util.isMoegirl
 import com.moegirlviewer.util.printRequestErr
 import kotlinx.coroutines.launch
 
@@ -41,6 +43,7 @@ fun RecommendationCard(
 ) {
   val scope = rememberCoroutineScope()
   val themeColors = MaterialTheme.colors
+  val isEmptyRecommendation = state.status == LoadStatus.SUCCESS && state.recommendationPages == null
 
   HomeCardContainer(
     icon = Icons.Filled.Stars,
@@ -55,10 +58,11 @@ fun RecommendationCard(
       scope.launch { state.reload() }
     }
   ) {
-    if (state.status == LoadStatus.SUCCESS && state.recommendationPages == null) {
+    if (isEmptyRecommendation) {
       EmptyContent(
+        emptyContentImageSizeType = EmptyContentImageSizeType.SMALL,
         height = 300.dp,
-        message = stringResource(id = R.string.noRecommendationPageHint)
+        message = stringResource(id = R.string.noRecommendationPageHint),
       )
     }
 

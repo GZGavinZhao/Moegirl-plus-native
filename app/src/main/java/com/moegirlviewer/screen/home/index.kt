@@ -1,6 +1,7 @@
 package com.moegirlviewer.screen.home
 
 import ArticleErrorMask
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
@@ -26,11 +27,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.FirstTimeSkippedLaunchedEffect
+import com.moegirlviewer.compable.OneTimeLaunchedEffect
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.Center
@@ -47,10 +51,12 @@ import com.moegirlviewer.screen.home.component.*
 import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCard
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.SettingsStore
+import com.moegirlviewer.theme.isUsePureTheme
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalMaterialApi
 @Composable
 fun HomeScreen() {
@@ -60,7 +66,7 @@ fun HomeScreen() {
   if (isUseCardsHome == null) return
   LaunchedEffect(isUseCardsHome) {
     if (isUseCardsHome!!) {
-      if (model.cardsDataStatus == LoadStatus.INITIAL) model.loadCardsData()
+      if (model.cardsDataStatus != LoadStatus.SUCCESS) model.loadCardsData()
     } else {
       if (HomeScreenModel.needReload || model.articleViewRef.value?.loadStatus == LoadStatus.LOADING) {
         model.articleViewRef.value?.reload?.invoke(true)
@@ -145,10 +151,31 @@ fun ComposedTopAppBar(
       }
     },
     title = {
-      StyledText(
-        text = stringResource(R.string.app_name),
-        color = themeColors.onPrimary
-      )
+      if (isMoegirl()) {
+        StyledText(
+          text = stringResource(R.string.app_name),
+          color = themeColors.onPrimary
+        )
+      } else {
+        Row {
+          if (isUsePureTheme()) {
+            StyledText(
+              text = "H",
+              color = themeColors.primaryVariant,
+              fontWeight = FontWeight.Black
+            )
+            StyledText(
+              text = "Moegirl",
+              color = themeColors.onPrimary
+            )
+          } else {
+            StyledText(
+              text = "HMoegirl",
+              color = themeColors.onPrimary
+            )
+          }
+        }
+      }
     },
     actions = {
       AppHeaderIcon(
@@ -179,12 +206,9 @@ private fun ComposedCardsHomePage() {
   val model: HomeScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
 
-  LaunchedEffect(model.cardsDataStatus) {
-    model.swipeRefreshState.isRefreshing = model.cardsDataStatus == LoadStatus.LOADING
-  }
-
   SwipeRefresh(
     state = model.swipeRefreshState,
+    swipeEnabled = model.cardsDataStatus != LoadStatus.LOADING,
     onRefresh = {
       scope.launch {
         model.loadCardsData()
@@ -199,7 +223,7 @@ private fun ComposedCardsHomePage() {
         .verticalScroll(rememberScrollState())
     ) {
       if (model.cardsDataStatus == LoadStatus.LOADING) {
-        CardPlaceholder()
+        CardPlaceholder(true)
         CardPlaceholder()
         CardPlaceholder()
       } else {
@@ -221,12 +245,9 @@ private fun ComposedArticleView() {
   val model: HomeScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
 
-  LaunchedEffect(model.articleLoadStatus) {
-    model.swipeRefreshState.isRefreshing = model.articleLoadStatus == LoadStatus.LOADING
-  }
-
   SwipeRefresh(
     state = model.swipeRefreshState,
+    swipeEnabled = model.articleLoadStatus != LoadStatus.LOADING,
     onRefresh = {
       scope.launch { model.articleViewRef.value!!.reload(true) }
     },

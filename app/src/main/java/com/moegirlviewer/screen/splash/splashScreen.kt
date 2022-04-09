@@ -15,7 +15,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.DoSideEffect
+import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.util.isMoegirl
 
@@ -24,7 +27,6 @@ import com.moegirlviewer.util.isMoegirl
 fun SplashScreen(
   state: SplashScreenState
 ) {
-
   Box(
     modifier = Modifier
       .fillMaxSize()

@@ -27,6 +27,7 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.article.ArticleScreenModel
 import com.moegirlviewer.store.AccountStore
+import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 
 @Suppress("UpdateTransitionLabel", "TransitionPropertiesLabel")
@@ -88,25 +89,23 @@ fun ArticleScreenHeader(
           }
         )
 
-        Box() {
-          AppHeaderIcon(
-            modifier = Modifier
-              .alpha(contentAlpha),
-            image = Icons.Filled.MoreVert,
-            onClick = {
-              visibleMoreMenu = true
-            }
-          )
+        AppHeaderIcon(
+          modifier = Modifier
+            .alpha(contentAlpha),
+          image = Icons.Filled.MoreVert,
+          onClick = {
+            visibleMoreMenu = true
+          }
+        )
 
-          MoreMenu(
-            visible = visibleMoreMenu,
-            onAction = {
-              onAction(it)
-              visibleMoreMenu = false
-            },
-            onDismiss = { visibleMoreMenu = false }
-          )
-        }
+        MoreMenu(
+          visible = visibleMoreMenu,
+          onAction = {
+            onAction(it)
+            visibleMoreMenu = false
+          },
+          onDismiss = { visibleMoreMenu = false }
+        )
       }
     )
   }
@@ -134,7 +133,7 @@ private fun MoreMenu(
     ) {
       StyledText(
         text = text,
-        color = Color.Unspecified
+        color = themeColors.text.primary
       )
     }
   }

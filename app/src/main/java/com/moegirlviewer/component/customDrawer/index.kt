@@ -111,7 +111,7 @@ fun CustomDrawer(
           .swipeable(
             state = state.swipeableState,
             anchors = anchors,
-            thresholds = { _, _ -> FractionalThreshold(0.3f) },
+            thresholds = { _, _ -> FractionalThreshold(if (isLeftSide) 0.3f else 0.2f) },
             orientation = Orientation.Horizontal,
             resistance = null,
             velocityThreshold = SwipeableDefaults.VelocityThreshold / 4,

@@ -98,6 +98,7 @@ class BrowsingHistoryScreenModel @Inject constructor() : ViewModel() {
           Globals.room.browsingRecord().clear()
           toast(Globals.context.getString(R.string.deleted))
           lists = BrowsingRecordLists()
+          status = LoadStatus.EMPTY
         }
       }
     ))

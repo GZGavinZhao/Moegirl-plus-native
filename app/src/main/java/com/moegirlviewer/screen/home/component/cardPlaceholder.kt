@@ -10,22 +10,26 @@ import androidx.compose.ui.unit.dp
 import com.moegirlviewer.util.styledPlaceholder
 
 @Composable
-fun CardPlaceholder() {
+fun CardPlaceholder(
+  hideTopLine: Boolean = false
+) {
   Column(
     modifier = Modifier
       .padding(15.dp)
   ) {
-    Row() {
-      Spacer(modifier = Modifier
-        .size(30.dp)
-        .clip(CircleShape)
-        .styledPlaceholder())
+    if (!hideTopLine) {
+      Row() {
+        Spacer(modifier = Modifier
+          .size(30.dp)
+          .clip(CircleShape)
+          .styledPlaceholder())
 
-      Spacer(modifier = Modifier
-        .padding(start = 10.dp)
-        .height(30.dp)
-        .width(120.dp)
-        .styledPlaceholder())
+        Spacer(modifier = Modifier
+          .padding(start = 10.dp)
+          .height(30.dp)
+          .width(120.dp)
+          .styledPlaceholder())
+      }
     }
 
     Spacer(modifier = Modifier

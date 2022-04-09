@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.compare
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
@@ -29,10 +30,13 @@ import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.compare.component.CompareScreenDiffContent
 import com.moegirlviewer.screen.compare.util.showUndoDialog
 import com.moegirlviewer.store.AccountStore
+import com.moegirlviewer.theme.isUseDarkMode
+import com.moegirlviewer.theme.isUsePureTheme
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalPagerApi
 @Composable
 fun CompareScreen(
@@ -167,7 +171,7 @@ private fun ComposedHeader(
         indicator = { tabPositions ->
           TabRowDefaults.Indicator(
             modifier = Modifier.tabIndicatorOffset(tabPositions[model.selectedTabIndex]),
-            color = themeColors.primaryVariant,
+            color = if (!isUsePureTheme() && !isUseDarkMode()) Color.White else themeColors.primaryVariant,
             height = 3.dp
           )
         }
