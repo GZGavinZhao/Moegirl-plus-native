@@ -27,7 +27,7 @@ data class CommonSettings(
   var useSpecialCharSupportedFontInApp: Boolean = false,
   var useSpecialCharSupportedFontInArticle: Boolean = false,
   var useSerifFontInArticle: Boolean = false,
-  var usePureTheme: Boolean = false,
+  var usePureTheme: Boolean = !isMoegirl(),
   var splashImageMode: SplashImageMode = SplashImageMode.NEW,
   var selectedSplashImages: List<String> = listOf(splashImageList.last().key),
 ) : Settings()

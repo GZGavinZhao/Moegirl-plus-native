@@ -14,6 +14,7 @@ import com.moegirlviewer.screen.searchResult.SearchResultRouteArguments
 import com.moegirlviewer.store.SearchRecord
 import com.moegirlviewer.store.SearchRecordsStore
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.closeKeyboard
 import com.moegirlviewer.util.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -26,6 +27,7 @@ class SearchScreenModel @Inject constructor() : ViewModel()  {
   val searchRecords = SearchRecordsStore.searchRecords
 
   fun searchByRecord(record: SearchRecord) {
+    closeKeyboard()
     coroutineScope.launch {
       delay(500)  // 延迟500毫秒，防止切换页面时搜索历史更换顺序不好看
       SearchRecordsStore.addRecord(record)

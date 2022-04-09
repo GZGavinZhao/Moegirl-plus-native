@@ -37,9 +37,9 @@ fun StatusBar(
 }
 
 private object CachedStatusBarConfig {
-  var visible = true
-  var backgroundColor = Color.Transparent
-  var darkIcons = false
+  var visible: Boolean? = null
+  var backgroundColor: Color? = null
+  var darkIcons: Boolean? = null
 }
 
 var statusBarLocked by mutableStateOf(false)

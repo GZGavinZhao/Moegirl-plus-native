@@ -40,7 +40,7 @@ fun ArticleErrorMask(
       ) {
         AsyncImage(
           modifier = Modifier
-            .width((configuration.screenWidthDp * 0.6).dp),
+            .width((configuration.screenWidthDp * 0.4).dp),
           model = rememberImageRequest(R.drawable.article_error),
           contentDescription = null
         )

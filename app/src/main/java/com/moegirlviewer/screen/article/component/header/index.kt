@@ -3,6 +3,7 @@ package com.moegirlviewer.screen.article.component.header
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -89,23 +90,30 @@ fun ArticleScreenHeader(
           }
         )
 
-        AppHeaderIcon(
-          modifier = Modifier
-            .alpha(contentAlpha),
-          image = Icons.Filled.MoreVert,
-          onClick = {
-            visibleMoreMenu = true
-          }
-        )
+        Box() {
+          AppHeaderIcon(
+            modifier = Modifier
+              .alpha(contentAlpha),
+            image = Icons.Filled.MoreVert,
+            onClick = {
+              visibleMoreMenu = true
+            }
+          )
 
-        MoreMenu(
-          visible = visibleMoreMenu,
-          onAction = {
-            onAction(it)
-            visibleMoreMenu = false
-          },
-          onDismiss = { visibleMoreMenu = false }
-        )
+          Box(
+            modifier = Modifier
+              .offset(x = 50.dp, y = 52.dp)
+          ) {
+            MoreMenu(
+              visible = visibleMoreMenu,
+              onAction = {
+                onAction(it)
+                visibleMoreMenu = false
+              },
+              onDismiss = { visibleMoreMenu = false }
+            )
+          }
+        }
       }
     )
   }
@@ -133,7 +141,7 @@ private fun MoreMenu(
     ) {
       StyledText(
         text = text,
-        color = themeColors.text.primary
+        color = if (enabled) themeColors.text.primary else themeColors.text.tertiary
       )
     }
   }

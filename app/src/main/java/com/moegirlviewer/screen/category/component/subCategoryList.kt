@@ -89,7 +89,7 @@ fun SubCategoryList() {
           for (item in model.subCategories) {
             Row(
               modifier = Modifier
-                .padding(bottom = 2.5.dp),
+                .padding(bottom = 5.dp),
               verticalAlignment = Alignment.CenterVertically
             ) {
               Icon(
@@ -109,7 +109,7 @@ fun SubCategoryList() {
                     ))
                   },
                 text = item,
-                fontSize = 15.5.sp,
+                fontSize = 16.sp,
                 color = themeColors.primaryVariant
               )
             }

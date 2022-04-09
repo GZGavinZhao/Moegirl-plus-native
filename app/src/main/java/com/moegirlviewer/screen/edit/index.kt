@@ -50,8 +50,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun EditScreen(arguments: EditRouteArguments) {
   val model: EditScreenModel = hiltViewModel()
-  val scope = rememberCoroutineScope()
-  val configuration = LocalConfiguration.current
 
   SideEffect {
     model.routeArguments = arguments

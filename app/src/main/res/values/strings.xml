@@ -309,7 +309,7 @@
     <string name="noRecommendationPageHint">还没有推荐，先去看看其他条目吧</string>
     <string name="useSerifFontHelpText">可以理解为印刷体，据说更便于阅读</string>
     <string name="sendThankTitle">公开向编辑者发送感谢</string>
-    <string name="sendThankExplanation">感谢是对编辑者贡献的鼓励和赞许，是对其编辑工作表达谢意的一种方式，您确定要向该修订记录的编辑者发送感谢吗？</string>
+    <string name="sendThankExplanation">感谢是对编辑者工作贡献表达谢意的一种方式，您确定要向该修订记录的编辑者发送感谢吗？</string>
     <string name="thankSelfHint">你不能感谢你自己</string>
 
     <!-- 特殊 -->

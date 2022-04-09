@@ -10,9 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -93,17 +95,23 @@ fun CarouseCard(
             modifier = Modifier
               .fillMaxWidth()
               .height(42.dp)
-              .background(Color.White.copy(alpha = 0.8f))
+              .background(
+                brush = Brush.verticalGradient(listOf(
+                  Color.Transparent,
+                  Color.Black.copy(alpha = 0.7f)
+                ))
+              )
               .blur(5.dp),
             contentAlignment = Alignment.Center
           ) {
             StyledText(
               text = item.intro,
-              color = Color(51, 102, 204),
+              color = Color.White,
               maxLines = 1,
               overflow = TextOverflow.Ellipsis,
               fontSize = 16.sp,
-              textAlign = TextAlign.Center
+              textAlign = TextAlign.Center,
+              fontWeight = FontWeight.Bold
             )
           }
         }

@@ -105,6 +105,7 @@ class NewPagesCardState : HomeScreenCardState() {
       newPageList = (if (reload) emptyList() else newPageList) + res.query.pages
         .filter { it.key > -1 }
         .values.sortedBy { it.pageid }
+        .reversed()
       continueKey = res.`continue`.grccontinue
       status = LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {

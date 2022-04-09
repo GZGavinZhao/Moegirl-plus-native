@@ -36,12 +36,9 @@ fun WikiEditor(
 
   LaunchedEffect(themeColors.isLight) {
     state.htmlWebViewRef.value!!.injectScript("""
-        document.querySelector('.CodeMirror')?.style.color = '${themeTextColors.primary.toCssRgbaString()}'
+        const element = document.querySelector('.CodeMirror')
+        if (element) element.style.color = '${themeTextColors.primary.toCssRgbaString()}'
       """.trimIndent())
-  }
-
-  LaunchedEffect(true) {
-    state.htmlWebViewRef.value!!.injectScript("window.remakeEditor()")
   }
 
   HtmlWebView(
@@ -144,6 +141,15 @@ class WikiEditorState {
 
   suspend fun setCursorPosition(position: WikiEditorCursorPosition) {
     setSelection(position, position)
+  }
+
+  suspend fun setBottomPadding(value: Int) {
+    htmlWebViewRef.value!!.injectScript("""(() => {
+      const width = document.documentElement.clientWidth
+      const height = document.documentElement.clientHeight - $value
+      window.editor.setSize(width, height)  
+      document.body.style.paddingBottom = $value + 'px'
+    })()""".trimIndent())
   }
 }
 

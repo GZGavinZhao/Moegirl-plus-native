@@ -127,10 +127,12 @@ fun ImageViewerScreen(
           text = stringResource(id = R.string.gallery) + "：${model.pagerState.currentPage + 1} / ${arguments.images.size}",
           color = Color(0xffcccccc)
         )
-        StyledText(
-          text = arguments.images[model.pagerState.currentPage].title,
-          color = Color(0xffcccccc)
-        )
+        if (arguments.images[model.pagerState.currentPage].title != "") {
+          StyledText(
+            text = arguments.images[model.pagerState.currentPage].title,
+            color = Color(0xffcccccc)
+          )
+        }
       }
     }
   }

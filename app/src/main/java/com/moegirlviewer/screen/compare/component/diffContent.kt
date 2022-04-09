@@ -92,7 +92,7 @@ private fun ComposedHeader(
           .padding(start = 5.dp)
           .noRippleClickable { gotoUserPage(userName) },
         text = userName,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         color = themeColors.primaryVariant
       )
 

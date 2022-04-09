@@ -309,7 +309,7 @@
     <string name="noRecommendationPageHint">還沒有推薦，先去看看其他條目吧</string>
     <string name="useSerifFontHelpText">可以理解為印刷體，據說更便於閱讀</string>
     <string name="sendThankTitle">公開向編輯者傳送感謝</string>
-    <string name="sendThankExplanation">感謝是對編輯者貢獻的鼓勵和讚許，是對其編輯工作表達謝意的一種方式，您確定要向該修訂記錄的編輯者傳送感謝嗎？</string>
+    <string name="sendThankExplanation">感謝是對編輯者工作貢獻表達謝意的一種方式，您確定要向該修訂記錄的編輯者傳送感謝嗎？</string>
     <string name="thankSelfHint">你不能感謝你自己</string>
 
     <!-- 特殊 -->

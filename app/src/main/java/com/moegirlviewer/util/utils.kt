@@ -9,12 +9,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.moegirlviewer.BuildConfig
 import com.moegirlviewer.Constants
 import com.moegirlviewer.DataSource
 import com.moegirlviewer.R
@@ -32,7 +32,6 @@ import java.security.MessageDigest
 import java.time.*
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.reflect.KProperty
 
 @Target(AnnotationTarget.CLASS)
 annotation class ProguardIgnore
@@ -212,3 +211,11 @@ fun <T> List<T>.randomList(count: Int): List<T> {
 }
 
 val categoryPageNamePrefixRegex = Regex("^([Cc]ategory|分类|分類):")
+
+fun closeKeyboard() {
+  val inputMethodService = Globals.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+  val windowToken = Globals.activity.window.currentFocus?.windowToken
+  if (windowToken != null) {
+    inputMethodService.hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+  }
+}
