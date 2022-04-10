@@ -18,6 +18,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.navigation.NavHostController
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.moegirlviewer.compable.statusBarLocked
 import com.moegirlviewer.component.Center
@@ -97,7 +98,9 @@ class MainActivity : ComponentActivity() {
     fun ContentBody() {
       MoegirlPlusTheme {
         OnComposeWillCreate {
-          Routes(it)
+          ProvideWindowInsets {
+            Routes(it)
+          }
         }
       }
     }

@@ -124,6 +124,8 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
     implementation "com.google.accompanist:accompanist-flowlayout:$accompanist_version"
     implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
+    // 最新版已经被弃用，因为compose官方库新加入了类似的功能，但实测效果不理想，所以暂时还是用这个
+    implementation "com.google.accompanist:accompanist-insets:0.24.3-alpha"
 
     def roomVersion = "2.4.2"
     implementation("androidx.room:room-runtime:$roomVersion")
@@ -131,7 +133,7 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
 
-    implementation "com.squareup.okhttp3:okhttp:4.9.3"
+    implementation "com.squareup.okhttp3:okhttp:4.9.2"   // 不能升级到4.9.3，会导致更容易被萌百的waf拦截，具体原因不明
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
     implementation "com.google.dagger:hilt-android:2.35"

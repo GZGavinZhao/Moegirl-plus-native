@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.google.accompanist.insets.statusBarsPadding
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.rememberImageRequest
