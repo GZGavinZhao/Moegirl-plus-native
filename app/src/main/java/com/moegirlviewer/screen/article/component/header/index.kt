@@ -102,7 +102,7 @@ fun ArticleScreenHeader(
 
           Box(
             modifier = Modifier
-              .offset(x = 50.dp, y = 52.dp)
+              .offset(x = 52.dp, y = 52.dp)
           ) {
             MoreMenu(
               visible = visibleMoreMenu,
