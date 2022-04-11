@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.NospzGothicMoeFamily
+import com.moegirlviewer.util.closeKeyboard
 
 @Composable
 fun PlainTextField(

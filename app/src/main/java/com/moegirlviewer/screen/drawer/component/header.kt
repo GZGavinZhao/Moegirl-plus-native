@@ -72,8 +72,8 @@ fun CommonDrawerHeader(
         modifier = Modifier
           .width(avatarSize.dp)
           .height(avatarSize.dp),
-        model = rememberImageRequest(data = if (isLoggedIn) Constants.avatarUrl + userName else R.drawable.akari) {
-          error(R.drawable.akari)
+        model = rememberImageRequest(data = if (isLoggedIn) Constants.avatarUrl + userName else R.drawable.default_avatar) {
+          error(R.drawable.default_avatar)
         },
         contentDescription = null,
       )

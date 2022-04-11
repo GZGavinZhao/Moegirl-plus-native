@@ -116,5 +116,4 @@ fun isUseDarkMode(): Boolean {
 //  return isSystemInDarkTheme() && darkThemeBySystem
 
   return isSystemInDarkTheme()
-//  return false
 }

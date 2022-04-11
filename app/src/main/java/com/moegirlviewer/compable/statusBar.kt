@@ -11,35 +11,21 @@ fun StatusBar(
   darkIcons: Boolean = false,
 ) {
   val systemUiController = rememberSystemUiController()
-  val statusBarLockedShadow = statusBarLocked   // state必须出现在composable函数的上下文中，才能正确触发组件重渲染
+  val refStatusBarLocked = statusBarLocked   // state必须出现在composable函数的上下文中，才能正确触发组件重渲染
 
-  SideEffect {
-    if (statusBarLockedShadow) return@SideEffect
-
-    if (
-      visible != CachedStatusBarConfig.visible ||
-      backgroundColor != CachedStatusBarConfig.backgroundColor ||
-      darkIcons != CachedStatusBarConfig.darkIcons
-    ) {
-      systemUiController.isStatusBarVisible = visible
-      systemUiController.setStatusBarColor(
-        color = backgroundColor,
-        darkIcons = darkIcons
-      )
-
-      with(CachedStatusBarConfig) {
-        this.visible = visible
-        this.backgroundColor = backgroundColor
-        this.darkIcons = darkIcons
-      }
-    }
+  LaunchedEffect(
+    visible,
+    backgroundColor,
+    darkIcons,
+    refStatusBarLocked
+  ) {
+    if (refStatusBarLocked) return@LaunchedEffect
+    systemUiController.isStatusBarVisible = visible
+    systemUiController.setStatusBarColor(
+      color = backgroundColor,
+      darkIcons = darkIcons
+    )
   }
-}
-
-private object CachedStatusBarConfig {
-  var visible: Boolean? = null
-  var backgroundColor: Color? = null
-  var darkIcons: Boolean? = null
 }
 
 var statusBarLocked by mutableStateOf(false)

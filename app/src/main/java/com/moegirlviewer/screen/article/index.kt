@@ -143,6 +143,7 @@ fun ArticleScreen(
                 onClose = {
                   model.visibleFindBar = false
                   model.articleViewRef.value!!.htmlWebViewRef!!.webView.clearMatches()
+                  closeKeyboard()
                 }
               )
 

@@ -129,6 +129,11 @@ class MainActivity : ComponentActivity() {
       }
     }
   }
+
+  override fun onResume() {
+    super.onResume()
+    useFreeStatusBarLayout()
+  }
 }
 
 @InternalCoroutinesApi
@@ -289,8 +294,8 @@ private suspend fun ComponentActivity.withSplashScreen(
 
   suspend fun complete() {
     mainWithSplashView.hideSplashScreen()
-    statusBarLocked = false
     useFreeStatusBarLayout()
+    statusBarLocked = false
   }
 
   launch {

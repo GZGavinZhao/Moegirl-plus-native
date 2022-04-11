@@ -109,10 +109,7 @@ fun CommentEditor(
   // 通过判断commentEditor是否收起，手动关闭输入法
   val composeBaseView = LocalView.current
   LaunchedEffect(topOffset == height.dp) {
-    if (topOffset == height.dp) {
-      val inputMethodService = Globals.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-      inputMethodService.hideSoftInputFromWindow(composeBaseView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-    }
+    if (topOffset == height.dp) closeKeyboard()
   }
 
   BackHandler(visible) {
