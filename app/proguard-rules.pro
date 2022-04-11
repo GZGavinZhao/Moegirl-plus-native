@@ -71,8 +71,11 @@
     @android.webkit.JavascriptInterface <methods>;
 }
 
-#保留枚举类不被混淆
+# 保留枚举类不被混淆
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+
+# 保留腾讯x5 webView不被混淆
+-keep class com.tencent.smtt.** { *; }
