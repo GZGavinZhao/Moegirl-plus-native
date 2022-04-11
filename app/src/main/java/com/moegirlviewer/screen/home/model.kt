@@ -68,7 +68,10 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
     if (isMoegirl()) {
       // 萌百不能用并发，会导致被waf
       try {
-        for (item in reloadList) item()
+        for (item in reloadList) {
+          item()
+          delay((100..300).random().toLong())
+        }
       } catch (e: MoeRequestException) { }
     } else {
       reloadList

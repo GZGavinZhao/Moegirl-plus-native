@@ -24,7 +24,6 @@ fun EmptyContent(
   emptyContentImageSizeType: EmptyContentImageSizeType = EmptyContentImageSizeType.NORMAL,
   message: String = stringResource(id = R.string.emptyContnet)
 ) {
-  val configuration = LocalConfiguration.current
   val themeColors = MaterialTheme.colors
   val usingImageSizes = isMoegirl(moegirlEmptyContentImageSizes, hmoeEmptyContentImageSizes)
   val usingSize = when(emptyContentImageSizeType) {

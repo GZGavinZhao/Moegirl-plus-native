@@ -11,7 +11,9 @@ class SourceConstants(
   val registerUrl: String,
   val appDownloadUrl: String,
   val filePrefix: String,
-  val topCardContentPageName: String
+  val topCardContentPageName: String,
+  val disclaimerPageName: String,
+  val privacyPageName: String
 )
 
 private val sourceConstants = when (BuildConfig.FLAVOR_source) {
@@ -26,7 +28,9 @@ private val sourceConstants = when (BuildConfig.FLAVOR_source) {
     registerUrl = "https://mzh.moegirl.org.cn/index.php?title=Special:创建账户",
     appDownloadUrl = "https://www.coolapk.com/apk/247471",
     filePrefix = "File:",
-    topCardContentPageName = "User:東東君/app/homeTopCard"
+    topCardContentPageName = "User:東東君/app/homeTopCard",
+    disclaimerPageName = "萌娘百科:免责声明",
+    privacyPageName = "萌娘百科:隐私权政策",
   )
 
   "hmoe" -> SourceConstants(
@@ -40,7 +44,9 @@ private val sourceConstants = when (BuildConfig.FLAVOR_source) {
     registerUrl = "https://www.hmoegirl.com/index.php?title=%E7%89%B9%E6%AE%8A:%E5%88%9B%E5%BB%BA%E8%B4%A6%E6%88%B7&returnto=Mainpage",
     appDownloadUrl = "",
     filePrefix = "文件:",
-    topCardContentPageName = "User:東東君/app/homeTopCard"
+    topCardContentPageName = "User:東東君/app/homeTopCard",
+    disclaimerPageName = "H萌娘:免责声明",
+    privacyPageName = "H萌娘:隐私政策",
   )
 
   else -> error("数据源'${BuildConfig.FLAVOR_source}'的常量集未配置！")
@@ -58,10 +64,10 @@ object Constants {
 //  val appDownloadUrl = sourceConstants.appDownloadUrl
   val filePrefix = sourceConstants.filePrefix
   val topCardContentPageName = sourceConstants.topCardContentPageName
+  val disclaimerPageName = sourceConstants.disclaimerPageName
+  val privacyPageName = sourceConstants.privacyPageName
 
   val topAppBarHeight = 56
-  val articleCacheDirPath = "article_cache"
-  val imageUrl = ""
   val targetStore = if (BuildConfig.FLAVOR_targetStore == "common")
     TargetStore.COMMON else TargetStore.FDROID
 }

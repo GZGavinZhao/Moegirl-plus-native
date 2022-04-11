@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.settings
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
@@ -28,10 +30,12 @@ import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.screen.splashSetting.SplashImageMode
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.gotoUserPage
 import com.moegirlviewer.util.isMoegirl
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen() {
   val model: SettingsScreenModel = hiltViewModel()
@@ -244,6 +248,18 @@ fun SettingsScreen() {
       )
 
       Title(R.string.other)
+      SettingsScreenItem(
+        title = stringResource(id = R.string.privacyPolicy),
+        onClick = {
+          gotoArticlePage(Constants.privacyPageName)
+        }
+      )
+      SettingsScreenItem(
+        title = stringResource(id = R.string.disclaimer),
+        onClick = {
+          gotoArticlePage(Constants.disclaimerPageName)
+        }
+      )
       SettingsScreenItem(
         title = stringResource(id = R.string.checkNewVersion),
         onClick = {

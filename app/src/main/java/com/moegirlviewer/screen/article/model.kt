@@ -162,6 +162,10 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
           document.body.style.maxHeight = '100%'
           document.body.style.overflowY = 'hidden'
           document.documentElement.style.overflowY = 'hidden'
+
+          const styleTag = document.createElement('style')
+          styleTag.innerHTML = '.mw-headline::after { display: none }'
+          document.head.append(styleTag)          
         """.trimIndent())
       }
     }

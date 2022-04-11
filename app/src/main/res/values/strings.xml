@@ -81,6 +81,7 @@
     <string name="recommendation">推荐</string>
     <string name="card">卡片</string>
     <string name="exit">退出</string>
+    <string name="disclaimer">免责声明</string>
 
     <string name="year">年</string>
     <string name="month">月</string>
@@ -205,6 +206,7 @@
     <string name="articleLoading">条目加载中</string>
     <string name="showSplashScreen">显示启动屏</string>
     <string name="useSerifFont">使用衬线字体</string>
+    <string name="privacyPolicy">隐私权政策</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>
