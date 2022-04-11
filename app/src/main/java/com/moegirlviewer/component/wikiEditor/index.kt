@@ -124,6 +124,7 @@ class WikiEditorState {
 
   suspend fun getPosition(): WikiEditorCursorPosition {
     val positionJson = htmlWebViewRef.value!!.injectScript("editor.getCursor()")
+    if (positionJson == "null") return WikiEditorCursorPosition.Zero
     return Gson().fromJson(positionJson, WikiEditorCursorPosition::class.java)
   }
 
@@ -157,4 +158,8 @@ class WikiEditorState {
 data class WikiEditorCursorPosition(
   val line: Int,
   val ch: Int
-)
+) {
+  companion object {
+    val Zero = WikiEditorCursorPosition(0, 0)
+  }
+}

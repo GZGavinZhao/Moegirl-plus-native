@@ -36,6 +36,7 @@ fun EditScreenWikitextEditor() {
   var visibleQuickInsertBar by remember { mutableStateOf(false) }
 
   fun makeBackup() = scope.launch {
+    if (model.wikitextStatus != LoadStatus.SUCCESS) return@launch
     val currentContent = model.wikiEditorState.getTextContent()
     if (currentContent != "" && currentContent != model.originalWikiText) model.makeBackup(currentContent)
   }

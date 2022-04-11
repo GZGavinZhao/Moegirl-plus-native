@@ -53,7 +53,6 @@ class EditScreenModel @Inject constructor() : ViewModel() {
   val wikiEditorState = WikiEditorState()
   var originalWikiText = ""
   var wikitextStatus by mutableStateOf(LoadStatus.INITIAL)
-  val focusRequester = FocusRequester()
 
   var previewHtml by mutableStateOf("")
   var previewStatus by mutableStateOf(LoadStatus.INITIAL)
@@ -73,7 +72,6 @@ class EditScreenModel @Inject constructor() : ViewModel() {
           minusOffset = 3,
           selectionMinusOffset = 2
         ))
-        focusRequester.requestFocus()
 
         wikitextStatus = LoadStatus.SUCCESS
       } else {

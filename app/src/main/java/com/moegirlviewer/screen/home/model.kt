@@ -70,7 +70,7 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
       try {
         for (item in reloadList) {
           item()
-          delay((100..300).random().toLong())
+          delay((300..500).random().toLong())
         }
       } catch (e: MoeRequestException) { }
     } else {

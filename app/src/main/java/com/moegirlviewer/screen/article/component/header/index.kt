@@ -159,7 +159,7 @@ private fun MoreMenu(
       Item(
         enabled = model.editAllowed ?: false,
         action = if (model.editFullDisabled)
-          MoreMenuAction.REFRESH else
+          MoreMenuAction.GOTO_ADD_SECTION else
           MoreMenuAction.GOTO_EDIT
         ,
         text = stringResource(
