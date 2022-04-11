@@ -52,7 +52,7 @@ val routeMetas = mutableMapOf<String, RouteMeta>()
 @ExperimentalAnimationApi
 private fun getTransitions(animation: Animation): Transitions = when(animation) {
   SLIDE -> {
-    val animationSpec = tween<IntOffset>(350)
+    val animationSpec = tween<IntOffset>(400)
 
     Transitions.helpful(
       enterTransition = {
@@ -306,7 +306,7 @@ private fun createMaskDecoration(
   Center {
     Spacer(modifier = Modifier
       .fillMaxSize()
-      .background(Color.Black.copy(alpha = 0.75f * animationValue.value))
+      .background(Color.Black.copy(alpha = 0.7f * animationValue.value))
     )
   }
 }
