@@ -30,6 +30,7 @@ data class CommonSettings(
   var usePureTheme: Boolean = !isMoegirl(),
   var splashImageMode: SplashImageMode = SplashImageMode.NEW,
   var selectedSplashImages: List<String> = listOf(splashImageList.last().key),
+  var lightRequestMode: Boolean = false,   // 目前只有萌百使用这个
 ) : Settings()
 
 // 最近更改右上角按钮打开的设置

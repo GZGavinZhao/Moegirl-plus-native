@@ -4,7 +4,6 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
@@ -12,10 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -28,6 +25,7 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.article.ArticleScreenModel
 import com.moegirlviewer.store.AccountStore
+import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 
@@ -128,9 +126,10 @@ private fun MoreMenu(
   val model: ArticleScreenModel = hiltViewModel()
   val themeColors = MaterialTheme.colors
   val isLoggedIn by AccountStore.isLoggedIn.collectAsState(initial = false)
+  val lightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(initial = false)
 
   @Composable
-  fun Item(
+  fun MoreMenuItem(
     action: MoreMenuAction,
     text: String,
     enabled: Boolean = true,
@@ -150,36 +149,38 @@ private fun MoreMenu(
     expanded = visible,
     onDismissRequest = onDismiss
   ) {
-    Item(
+    MoreMenuItem(
       action = MoreMenuAction.REFRESH,
       text = stringResource(id = R.string.refresh)
     )
 
-    if (isLoggedIn) {
-      Item(
-        enabled = model.editAllowed ?: false,
-        action = if (model.editFullDisabled)
-          MoreMenuAction.GOTO_ADD_SECTION else
-          MoreMenuAction.GOTO_EDIT
-        ,
-        text = stringResource(
-          id = when {
-            model.editAllowed == null -> R.string.permissionsChecking
-            model.editAllowed == false -> R.string.noAllowEditThePage
-            model.editFullDisabled -> R.string.addTopic
-            else -> R.string.editThePage
-          }
+    if (!lightRequestMode) {
+      if (isLoggedIn) {
+        MoreMenuItem(
+          enabled = model.editAllowed ?: false,
+          action = if (model.editFullDisabled)
+            MoreMenuAction.GOTO_ADD_SECTION else
+            MoreMenuAction.GOTO_EDIT
+          ,
+          text = stringResource(
+            id = when {
+              model.editAllowed == null -> R.string.permissionsChecking
+              model.editAllowed == false -> R.string.noAllowEditThePage
+              model.editFullDisabled -> R.string.addTopic
+              else -> R.string.editThePage
+            }
+          )
         )
-      )
-    } else {
-      Item(
-        action = MoreMenuAction.GOTO_LOGIN,
-        text = stringResource(id = R.string.loginToEdit)
-      )
+      } else {
+        MoreMenuItem(
+          action = MoreMenuAction.GOTO_LOGIN,
+          text = stringResource(id = R.string.loginToEdit)
+        )
+      }
     }
 
-    if (isLoggedIn) {
-      Item(
+    if (isLoggedIn && !lightRequestMode) {
+      MoreMenuItem(
         action = MoreMenuAction.TOGGLE_WATCH_LIST,
         text = stringResource(id = R.string.operateWatchList,
           stringResource(id = if (model.isWatched)
@@ -191,25 +192,25 @@ private fun MoreMenu(
     }
 
     if (model.visibleTalkButton) {
-      Item(
+      MoreMenuItem(
         action = MoreMenuAction.GOTO_TALK,
         text = stringResource(id = R.string.talk)
       )
     }
 
-    Item(
+    MoreMenuItem(
       action = MoreMenuAction.GOTO_PAGE_REVISIONS,
       text = stringResource(id = R.string.pageVersionHistory)
     )
-    Item(
+    MoreMenuItem(
       action = MoreMenuAction.SHARE,
       text = stringResource(id = R.string.share)
     )
-    Item(
+    MoreMenuItem(
       action = MoreMenuAction.SHOW_FIND_BAR,
       text = stringResource(id = R.string.findInPage)
     )
-    Item(
+    MoreMenuItem(
       action = MoreMenuAction.SHOW_CATALOG,
       text = stringResource(id = R.string.showCatalog)
     )

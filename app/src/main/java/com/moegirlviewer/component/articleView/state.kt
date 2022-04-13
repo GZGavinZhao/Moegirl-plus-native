@@ -13,6 +13,7 @@ import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.account.AccountApi
 import com.moegirlviewer.api.page.PageApi
+import com.moegirlviewer.api.page.bean.PageInfoResBean
 import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.component.articleView.util.collectCategoryDataFromHtml
 import com.moegirlviewer.component.articleView.util.createMoegirlRendererConfig
@@ -25,8 +26,6 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewRef
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.*
-import com.moegirlviewer.room.pageContentCache.PageContentCache
-import com.moegirlviewer.room.pageNameRedirect.PageNameRedirect
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.category.CategoryRouteArguments
 import com.moegirlviewer.screen.edit.EditRouteArguments
@@ -125,6 +124,12 @@ class ArticleViewState(
         }
       """.trimIndent() else ""}
       
+      ${if (!props.visibleEditButton) """
+        .mw-editsection {
+          display: none;
+        }
+      """.trimIndent() else ""}
+      
       :root {
         --color-primary: ${context.themeColors.primaryVariant.toCssRgbaString()};
         --color-dark: ${context.themeColors.primaryVariant.darken(0.3F).toCssRgbaString()};
@@ -187,10 +192,11 @@ class ArticleViewState(
     revId: Int? = props.revId,
     forceLoad: Boolean = false
   ) = coroutineScope {
-    suspend fun consumeArticleData(articleData: ArticleData, articleInfo: ArticleInfo) {
+    suspend fun consumeArticleData(articleData: ArticleData, articleInfo: ArticleInfo?) {
       this@ArticleViewState.articleData = articleData
       updateHtmlView(true)
-      loadImgOriginalUrls()
+      val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+      if (!isLightRequestMode) loadImgOriginalUrls()
       props.onArticleLoaded?.invoke(articleData, articleInfo)
     }
 
@@ -198,8 +204,15 @@ class ArticleViewState(
 
     launch {
       try {
-        val pageInfo = PageApi.getPageInfo(pageKey)
-        val isCategoryPage = MediaWikiNamespace.CATEGORY.code == pageInfo.ns
+        val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+        var pageInfo: PageInfoResBean.Query.MapValue? = null
+
+        val isCategoryPage = if (isLightRequestMode && pageName != null) {
+          pageName!!.contains(categoryPageNamePrefixRegex)
+        } else {
+          pageInfo = PageApi.getPageInfo(pageKey)
+          MediaWikiNamespace.CATEGORY.code == pageInfo.ns
+        }
 
         val articleData = PageApi.getPageContent(pageKey, revId, previewMode = props.previewMode)
 
@@ -216,12 +229,12 @@ class ArticleViewState(
 
         consumeArticleData(articleData, pageInfo)
 
-        Globals.room.pageContentCache().insertItem(PageContentCache(
-          pageName = pageName!!,
-          content = articleData,
-          pageInfo = pageInfo
-        ))
-        // 由于条目缓存功能暂时关闭，所以条目重定向表也没必要记录了
+//        条目缓存
+//        Globals.room.pageContentCache().insertItem(PageContentCache(
+//          pageName = pageName!!,
+//          content = articleData,
+//          pageInfo = pageInfo
+//        ))
 //        if (pageName != null && pageName != pageName!!) {
 //          Globals.room.pageNameRedirect().insertItem(PageNameRedirect(
 //            redirectName = if (pageKey is PageNameKey) pageKey.pageName.first() else "pageId::" + (pageKey as PageIdKey).pageId.first(),

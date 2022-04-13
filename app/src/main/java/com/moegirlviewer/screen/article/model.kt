@@ -1,8 +1,6 @@
 package com.moegirlviewer.screen.article
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
@@ -27,10 +25,12 @@ import com.moegirlviewer.screen.edit.EditRouteArguments
 import com.moegirlviewer.screen.edit.EditType
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommentStore
+import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -77,12 +77,21 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   // 是否允许编辑全文，讨论页默认不允许
   val editFullDisabled get() = articleInfo?.ns != null && MediaWikiNamespace.isTalkPage(articleInfo!!.ns)
   // 是否允许显示评论按钮
-  val commentButtonAllowed get() = listOf(
-    MediaWikiNamespace.MAIN.code,
-    MediaWikiNamespace.USER.code,
-    MediaWikiNamespace.HELP.code,
-    MediaWikiNamespace.PROJECT.code
-  ).contains(articleInfo?.ns) && isMoegirl(true, hmoeCommentDisabledTitles.contains(truePageName).not())
+  val commentButtonAllowed: Boolean @Composable get() {
+    val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(initial = false)
+    return if (isLightRequestMode) {
+      if (truePageName != null)
+        truePageName!!.contains(moegirlDisabledShowCommentButtonRegexForLightRequestMode).not()
+        else false
+    } else {
+      listOf(
+        MediaWikiNamespace.MAIN.code,
+        MediaWikiNamespace.USER.code,
+        MediaWikiNamespace.HELP.code,
+        MediaWikiNamespace.PROJECT.code
+      ).contains(articleInfo?.ns) && isMoegirl(true, hmoeCommentDisabledTitles.contains(truePageName).not())
+    }
+  }
   // 是否显示前往讨论页的按钮，当前为讨论页时不显示
   val visibleTalkButton get() = articleInfo?.ns != null && !MediaWikiNamespace.isTalkPage(articleInfo!!.ns)
   // 当前页面是否存在讨论页
@@ -92,10 +101,13 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   // 否则页面内嵌的iframe无法正常使用，因为是通过将iframe的src清空实现的停止播放
   var isMediaDisabled = false
 
-  fun handleOnArticleLoaded(articleData: ArticleData, articleInfo: ArticleInfo) {
+  // 用于记录页面刚进入时是否为轻请求模式，如果是的话那么在轻请求选项关闭时，该页面需要刷新
+  var isLightRequestModeWhenOpened: Boolean? = null
+
+  fun handleOnArticleLoaded(articleData: ArticleData, articleInfo: ArticleInfo?) {
     this.articleData = articleData
     this.articleInfo = articleInfo
-    isWatched = articleInfo.watched != null
+    isWatched = articleInfo?.watched != null
 
     coroutineScope.launch {
       delay(500)
@@ -224,7 +236,12 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   }
 
   suspend fun checkEditAllowed() {
-    if (!AccountStore.isLoggedIn.first()) return
+    if (!AccountStore.isLoggedIn.first() || articleInfo == null) return
+    val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+    if (isLightRequestMode) {
+      editAllowed = false
+      return
+    }
 
     if (routeArguments.revId != null) {
       val lastEditingRecordRes = EditingRecordApi.getPageRevisions(routeArguments.pageKey!!)
@@ -309,7 +326,11 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   }
 }
 
-val hmoeCommentDisabledTitles = listOf(
+private val moegirlDisabledShowCommentButtonRegexForLightRequestMode = Regex("""
+  ^([Tt]alk|讨论|討論|[Tt]emplate( talk|)|模板(讨论|討論|)|[Mm]odule( talk|)|模块(讨论|討論|)|[Cc]ategory( talk|)|分[类類](讨论|討論|)|[Uu]ser talk|用户讨论|用戶討論|萌娘百科 talk):
+""".trimIndent())
+
+private val hmoeCommentDisabledTitles = listOf(
   "H萌娘:免责声明",
   "H萌娘:隐私政策",
   "H萌娘:创建新条目",

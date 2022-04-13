@@ -248,6 +248,23 @@ fun SettingsScreen() {
       )
 
       Title(R.string.other)
+      if (isMoegirl()) {
+        SettingsScreenItem(
+          title = stringResource(id = R.string.lightRequestMode),
+          subtext = stringResource(id = R.string.lightRequestModeHelpText),
+          onClick = {
+            setSettingItem { this.lightRequestMode = !this.lightRequestMode }
+          }
+        ) {
+          Switch(
+            checked = commonSettings.lightRequestMode,
+            colors = switchColors,
+            onCheckedChange = {
+              setSettingItem { this.lightRequestMode = it }
+            }
+          )
+        }
+      }
       SettingsScreenItem(
         title = stringResource(id = R.string.privacyPolicy),
         onClick = {

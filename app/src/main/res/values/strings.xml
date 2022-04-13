@@ -207,6 +207,7 @@
     <string name="showSplashScreen">显示启动屏</string>
     <string name="useSerifFont">使用衬线字体</string>
     <string name="privacyPolicy">隐私权政策</string>
+    <string name="lightRequestMode">轻请求模式(实验性)</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>
@@ -313,6 +314,7 @@
     <string name="sendThankTitle">公开向编辑者发送感谢</string>
     <string name="sendThankExplanation">感谢是对编辑者工作贡献表达谢意的一种方式，您确定要向该修订记录的编辑者发送感谢吗？</string>
     <string name="thankSelfHint">你不能感谢你自己</string>
+    <string name="lightRequestModeHelpText">如果你近期经常被防火墙拦截，可以尝试这个选项。开启后这些功能将无法使用：编辑、操作监视列表。注意：该选项本身并不能解除被拦截状态</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤销[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|讨论]]）的版本%2$s</string>

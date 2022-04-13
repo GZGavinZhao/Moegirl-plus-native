@@ -44,6 +44,7 @@ class ArticleViewProps(
   val addCategories: Boolean = true,
   val cacheEnabled: Boolean = false,
   val previewMode: Boolean = false,   // 这个参数对应的就是api的preview参数，没有其他功能，使用这个会获得不带缓存的渲染结果
+  val visibleEditButton: Boolean = true,
   val contentTopPadding: Dp = 0.dp,
   val renderDelay: Long = 0,
   val messageHandlers: HtmlWebViewMessageHandlers? = null,
@@ -52,7 +53,7 @@ class ArticleViewProps(
 
   val onScrollChanged: HtmlWebViewScrollChangeHandler? = null,
   val onArticleRendered: (() -> Unit)? = null,
-  val onArticleLoaded: ((articleData: ArticleData, articleInfo: ArticleInfo) -> Unit)? = null,
+  val onArticleLoaded: ((articleData: ArticleData, articleInfo: ArticleInfo?) -> Unit)? = null, // 低请求模式下articleInfo会得到null
   val onArticleMissed: (() -> Unit)? = null,
   val onArticleError: (() -> Unit)? = null,
   val onStatusChanged: ((LoadStatus) -> Unit)? = null,

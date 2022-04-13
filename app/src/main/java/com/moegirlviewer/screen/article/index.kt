@@ -62,9 +62,18 @@ fun ArticleScreen(
   ) {
   val model: ArticleScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
+  val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(initial = false)
 
   SideEffect {
     model.routeArguments = arguments
+  }
+
+  LaunchedEffect(isLightRequestMode) {
+    if (model.isLightRequestModeWhenOpened == true && !isLightRequestMode) {
+      model.articleViewRef.value!!.reload(true)
+    }
+
+    model.isLightRequestModeWhenOpened = isLightRequestMode
   }
 
   LaunchedEffect(true) {
@@ -215,6 +224,7 @@ private fun ComposedArticleView(
 ) {
   val model: ArticleScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
+  val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(false)
 
   val debouncedManualEffector = rememberDebouncedManualEffector<ReadingRecord>(1000) {
     scope.launch {
@@ -295,6 +305,7 @@ private fun ComposedArticleView(
           revId = arguments.revId,
           editAllowed = model.editAllowed ?: false,
           visibleLoadStatusIndicator = false,
+          visibleEditButton = !isLightRequestMode,
           contentTopPadding = (Constants.topAppBarHeight + Globals.statusBarHeight).dp,
           addCategories = model.truePageName != "H萌娘:官方群组",
           onScrollChanged = handleOnScrollChanged,
