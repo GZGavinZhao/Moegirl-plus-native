@@ -351,7 +351,7 @@ class ArticleViewState(
         coroutineScope.launch {
           withContext(Dispatchers.Main) {
             Globals.navController.navigate(ArticleRouteArguments(
-              pageKey = props.pageKey,
+              pageKey = PageNameKey(pageName),
               displayName = displayName,
               anchor = anchor
             ))
