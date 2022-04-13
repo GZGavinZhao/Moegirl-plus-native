@@ -21,6 +21,7 @@ import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
 import my.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.moegirlviewer.component.commonDialog.*
+import com.moegirlviewer.request.imageOkHttpClient
 import com.moegirlviewer.request.moeOkHttpClient
 import com.moegirlviewer.util.Globals
 
@@ -45,7 +46,7 @@ fun OnComposeWillCreate(
         add(SvgDecoder.Factory())
         add(ImageDecoderDecoder.Factory())
       }
-      .okHttpClient(moeOkHttpClient)
+      .okHttpClient(imageOkHttpClient)
       .build()
   }
   val commonAlertDialogRef = remember { Ref<CommonAlertDialogRef>() }

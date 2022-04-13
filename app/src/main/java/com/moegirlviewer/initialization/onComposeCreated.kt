@@ -74,8 +74,9 @@ private suspend fun checkShortcutIntent() {
 private suspend fun initAccount() {
   if (AccountStore.isLoggedIn.first()) {
     val isValidLogin = AccountStore.checkAccount()
+    val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
     if (isValidLogin) {
-      initUserInfo()
+      if (!isLightRequestMode) initUserInfo()
     } else {
       AccountStore.logout()
       toast(Globals.context.getString(R.string.invalidLoginStatusHint))
@@ -117,7 +118,8 @@ fun registerTasks()  {
   registerTask(30_1000) {
     coroutineScope.launch {
       val isLoggedIn = AccountStore.isLoggedIn.first()
-      if (!isLoggedIn) return@launch
+      val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+      if (!isLoggedIn || isLightRequestMode) return@launch
       try {
         AccountStore.checkWaitingNotificationTotal()
       } catch (e: MoeRequestException) {
