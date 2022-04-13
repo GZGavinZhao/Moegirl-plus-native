@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.splashSetting
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
@@ -34,6 +35,7 @@ import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SplashSettingScreen() {
   val model: SplashSettingScreenModel = hiltViewModel()

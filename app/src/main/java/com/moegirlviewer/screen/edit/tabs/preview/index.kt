@@ -21,6 +21,7 @@ import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.screen.article.component.catalog.ArticleScreenCatalog
 import com.moegirlviewer.screen.edit.EditScreenModel
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.PageNameKey
 import com.moegirlviewer.util.noRippleClickable
 import kotlinx.coroutines.launch
 
@@ -54,7 +55,7 @@ fun EditScreenPreview() {
     ) {
       ArticleView(props = ArticleViewProps(
         html = model.previewHtml,
-        pageName = model.routeArguments.pageName,
+        pageKey = PageNameKey(model.routeArguments.pageName),
         linkDisabled = true,
         addCopyright = false,
         emitCatalogData = { catalogData = it },

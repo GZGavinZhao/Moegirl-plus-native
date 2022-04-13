@@ -46,7 +46,7 @@ fun ContributionItem(
       .background(themeColors.surface)
       .clickable {
         Globals.navController.navigate(ArticleRouteArguments(
-          pageName = pageName,
+          pageKey = PageNameKey(pageName),
           revId = revId
         ))
       }

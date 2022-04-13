@@ -16,6 +16,7 @@ import com.moegirlviewer.component.articleView.ArticleViewRef
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.HomeScreenCardState
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.PageNameKey
 import com.moegirlviewer.util.isMoegirl
 import com.moegirlviewer.util.printRequestErr
 import kotlinx.coroutines.launch
@@ -41,7 +42,7 @@ fun TopCard(
     ) {
       ArticleView(props = ArticleViewProps(
         ref = state.articleViewRef,
-        pageName = Constants.topCardContentPageName,
+        pageKey = PageNameKey(Constants.topCardContentPageName),
         visibleLoadStatusIndicator = false,
         previewMode = true,
         injectedStyles = state.injectedStyles,

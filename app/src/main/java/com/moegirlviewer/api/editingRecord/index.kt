@@ -3,6 +3,8 @@ package com.moegirlviewer.api.editingRecord
 import com.moegirlviewer.api.editingRecord.bean.*
 import com.moegirlviewer.request.MoeRequestMethod
 import com.moegirlviewer.request.moeRequest
+import com.moegirlviewer.util.PageKey
+import com.moegirlviewer.util.addQueryApiParamsByPageKey
 
 object EditingRecordApi {
   suspend fun getRecentChanges(
@@ -60,8 +62,7 @@ object EditingRecordApi {
   )
 
   suspend fun getPageRevisions(
-    pageName: String? = null,
-    pageId: Int? = null,
+    pageKey: PageKey,
     continueKey: String? = null,
     limit: Int = 10
   ) = moeRequest(
@@ -70,8 +71,7 @@ object EditingRecordApi {
       this["action"] = "query"
       this["prop"] = "revisions"
       this["continue"] = "||"
-      if (pageName != null) this["titles"] = pageName
-      if (pageId != null) this["pageids"] = pageId
+      addQueryApiParamsByPageKey(pageKey)
       this["rvprop"] = "timestamp|user|comment|ids|flags|size"
       this["rvlimit"] = limit
       if (continueKey != null) this["rvcontinue"] = continueKey

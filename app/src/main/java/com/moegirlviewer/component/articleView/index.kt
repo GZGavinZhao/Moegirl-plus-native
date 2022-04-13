@@ -29,8 +29,7 @@ typealias ArticleInfo = PageInfoResBean.Query.MapValue
 
 class ArticleViewProps(
   val modifier: Modifier = Modifier,
-  val pageName: String? = null,   // 不传html时，pageName和pageId之中必须传一个
-  val pageId: Int? = null,
+  val pageKey: PageKey? = null, // 不传html时，pageKey必传
   val html: String? = null,
   val revId: Int? = null,
   val readingRecord: ReadingRecord? = null,
@@ -95,14 +94,13 @@ fun ArticleView(
 
   // 这段逻辑只能用来初始化，初始化之后再要更新需要手动调用loadArticleContent或updateHtmlView
   LaunchedEffect(
-    props.pageName,
-    props.pageId,
+    props.pageKey,
     props.revId,
     props.html
   ) {
     if (state.status == LoadStatus.LOADING || state.status == LoadStatus.INITIAL) {
       if (props.html.isNullOrEmpty()) {
-        if (props.pageName != null || props.pageId != null || props.revId != null) state.loadArticleContent()
+        if (props.pageKey != null || props.revId != null) state.loadArticleContent()
       } else {
         state.updateHtmlView()
       }

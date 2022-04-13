@@ -70,11 +70,15 @@ class ArticleViewState(
       else -> (articleData?.parse?.text?._asterisk) ?: ""
     }
 
+  val pageName get() = articleData?.parse?.title ?: run {
+    (props.pageKey as? PageNameKey)?.pageName?.firstOrNull()
+  }
+
   suspend fun updateHtmlView(force: Boolean = false) {
     if (isInitialized && !force) { return }
 
     val moegirlRendererConfig = createMoegirlRendererConfig(
-      pageName = props.pageName,
+      pageName = pageName,
       language = if(isTraditionalChineseEnv()) "zh-hant" else "zh-hans",
       site = Constants.source.code,
       enabledCategories = props.addCategories,
@@ -160,7 +164,7 @@ class ArticleViewState(
     htmlWebViewRef.value!!.updateContent {
       HtmlWebViewContent(
         body = articleHtml,
-        title = props.pageName,
+        title = pageName,
         injectedStyles = injectedStyles,
         injectedScripts = injectedScripts,
         injectedFiles = defaultInjectedFiles
@@ -179,8 +183,7 @@ class ArticleViewState(
   }
 
   suspend fun loadArticleContent(
-    pageName: String? = props.pageName,
-    pageId: Int? = props.pageId,
+    pageKey: PageKey = props.pageKey!!,
     revId: Int? = props.revId,
     forceLoad: Boolean = false
   ) = coroutineScope {
@@ -195,21 +198,15 @@ class ArticleViewState(
 
     launch {
       try {
-        val truePageName = PageApi.getTruePageName(pageName, pageId)
-        if (truePageName == null) {
-          props.onArticleMissed?.invoke()
-          return@launch
-        }
-
-        val pageInfo = PageApi.getPageInfo(truePageName)
+        val pageInfo = PageApi.getPageInfo(pageKey)
         val isCategoryPage = MediaWikiNamespace.CATEGORY.code == pageInfo.ns
 
-        val articleData = PageApi.getPageContent(truePageName, revId, previewMode = props.previewMode)
+        val articleData = PageApi.getPageContent(pageKey, revId, previewMode = props.previewMode)
 
         if (isCategoryPage) {
           val collectedCategoryData = collectCategoryDataFromHtml(articleData.parse.text._asterisk)
           Globals.navController.replace(CategoryRouteArguments(
-            categoryName = truePageName.replaceFirst(categoryPageNamePrefixRegex, ""),
+            categoryName = pageName!!.replaceFirst(categoryPageNamePrefixRegex, ""),
             parentCategories = collectedCategoryData.parentCategories,
             categoryExplainPageName = collectedCategoryData.categoryExplainPageName
           ))
@@ -220,16 +217,17 @@ class ArticleViewState(
         consumeArticleData(articleData, pageInfo)
 
         Globals.room.pageContentCache().insertItem(PageContentCache(
-          pageName = truePageName,
+          pageName = pageName!!,
           content = articleData,
           pageInfo = pageInfo
         ))
-        if (pageName != null && pageName != truePageName) {
-          Globals.room.pageNameRedirect().insertItem(PageNameRedirect(
-            redirectName = pageName,
-            pageName = truePageName
-          ))
-        }
+        // 由于条目缓存功能暂时关闭，所以条目重定向表也没必要记录了
+//        if (pageName != null && pageName != pageName!!) {
+//          Globals.room.pageNameRedirect().insertItem(PageNameRedirect(
+//            redirectName = if (pageKey is PageNameKey) pageKey.pageName.first() else "pageId::" + (pageKey as PageIdKey).pageId.first(),
+//            pageName = pageName!!
+//          ))
+//        }
       } catch (e: MoeRequestException) {
         printRequestErr(e, "加载文章失败")
         val getCrossWikiTitleFromErrorMessageRegex = Regex(""""萌百:(.+?)"""")
@@ -353,7 +351,7 @@ class ArticleViewState(
         coroutineScope.launch {
           withContext(Dispatchers.Main) {
             Globals.navController.navigate(ArticleRouteArguments(
-              pageName = pageName,
+              pageKey = props.pageKey,
               displayName = displayName,
               anchor = anchor
             ))

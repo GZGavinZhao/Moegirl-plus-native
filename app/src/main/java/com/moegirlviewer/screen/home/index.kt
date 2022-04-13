@@ -270,7 +270,7 @@ private fun ComposedArticleView() {
       ) {
         ArticleView(
           props = ArticleViewProps(
-            pageName = "Mainpage",
+            pageKey = PageNameKey("Mainpage"),
             ref = model.articleViewRef,
             fullHeight = true,
             visibleLoadStatusIndicator = false,

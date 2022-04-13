@@ -120,7 +120,7 @@ fun vibrate() {
 
 fun gotoArticlePage(pageName: String) {
   Globals.navController.navigate(ArticleRouteArguments(
-    pageName = pageName
+    pageKey = PageNameKey(pageName)
   ))
 }
 

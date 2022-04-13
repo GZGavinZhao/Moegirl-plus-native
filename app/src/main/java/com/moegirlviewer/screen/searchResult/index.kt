@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.searchResult
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
@@ -31,9 +32,11 @@ import com.moegirlviewer.screen.searchResult.component.SearchResultItem
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.PageNameKey
 import com.moegirlviewer.util.navigate
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
@@ -100,7 +103,7 @@ fun SearchResultScreen(
             keyword = arguments.keyword,
             onClick = {
               Globals.navController.navigate(ArticleRouteArguments(
-                pageName = item.title
+                pageKey = PageNameKey(item.title)
               ))
             }
           )

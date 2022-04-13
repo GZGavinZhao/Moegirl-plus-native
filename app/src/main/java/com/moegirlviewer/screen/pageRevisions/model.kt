@@ -10,6 +10,7 @@ import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.editingRecord.bean.PageRevisionsBean
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.PageNameKey
 import com.moegirlviewer.util.printRequestErr
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -33,7 +34,7 @@ class PageRevisionsScreenModel @Inject constructor() : ViewModel() {
 
     try {
       val res = EditingRecordApi.getPageRevisions(
-        pageName = routeArguments.pageName,
+        pageKey = PageNameKey(routeArguments.pageName),
         continueKey = continueKey
       )
       if (res.query.pages.values.first().missing != null) {

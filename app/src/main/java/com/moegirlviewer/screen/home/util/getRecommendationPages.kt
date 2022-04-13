@@ -4,6 +4,7 @@ import com.moegirlviewer.api.category.CategoryApi
 import com.moegirlviewer.api.category.CategoryApiPagesSort
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.PageNameKey
 import com.moegirlviewer.util.categoryPageNamePrefixRegex
 import com.moegirlviewer.util.randomList
 import kotlinx.coroutines.flow.first
@@ -58,7 +59,7 @@ suspend fun getRecommendationPages(
 
   val randomPagesOfMaximalCategory = pagesOfMaximalCategory.randomList(5)
   val randomPagesWithMainImage = PageApi.getMainImageAndIntroduction(
-    *randomPagesOfMaximalCategory.toTypedArray(),
+    PageNameKey(*randomPagesOfMaximalCategory.toTypedArray()),
     size = Globals.activity.resources.displayMetrics.widthPixels
   )
     .query.pages.values

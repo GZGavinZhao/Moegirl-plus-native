@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.category
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.expandVertically
@@ -43,6 +44,7 @@ import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CategoryScreen(
@@ -111,7 +113,7 @@ fun CategoryScreen(
               onClick = { offset ->
                 annotatedString.getStringAnnotations("link", offset, offset).firstOrNull()?.let {
                   Globals.navController.navigate(ArticleRouteArguments(
-                    pageName = arguments.categoryExplainPageName
+                    pageKey = PageNameKey(arguments.categoryExplainPageName)
                   ))
                 }
               }
@@ -139,12 +141,12 @@ fun CategoryScreen(
             categories = (item.categories ?: emptyList()).map { it.title.replaceFirst(categoryPageNamePrefixRegex, "") },
             onClick = {
               Globals.navController.navigate(ArticleRouteArguments(
-                pageName = item.title
+                pageKey = PageNameKey(item.title)
               ))
             },
             onCategoryClick = {
               Globals.navController.navigate(ArticleRouteArguments(
-                pageName = "Category:$it",
+                pageKey = PageNameKey("Category:$it"),
                 displayName = Globals.context.getString(R.string.category) + "：$it"
               ))
             }
@@ -266,7 +268,7 @@ private fun ComposedHeader(
                   .clickable {
                     if (item != categories.last()) Globals.navController.navigate(
                       ArticleRouteArguments(
-                        pageName = "Category:$item",
+                        pageKey = PageNameKey("Category:$item"),
                         displayName = Globals.context.getString(R.string.category) + "：$item"
                       )
                     )

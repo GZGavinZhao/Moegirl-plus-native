@@ -4,22 +4,18 @@ import com.moegirlviewer.Constants
 import com.moegirlviewer.api.page.bean.*
 import com.moegirlviewer.request.MoeRequestMethod
 import com.moegirlviewer.request.moeRequest
-import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 object PageApi {
-  suspend fun getTruePageName(
-    pageName: String? = null,
-    pageId: Int? = null)
-  : String? {
+  suspend fun getTruePageName(pageKey: PageKey) : String? {
     val res = moeRequest(
       entity = PageInfoResBean::class.java,
       params = mutableMapOf<String, Any>().apply {
         this["action"] = "query"
         this["converttitles"] = "1"
-        if (pageId == null && pageName != null) this["titles"] = pageName
-        if (pageId != null) this["pageids"] = pageId
+        addQueryApiParamsByPageKey(pageKey)
       }
     )
 
@@ -27,7 +23,7 @@ object PageApi {
   }
 
   suspend fun getPageContent(
-    pageName: String? = null,
+    pageKey: PageKey,
     revId: Int? = null,
     previewMode: Boolean = false,
   ) = moeRequest(
@@ -37,20 +33,23 @@ object PageApi {
       this["redirects"] = "1"
       this["prop"] = "text|categories|templates|sections|images|displaytitle"
       if (previewMode) this["preview"] = "1"
-      if (pageName != null && revId == null) this["page"] = pageName
+      when (pageKey) {
+        is PageIdKey -> this["pageid"] = pageKey.triedPageIdOrNull!!
+        is PageNameKey -> this["page"] = pageKey.triedPageNameOrNull!!
+      }
       if (revId != null) this["oldid"] = revId
     }
   )
 
   suspend fun getMainImageAndIntroduction(
-    vararg pageName: String,
+    pageKey: PageKey,
     size: Int = 500
   ) = moeRequest(
     entity = MainImagesAndIntroductionResBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
       this["prop"] = "extracts|pageimages"
-      this["titles"] = pageName.joinToString("|")
+      addQueryApiParamsByPageKey(pageKey)
       this["pithumbsize"] = size.toString()
       this["exsentences"] = "10"
       this["exlimit"] = "max"
@@ -89,14 +88,14 @@ object PageApi {
       }
   }
 
-  suspend fun getPageInfo(pageName: String): PageInfoResBean.Query.MapValue {
+  suspend fun getPageInfo(pageKey: PageKey): PageInfoResBean.Query.MapValue {
     val res = moeRequest(
       entity = PageInfoResBean::class.java,
       params = mutableMapOf<String, Any>().apply {
         this["action"] = "query"
         this["prop"] = "info"
         this["inprop"] = "protection|watched|talkid"
-        this["titles"] = pageName
+        addQueryApiParamsByPageKey(pageKey)
       }
     )
 
@@ -127,15 +126,5 @@ object PageApi {
         this["grncontinue"] = continueKey
       }
     }
-  )
-
-  suspend fun purgePage(
-    pageName: String
-  ) = moeRequest(
-    entity = PurgePageResultBean::class.java,
-    params = mapOf(
-      "action" to "purge",
-      "titles" to pageName
-    )
   )
 }

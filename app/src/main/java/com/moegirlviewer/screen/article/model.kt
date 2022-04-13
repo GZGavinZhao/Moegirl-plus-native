@@ -1,14 +1,11 @@
 package com.moegirlviewer.screen.article
 
-import androidx.compose.foundation.ScrollState
-import androidx.compose.material.SwipeableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
-import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
@@ -26,7 +23,6 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
 import com.moegirlviewer.room.watchingPage.WatchingPage
-import com.moegirlviewer.screen.drawer.CommonDrawerState
 import com.moegirlviewer.screen.edit.EditRouteArguments
 import com.moegirlviewer.screen.edit.EditType
 import com.moegirlviewer.store.AccountStore
@@ -36,8 +32,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
-import kotlin.math.min
-import kotlin.math.roundToInt
 
 @HiltViewModel
 class ArticleScreenModel @Inject constructor() : ViewModel() {
@@ -64,21 +58,21 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
   // 真实页面名
   val truePageName get() = articleData?.parse?.title ?:
-    routeArguments.pageName ?:
+    routeArguments.pageKey?.triedPageNameOrNull ?:
     routeArguments.readingRecord?.pageName
   // 要显示的页面名(受萌百标题格式化模板的影响)
   val displayPageName get() = getTextFromHtml(
     (
       articleData?.parse?.displaytitle ?:
       routeArguments.displayName ?:
-      routeArguments.pageName ?:
+      routeArguments.pageKey?.triedPageNameOrNull ?:
       routeArguments.readingRecord?.pageName ?:
       Globals.context.getString(R.string.app_name)
     )
       .replace("_", " ")
       .replace(categoryPageNamePrefixRegex, "${Globals.context.getString(R.string.category)}：")
   )
-  val pageId get() = articleData?.parse?.pageid
+  val pageId get() = routeArguments.pageKey?.triedPageIdOrNull ?: articleData?.parse?.pageid
 
   // 是否允许编辑全文，讨论页默认不允许
   val editFullDisabled get() = articleInfo?.ns != null && MediaWikiNamespace.isTalkPage(articleInfo!!.ns)
@@ -114,7 +108,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
     coroutineScope.launch {
       val mainPageUrl = try {
-        PageApi.getMainImageAndIntroduction(truePageName!!, size = 250).query.pages.values.first().thumbnail?.source
+        PageApi.getMainImageAndIntroduction(routeArguments.pageKey!!, size = 250).query.pages.values.first().thumbnail?.source
       } catch (e: MoeRequestException) { null }
 
       Globals.room.browsingRecord().insertItem(BrowsingRecord(
@@ -233,10 +227,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     if (!AccountStore.isLoggedIn.first()) return
 
     if (routeArguments.revId != null) {
-      val lastEditingRecordRes = EditingRecordApi.getPageRevisions(
-        pageName = routeArguments.pageName,
-        pageId = routeArguments.pageId
-      )
+      val lastEditingRecordRes = EditingRecordApi.getPageRevisions(routeArguments.pageKey!!)
 
       val lastEditingRecord = lastEditingRecordRes.query.pages.values.first().revisions?.first() ?: return
       if (lastEditingRecord.revid != routeArguments.revId) {
@@ -302,7 +293,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
   fun share() {
     val siteName = Globals.context.getString(R.string.siteName)
-    shareText("$siteName - ${routeArguments.pageName} ${Constants.shareUrl}$pageId")
+    shareText("$siteName - $truePageName ${Constants.shareUrl}$pageId")
   }
 
   companion object {

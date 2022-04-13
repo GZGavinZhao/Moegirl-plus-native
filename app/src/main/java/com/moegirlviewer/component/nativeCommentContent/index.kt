@@ -73,7 +73,7 @@ fun NativeCommentContent(
           val pageName = it.item.split("#").first()
           val anchor = it.item.split("#").getOrNull(1)
           Globals.navController.navigate(ArticleRouteArguments(
-            pageName = pageName,
+            pageKey = PageNameKey(pageName),
             anchor = anchor
           ))
         }

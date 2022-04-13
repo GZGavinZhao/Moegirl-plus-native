@@ -291,8 +291,7 @@ private fun ComposedArticleView(
 //    ) {
       ArticleView(
         props = ArticleViewProps(
-          pageName = arguments.pageName,
-          pageId = arguments.pageId,
+          pageKey = arguments.pageKey,
           revId = arguments.revId,
           editAllowed = model.editAllowed ?: false,
           visibleLoadStatusIndicator = false,

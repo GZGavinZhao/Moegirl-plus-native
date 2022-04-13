@@ -129,7 +129,7 @@ class CarouseCardState : HomeScreenCardState() {
   override suspend fun reload() {
     status = LoadStatus.LOADING
     try {
-      val res = PageApi.getPageContent("Template:首页/典范条目", previewMode = true)
+      val res = PageApi.getPageContent(PageNameKey("Template:首页/典范条目"), previewMode = true)
       val htmlContent = res.parse.text._asterisk
       val htmlDoc = Jsoup.parse(htmlContent)
 

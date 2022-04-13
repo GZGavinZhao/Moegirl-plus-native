@@ -45,7 +45,7 @@ private fun checkDeepLink() {
   when(deepLink) {
     is PageIdDeepLink -> {
       Globals.navController.navigate(ArticleRouteArguments(
-        pageId = deepLink.pageId
+        pageKey = PageIdKey(deepLink.pageId)
       ))
     }
     is PageNameDeepLink -> {
@@ -61,7 +61,7 @@ private suspend fun checkShortcutIntent() {
     ShortcutAction.CONTINUE_READ -> {
       val readingRecord = SettingsStore.other.getValue { this.readingRecord }.first() ?: return
       Globals.navController.navigate(ArticleRouteArguments(
-        pageName = readingRecord.pageName,
+        pageKey = PageNameKey(readingRecord.pageName),
         readingRecord = readingRecord
       ))
     }

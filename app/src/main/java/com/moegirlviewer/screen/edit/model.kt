@@ -311,7 +311,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
         Globals.navController.popBackStack()
       } else {
         Globals.navController.replace(ArticleRouteArguments(
-          pageName = routeArguments.pageName
+          pageKey = PageNameKey(routeArguments.pageName)
         ))
       }
 

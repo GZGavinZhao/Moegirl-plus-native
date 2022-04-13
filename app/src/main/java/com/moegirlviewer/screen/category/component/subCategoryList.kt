@@ -104,7 +104,7 @@ fun SubCategoryList() {
                   .padding(start = 5.dp)
                   .noRippleClickable {
                     Globals.navController.navigate(ArticleRouteArguments(
-                      pageName = "Category:$item",
+                      pageKey = PageNameKey("Category:$item"),
                       displayName = Globals.context.getString(R.string.category) + "：$item"
                     ))
                   },

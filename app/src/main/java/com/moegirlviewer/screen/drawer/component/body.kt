@@ -96,7 +96,7 @@ fun CommonDrawerBody(
         onClick = {
           withDrawerClosed {
             Globals.navController.navigate(ArticleRouteArguments(
-              pageName = isMoegirl("萌娘百科 talk:讨论版", "H萌娘讨论:讨论版")
+              pageKey = PageNameKey(isMoegirl("萌娘百科 talk:讨论版", "H萌娘讨论:讨论版"))
             ))
           }
         }

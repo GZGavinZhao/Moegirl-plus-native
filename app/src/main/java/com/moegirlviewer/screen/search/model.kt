@@ -14,6 +14,7 @@ import com.moegirlviewer.screen.searchResult.SearchResultRouteArguments
 import com.moegirlviewer.store.SearchRecord
 import com.moegirlviewer.store.SearchRecordsStore
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.PageNameKey
 import com.moegirlviewer.util.closeKeyboard
 import com.moegirlviewer.util.navigate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +36,7 @@ class SearchScreenModel @Inject constructor() : ViewModel()  {
 
     if (record.isPageName) {
       Globals.navController.navigate(ArticleRouteArguments(
-        pageName = record.keyword,
+        pageKey = PageNameKey(record.keyword),
       ))
     } else {
       Globals.navController.navigate(SearchResultRouteArguments(
