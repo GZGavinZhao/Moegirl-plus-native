@@ -1,21 +1,11 @@
 package com.moegirlviewer.component.htmlWebView
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
-import android.util.Log
 import android.view.View
 import android.webkit.JavascriptInterface
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.viewinterop.AndroidView
@@ -24,7 +14,6 @@ import com.google.gson.JsonParser
 import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.component.htmlWebView.utils.createHtmlDocument
 import com.moegirlviewer.component.htmlWebView.utils.createWebViewTrackDrawable
-import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LocalCachedWebViews
 import com.moegirlviewer.util.toUnicodeForInjectScriptInWebView
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
@@ -35,7 +24,6 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.roundToInt
 
 private const val assetsBaseUrl = "file:///android_asset/"
 
