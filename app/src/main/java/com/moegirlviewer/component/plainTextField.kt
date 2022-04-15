@@ -192,7 +192,6 @@ private fun TextFieldDecoration(
         StyledText(
           text = placeholder,
           style = placeholderStyle,
-          color = themeColors.text.tertiary,
         )
       }
     }

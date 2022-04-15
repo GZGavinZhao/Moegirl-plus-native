@@ -244,7 +244,7 @@
     <string name="noAllowEditThePage">無權編輯此頁</string>
     <string name="emptyContnet">還沒有任何內容_(:з」∠)_</string>
     <string name="searchInBrowsingHistory">搜尋瀏覽歷史...</string>
-    <string name="noSearchingResult">什麼也沒搜到_(:з」∠)_</string>
+    <string name="noSearchingResult">什麼也沒有_(:з」∠)_</string>
     <string name="darkThemeBySystem">適配深色模式(實驗性)</string>
     <string name="darkThemeBySystemHelpText">部分條目會有文字看不清的情況</string>
     <string name="selectSplashScreenImage">啟動屏設定</string>

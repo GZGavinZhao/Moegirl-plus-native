@@ -1,10 +1,13 @@
 package com.moegirlviewer.screen.browsingHistorySearch
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -12,6 +15,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +37,7 @@ import com.moegirlviewer.util.gotoArticlePage
 import com.moegirlviewer.util.imeBottomPadding
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalFoundationApi
 @Composable
 fun BrowsingHistorySearchScreen() {
@@ -89,26 +94,35 @@ private fun ComposedHeader(
 
   StyledTopAppBar(
     title = {
-      PlainTextField(
-        modifier = Modifier
-          .fillMaxWidth()
-          .autoFocus(),
-        value = searchInputVal,
-        singleLine = true,
-        onValueChange = onSearchInputValChange,
-        placeholder = stringResource(id = R.string.searchInBrowsingHistory),
-        textStyle = TextStyle(
-          color = themeColors.onPrimary,
-          fontSize = 18.sp
+      CompositionLocalProvider(
+        LocalTextSelectionColors provides TextSelectionColors(
+          handleColor = themeColors.onPrimary.copy(alpha = 0.5f),
+          backgroundColor = themeColors.onPrimary.copy(alpha = 0.5f)
         ),
-        placeholderStyle = TextStyle(
-          color = themeColors.onPrimary.copy(alpha = 0.5f),
-          fontSize = 18.sp
-        ),
-        keyboardOptions = KeyboardOptions.Default.copy(
-          imeAction = ImeAction.Done
-        ),
-        maxLines = 1,
+        content = {
+          PlainTextField(
+            modifier = Modifier
+              .fillMaxWidth()
+              .autoFocus(),
+            value = searchInputVal,
+            singleLine = true,
+            onValueChange = onSearchInputValChange,
+            placeholder = stringResource(id = R.string.searchInBrowsingHistory),
+            textStyle = TextStyle(
+              color = themeColors.onPrimary,
+              fontSize = 18.sp
+            ),
+            placeholderStyle = TextStyle(
+              color = themeColors.onPrimary,
+              fontSize = 18.sp
+            ),
+            cursorBrush = SolidColor(themeColors.onPrimary),
+            keyboardOptions = KeyboardOptions.Default.copy(
+              imeAction = ImeAction.Done
+            ),
+            maxLines = 1,
+          )
+        },
       )
     },
     actions = {
@@ -118,8 +132,8 @@ private fun ComposedHeader(
         ) {
           Icon(
             modifier = Modifier
-              .width(20.dp)
-              .height(20.dp),
+              .width(24.dp)
+              .height(24.dp),
             imageVector = Icons.Filled.Close,
             contentDescription = null,
             tint = themeColors.onPrimary

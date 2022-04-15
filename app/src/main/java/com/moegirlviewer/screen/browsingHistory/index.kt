@@ -160,14 +160,14 @@ private fun Title(
   Column(
     modifier = Modifier
       .fillMaxWidth()
-      .background(themeColors.background)
+      .background(themeColors.background2)
       .padding(bottom = 10.dp, top = 10.dp)
   ) {
     StyledText(
       modifier = Modifier
         .padding(start = 10.dp),
       text = text,
-      color = themeColors.primaryVariant,
+      color = themeColors.text.primary,
       fontSize = 16.sp
     )
 

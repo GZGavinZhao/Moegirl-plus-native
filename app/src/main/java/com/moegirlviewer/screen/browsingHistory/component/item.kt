@@ -41,7 +41,7 @@ fun BrowsingHistoryScreenItem(
 
   Box(
     modifier = Modifier
-      .padding(top = 10.dp, start = 10.dp, end = 10.dp)
+      .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
       .height(110.dp)
       .clip(RoundedCornerShape(5.dp))
       .background(themeColors.surface)
