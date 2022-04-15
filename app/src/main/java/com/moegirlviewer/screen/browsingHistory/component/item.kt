@@ -5,11 +5,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -36,34 +39,38 @@ fun BrowsingHistoryScreenItem(
 ) {
   val themeColors = MaterialTheme.colors
 
-  Surface() {
-    Box(
+  Box(
+    modifier = Modifier
+      .padding(top = 10.dp, start = 10.dp, end = 10.dp)
+      .height(110.dp)
+      .clip(RoundedCornerShape(5.dp))
+      .background(themeColors.surface)
+      .combinedClickable(
+        onClick = onClick,
+        onLongClick = onLongClick
+      )
+      .padding(top = 10.dp, bottom = 10.dp, start = 10.dp, end = 10.dp)
+  ) {
+    Row(
       modifier = Modifier
-        .sideBorder(BorderSide.BOTTOM, 1.dp, themeColors.background2)
-        .height(90.dp)
-        .background(themeColors.surface)
-        .combinedClickable(
-          onClick = onClick,
-          onLongClick = onLongClick
-        ),
-      contentAlignment = Alignment.Center
+        .fillMaxSize()
     ) {
       Box(
         modifier = Modifier
-          .fillMaxSize()
-          .absoluteOffset(
-            x = if (record.imgUrl != null) 0.dp else 5.dp,
-            y = if (record.imgUrl != null) 0.dp else 5.dp
-          )
+          .width(70.dp)
+          .height(100.dp),
+        contentAlignment = Alignment.Center
       ) {
         if (record.imgUrl != null) {
           AsyncImage(
             modifier = Modifier
               .width(70.dp)
-              .height(90.dp),
+              .height(100.dp)
+              .clip(RoundedCornerShape(5.dp)),
             model = rememberImageRequest(data = record.imgUrl),
             contentDescription = null,
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.TopCenter
           )
         } else {
           Image(
@@ -76,28 +83,32 @@ fun BrowsingHistoryScreenItem(
         }
       }
 
-      StyledText(
-        modifier = Modifier
-          .padding(start = 5.dp)
-          .width((14 * 15).dp),
-        text = record.pageName,
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis,
-        textAlign = TextAlign.Center
-      )
-
       Box(
         modifier = Modifier
+          .padding(bottom = 5.dp)
           .fillMaxSize()
-          .absoluteOffset(x = (-5).dp, y = (-5).dp),
-        contentAlignment = Alignment.BottomEnd,
+          .weight(1f)
+          .padding(10.dp),
+        contentAlignment = Alignment.Center
       ) {
         StyledText(
-          text = diffNowDate(record.date),
-          color = themeColors.text.secondary,
-          fontSize = 13.sp
+          text = record.pageName,
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis,
         )
       }
+    }
+
+    Box(
+      modifier = Modifier
+        .fillMaxSize(),
+      contentAlignment = Alignment.BottomEnd,
+    ) {
+      StyledText(
+        text = diffNowDate(record.date),
+        color = themeColors.text.secondary,
+        fontSize = 13.sp
+      )
     }
   }
 }

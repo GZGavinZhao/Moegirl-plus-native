@@ -30,6 +30,7 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
 import com.moegirlviewer.screen.browsingHistory.component.BrowsingHistoryScreenItem
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
@@ -50,7 +51,7 @@ fun BrowsingHistoryScreen() {
   }
 
   Scaffold(
-    backgroundColor = themeColors.background,
+    backgroundColor = themeColors.background2,
     topBar = {
       ComposedHeader()
     }
@@ -63,7 +64,7 @@ fun BrowsingHistoryScreen() {
             list: List<BrowsingRecord>
           ) {
             if (list.isNotEmpty()) {
-              item {
+              stickyHeader {
                 Title(stringResource(titleResourceId))
               }
 
@@ -159,21 +160,22 @@ private fun Title(
   Column(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(bottom = 10.dp, top = 5.dp)
+      .background(themeColors.background)
+      .padding(bottom = 10.dp, top = 10.dp)
   ) {
     StyledText(
       modifier = Modifier
-        .padding(start = 5.dp),
+        .padding(start = 10.dp),
       text = text,
       color = themeColors.primaryVariant,
       fontSize = 16.sp
     )
 
-    Spacer(modifier = Modifier
-      .padding(top = 3.dp, end = 10.dp)
-      .height(2.dp)
-      .fillMaxWidth()
-      .background(themeColors.primaryVariant)
-    )
+//    Spacer(modifier = Modifier
+//      .padding(top = 3.dp, end = 10.dp)
+//      .height(2.dp)
+//      .fillMaxWidth()
+//      .background(themeColors.primaryVariant)
+//    )
   }
 }

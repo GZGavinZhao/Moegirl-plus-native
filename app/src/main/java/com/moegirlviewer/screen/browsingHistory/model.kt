@@ -79,7 +79,6 @@ class BrowsingHistoryScreenModel @Inject constructor() : ViewModel() {
             yesterdayList = lists.yesterdayList.filter { it != record },
             earlierList = lists.earlierList.filter { it != record }
           )
-          status = LoadStatus.EMPTY
         }
       }
     ))
