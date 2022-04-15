@@ -1,6 +1,7 @@
 package com.moegirlviewer.screen.searchResult.component
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -71,7 +73,7 @@ fun SearchResultItem(
       .padding(top = 10.dp, start = 10.dp, end = 10.dp)
       .fillMaxWidth(),
     backgroundColor = themeColors.surface,
-    elevation = 3.dp,
+    elevation = 1.dp,
     onClick = { onClick(data.title) }
   ) {
     Column(
@@ -88,7 +90,7 @@ fun SearchResultItem(
           .padding(top = 5.dp)
           .fillMaxWidth()
           .sideBorder(BorderSide.TOP, 2.dp, themeColors.primaryVariant)
-          .sideBorder(BorderSide.BOTTOM, 2.dp, themeColors.primaryVariant)
+          .sideBorder(BorderSide.BOTTOM, 2.dp, themeColors.primaryVariant.copy(alpha = 0.15f))
           .padding(vertical = 5.dp)
       ) {
         SearchContent(
@@ -187,14 +189,14 @@ private fun SearchContent(
         ) {
           AsyncImage(
             modifier = Modifier
-              .padding(start = 5.dp, end = 3.dp)
-              .fillMaxWidth()
-              .height(min(120f, (100f / imageSource.width * imageSource.height)).dp),
+              .width(80.dp),
+//              .padding(start = 5.dp, end = 3.dp)
+//              .fillMaxWidth()
+//              .height(min(120f, (100f / imageSource.width * imageSource.height)).dp),
             model = rememberImageRequest(imageSource.source),
-            placeholder = painterResource(id = R.drawable.placeholder),
             contentDescription = null,
-            contentScale = ContentScale.FillWidth,
             alignment = Alignment.TopCenter,
+            contentScale = ContentScale.FillWidth
           )
         }
       }
@@ -218,6 +220,7 @@ private fun ComposedFooter(
 
   Box(
     modifier = Modifier
+      .padding(top = 1.dp)
       .fillMaxWidth(),
     contentAlignment = Alignment.CenterEnd
   ) {
