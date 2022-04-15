@@ -75,8 +75,8 @@ fun SearchScreenHeader() {
         ) {
           Icon(
             modifier = Modifier
-              .width(20.dp)
-              .height(20.dp),
+              .width(24.dp)
+              .height(24.dp),
             imageVector = Icons.Filled.Close,
             contentDescription = null
           )
