@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.moegirlviewer.compable.DoSideEffect
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.util.noRippleClickable
+import com.moegirlviewer.util.printDebugLog
 import com.moegirlviewer.util.toDp
 import com.moegirlviewer.util.visibility
 import kotlinx.coroutines.delay
@@ -66,6 +67,12 @@ fun CustomDrawer(
     state.alwaysDelayDisplayFlag = true
   }
 
+  // 有时点击抽屉里的按钮跳页面的同时关闭抽屉，抽屉会在还没完全关闭时，页面就已经跳走了，导致协程被销毁，swipeableState的状态会停留在动画中途
+  // 这里是为了重置为静止状态
+  LaunchedEffect(true) {
+    state.swipeableState.snapTo(state.swipeableState.targetValue)
+  }
+
   LaunchedEffect(state.swipeableState.offset.value) {
     state.swipableStateRestored = true
   }
@@ -104,6 +111,7 @@ fun CustomDrawer(
         .graphicsLayer(
           translationX = state.swipeOffset
         )
+        .background(Color.Red)
     ) {
       Box(
         modifier = Modifier
