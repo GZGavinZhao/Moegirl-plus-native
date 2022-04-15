@@ -111,7 +111,6 @@ fun CustomDrawer(
         .graphicsLayer(
           translationX = state.swipeOffset
         )
-        .background(Color.Red)
     ) {
       Box(
         modifier = Modifier
