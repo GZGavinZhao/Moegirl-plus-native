@@ -5,39 +5,21 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.Constants
-import com.moegirlviewer.R
-import com.moegirlviewer.compable.FirstTimeSkippedLaunchedEffect
-import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.compable.remember.rememberDebouncedManualEffector
-import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewProps
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
-import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
-import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.article.component.ArticleLoadingMask
 import com.moegirlviewer.screen.article.component.catalog.ArticleScreenCatalog
@@ -218,6 +200,7 @@ private fun ComposedHeader() {
   )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ComposedArticleView(
   arguments: ArticleRouteArguments,
@@ -225,6 +208,7 @@ private fun ComposedArticleView(
   val model: ArticleScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
   val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(false)
+  val isFocusMode by SettingsStore.common.getValue { focusMode }.collectAsState(initial = false)
 
   val debouncedManualEffector = rememberDebouncedManualEffector<ReadingRecord>(1000) {
     scope.launch {
@@ -255,8 +239,14 @@ private fun ComposedArticleView(
 //  }
 
   val handleOnScrollChanged: HtmlWebViewScrollChangeHandler = { _, top, _, oldTop ->
-    model.visibleHeader = top < 80 || top < oldTop
-    model.visibleCommentButton = top < oldTop
+    if (isFocusMode) {
+      model.visibleHeader = top == 0
+      model.visibleCommentButton = top == 0
+    } else {
+      model.visibleHeader = top < 80 || top < oldTop
+      model.visibleCommentButton = top < oldTop
+    }
+
     scope.launch {
       debouncedManualEffector.trigger(ReadingRecord(
         pageName = model.truePageName!!,
@@ -315,6 +305,12 @@ private fun ComposedArticleView(
           onStatusChanged = { model.articleLoadStatus = it },
           emitCatalogData = { model.catalogData = it },
           ref = model.articleViewRef,
+          injectedScripts = listOf(
+            BodyDoubleClickJs.scriptContent
+          ),
+          messageHandlers = mapOf(
+            BodyDoubleClickJs.messageHandler
+          )
         )
       )
 //    }

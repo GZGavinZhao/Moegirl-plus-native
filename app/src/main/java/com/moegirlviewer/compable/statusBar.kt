@@ -21,6 +21,12 @@ fun StatusBar(
       color = backgroundColor,
       darkIcons = darkIcons
     )
+
+    with(CachedStatusBarConfig) {
+      this.visible = visible
+      this.backgroundColor = backgroundColor
+      this.darkIcons = darkIcons
+    }
   }
 
   LaunchedEffect(
@@ -42,3 +48,8 @@ fun StatusBar(
 }
 
 var statusBarLocked by mutableStateOf(false)
+object CachedStatusBarConfig {
+  var visible = true
+  var backgroundColor = Color.Transparent
+  var darkIcons = false
+}

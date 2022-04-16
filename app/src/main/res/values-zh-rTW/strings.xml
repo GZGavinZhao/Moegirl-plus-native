@@ -208,6 +208,7 @@
     <string name="useSerifFont">使用襯線字型</string>
     <string name="privacyPolicy">隱私權政策</string>
     <string name="lightRequestMode">輕請求模式(實驗性)</string>
+    <string name="focusMode">專注模式</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>
@@ -315,6 +316,7 @@
     <string name="sendThankExplanation">感謝是對編輯者工作貢獻表達謝意的一種方式，您確定要向該修訂記錄的編輯者傳送感謝嗎？</string>
     <string name="thankSelfHint">你不能感謝你自己</string>
     <string name="lightRequestModeHelpText">如果你近期經常被防火牆攔截，可以嘗試這個選項。開啟後這些功能將無法使用：編輯、操作監視列表。注意：該選項本身並不能解除被攔截狀態</string>
+    <string name="focusModeHelpText">瀏覽條目時狀態列將隱藏，頭欄和評論按鈕隱藏後不會因向上滑動而重新出現，變為雙擊屏幕後顯示</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤銷[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|討論]]）的版本%2$s</string>

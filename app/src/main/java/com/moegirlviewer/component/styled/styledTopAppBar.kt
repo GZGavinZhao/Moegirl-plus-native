@@ -24,6 +24,7 @@ fun StyledTopAppBar(
   backgroundColor: Color = MaterialTheme.colors.primary,
   contentColor: Color = contentColorFor(backgroundColor),
   elevation: Dp = if (MaterialTheme.elevation) 3.dp else 0.dp,
+  visibleStatusBar: Boolean = true,
   statusBarBackgroundColor: Color = backgroundColor,
   statusBarDarkIcons: Boolean = isUsePureTheme(),
   title: @Composable () -> Unit,
@@ -33,22 +34,25 @@ fun StyledTopAppBar(
   val themeColor = MaterialTheme.colors
 
   StatusBar(
+    visible = visibleStatusBar,
     backgroundColor = Color.Transparent,
     darkIcons = statusBarDarkIcons
   )
 
   Box {
-    Spacer(modifier = modifier
-      .fillMaxWidth()
-      .background(statusBarBackgroundColor)
-      .padding(top = Globals.statusBarHeight.dp)
-      .absoluteOffset(0.dp, 0.dp)
-      .zIndex(1f)
-    )
+    if (visibleStatusBar) {
+      Spacer(modifier = modifier
+        .fillMaxWidth()
+        .background(statusBarBackgroundColor)
+        .padding(top = Globals.statusBarHeight.dp)
+        .absoluteOffset(0.dp, 0.dp)
+        .zIndex(1f)
+      )
+    }
 
     TopAppBar(
       modifier = Modifier
-        .padding(top = Globals.statusBarHeight.dp)
+        .padding(top = (if (visibleStatusBar) Globals.statusBarHeight else 0f).dp)
         .then(modifier),
       backgroundColor = backgroundColor,
       contentColor = contentColor,

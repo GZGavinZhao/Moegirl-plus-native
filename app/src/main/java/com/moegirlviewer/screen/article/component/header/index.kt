@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.CachedStatusBarConfig
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.styled.StyledText
@@ -40,6 +41,8 @@ fun ArticleScreenHeader(
   val themeColors = MaterialTheme.colors
   val transition = updateTransition(visible)
   var visibleMoreMenu by remember { mutableStateOf(false) }
+  val isFocusMode by SettingsStore.common.getValue { focusMode }.collectAsState(initial = null)
+  if (isFocusMode == null) return
   
   val offsetTopForHidden = -Constants.topAppBarHeight
 
@@ -58,6 +61,7 @@ fun ArticleScreenHeader(
 
   Box() {
     StyledTopAppBar(
+      visibleStatusBar = !isFocusMode!!,
       modifier = Modifier
         .then(modifier)
         .absoluteOffset(0.dp, topOffset)

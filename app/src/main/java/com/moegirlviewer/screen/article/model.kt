@@ -3,7 +3,9 @@ package com.moegirlviewer.screen.article
 import androidx.compose.runtime.*
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonObject
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
@@ -341,3 +343,33 @@ private val hmoeCommentDisabledTitles = listOf(
   "习妡萍",
   "禁评",
 )
+
+object BodyDoubleClickJs {
+  private const val messageName = "bodyDoubleClicked"
+  val scriptContent = """
+    (() => {
+      let doubleClickFlag = false
+      $('body').on('click', e => {
+        if (doubleClickFlag) {
+          doubleClickFlag = false
+          _postMessage('$messageName')
+        } else {
+          doubleClickFlag = true
+          setTimeout(() => doubleClickFlag = false, 400)
+        }
+      })
+    })()
+  """.trimIndent()
+
+  val messageHandler: Pair<String, (JsonObject?) -> Unit> @Composable get() {
+    val model: ArticleScreenModel = hiltViewModel()
+    val isFocusMode by SettingsStore.common.getValue { focusMode }.collectAsState(initial = false)
+
+    return messageName to {
+      if (isFocusMode) {
+        model.visibleHeader = !model.visibleHeader
+        model.visibleCommentButton = model.visibleHeader
+      }
+    }
+  }
+}

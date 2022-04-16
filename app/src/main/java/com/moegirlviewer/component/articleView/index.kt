@@ -28,7 +28,6 @@ typealias ArticleData = PageContentResBean
 typealias ArticleInfo = PageInfoResBean.Query.MapValue
 
 class ArticleViewProps(
-  val modifier: Modifier = Modifier,
   val pageKey: PageKey? = null, // 不传html时，pageKey必传
   val html: String? = null,
   val revId: Int? = null,
@@ -72,6 +71,7 @@ class ArticleViewRef(
 
 @Composable
 fun ArticleView(
+  modifier: Modifier = Modifier,
   props: ArticleViewProps
 ) {
   val scope = rememberCoroutineScope()
@@ -136,6 +136,7 @@ fun ArticleView(
     modifier = Modifier
       .fillMaxWidth()
       .then(if (props.fullHeight) Modifier.height(state.contentHeight.dp) else Modifier.fillMaxHeight())
+      .then(modifier)
   ) {
     HtmlWebView(
       messageHandlers = state.defaultMessageHandlers + (props.messageHandlers ?: emptyMap()),

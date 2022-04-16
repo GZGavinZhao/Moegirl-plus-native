@@ -5,11 +5,10 @@ import androidx.activity.ComponentActivity
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.isDebugEnv
 import com.moegirlviewer.util.useFreeStatusBarLayout
-import com.tencent.smtt.sdk.WebView
 
 fun ComponentActivity.initializeOnCreate() {
-  WebView.setWebContentsDebuggingEnabled(isDebugEnv())
-//  WebView.enableSlowWholeDocumentDraw()
+  android.webkit.WebView.setWebContentsDebuggingEnabled(isDebugEnv())
+  com.tencent.smtt.sdk.WebView.setWebContentsDebuggingEnabled(isDebugEnv())
 
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
     window.decorView.isForceDarkAllowed = false

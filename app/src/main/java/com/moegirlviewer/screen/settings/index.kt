@@ -138,6 +138,22 @@ fun SettingsScreen() {
         )
       }
 
+      SettingsScreenItem(
+        title = stringResource(id = R.string.focusMode),
+        subtext = stringResource(id = R.string.focusModeHelpText),
+        onClick = {
+          setSettingItem { this.focusMode = !this.focusMode }
+        }
+      ) {
+        Switch(
+          checked = commonSettings.focusMode,
+          colors = switchColors,
+          onCheckedChange = {
+            setSettingItem { this.focusMode = it }
+          }
+        )
+      }
+
       Title(R.string._interface)
       if (isMoegirl()) {
         SettingsScreenItem(
