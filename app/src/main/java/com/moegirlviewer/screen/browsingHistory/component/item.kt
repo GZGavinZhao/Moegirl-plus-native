@@ -42,31 +42,31 @@ fun BrowsingHistoryScreenItem(
   Box(
     modifier = Modifier
       .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
-      .height(110.dp)
+      .height(100.dp)
       .clip(RoundedCornerShape(5.dp))
       .background(themeColors.surface)
       .combinedClickable(
         onClick = onClick,
         onLongClick = onLongClick
       )
-      .padding(top = 10.dp, bottom = 10.dp, start = 10.dp, end = 10.dp)
   ) {
-    Row(
+    Box(
       modifier = Modifier
         .fillMaxSize()
     ) {
       Box(
         modifier = Modifier
           .width(70.dp)
-          .height(100.dp),
+          .height(100.dp)
+          .absoluteOffset(0.dp, 0.dp)
+          .background(themeColors.surface),
         contentAlignment = Alignment.Center
       ) {
         if (record.imgUrl != null) {
           AsyncImage(
             modifier = Modifier
               .width(70.dp)
-              .height(100.dp)
-              .clip(RoundedCornerShape(5.dp)),
+              .height(100.dp),
             model = rememberImageRequest(data = record.imgUrl),
             contentDescription = null,
             contentScale = ContentScale.Crop,
@@ -75,19 +75,19 @@ fun BrowsingHistoryScreenItem(
         } else {
           Image(
             modifier = Modifier
-              .width(60.dp)
-              .height(80.dp),
+              .width(70.dp)
+              .height(100.dp)
+              .padding(horizontal = 7.5.dp),
             painter = painterResource(R.drawable.moemoji),
-            contentDescription = null
+            contentDescription = null,
           )
         }
       }
 
       Box(
         modifier = Modifier
-          .padding(bottom = 5.dp)
+          .padding(bottom = 5.dp, start = 70.dp)
           .fillMaxSize()
-          .weight(1f)
           .padding(10.dp),
         contentAlignment = Alignment.Center
       ) {
@@ -97,18 +97,19 @@ fun BrowsingHistoryScreenItem(
           overflow = TextOverflow.Ellipsis,
         )
       }
-    }
 
-    Box(
-      modifier = Modifier
-        .fillMaxSize(),
-      contentAlignment = Alignment.BottomEnd,
-    ) {
-      StyledText(
-        text = diffNowDate(record.date),
-        color = themeColors.text.secondary,
-        fontSize = 13.sp
-      )
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .absoluteOffset(x = ((-10).dp), y = (-10).dp),
+        contentAlignment = Alignment.BottomEnd,
+      ) {
+        StyledText(
+          text = diffNowDate(record.date),
+          color = themeColors.text.secondary,
+          fontSize = 13.sp
+        )
+      }
     }
   }
 }

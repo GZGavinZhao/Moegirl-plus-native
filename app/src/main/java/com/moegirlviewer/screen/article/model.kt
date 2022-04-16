@@ -30,7 +30,6 @@ import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -81,7 +80,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(initial = false)
     return if (isLightRequestMode) {
       if (truePageName != null)
-        truePageName!!.contains(moegirlDisabledShowCommentButtonRegexForLightRequestMode).not()
+        truePageName!!.contains(disabledShowCommentButtonRegexForLightRequestMode).not()
         else false
     } else {
       listOf(
@@ -326,8 +325,8 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   }
 }
 
-private val moegirlDisabledShowCommentButtonRegexForLightRequestMode = Regex("""
-  ^([Tt]alk|讨论|討論|[Tt]emplate( talk|)|模板(讨论|討論|)|[Mm]odule( talk|)|模块(讨论|討論|)|[Cc]ategory( talk|)|分[类類](讨论|討論|)|[Uu]ser talk|用户讨论|用戶討論|萌娘百科 talk):
+private val disabledShowCommentButtonRegexForLightRequestMode = Regex("""
+  ^([Tt]alk|讨论|討論|[Tt]emplate( talk|)|模板(讨论|討論|)|[Mm]odule( talk|)|模块(讨论|討論|)|[Cc]ategory( talk|)|分[类類](讨论|討論|)|[Uu]ser talk|用户讨论|用戶討論|萌娘百科 talk|H萌娘讨论):
 """.trimIndent())
 
 private val hmoeCommentDisabledTitles = listOf(
