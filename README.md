@@ -36,22 +36,22 @@ HMoegirl(H萌娘)
 
 ## 截图
 
-<img src="source/images/1.jpg" width="300" align="left">
-<img src="source/images/2.jpg" width="300" align="left">
-<img src="source/images/3.jpg" width="300" align="left">
-<img src="source/images/4.jpg" width="300" align="left">
-<img src="source/images/5.jpg" width="300" align="left">
-<img src="source/images/6.jpg" width="300" align="left">
-<img src="source/images/7.jpg" width="300" align="left">
-<img src="source/images/8.jpg" width="300" align="left">
-<img src="source/images/9.jpg" width="300" align="left">
-<img src="source/images/10.jpg" width="300" align="left">
-<img src="source/images/11.jpg" width="300" align="left">
-<img src="source/images/12.jpg" width="300" align="left">
-<img src="source/images/13.jpg" width="300" align="left">
-<img src="source/images/14.jpg" width="300" align="left">
-<img src="source/images/15.jpg" width="300" align="left">
-<img src="source/images/16.jpg" width="300" align="left">
-<img src="source/images/17.jpg" width="300" align="left">
-<img src="source/images/18.jpg" width="300" align="left">
-<img src="source/images/19.jpg" width="300" align="left">
+<img src="source/images/1.jpg" width="270" align="left">
+<img src="source/images/2.jpg" width="270" align="left">
+<img src="source/images/3.jpg" width="270" align="left">
+<img src="source/images/4.jpg" width="270" align="left">
+<img src="source/images/5.jpg" width="270" align="left">
+<img src="source/images/6.jpg" width="270" align="left">
+<img src="source/images/7.jpg" width="270" align="left">
+<img src="source/images/8.jpg" width="270" align="left">
+<img src="source/images/9.jpg" width="270" align="left">
+<img src="source/images/10.jpg" width="270" align="left">
+<img src="source/images/11.jpg" width="270" align="left">
+<img src="source/images/12.jpg" width="270" align="left">
+<img src="source/images/13.jpg" width="270" align="left">
+<img src="source/images/14.jpg" width="270" align="left">
+<img src="source/images/15.jpg" width="270" align="left">
+<img src="source/images/16.jpg" width="270" align="left">
+<img src="source/images/17.jpg" width="270" align="left">
+<img src="source/images/18.jpg" width="270" align="left">
+<img src="source/images/19.jpg" width="270" align="left">
