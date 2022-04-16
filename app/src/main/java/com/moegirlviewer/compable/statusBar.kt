@@ -2,6 +2,8 @@ package com.moegirlviewer.compable
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
@@ -13,6 +15,14 @@ fun StatusBar(
   val systemUiController = rememberSystemUiController()
   val refStatusBarLocked = statusBarLocked   // state必须出现在composable函数的上下文中，才能正确触发组件重渲染
 
+  fun syncConfig() {
+    systemUiController.isStatusBarVisible = visible
+    systemUiController.setStatusBarColor(
+      color = backgroundColor,
+      darkIcons = darkIcons
+    )
+  }
+
   LaunchedEffect(
     visible,
     backgroundColor,
@@ -20,12 +30,15 @@ fun StatusBar(
     refStatusBarLocked
   ) {
     if (refStatusBarLocked) return@LaunchedEffect
-    systemUiController.isStatusBarVisible = visible
-    systemUiController.setStatusBarColor(
-      color = backgroundColor,
-      darkIcons = darkIcons
-    )
+    syncConfig()
   }
+
+  LifecycleEventEffect(
+    onResume = {
+      if (refStatusBarLocked) return@LifecycleEventEffect
+      syncConfig()
+    }
+  )
 }
 
 var statusBarLocked by mutableStateOf(false)

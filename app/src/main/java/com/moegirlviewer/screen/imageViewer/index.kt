@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -115,24 +116,26 @@ fun ImageViewerScreen(
       )
     }
 
-    if (arguments.images.size > 1) {
-      Column(
-        modifier = Modifier
-          .offset(20.dp, (-20).dp)
-          .width((configuration.screenWidthDp * 0.6).dp)
-          .zIndex(1f),
-        verticalArrangement = Arrangement.Center
-      ) {
+    Column(
+      modifier = Modifier
+        .offset(20.dp, (-20).dp)
+        .width((configuration.screenWidthDp * 0.6).dp)
+        .zIndex(1f),
+      verticalArrangement = Arrangement.Center
+    ) {
+      if (arguments.images.size > 1) {
         StyledText(
           text = stringResource(id = R.string.gallery) + "：${model.pagerState.currentPage + 1} / ${arguments.images.size}",
           color = Color(0xffcccccc)
         )
-        if (arguments.images[model.pagerState.currentPage].title != "") {
-          StyledText(
-            text = arguments.images[model.pagerState.currentPage].title,
-            color = Color(0xffcccccc)
-          )
-        }
+      }
+      if (arguments.images[model.pagerState.currentPage].title != "") {
+        StyledText(
+          text = arguments.images[model.pagerState.currentPage].title,
+          color = Color(0xffcccccc),
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis
+        )
       }
     }
   }
