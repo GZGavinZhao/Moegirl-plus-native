@@ -85,8 +85,8 @@ private fun Item(
     } else {
       Box(
         modifier = Modifier
-          .width(120.dp)
-          .height(170.dp)
+          .width(122.dp)
+          .height(175.dp)
           .clip(RoundedCornerShape(10.dp))
           .background(themeColors.background2),
         contentAlignment = Alignment.Center
