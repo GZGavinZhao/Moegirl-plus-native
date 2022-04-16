@@ -38,8 +38,9 @@ fun NewPagesCard(
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
   val viewMode by SettingsStore.cardsHomePage.getValue { newPagesCardViewMode }.collectAsState(
-    initial = NewPagesCardViewMode.LIST
+    initial = null
   )
+  if (viewMode == null) return
 
   HomeCardContainer(
     icon = Icons.Filled.FiberNew,
