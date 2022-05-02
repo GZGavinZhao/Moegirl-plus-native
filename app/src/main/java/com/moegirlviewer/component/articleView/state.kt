@@ -207,7 +207,7 @@ class ArticleViewStateCore() {
       messageForLoaded
     )
 
-    htmlWebViewRef.value!!.updateContent {
+    htmlWebViewRef.value?.updateContent?.invoke {
       HtmlWebViewContent(
         body = articleHtml,
         title = pageName,

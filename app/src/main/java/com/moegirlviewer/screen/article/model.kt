@@ -28,7 +28,10 @@ import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.forEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,10 +43,10 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   val articleViewState = ArticleViewState()
   lateinit var routeArguments: ArticleRouteArguments
 
-  var articleData by mutableStateOf<ArticleData?>(null)
+  val articleData by articleViewState::articleData
   var visibleHeader by mutableStateOf(true)
   var catalogData by mutableStateOf(emptyList<ArticleCatalog>())
-  var articleInfo by mutableStateOf<ArticleInfo?>(null)
+  val articleInfo by articleViewState::articleInfo
   // 该页面是否在当前用户的监视列表之中，虽然这个状态也是从articleInfo拿的，但由于这个值会由用户操作动态变化，所以作为state声明
   var isWatched by mutableStateOf(false)
   var visibleFindBar by mutableStateOf(false)
@@ -101,9 +104,15 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   // 用于记录页面刚进入时是否为轻请求模式，如果是的话那么在轻请求选项关闭时，该页面需要刷新
   var isLightRequestModeWhenOpened: Boolean? = null
 
-  fun handleOnArticleLoaded(articleData: ArticleData, articleInfo: ArticleInfo?) {
-    this.articleData = articleData
-    this.articleInfo = articleInfo
+  init {
+    coroutineScope.launch {
+      snapshotFlow { articleViewState.status }
+        .filter { it == LoadStatus.SUCCESS }
+        .collect { handleOnArticleLoaded() }
+    }
+  }
+
+  fun handleOnArticleLoaded() {
     isWatched = articleInfo?.watched != null
 
     coroutineScope.launch {

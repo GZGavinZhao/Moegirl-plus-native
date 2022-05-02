@@ -90,7 +90,7 @@ fun ArticleView(
   ) {
     if (coreState.status == LoadStatus.LOADING || coreState.status == LoadStatus.INITIAL) {
       if (coreState.html.isNullOrEmpty()) {
-        if (coreState.pageKey != null || coreState.revId != null) coreState.loadArticleContent()
+        if (coreState.pageKey != null || coreState.revId != null) coreState.coroutineScope.launch { coreState.loadArticleContent() }
       } else {
         coreState.updateHtmlView()
       }

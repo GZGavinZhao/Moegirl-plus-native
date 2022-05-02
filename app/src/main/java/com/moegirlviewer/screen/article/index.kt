@@ -299,7 +299,6 @@ private fun ComposedArticleView(
         contentTopPadding = (Constants.topAppBarHeight + Globals.statusBarHeight).dp,
         addCategories = model.truePageName != "H萌娘:官方群组",
         onScrollChanged = handleOnScrollChanged,
-        onArticleLoaded = { data, info -> model.handleOnArticleLoaded(data, info) },
         onArticleRendered = { model.handleOnArticleRendered() },
         onArticleMissed = { model.handleOnArticleMissed() },
         emitCatalogData = { model.catalogData = it },
