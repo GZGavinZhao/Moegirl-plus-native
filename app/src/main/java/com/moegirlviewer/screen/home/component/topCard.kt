@@ -6,19 +6,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.node.Ref
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.Constants
-import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.component.articleView.ArticleView
-import com.moegirlviewer.component.articleView.ArticleViewProps
-import com.moegirlviewer.component.articleView.ArticleViewRef
-import com.moegirlviewer.request.MoeRequestException
+import com.moegirlviewer.component.articleView.ArticleViewState
 import com.moegirlviewer.screen.home.HomeScreenCardState
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.PageNameKey
-import com.moegirlviewer.util.isMoegirl
-import com.moegirlviewer.util.printRequestErr
 import kotlinx.coroutines.launch
 
 @Composable
@@ -30,7 +24,7 @@ fun TopCard(
   HomeCard(
     modifier = Modifier
       .padding(15.dp),
-    loadStatus = state.status,
+    loadStatus = state.articleViewState.status,
     onReload = {
       scope.launch { state.reload() }
     }
@@ -38,26 +32,24 @@ fun TopCard(
     Box(
       modifier = Modifier
         .fillMaxWidth()
-        .then(if (state.status != LoadStatus.SUCCESS) Modifier.height(300.dp) else Modifier)
+        .then(if (state.articleViewState.status != LoadStatus.SUCCESS) Modifier.height(300.dp) else Modifier)
     ) {
-      ArticleView(props = ArticleViewProps(
-        ref = state.articleViewRef,
+      ArticleView(
+        state = state.articleViewState,
         pageKey = PageNameKey(Constants.topCardContentPageName),
         visibleLoadStatusIndicator = false,
         previewMode = true,
         injectedStyles = state.injectedStyles,
-        onStatusChanged = { state.status = it },
         fullHeight = true,
         renderDelay = 1000
-      ))
+      )
     }
   }
 }
 
 class TopCardState : HomeScreenCardState() {
-  var status by mutableStateOf(LoadStatus.LOADING)
   var isContentPageUpdated by mutableStateOf(false)
-  val articleViewRef = Ref<ArticleViewRef>()
+  val articleViewState = ArticleViewState()
   val injectedStyles = listOf("""
     body { 
       padding-bottom: 0;
@@ -86,6 +78,6 @@ class TopCardState : HomeScreenCardState() {
 
   override suspend fun reload() {
 //    purgePage()
-    articleViewRef.value?.reload?.invoke(true)
+    articleViewState.reload()
   }
 }

@@ -13,10 +13,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.ReloadButton
-import com.moegirlviewer.component.articleView.ArticleCatalog
-import com.moegirlviewer.component.articleView.ArticleView
-import com.moegirlviewer.component.articleView.ArticleViewProps
-import com.moegirlviewer.component.articleView.ArticleViewRef
+import com.moegirlviewer.component.articleView.*
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.screen.article.component.catalog.ArticleScreenCatalog
 import com.moegirlviewer.screen.edit.EditScreenModel
@@ -35,10 +32,10 @@ fun EditScreenPreview() {
   var catalogData by rememberFromMemory("catalogData") {
     mutableStateOf(emptyList<ArticleCatalog>())
   }
-  val articleViewRef = remember { Ref<ArticleViewRef>() }
+  val articleViewState = remember { ArticleViewState() }
 
   LaunchedEffect(model.previewHtml) {
-    articleViewRef.value?.updateView?.invoke()
+    articleViewState.updateHtmlView()
   }
 
   Center {
@@ -47,20 +44,20 @@ fun EditScreenPreview() {
       catalogData = catalogData,
       onSectionClick = {
         scope.launch {
-          articleViewRef.value!!.htmlWebViewRef!!.injectScript(
+          articleViewState.injectScript(
             "moegirl.method.link.gotoAnchor('$it', -10)"
           )
         }
       }
     ) {
-      ArticleView(props = ArticleViewProps(
+      ArticleView(
+        state = articleViewState,
         html = model.previewHtml,
         pageKey = PageNameKey(model.routeArguments.pageName),
         linkDisabled = true,
         addCopyright = false,
-        emitCatalogData = { catalogData = it },
-        ref = articleViewRef
-      ))
+        emitCatalogData = { catalogData = it }
+      )
     }
 
     if (model.previewStatus != LoadStatus.SUCCESS) {

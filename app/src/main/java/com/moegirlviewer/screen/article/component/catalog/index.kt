@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.article.component.catalog
 
+import com.moegirlviewer.component.articleView.ArticleCatalog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.RippleColorScope
-import com.moegirlviewer.component.articleView.ArticleCatalog
 import com.moegirlviewer.component.customDrawer.CustomDrawer
 import com.moegirlviewer.component.customDrawer.CustomDrawerSide
 import com.moegirlviewer.component.customDrawer.CustomDrawerState

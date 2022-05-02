@@ -24,26 +24,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.moegirlviewer.Constants
 import com.moegirlviewer.R
-import com.moegirlviewer.compable.FirstTimeSkippedLaunchedEffect
-import com.moegirlviewer.compable.OneTimeLaunchedEffect
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.articleView.ArticleView
-import com.moegirlviewer.component.articleView.ArticleViewProps
-import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
@@ -71,8 +61,8 @@ fun HomeScreen() {
     if (isUseCardsHome!!) {
       if (model.cardsDataStatus != LoadStatus.SUCCESS) model.loadCardsData()
     } else {
-      if (HomeScreenModel.needReload || model.articleViewRef.value?.loadStatus == LoadStatus.LOADING) {
-        model.articleViewRef.value?.reload?.invoke(true)
+      if (HomeScreenModel.needReload || model.articleViewState.status == LoadStatus.LOADING) {
+        model.articleViewState.reload(true)
         HomeScreenModel.needReload = false
       }
     }
@@ -250,9 +240,9 @@ private fun ComposedArticleView() {
 
   SwipeRefresh(
     state = model.swipeRefreshState,
-    swipeEnabled = model.articleLoadStatus != LoadStatus.LOADING,
+    swipeEnabled = model.articleViewState.status != LoadStatus.LOADING,
     onRefresh = {
-      scope.launch { model.articleViewRef.value!!.reload(true) }
+      scope.launch { model.articleViewState.reload(true) }
     },
     indicator = { state, refreshTriggerDistance ->
       StyledSwipeRefreshIndicator(
@@ -269,19 +259,16 @@ private fun ComposedArticleView() {
         contentAlignment = Alignment.Center
       ) {
         ArticleView(
-          props = ArticleViewProps(
-            pageKey = PageNameKey("Mainpage"),
-            ref = model.articleViewRef,
-            fullHeight = true,
-            visibleLoadStatusIndicator = false,
-            onStatusChanged = { model.articleLoadStatus = it }
-          )
+          state = model.articleViewState,
+          pageKey = PageNameKey("Mainpage"),
+          fullHeight = true,
+          visibleLoadStatusIndicator = false,
         )
       }
     }
 
     AnimatedVisibility(
-      visible = model.articleLoadStatus == LoadStatus.LOADING,
+      visible = model.articleViewState.status == LoadStatus.LOADING,
       enter = fadeIn(),
       exit = fadeOut()
     ) {
@@ -289,14 +276,14 @@ private fun ComposedArticleView() {
     }
 
     AnimatedVisibility(
-      visible = model.articleLoadStatus == LoadStatus.FAIL,
+      visible = model.articleViewState.status == LoadStatus.FAIL,
       enter = fadeIn(),
       exit = fadeOut()
     ) {
       ArticleErrorMask(
         onClick = {
           scope.launch {
-            model.articleViewRef.value!!.reload(true)
+            model.articleViewState.reload(true)
           }
         }
       )

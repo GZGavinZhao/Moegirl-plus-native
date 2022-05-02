@@ -1,12 +1,14 @@
 package com.moegirlviewer.screen.article
 
 import ArticleErrorMask
+import com.moegirlviewer.component.articleView.ArticleView
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
@@ -17,8 +19,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.compable.remember.rememberDebouncedManualEffector
 import com.moegirlviewer.component.Center
-import com.moegirlviewer.component.articleView.ArticleView
-import com.moegirlviewer.component.articleView.ArticleViewProps
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.article.component.ArticleLoadingMask
@@ -52,7 +52,7 @@ fun ArticleScreen(
 
   LaunchedEffect(isLightRequestMode) {
     if (model.isLightRequestModeWhenOpened == true && !isLightRequestMode) {
-      model.articleViewRef.value!!.reload(true)
+      model.articleViewState.reload()
     }
 
     model.isLightRequestModeWhenOpened = isLightRequestMode
@@ -65,7 +65,7 @@ fun ArticleScreen(
   LaunchedEffect(true) {
     if (ArticleScreenModel.needReload) {
       ArticleScreenModel.needReload = false
-      model.articleViewRef.value!!.reload(true)
+      model.articleViewState.reload()
     }
   }
 
@@ -86,7 +86,7 @@ fun ArticleScreen(
     // 这里必须用model的协程上下文，使用compose的协程会因为离开页面时compose的协程上下文会被销毁，导致onDispose的代码无法执行
     model.coroutineScope.launch {
       if (model.isMediaDisabled) {
-        model.articleViewRef.value!!.enableAllMedia()
+        model.articleViewState.enableAllMedia()
         model.isMediaDisabled = false
       }
     }
@@ -94,7 +94,7 @@ fun ArticleScreen(
     onDispose {
       model.coroutineScope.launch {
         if (SettingsStore.common.getValue { this.stopMediaOnLeave }.first()) {
-          model.articleViewRef.value!!.disableAllMedia()
+          model.articleViewState.disableAllMedia()
         }
       }
     }
@@ -129,11 +129,11 @@ fun ArticleScreen(
 
               ArticleScreenFindBar(
                 visible = model.visibleFindBar,
-                onFindAll = { model.articleViewRef.value!!.htmlWebViewRef!!.webView.findAllAsync(it) },
-                onFindNext = { model.articleViewRef.value!!.htmlWebViewRef!!.webView.findNext(true) },
+                onFindAll = { model.articleViewState.htmlWebViewRef.value!!.webView.findAllAsync(it) },
+                onFindNext = { model.articleViewState.htmlWebViewRef.value!!.webView.findNext(true) },
                 onClose = {
                   model.visibleFindBar = false
-                  model.articleViewRef.value!!.htmlWebViewRef!!.webView.clearMatches()
+                  model.articleViewState.htmlWebViewRef.value!!.webView.clearMatches()
                   closeKeyboard()
                 }
               )
@@ -164,7 +164,7 @@ private fun ComposedHeader() {
     onAction = {
       when(it) {
         REFRESH -> {
-          scope.launch { model.articleViewRef.value!!.reload(true) }
+          scope.launch { model.articleViewState.reload(true) }
         }
         GOTO_EDIT -> {
           scope.launch { model.handleOnGotoEditClicked() }
@@ -250,7 +250,7 @@ private fun ComposedArticleView(
     scope.launch {
       debouncedManualEffector.trigger(ReadingRecord(
         pageName = model.truePageName!!,
-        progress = top.toFloat() / model.articleViewRef.value!!.htmlWebViewRef!!.webView.contentHeight,
+        progress = top.toFloat() / model.articleViewState.htmlWebViewRef.value!!.webView.contentHeight,
         scrollY = top
       ))
     }
@@ -290,33 +290,30 @@ private fun ComposedArticleView(
 //      contentAlignment = Alignment.Center
 //    ) {
       ArticleView(
-        props = ArticleViewProps(
-          pageKey = arguments.pageKey,
-          revId = arguments.revId,
-          editAllowed = model.editAllowed ?: false,
-          visibleLoadStatusIndicator = false,
-          visibleEditButton = !isLightRequestMode,
-          contentTopPadding = (Constants.topAppBarHeight + Globals.statusBarHeight).dp,
-          addCategories = model.truePageName != "H萌娘:官方群组",
-          onScrollChanged = handleOnScrollChanged,
-          onArticleLoaded = { data, info -> model.handleOnArticleLoaded(data, info) },
-          onArticleRendered = { model.handleOnArticleRendered() },
-          onArticleMissed = { model.handleOnArticleMissed() },
-          onStatusChanged = { model.articleLoadStatus = it },
-          emitCatalogData = { model.catalogData = it },
-          ref = model.articleViewRef,
-          injectedScripts = listOf(
-            BodyDoubleClickJs.scriptContent
-          ),
-          messageHandlers = mapOf(
-            BodyDoubleClickJs.messageHandler
-          )
+        state = model.articleViewState,
+        pageKey = arguments.pageKey,
+        revId = arguments.revId,
+        editAllowed = model.editAllowed ?: false,
+        visibleLoadStatusIndicator = false,
+        visibleEditButton = !isLightRequestMode,
+        contentTopPadding = (Constants.topAppBarHeight + Globals.statusBarHeight).dp,
+        addCategories = model.truePageName != "H萌娘:官方群组",
+        onScrollChanged = handleOnScrollChanged,
+        onArticleLoaded = { data, info -> model.handleOnArticleLoaded(data, info) },
+        onArticleRendered = { model.handleOnArticleRendered() },
+        onArticleMissed = { model.handleOnArticleMissed() },
+        emitCatalogData = { model.catalogData = it },
+        injectedScripts = listOf(
+          BodyDoubleClickJs.scriptContent
+        ),
+        messageHandlers = mapOf(
+          BodyDoubleClickJs.messageHandler
         )
       )
 //    }
 
     AnimatedVisibility(
-      visible = model.articleLoadStatus == LoadStatus.LOADING,
+      visible = model.articleViewState.status == LoadStatus.LOADING,
       enter = fadeIn(),
       exit = fadeOut()
     ) {
@@ -324,13 +321,13 @@ private fun ComposedArticleView(
     }
 
     AnimatedVisibility(
-      visible = model.articleLoadStatus == LoadStatus.FAIL,
+      visible = model.articleViewState.status == LoadStatus.FAIL,
       enter = fadeIn(),
       exit = fadeOut()
     ) {
       ArticleErrorMask(
         onClick = {
-          scope.launch { model.articleViewRef.value!!.reload(true) }
+          scope.launch { model.articleViewState.reload(true) }
         }
       )
     }

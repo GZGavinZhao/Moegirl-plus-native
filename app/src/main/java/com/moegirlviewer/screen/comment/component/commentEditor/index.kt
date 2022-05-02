@@ -1,7 +1,5 @@
 package com.moegirlviewer.screen.comment.component.commentEditor
 
-import android.content.Context
-import android.view.inputmethod.InputMethodManager
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
@@ -19,9 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,10 +32,8 @@ import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.PlainTextField
 import com.moegirlviewer.component.ReloadButton
 import com.moegirlviewer.component.articleView.ArticleView
-import com.moegirlviewer.component.articleView.ArticleViewProps
-import com.moegirlviewer.component.articleView.ArticleViewRef
+import com.moegirlviewer.component.articleView.ArticleViewState
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
-import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.edit.EditScreenModel
 import com.moegirlviewer.theme.text
@@ -66,7 +60,7 @@ fun CommentEditor(
   val scope = rememberCoroutineScope()
 
   val cachedWebViews = rememberCachedWebViews()
-  val articleViewRef = remember { Ref<ArticleViewRef>() }
+  val articleViewState = remember { ArticleViewState() }
   val pagerState = rememberPagerState()
   var statusOfCommentPreview by remember { mutableStateOf(LoadStatus.INITIAL) }
   var commentPreviewHtml by remember { mutableStateOf("") }
@@ -99,7 +93,7 @@ fun CommentEditor(
   }
 
   LaunchedEffect(commentPreviewHtml) {
-    articleViewRef.value?.updateView?.invoke()
+    articleViewState.updateHtmlView()
   }
 
   LaunchedEffect(useWikitext) {
@@ -240,13 +234,13 @@ fun CommentEditor(
                   )
                 } else {
                   Box() {
-                    ArticleView(props = ArticleViewProps(
+                    ArticleView(
+                      state = articleViewState,
                       inDialogMode = true,
                       html = commentPreviewHtml,
                       editAllowed = false,
                       addCategories = false,
-                      ref = articleViewRef,
-                    ))
+                    )
 
                     if (statusOfCommentPreview != LoadStatus.SUCCESS) {
                       Center(

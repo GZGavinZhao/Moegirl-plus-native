@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.login
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +34,7 @@ import com.moegirlviewer.util.noRippleClickable
 import com.moegirlviewer.util.openHttpUrl
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun LoginScreen() {
   val model: LoginScreenModel = hiltViewModel()

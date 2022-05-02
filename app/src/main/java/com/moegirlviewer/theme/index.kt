@@ -3,6 +3,7 @@ package com.moegirlviewer.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.runtime.*
@@ -29,6 +30,9 @@ fun MoegirlPlusTheme(
     isUsePureTheme() -> getPureColorPalette()
     else -> isMoegirl(MoegirlLightColorPalette, HmoeLightColorPalette)
   }
+
+  _currentThemeColors = colors
+  _currentIsUseDarkTheme = isUseDarkMode()
 
   val typography = remember(useSpecialCharSupportedFontInApp) {
     Typography(
@@ -67,3 +71,9 @@ fun isUsePureTheme(): Boolean {
 
   return cachedUsePureTheme
 }
+
+private var _currentThemeColors: Colors? = null
+private var _currentIsUseDarkTheme: Boolean? = null
+
+val currentThemeColors get() = _currentThemeColors!!
+val currentIsUseDarkTheme get() = _currentIsUseDarkTheme!!

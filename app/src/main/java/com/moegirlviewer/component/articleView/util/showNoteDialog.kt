@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.MemoryStore
 import com.moegirlviewer.component.articleView.ArticleView
-import com.moegirlviewer.component.articleView.ArticleViewProps
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.util.CachedWebViews
 import com.moegirlviewer.util.Globals
@@ -35,10 +34,10 @@ fun showNoteDialog(
             modifier = Modifier
               .height((configuration.screenHeightDp * 0.2).dp)
           ) {
-            ArticleView(props = ArticleViewProps(
+            ArticleView(
               inDialogMode = true,
               html = content,
-            ))
+            )
           }
         }
       }

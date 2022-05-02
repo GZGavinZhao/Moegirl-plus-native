@@ -12,10 +12,7 @@ import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.api.watchList.WatchListApi
 import com.moegirlviewer.compable.remember.MemoryStore
-import com.moegirlviewer.component.articleView.ArticleCatalog
-import com.moegirlviewer.component.articleView.ArticleData
-import com.moegirlviewer.component.articleView.ArticleInfo
-import com.moegirlviewer.component.articleView.ArticleViewRef
+import com.moegirlviewer.component.articleView.*
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.component.customDrawer.CustomDrawerState
@@ -40,7 +37,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   val cachedWebViews = CachedWebViews()
   val memoryStore = MemoryStore()
   val catalogDrawerState = CustomDrawerState()
-  val articleViewRef = Ref<ArticleViewRef>()
+  val articleViewState = ArticleViewState()
   lateinit var routeArguments: ArticleRouteArguments
 
   var articleData by mutableStateOf<ArticleData?>(null)
@@ -51,7 +48,6 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   var isWatched by mutableStateOf(false)
   var visibleFindBar by mutableStateOf(false)
   var visibleCommentButton by mutableStateOf(false)
-  var articleLoadStatus by mutableStateOf(LoadStatus.INITIAL)
   // 是否允许编辑，null表示权限检测中
   var editAllowed by mutableStateOf<Boolean?>(null)
 //  var swipeRefreshState = SwipeRefreshState(false)
@@ -154,7 +150,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     if (routeArguments.anchor != null) {
       coroutineScope.launch {
         val minusOffset = Constants.topAppBarHeight + Globals.statusBarHeight
-        articleViewRef.value!!.htmlWebViewRef!!.injectScript("""
+        articleViewState.injectScript("""
           document.getElementById('${routeArguments.anchor}').scrollIntoView()
           window.scrollTo(0, window.scrollY - $minusOffset)
         """.trimIndent())
@@ -163,7 +159,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
     if (truePageName == "H萌娘:官方群组") {
       coroutineScope.launch {
-        articleViewRef.value!!.htmlWebViewRef!!.injectScript("""
+        articleViewState.injectScript("""
           document.getElementById('app-background').style.display = 'block'
           document.getElementById('app-background-top-padding').style.height = '${Constants.topAppBarHeight + Globals.statusBarHeight}px'
           document.body.style.maxHeight = '100%'
@@ -179,7 +175,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
     if (routeArguments.readingRecord != null) {
       coroutineScope.launch {
-        articleViewRef.value!!.htmlWebViewRef!!.injectScript("""
+        articleViewState.injectScript("""
           window.scrollTo(0, ${routeArguments.readingRecord!!.scrollY})
         """.trimIndent())
       }
@@ -303,7 +299,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
     val minusOffset = Constants.topAppBarHeight + Globals.statusBarHeight
     coroutineScope.launch {
-      articleViewRef.value!!.htmlWebViewRef!!.injectScript(
+      articleViewState.injectScript(
         "moegirl.method.link.gotoAnchor('$anchor', -$minusOffset)"
       )
     }

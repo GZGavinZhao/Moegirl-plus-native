@@ -3,12 +3,11 @@ package com.moegirlviewer.screen.home
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.node.Ref
 import androidx.lifecycle.ViewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.MemoryStore
-import com.moegirlviewer.component.articleView.ArticleViewRef
+import com.moegirlviewer.component.articleView.ArticleViewState
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.drawer.CommonDrawerState
 import com.moegirlviewer.screen.home.component.CarouseCardState
@@ -27,8 +26,7 @@ class HomeScreenModel @Inject constructor() : ViewModel() {
   val cachedWebViews = CachedWebViews()
   val memoryStore = MemoryStore()
   val commonDrawerState = CommonDrawerState()
-  val articleViewRef = Ref<ArticleViewRef>()
-  var articleLoadStatus by mutableStateOf(LoadStatus.INITIAL)
+  val articleViewState = ArticleViewState()
   val swipeRefreshState = SwipeRefreshState(false)
   var cardsDataStatus by mutableStateOf(LoadStatus.INITIAL)
 
