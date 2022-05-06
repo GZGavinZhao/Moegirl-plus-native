@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
+import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.rememberDebouncedManualEffector
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
@@ -293,13 +294,13 @@ private fun ComposedArticleView(
         state = model.articleViewState,
         pageKey = arguments.pageKey,
         revId = arguments.revId,
-        editAllowed = model.editAllowed ?: false,
+        editAllowed = model.editAllowed.allowed,
         visibleLoadStatusIndicator = false,
-        visibleEditButton = !isLightRequestMode,
         contentTopPadding = (Constants.topAppBarHeight + Globals.statusBarHeight).dp,
         addCategories = model.truePageName != "H萌娘:官方群组",
         onScrollChanged = handleOnScrollChanged,
         onArticleRendered = { model.handleOnArticleRendered() },
+        onPreGotoEdit = { model.handleOnPreGotoEdit() },
         onArticleMissed = { model.handleOnArticleMissed() },
         emitCatalogData = { model.catalogData = it },
         injectedScripts = listOf(

@@ -29,6 +29,7 @@ import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
+import com.moegirlviewer.util.LoadStatus
 
 @Suppress("UpdateTransitionLabel", "TransitionPropertiesLabel")
 @Composable
@@ -130,7 +131,6 @@ private fun MoreMenu(
   val model: ArticleScreenModel = hiltViewModel()
   val themeColors = MaterialTheme.colors
   val isLoggedIn by AccountStore.isLoggedIn.collectAsState(initial = false)
-  val lightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(initial = false)
 
   @Composable
   fun MoreMenuItem(
@@ -158,32 +158,30 @@ private fun MoreMenu(
       text = stringResource(id = R.string.refresh)
     )
 
-    if (!lightRequestMode) {
-      if (isLoggedIn) {
-        MoreMenuItem(
-          enabled = model.editAllowed ?: false,
-          action = if (model.editFullDisabled)
-            MoreMenuAction.GOTO_ADD_SECTION else
-            MoreMenuAction.GOTO_EDIT
-          ,
-          text = stringResource(
-            id = when {
-              model.editAllowed == null -> R.string.permissionsChecking
-              model.editAllowed == false -> R.string.noAllowEditThePage
-              model.editFullDisabled -> R.string.addTopic
-              else -> R.string.editThePage
-            }
-          )
+    if (isLoggedIn) {
+      MoreMenuItem(
+        enabled = model.editAllowed.allowed,
+        action = if (model.editAllowed == EditAllowedStatus.ALLOWED_SECTION)
+          MoreMenuAction.GOTO_ADD_SECTION else
+          MoreMenuAction.GOTO_EDIT
+        ,
+        text = stringResource(
+          id = when(model.editAllowed) {
+            EditAllowedStatus.CHECKING -> R.string.permissionsChecking
+            EditAllowedStatus.DISABLED -> R.string.noAllowEditThePage
+            EditAllowedStatus.ALLOWED_SECTION -> R.string.addTopic
+            EditAllowedStatus.ALLOWED_FULL -> R.string.editThePage
+          }
         )
-      } else {
-        MoreMenuItem(
-          action = MoreMenuAction.GOTO_LOGIN,
-          text = stringResource(id = R.string.loginToEdit)
-        )
-      }
+      )
+    } else {
+      MoreMenuItem(
+        action = MoreMenuAction.GOTO_LOGIN,
+        text = stringResource(id = R.string.loginToEdit)
+      )
     }
 
-    if (isLoggedIn && !lightRequestMode) {
+    if (isLoggedIn) {
       MoreMenuItem(
         action = MoreMenuAction.TOGGLE_WATCH_LIST,
         text = stringResource(id = R.string.operateWatchList,
@@ -232,4 +230,11 @@ enum class MoreMenuAction {
   GOTO_TALK,
   GOTO_PAGE_REVISIONS,
   SHOW_FIND_BAR
+}
+
+enum class EditAllowedStatus(val allowed: Boolean = false) {
+  ALLOWED_SECTION(true),
+  ALLOWED_FULL(true),
+  DISABLED,
+  CHECKING
 }

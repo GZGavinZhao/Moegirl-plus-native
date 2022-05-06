@@ -111,13 +111,15 @@ fun ArticleViewStateCore.createDefaultMessageHandlers(): HtmlWebViewMessageHandl
       }
 
       if (linkType == "edit") {
-        val section = linkData.get("section").asString
-        val pageName = linkData.get("pageName").asString
-        val preload = if (linkData.has("preload")) linkData.get("preload").asString else null
-
-        if (linkDisabled) return@to
-
         coroutineScope.launch {
+          if (onPreGotoEdit?.invoke() == false) return@launch
+
+          val section = linkData.get("section").asString
+          val pageName = linkData.get("pageName").asString
+          val preload = if (linkData.has("preload")) linkData.get("preload").asString else null
+
+          if (linkDisabled) return@launch
+
           val isLoggedIn = AccountStore.isLoggedIn.first()
           if (!isLoggedIn) {
             Globals.commonAlertDialog.show(CommonAlertDialogProps(

@@ -45,6 +45,7 @@ fun ArticleView(
   messageHandlers: HtmlWebViewMessageHandlers? = null,
   emitCatalogData: ((data: List<ArticleCatalog>) -> Unit)? = null,
   onArticleLoaded: ((articleData: ArticleData, articleInfo: ArticleInfo?) -> Unit)? = null,
+  onPreGotoEdit: (suspend () -> Boolean)? = null,   // 跳转编辑页面前触发，如果返回false，则拦截跳转，主要用于轻请求模式下的权限检查
   onScrollChanged: HtmlWebViewScrollChangeHandler? = null,
   onArticleRendered: (() -> Unit)? = null,
   onArticleMissed: (() -> Unit)? = null,
@@ -76,6 +77,7 @@ fun ArticleView(
     coreState.messageHandlers = messageHandlers
     coreState.emitCatalogData = emitCatalogData
     coreState.onArticleLoaded = onArticleLoaded
+    coreState.onPreGotoEdit = onPreGotoEdit
     coreState.onScrollChanged = onScrollChanged
     coreState.onArticleRendered = onArticleRendered
     coreState.onArticleMissed = onArticleMissed

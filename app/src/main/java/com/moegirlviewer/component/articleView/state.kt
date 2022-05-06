@@ -85,6 +85,7 @@ class ArticleViewStateCore() {
   var emitCatalogData: ((data: List<ArticleCatalog>) -> Unit)? = null
   var onArticleLoaded: ((articleData: ArticleData, articleInfo: ArticleInfo?) -> Unit)? = null
   var onScrollChanged: HtmlWebViewScrollChangeHandler? = null
+  var onPreGotoEdit: (suspend () -> Boolean)? = null
   var onArticleRendered: (() -> Unit)? = null
   var onArticleMissed: (() -> Unit)? = null
   var onArticleError: (() -> Unit)? = null

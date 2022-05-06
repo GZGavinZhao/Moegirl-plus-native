@@ -118,8 +118,7 @@ fun registerTasks()  {
   registerTask(30_1000) {
     coroutineScope.launch {
       val isLoggedIn = AccountStore.isLoggedIn.first()
-      val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
-      if (!isLoggedIn || isLightRequestMode) return@launch
+      if (!isLoggedIn) return@launch
       try {
         AccountStore.checkWaitingNotificationTotal()
       } catch (e: MoeRequestException) {

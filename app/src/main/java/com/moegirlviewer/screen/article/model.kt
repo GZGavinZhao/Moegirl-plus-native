@@ -20,10 +20,12 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
 import com.moegirlviewer.room.watchingPage.WatchingPage
+import com.moegirlviewer.screen.article.component.header.EditAllowedStatus
 import com.moegirlviewer.screen.edit.EditRouteArguments
 import com.moegirlviewer.screen.edit.EditType
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.CommentStore
+import com.moegirlviewer.store.CommonSettings
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,8 +53,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   var isWatched by mutableStateOf(false)
   var visibleFindBar by mutableStateOf(false)
   var visibleCommentButton by mutableStateOf(false)
-  // 是否允许编辑，null表示权限检测中
-  var editAllowed by mutableStateOf<Boolean?>(null)
+  var editAllowed by mutableStateOf(EditAllowedStatus.CHECKING)
 //  var swipeRefreshState = SwipeRefreshState(false)
 //  var scrollState = ScrollState(0)
 
@@ -74,8 +75,6 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   )
   val pageId get() = routeArguments.pageKey?.triedPageIdOrNull ?: articleData?.parse?.pageid
 
-  // 是否允许编辑全文，讨论页默认不允许
-  val editFullDisabled get() = articleInfo?.ns != null && MediaWikiNamespace.isTalkPage(articleInfo!!.ns)
   // 是否允许显示评论按钮
   val commentButtonAllowed: Boolean @Composable get() {
     val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(initial = false)
@@ -113,7 +112,10 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   }
 
   fun handleOnArticleLoaded() {
-    isWatched = articleInfo?.watched != null
+    coroutineScope.launch {
+      isWatched = Globals.room.watchingPage().exists(truePageName!!)
+    }
+//    isWatched = articleInfo?.watched != null
 
     coroutineScope.launch {
       delay(500)
@@ -136,7 +138,15 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
       ))
     }
 
-    coroutineScope.launch { checkEditAllowed() }
+    coroutineScope.launch {
+      val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+      if (isLightRequestMode) {
+        // 轻请求模式直接允许，之后再点击编辑时检查权限
+        editAllowed = EditAllowedStatus.ALLOWED_FULL
+      } else {
+        checkEditAllowed()
+      }
+    }
   }
 
   fun handleOnArticleMissed() {
@@ -192,12 +202,57 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   }
 
   suspend fun handleOnGotoEditClicked() {
+    // 检测有没有articleInfo，没有则加载，之后判断是否可以编辑
+    if (articleInfo == null) {
+      Globals.commonLoadingDialog.show()
+      try {
+        loadArticleInfo()
+        checkEditAllowed()
+        if (!editAllowed.allowed) {
+          Globals.commonAlertDialog.showText(Globals.context.getString(R.string.noAllowEditThePage))
+          return
+        }
+        if (editAllowed == EditAllowedStatus.ALLOWED_SECTION) {
+          Globals.commonAlertDialog.showText(Globals.context.getString(R.string.editFullTextDisabling))
+          return
+        }
+      } catch (e: MoeRequestException) {
+        printRequestErr(e, "轻请求模式点击编辑，加载条目info时失败")
+        toast(Globals.context.getString(R.string.netErr))
+      } finally {
+        Globals.commonLoadingDialog.hide()
+      }
+    }
+
+
     val isNonautoConfirmed = checkIfNonAutoConfirmedToShowEditAlert(truePageName!!)
     if (isNonautoConfirmed) return
     Globals.navController.navigate(EditRouteArguments(
       pageName = truePageName!!,
       type = EditType.FULL
     ))
+  }
+
+  suspend fun handleOnPreGotoEdit(): Boolean {
+    try {
+      if (articleInfo == null) {
+        Globals.commonLoadingDialog.show()
+        loadArticleInfo()
+        checkEditAllowed()
+        if (!editAllowed.allowed) {
+          Globals.commonAlertDialog.showText(Globals.context.getString(R.string.noAllowEditThePage))
+          return false
+        }
+      }
+    } catch (e: MoeRequestException) {
+      printRequestErr(e, "轻请求模式点击编辑章节，加载条目info时失败")
+      toast(Globals.context.getString(R.string.netErr))
+      return false
+    } finally {
+      Globals.commonLoadingDialog.hide()
+    }
+
+    return true
   }
 
   suspend fun handleOnAddSectionClicked() {
@@ -241,39 +296,52 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     }
   }
 
-  suspend fun checkEditAllowed() {
-    if (!AccountStore.isLoggedIn.first() || articleInfo == null) return
-    val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
-    if (isLightRequestMode) {
-      editAllowed = false
-      return
-    }
+  // 轻请求模式下，articleInfo不会加载，要在点击编辑按钮时再加载
+  suspend fun loadArticleInfo() {
+    if (articleInfo != null) return
+    articleViewState.core.articleInfo = PageApi.getPageInfo(routeArguments.pageKey!!)
+  }
 
-    if (routeArguments.revId != null) {
-      val lastEditingRecordRes = EditingRecordApi.getPageRevisions(routeArguments.pageKey!!)
-
-      val lastEditingRecord = lastEditingRecordRes.query.pages.values.first().revisions?.first() ?: return
-      if (lastEditingRecord.revid != routeArguments.revId) {
-        editAllowed = false
-        toast(Globals.context.getString(R.string.historyModeEditDisabledHint))
-        return
-      }
-    }
-
-    try {
+  suspend fun getEditAllowed(): Boolean? {
+    return try {
       val userInfo = AccountStore.loadUserInfo()
       val isUnprotectednessPage = articleInfo!!.protection.all { it.type != "edit" } || articleInfo!!.protection.isEmpty()
       val isSysop = userInfo.groups.contains("sysop")
       val isPatroller = userInfo.groups.contains("patroller")
 
       // 是非保护页面
-      editAllowed = isUnprotectednessPage ||
+      isUnprotectednessPage ||
         // 用户是管理员
         isSysop ||
         // 是巡查员，且当前页面的保护等级允许巡查员编辑
         (isPatroller && articleInfo!!.protection.first { it.type == "edit" }.level == "patrolleredit")
     } catch (e: MoeRequestException) {
       printRequestErr(e, "检查页面是否可编辑失败")
+      null
+    }
+  }
+
+  suspend fun checkEditAllowed() {
+    if (!AccountStore.isLoggedIn.first() || articleInfo == null) return
+
+    if (routeArguments.revId != null) {
+      val lastEditingRecordRes = EditingRecordApi.getPageRevisions(routeArguments.pageKey!!)
+
+      val lastEditingRecord = lastEditingRecordRes.query.pages.values.first().revisions?.first() ?: return
+      if (lastEditingRecord.revid != routeArguments.revId) {
+        editAllowed = EditAllowedStatus.DISABLED
+        toast(Globals.context.getString(R.string.historyModeEditDisabledHint))
+        return
+      }
+    }
+
+    // 是否允许编辑全文，讨论页默认不允许
+    val editFullDisabled = MediaWikiNamespace.isTalkPage(articleInfo!!.ns)
+
+    editAllowed = when(getEditAllowed()) {
+      true -> if (editFullDisabled) EditAllowedStatus.ALLOWED_SECTION else EditAllowedStatus.ALLOWED_FULL
+      false -> EditAllowedStatus.DISABLED
+      null -> EditAllowedStatus.CHECKING
     }
   }
 
