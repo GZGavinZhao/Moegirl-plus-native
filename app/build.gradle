@@ -6,6 +6,8 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+def withAppCenter = System.env.WITH_APP_CENTER != null
+
 android {
     compileSdk 31
 
@@ -31,7 +33,7 @@ android {
         }
     }
 
-    if (System.env.WITH_APP_CENTER == null) {
+    if (!withAppCenter) {
         signingConfigs {
             def keystorePropertiesFile = rootProject.file("key.properties")
             def keystoreProperties = new Properties()
@@ -71,7 +73,7 @@ android {
         release {
             minifyEnabled true
             zipAlignEnabled true
-            signingConfig signingConfigs.release
+            if (!withAppCenter) signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
