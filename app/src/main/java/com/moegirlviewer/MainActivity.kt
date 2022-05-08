@@ -20,6 +20,9 @@ import androidx.compose.ui.draw.alpha
 import androidx.navigation.NavHostController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import com.moegirlviewer.compable.statusBarLocked
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.initialization.OnComposeWillCreate
@@ -86,6 +89,7 @@ class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    AppCenter.start(application, "f32de570-e45d-47d5-9caf-c134e2a4f839", Analytics::class.java, Crashes::class.java)
     Globals.context = applicationContext
     Globals.activity = this
     Globals.httpUserAgent = getHttpUserAgent()
