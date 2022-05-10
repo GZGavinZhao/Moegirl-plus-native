@@ -10,7 +10,6 @@ import com.moegirlviewer.screen.home.component.newPagesCard.NewPagesCardViewMode
 import com.moegirlviewer.screen.splashSetting.SplashImageMode
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.isMoegirl
-import com.moegirlviewer.util.splashImageList
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -29,7 +28,7 @@ data class CommonSettings(
   var useSerifFontInArticle: Boolean = false,
   var usePureTheme: Boolean = !isMoegirl(),
   var splashImageMode: SplashImageMode = SplashImageMode.NEW,
-  var selectedSplashImages: List<String> = listOf(splashImageList.last().key),
+  var selectedSplashImages: List<String> = emptyList(),
   var lightRequestMode: Boolean = false,
   var focusMode: Boolean = false,
 ) : Settings()

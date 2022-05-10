@@ -55,7 +55,7 @@ fun LoginScreen() {
         Image(
           modifier = Modifier
             .fillMaxSize(),
-          painter = painterResource(R.mipmap.splash_2017_1),
+          painter = painterResource(R.mipmap.login_bg),
           contentDescription = null,
           contentScale = ContentScale.Crop,
           colorFilter = ColorFilter.tint(

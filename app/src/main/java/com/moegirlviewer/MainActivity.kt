@@ -265,14 +265,15 @@ private suspend fun ComponentActivity.withSplashScreen(
   statusBarLocked = true
 
   val usingSplashImage = if (isMoegirl()) {
+    val imageList = MoegirlSplashImageManager.getImageList()
     when(splashImageMode) {
-      SplashImageMode.NEW -> splashImageList.last()
-      SplashImageMode.RANDOM -> splashImageList.random()
+      SplashImageMode.NEW -> MoegirlSplashImageManager.getLatestImage()
+      SplashImageMode.RANDOM -> MoegirlSplashImageManager.getRandomImage()
       SplashImageMode.CUSTOM_RANDOM -> SettingsStore.common.getValue { this.selectedSplashImages }
-        .map { it.ifEmpty { listOf(splashImageList.last().key) } }
-        .map { splashImageKeys -> splashImageList.filter { splashImageKeys.contains(it.key) } }
+        .map { it.ifEmpty { imageList.map { it.key } } }
+        .map { splashImageKeys -> imageList.filter { splashImageKeys.contains(it.key) } }
         .first()
-        .random()
+        .randomOrNull() ?: SplashImage.onlyUseInSplashScreen(MoegirlSplashImageManager.fallbackImage)
       else -> null
     }!!
   } else {

@@ -3,6 +3,7 @@ package com.moegirlviewer.api.app
 import com.google.gson.Gson
 import com.moegirlviewer.api.app.bean.AppLastVersionBean
 import com.moegirlviewer.api.app.bean.HmoeSplashImageConfigBean
+import com.moegirlviewer.api.app.bean.MoegirlSplashImageBean
 import com.moegirlviewer.request.CommonRequestException
 import com.moegirlviewer.request.commonOkHttpClient
 import com.moegirlviewer.request.send
@@ -38,6 +39,13 @@ object AppApi {
         cause = e
       )
     }
+  }
+
+  suspend fun getMoegirlSplashImageConfig(): List<MoegirlSplashImageBean> {
+    val request = Request.Builder()
+      .url("https://cdn.jsdelivr.net/gh/koharubiyori/Moegirl-plus-assets/splashImageList.json")
+      .build()
+    return request.send(Array<MoegirlSplashImageBean>::class.java).toList()
   }
 
   suspend fun getHmoeSplashImageConfig(): HmoeSplashImageConfigBean {

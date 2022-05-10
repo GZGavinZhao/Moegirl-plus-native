@@ -318,6 +318,7 @@
     <string name="thankSelfHint">你不能感谢你自己</string>
     <string name="lightRequestModeHelpText">如果你近期经常被防火墙拦截，可以尝试这个选项，开启后极少数条目可能出现BUG。注意：该选项本身并不能解除被拦截状态</string>
     <string name="focusModeHelpText">浏览条目时状态栏将隐藏，头栏和评论按钮隐藏后不会因向上滑动而重新出现，变为双击屏幕后显示</string>
+    <string name="splashImagesPreparingHint">启动屏图片准备中，请稍候</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤销[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|讨论]]）的版本%2$s</string>
@@ -331,37 +332,4 @@
         "2. 条目页右滑开启目录",
     ]</string>
     <string name="jsonArray_quickSummaryListOfEdit">["修饰语句", "修正笔误", "内容扩充", "排版"]</string>
-
-    <!-- 启动屏图片标题 -->
-    <string name="splashImageTitle_2015_4">萌娘のクリスマス</string>
-
-    <string name="splashImageTitle_2016_1">樱花</string>
-    <string name="splashImageTitle_2016_2">条纹泳装</string>
-    <string name="splashImageTitle_2016_3">巫女之秋</string>
-    <string name="splashImageTitle_2016_4">舞狮</string>
-
-    <string name="splashImageTitle_2017_1">春季校服</string>
-    <string name="splashImageTitle_2017_2">跳高</string>
-    <string name="splashImageTitle_2017_3">秋季私服</string>
-    <string name="splashImageTitle_2017_4">雪萌娘</string>
-
-    <string name="splashImageTitle_2018_1">春季制服</string>
-    <string name="splashImageTitle_2018_2">披纱泳装</string>
-    <string name="splashImageTitle_2018_3">食欲之秋</string>
-    <string name="splashImageTitle_2018_4">雪人</string>
-
-    <string name="splashImageTitle_2019_1">抹茶蛋糕</string>
-    <string name="splashImageTitle_2019_2">单车</string>
-    <string name="splashImageTitle_2019_3">秋杏</string>
-    <string name="splashImageTitle_2019_4">雪狐</string>
-
-    <string name="splashImageTitle_2020_1">疫情医生</string>
-    <string name="splashImageTitle_2020_3">十周年-秋夜花火</string>
-    <string name="splashImageTitle_2020_3_10th_anniversary">十周年-庆生</string>
-
-    <string name="splashImageTitle_2021_2">校园</string>
-    <string name="splashImageTitle_2021_3">猫猫时光</string>
-
-    <string name="splashImageTitle_2022_1">“虎”的祝福</string>
-    <string name="splashImageTitle_2022_1_1">萌娘百科 GO!</string>
 </resources>

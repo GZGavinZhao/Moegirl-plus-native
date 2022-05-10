@@ -31,8 +31,11 @@ fun onComposeCreated() {
   registerTasks()
   checkDeepLink()
 
-  if (!isMoegirl()) {
-    coroutineScope.launch {
+  coroutineScope.launch {
+    if (isMoegirl()) {
+      MoegirlSplashImageManager.loadConfig()
+      MoegirlSplashImageManager.syncImagesByConfig()
+    } else {
       HmoeSplashImageManager.loadConfig()
       HmoeSplashImageManager.syncImagesByConfig()
     }

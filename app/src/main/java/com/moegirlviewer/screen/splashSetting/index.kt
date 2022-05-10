@@ -47,7 +47,7 @@ fun SplashSettingScreen() {
   val selectedSplashImages by SettingsStore.common.getValue { this.selectedSplashImages }.collectAsState(
     initial = remember { emptyList() }
   )
-  val reversedSplashImageList = remember { splashImageList.reversed() }
+  val reversedSplashImageList = remember { MoegirlSplashImageManager.getImageList() }
 
   BackHandler(selectedSplashImageMode == SplashImageMode.CUSTOM_RANDOM && selectedSplashImages.isEmpty()) {
     Globals.commonAlertDialog.show(CommonAlertDialogProps(

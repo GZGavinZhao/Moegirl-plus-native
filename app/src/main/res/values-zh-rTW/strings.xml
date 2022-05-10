@@ -318,6 +318,7 @@
     <string name="thankSelfHint">你不能感謝你自己</string>
     <string name="lightRequestModeHelpText">如果你近期經常被防火牆攔截，可以嘗試這個選項，開啟後極少數條目可能出現BUG。注意：該選項本身並不能解除被攔截狀態</string>
     <string name="focusModeHelpText">瀏覽條目時狀態列將隱藏，頭欄和評論按鈕隱藏後不會因向上滑動而重新出現，變為雙擊屏幕後顯示</string>
+    <string name="splashImagesPreparingHint">啟動屏圖片準備中，請稍候</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤銷[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|討論]]）的版本%2$s</string>
@@ -331,36 +332,4 @@
         "2. 條目頁右滑開啟目錄",
     ]</string>
     <string name="jsonArray_quickSummaryListOfEdit">["修飾語句", "修正筆誤", "內容擴充", "排版"]</string>
-
-    <string name="splashImageTitle_2015_4">萌娘のクリスマス</string>
-
-    <string name="splashImageTitle_2016_1">櫻花</string>
-    <string name="splashImageTitle_2016_2">條紋泳裝</string>
-    <string name="splashImageTitle_2016_3">巫女之秋</string>
-    <string name="splashImageTitle_2016_4">舞獅</string>
-
-    <string name="splashImageTitle_2017_1">春季校服</string>
-    <string name="splashImageTitle_2017_2">跳高</string>
-    <string name="splashImageTitle_2017_3">秋季私服</string>
-    <string name="splashImageTitle_2017_4">雪萌娘</string>
-
-    <string name="splashImageTitle_2018_1">春季制服</string>
-    <string name="splashImageTitle_2018_2">披紗泳裝</string>
-    <string name="splashImageTitle_2018_3">食慾之秋</string>
-    <string name="splashImageTitle_2018_4">雪人</string>
-
-    <string name="splashImageTitle_2019_1">抹茶蛋糕</string>
-    <string name="splashImageTitle_2019_2">單車</string>
-    <string name="splashImageTitle_2019_3">秋杏</string>
-    <string name="splashImageTitle_2019_4">雪狐</string>
-
-    <string name="splashImageTitle_2020_1">疫情醫生</string>
-    <string name="splashImageTitle_2020_3">十週年-秋夜花火</string>
-    <string name="splashImageTitle_2020_3_10th_anniversary">十週年-慶生</string>
-
-    <string name="splashImageTitle_2021_2">校園</string>
-    <string name="splashImageTitle_2021_3">貓貓時光</string>
-
-    <string name="splashImageTitle_2022_1">“虎”的祝福</string>
-    <string name="splashImageTitle_2022_1_1">萌娘百科 GO!</string>
 </resources>

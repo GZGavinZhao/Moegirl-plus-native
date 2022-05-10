@@ -29,10 +29,7 @@ import com.moegirlviewer.store.CommonSettings
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.screen.splashSetting.SplashImageMode
 import com.moegirlviewer.theme.text
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.gotoArticlePage
-import com.moegirlviewer.util.gotoUserPage
-import com.moegirlviewer.util.isMoegirl
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -177,7 +174,11 @@ fun SettingsScreen() {
         SettingsScreenItem(
           title = stringResource(id = R.string.selectSplashScreenImage),
           onClick = {
-            Globals.navController.navigate("splashSetting")
+            if (MoegirlSplashImageManager.isImagesReady()) {
+              Globals.navController.navigate("splashSetting")
+            } else {
+              toast(Globals.context.getString(R.string.splashImagesPreparingHint))
+            }
           }
         )
       } else {

@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.splashPreview
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -34,11 +35,12 @@ import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
   val model: SplashPreviewScreenModel = hiltViewModel()
-  val reversedSplashImageList = remember { splashImageList.reversed() }
+  val reversedSplashImageList = remember { MoegirlSplashImageManager.getImageList() }
   val pagerState = rememberPagerState(
     initialPage = reversedSplashImageList.indexOfFirst { it.key == arguments.intiialSplashImageKey }
   )
@@ -178,7 +180,7 @@ private fun ComposedHeader(
 @Composable
 private fun ComposedFooter() {
   val themeColors = MaterialTheme.colors
-  val splashImagesSize = remember { splashImageList.size }
+  val splashImagesSize = remember { MoegirlSplashImageManager.getImageList().size }
   val selectedSplashImagesSize by SettingsStore.common.getValue { this.selectedSplashImages.size }.collectAsState(
     initial = 0
   )
