@@ -1,7 +1,11 @@
 package com.moegirlviewer.screen.recentChanges
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -36,6 +40,7 @@ import com.moegirlviewer.util.LoadStatus
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun RecentChangesScreen() {
@@ -110,34 +115,40 @@ fun RecentChangesScreen() {
           .fillMaxSize(),
         state = model.lazyListState
       ) {
-        itemsIndexed(
-          items = model.changesList,
-          key = { _, item -> item.key }
-        ) { _, adapter ->
-          when(adapter) {
+        for (itemData in model.changesList) {
+          when(itemData) {
             is DateTitleItemAdapter -> {
-              StyledText(
-                modifier = Modifier
-                  .padding(top = 7.dp, bottom = 8.dp, start = 10.dp),
-                text = adapter.dateTitle,
-              )
+              stickyHeader(key = itemData.key) {
+                Box(
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .background(themeColors.background2)
+                    .padding(top = 7.dp, bottom = 8.dp, start = 10.dp)
+                ) {
+                  StyledText(
+                    text = itemData.dateTitle,
+                  )
+                }
+              }
             }
 
             is DataItemAdapter -> {
-              val item = adapter.data
-              RecentChangesItem(
-                type = item.type,
-                pageName = item.title,
-                comment = item.comment,
-                users = item.users,
-                newLength = item.newlen,
-                oldLength = item.oldlen,
-                revId = item.revid,
-                oldRevId = item.old_revid,
-                dateISO = item.timestamp,
-                editDetails = item.details,
-                pageWatched = if (isWatchListMode && isLoggedIn) false else watchList.any { it.pageName == item.title }
-              )
+              val data = itemData.data
+              item(key = itemData.key) {
+                RecentChangesItem(
+                  type = data.type,
+                  pageName = data.title,
+                  comment = data.comment,
+                  users = data.users,
+                  newLength = data.newlen,
+                  oldLength = data.oldlen,
+                  revId = data.revid,
+                  oldRevId = data.old_revid,
+                  dateISO = data.timestamp,
+                  editDetails = data.details,
+                  pageWatched = if (isWatchListMode && isLoggedIn) false else watchList.any { it.pageName == data.title }
+                )
+              }
             }
           }
         }
