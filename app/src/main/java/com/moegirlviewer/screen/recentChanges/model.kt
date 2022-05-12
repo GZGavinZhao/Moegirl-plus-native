@@ -81,7 +81,7 @@ class RecentChangesScreenModel @Inject constructor() : ViewModel() {
     if (status == LoadStatus.LOADING) return
     SettingsStore.recentChanges.setValue { this.isWatchListMode = !this.isWatchListMode }
 
-    val isWatchListMode = !SettingsStore.recentChanges.getValue { this.isWatchListMode }.first()
+    val isWatchListMode = SettingsStore.recentChanges.getValue { this.isWatchListMode }.first()
     val allListStr = Globals.context.getString(R.string.allList)
     val watchListStr = Globals.context.getString(R.string.watchList)
     toast(Globals.context.getString(R.string.toggleToXXMode,
