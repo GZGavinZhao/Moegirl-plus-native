@@ -5,10 +5,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.moegirlviewer.util.*
 
 @Composable
 fun StatusBar(
-  visible: Boolean = true,
+  mode: StatusBarMode = StatusBarMode.VISIBLE,
+  sticky: Boolean = false,
   backgroundColor: Color = Color.Transparent,
   darkIcons: Boolean = false,
 ) {
@@ -16,21 +18,31 @@ fun StatusBar(
   val refStatusBarLocked = statusBarLocked   // state必须出现在composable函数的上下文中，才能正确触发组件重渲染
 
   fun syncConfig() {
-    systemUiController.isStatusBarVisible = visible
+    when(mode) {
+      StatusBarMode.VISIBLE -> {
+        Globals.activity.useFreeStatusBarLayout()
+        systemUiController.isStatusBarVisible = true
+      }
+      StatusBarMode.HIDE -> systemUiController.isStatusBarVisible = false
+      StatusBarMode.STICKY -> {
+        Globals.activity.useStickyStatusBarLayout()
+      }
+    }
     systemUiController.setStatusBarColor(
       color = backgroundColor,
       darkIcons = darkIcons
     )
 
     with(CachedStatusBarConfig) {
-      this.visible = visible
+      this.mode = mode
+      this.sticky = sticky
       this.backgroundColor = backgroundColor
       this.darkIcons = darkIcons
     }
   }
 
   LaunchedEffect(
-    visible,
+    mode,
     backgroundColor,
     darkIcons,
     refStatusBarLocked
@@ -49,7 +61,14 @@ fun StatusBar(
 
 var statusBarLocked by mutableStateOf(false)
 object CachedStatusBarConfig {
-  var visible = true
+  var mode = StatusBarMode.VISIBLE
+  var sticky = false
   var backgroundColor = Color.Transparent
   var darkIcons = false
+}
+
+enum class StatusBarMode {
+  VISIBLE,
+  HIDE,
+  STICKY
 }

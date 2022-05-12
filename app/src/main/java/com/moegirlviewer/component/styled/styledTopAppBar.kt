@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.moegirlviewer.compable.StatusBar
+import com.moegirlviewer.compable.StatusBarMode
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.theme.elevation
 import com.moegirlviewer.theme.isUsePureTheme
@@ -24,7 +25,8 @@ fun StyledTopAppBar(
   backgroundColor: Color = MaterialTheme.colors.primary,
   contentColor: Color = contentColorFor(backgroundColor),
   elevation: Dp = if (MaterialTheme.elevation) 3.dp else 0.dp,
-  visibleStatusBar: Boolean = true,
+  statusBarMode: StatusBarMode = StatusBarMode.VISIBLE,
+  statusBarSticky: Boolean = false,
   statusBarBackgroundColor: Color = backgroundColor,
   statusBarDarkIcons: Boolean = isUsePureTheme(),
   title: @Composable () -> Unit,
@@ -34,13 +36,14 @@ fun StyledTopAppBar(
   val themeColor = MaterialTheme.colors
 
   StatusBar(
-    visible = visibleStatusBar,
+    mode = statusBarMode,
+    sticky = statusBarSticky,
     backgroundColor = Color.Transparent,
     darkIcons = statusBarDarkIcons
   )
 
   Box {
-    if (visibleStatusBar) {
+    if (statusBarMode == StatusBarMode.VISIBLE) {
       Spacer(modifier = modifier
         .fillMaxWidth()
         .background(statusBarBackgroundColor)
@@ -52,7 +55,7 @@ fun StyledTopAppBar(
 
     TopAppBar(
       modifier = Modifier
-        .padding(top = (if (visibleStatusBar) Globals.statusBarHeight else 0f).dp)
+        .padding(top = (if (statusBarMode == StatusBarMode.VISIBLE) Globals.statusBarHeight else 0f).dp)
         .then(modifier),
       backgroundColor = backgroundColor,
       contentColor = contentColor,

@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.CachedStatusBarConfig
+import com.moegirlviewer.compable.StatusBarMode
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.styled.StyledText
@@ -62,7 +63,8 @@ fun ArticleScreenHeader(
 
   Box() {
     StyledTopAppBar(
-      visibleStatusBar = !isFocusMode!!,
+      statusBarMode = if (isFocusMode!!) StatusBarMode.STICKY else StatusBarMode.VISIBLE,
+      statusBarSticky = isFocusMode!!,
       modifier = Modifier
         .then(modifier)
         .absoluteOffset(0.dp, topOffset)
