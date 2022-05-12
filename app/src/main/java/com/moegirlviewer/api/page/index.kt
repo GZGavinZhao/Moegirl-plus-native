@@ -33,11 +33,14 @@ object PageApi {
       this["redirects"] = "1"
       this["prop"] = "text|categories|templates|sections|images|displaytitle"
       if (previewMode) this["preview"] = "1"
-      when (pageKey) {
-        is PageIdKey -> this["pageid"] = pageKey.triedPageIdOrNull!!
-        is PageNameKey -> this["page"] = pageKey.triedPageNameOrNull!!
+      if (revId == null) {
+        when (pageKey) {
+          is PageIdKey -> this["pageid"] = pageKey.triedPageIdOrNull!!
+          is PageNameKey -> this["page"] = pageKey.triedPageNameOrNull!!
+        }
+      } else {
+        this["oldid"] = revId
       }
-      if (revId != null) this["oldid"] = revId
     }
   )
 
