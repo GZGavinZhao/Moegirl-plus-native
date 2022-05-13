@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
@@ -81,7 +82,8 @@ fun ArticleScreenHeader(
             .alpha(contentAlpha),
           text = title,
           overflow = TextOverflow.Ellipsis,
-          maxLines = 1,
+          maxLines = 2,
+          fontSize = 18.sp,
           color = themeColors.onPrimary
         )
       },
