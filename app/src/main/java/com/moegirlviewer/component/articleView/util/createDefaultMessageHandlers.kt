@@ -143,8 +143,8 @@ fun ArticleViewStateCore.createDefaultMessageHandlers(): HtmlWebViewMessageHandl
           if (!isNonAutoConfirmed) {
             Globals.navController.navigate(
               EditRouteArguments(
-                // Hmoe通过编辑链接获取的标题有问题，只能使用articleData的了，但这样就导致只能编辑当前看的页面
-                pageName = isMoegirl(pageName, articleData!!.parse.title),
+                // 移动端接口地址(mzh)通过编辑链接获取的标题有问题，只能使用articleData的了，但这样就导致只能编辑当前看的页面
+                pageName = articleData!!.parse.title,
                 type = EditType.SECTION,
                 section = section,
                 preload = preload

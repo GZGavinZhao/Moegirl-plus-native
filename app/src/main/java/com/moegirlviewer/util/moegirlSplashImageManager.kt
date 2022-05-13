@@ -13,6 +13,8 @@ import com.moegirlviewer.request.CommonRequestException
 import com.moegirlviewer.request.commonOkHttpClient
 import com.moegirlviewer.request.moeOkHttpClient
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Request
 import java.io.File
@@ -120,26 +122,28 @@ object MoegirlSplashImageManager {
     val allReferencedImageUrls = config.map { it.url }
 
     // 下载线上配置新增的图片
-    allReferencedImageUrls.forEach { imageUrl ->
-      if (rootDir.existsChild(imageUrl.localImageFileName()).not()) {
-        val request = Request.Builder()
-          .url(imageUrl)
-          .build()
-        withContext(Dispatchers.IO) {
-          val res = try {
-            moeOkHttpClient.newCall(request).execute()
-          } catch (e: CommonRequestException) {
-            printRequestErr(e, "萌百：启动屏图片下载失败：$imageUrl")
-            return@withContext
+    withContext(Dispatchers.IO)  {
+      allReferencedImageUrls.forEach { imageUrl ->
+        if (rootDir.existsChild(imageUrl.localImageFileName()).not()) {
+          launch {
+            val request = Request.Builder()
+              .url(imageUrl)
+              .build()
+            val res = try {
+              commonOkHttpClient.newCall(request).execute()
+            } catch (e: CommonRequestException) {
+              printRequestErr(e, "萌百：启动屏图片下载失败：$imageUrl")
+              return@launch
+            }
+
+            if (!res.isSuccessful) return@launch
+            val imageByteArray = res.body!!.bytes()
+
+            val file = File(rootDir, imageUrl.localImageFileName())
+            file.createNewFile()
+            file.writeBytes(imageByteArray)
+            printPlainLog("萌百：启动屏图片下载完毕：$imageUrl")
           }
-
-          if (!res.isSuccessful) return@withContext
-          val imageByteArray = res.body!!.bytes()
-
-          val file = File(rootDir, imageUrl.localImageFileName())
-          file.createNewFile()
-          file.writeBytes(imageByteArray)
-          printPlainLog("萌百：启动屏图片下载完毕：$imageUrl")
         }
       }
     }
