@@ -19,9 +19,9 @@ private val sourceConstants = when (BuildConfig.FLAVOR_source) {
   "moegirl" -> SourceConstants(
     source = DataSource.MOEGIRL,
     domain = "https://moegirl.org.cn",
-    mainUrl = "https://zh.moegirl.org.cn",
-    mainPageUrl = "https://zh.moegirl.org.cn/Mainpage",
-    apiUrl = "https://zh.moegirl.org.cn/api.php",
+    mainUrl = "https://mzh.moegirl.org.cn",
+    mainPageUrl = "https://mzh.moegirl.org.cn/Mainpage",
+    apiUrl = "https://mzh.moegirl.org.cn/api.php",
     avatarUrl = "https://commons.moegirl.org.cn/extensions/Avatar/avatar.php?user=",
     shareUrl = "https://mzh.moegirl.org.cn/index.php?curid=",
     registerUrl = "https://mzh.moegirl.org.cn/index.php?title=Special:创建账户",

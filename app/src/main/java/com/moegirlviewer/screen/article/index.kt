@@ -45,7 +45,8 @@ fun ArticleScreen(
   ) {
   val model: ArticleScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
-  val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(initial = false)
+//  val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(initial = false)
+  val isLightRequestMode = true
 
   SideEffect {
     model.routeArguments = arguments
@@ -208,7 +209,6 @@ private fun ComposedArticleView(
 ) {
   val model: ArticleScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
-  val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(false)
   val isFocusMode by SettingsStore.common.getValue { focusMode }.collectAsState(initial = false)
 
   val debouncedManualEffector = rememberDebouncedManualEffector<ReadingRecord>(1000) {

@@ -77,7 +77,8 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
   // 是否允许显示评论按钮
   val commentButtonAllowed: Boolean @Composable get() {
-    val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(initial = false)
+//    val isLightRequestMode by SettingsStore.common.getValue { lightRequestMode }.collectAsState(initial = false)
+    val isLightRequestMode = true
     return if (isLightRequestMode) {
       if (truePageName != null)
         truePageName!!.contains(disabledShowCommentButtonRegexForLightRequestMode).not()
@@ -139,7 +140,8 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     }
 
     coroutineScope.launch {
-      val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+//      val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+      val isLightRequestMode = true
       if (isLightRequestMode) {
         // 轻请求模式直接允许，之后再点击编辑时检查权限
         editAllowed = EditAllowedStatus.ALLOWED_FULL

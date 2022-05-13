@@ -77,7 +77,8 @@ private suspend fun checkShortcutIntent() {
 private suspend fun initAccount() {
   if (AccountStore.isLoggedIn.first()) {
     val isValidLogin = AccountStore.checkAccount()
-    val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+//    val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+    val isLightRequestMode = true
     if (isValidLogin) {
       if (!isLightRequestMode) initUserInfo()
     } else {

@@ -198,14 +198,14 @@ class ArticleViewStateCore() {
     }
 
     val messageForLoaded = """
-      setTimeout(() => _postMessage('loaded'))
+      _postMessage('loaded')
     """.trimIndent()
 
     val injectedStyles = listOf(styles) + (injectedStyles ?: emptyList())
     val injectedScripts = listOf(
+      messageForLoaded,
       moegirlRendererConfig,
       *(injectedScripts ?: emptyList()).toTypedArray(),
-      messageForLoaded
     )
 
     htmlWebViewRef.value?.updateContent?.invoke {
@@ -238,7 +238,8 @@ class ArticleViewStateCore() {
       this@ArticleViewStateCore.articleData = articleData
       this@ArticleViewStateCore.articleInfo = articleInfo
       updateHtmlView(true)
-      val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+//      val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+      val isLightRequestMode = true
       if (!isLightRequestMode) loadImgOriginalUrls()
 //      onArticleLoaded?.invoke(articleData, articleInfo)
     }
@@ -247,7 +248,7 @@ class ArticleViewStateCore() {
 
     launch {
       try {
-        val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
+        val isLightRequestMode = true
         var pageInfo: PageInfoResBean.Query.MapValue? = null
 
         val isCategoryPage = if (isLightRequestMode && pageName != null) {
