@@ -84,6 +84,7 @@ object MoegirlSplashImageManager {
     val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
     val localImagesMap = localImages.associateBy { it.name }
     return config
+      .filter { localImagesMap.containsKey(it.url.localImageFileName()) }
       .map {
         val imageName = it.url.localImageFileName()
         MoegirlSplashImage(
