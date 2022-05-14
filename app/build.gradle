@@ -134,7 +134,7 @@ dependencies {
 
     implementation "com.squareup.okhttp3:okhttp:4.9.3"   // 不能升级到4.9.3，会导致更容易被萌百的waf拦截，具体原因不明
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
     implementation "com.google.dagger:hilt-android:2.35"
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation "com.github.franmontiel:PersistentCookieJar:v1.0.1"
@@ -148,6 +148,9 @@ dependencies {
     implementation "io.coil-kt:coil-compose:$coilVersion"
     implementation "io.coil-kt:coil-svg:$coilVersion"
     implementation "io.coil-kt:coil-gif:$coilVersion"
+
+    implementation("io.ktor:ktor-server-core:1.6.7")
+    implementation("io.ktor:ktor-server-cio:1.6.7")
 
     kapt "com.google.dagger:hilt-android-compiler:2.35"
 }

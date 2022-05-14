@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.compable.DoSideEffect
 import com.moegirlviewer.component.ReloadButton
+import com.moegirlviewer.component.articleView.util.LocalHttpServer
 import com.moegirlviewer.component.htmlWebView.HtmlWebView
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
@@ -130,10 +131,11 @@ fun ArticleView(
       .then(modifier)
   ) {
     HtmlWebView(
+      url = LocalHttpServer.rootUrl,
       messageHandlers = coreState.defaultMessageHandlers + (coreState.messageHandlers ?: emptyMap()),
       onScrollChanged = coreState.onScrollChanged,
       ref = coreState.htmlWebViewRef,
-      shouldInterceptRequest = { webView, request -> coreState.shouldInterceptRequest(webView, request) }
+//      shouldInterceptRequest = { webView, request -> coreState.shouldInterceptRequest(webView, request) }
     )
 
     if (coreState.visibleLoadStatusIndicator && state.status != LoadStatus.SUCCESS) {

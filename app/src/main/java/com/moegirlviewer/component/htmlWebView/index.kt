@@ -40,6 +40,7 @@ typealias HtmlWebViewScrollChangeHandler = (l: Int, t: Int, oldl: Int, oldt: Int
 @Composable
 fun HtmlWebView(
   modifier: Modifier = Modifier,
+  url: String? = null,  // 传入时，baseUrl无效
   baseUrl: String = assetsBaseUrl,
   messageHandlers: HtmlWebViewMessageHandlers? = null,
   ref: Ref<HtmlWebViewRef>,
@@ -157,7 +158,11 @@ fun HtmlWebView(
         }
       }, "_NativeInterface")
 
-      webView.loadDataWithBaseURL(baseUrl, "", "text/html", "utf8", null)
+      if (url != null) {
+        webView.loadUrl(url)
+      } else {
+        webView.loadDataWithBaseURL(baseUrl, "", "text/html", "utf8", null)
+      }
       cachedWebView.webViewInstance = webView
     }
   }
