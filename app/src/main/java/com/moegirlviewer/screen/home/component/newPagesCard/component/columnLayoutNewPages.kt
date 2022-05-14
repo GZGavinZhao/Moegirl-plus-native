@@ -100,7 +100,7 @@ private fun Item(
 
     Box(
       modifier = Modifier
-        .weight(1f),
+        .padding(top = 5.dp),
       contentAlignment = Alignment.Center
     ) {
       StyledText(
@@ -111,7 +111,8 @@ private fun Item(
         color = themeColors.primaryVariant,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
+        lineHeight = 13.sp
       )
     }
   }

@@ -144,7 +144,7 @@ dependencies {
 //    implementation "io.github.vanpra.compose-material-dialogs:datetime:0.7.0"
     implementation 'com.tencent.tbs:tbssdk:44176'
 
-    def coilVersion = "2.0.0-rc01"
+    def coilVersion = "2.0.0"
     implementation "io.coil-kt:coil-compose:$coilVersion"
     implementation "io.coil-kt:coil-svg:$coilVersion"
     implementation "io.coil-kt:coil-gif:$coilVersion"
