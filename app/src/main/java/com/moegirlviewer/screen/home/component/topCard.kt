@@ -48,7 +48,6 @@ fun TopCard(
 }
 
 class TopCardState : HomeScreenCardState() {
-  var isContentPageUpdated by mutableStateOf(false)
   val articleViewState = ArticleViewState()
   val injectedStyles = listOf("""
     body { 
@@ -62,22 +61,11 @@ class TopCardState : HomeScreenCardState() {
     
     ul.gallery li img:not(foo) {
       width: 90px !important;
-      height: 130px;
+      height: 140px !important;
     }
   """.trimIndent())
 
-//  suspend fun purgePage() {
-//    isContentPageUpdated = false
-//    try {
-//      PageApi.purgePage(Constants.topCardContentPageName)
-//      isContentPageUpdated = true
-//    } catch (e: MoeRequestException) {
-//      printRequestErr(e, "刷新topCard内容页面失败")
-//    }
-//  }
-
   override suspend fun reload() {
-//    purgePage()
     articleViewState.reload()
   }
 }
