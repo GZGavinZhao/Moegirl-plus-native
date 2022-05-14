@@ -106,7 +106,7 @@ private fun Item(
 
         StyledText(
           text = introduction ?: stringResource(id = R.string.noIntroduction),
-          fontSize = 13.sp,
+          fontSize = 13.5.sp,
           color = if (introduction != null) themeColors.text.secondary else themeColors.text.tertiary,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,

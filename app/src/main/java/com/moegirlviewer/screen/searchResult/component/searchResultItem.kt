@@ -2,14 +2,17 @@ package com.moegirlviewer.screen.searchResult.component
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -30,7 +33,9 @@ import coil.compose.AsyncImage
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.bean.SearchResultBean
 import com.moegirlviewer.compable.remember.rememberImageRequest
+import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide
 import com.moegirlviewer.util.Italic
@@ -56,49 +61,88 @@ fun SearchResultItem(
   val context = LocalContext.current
   val themeColors = MaterialTheme.colors
 
-  val subInfoText = remember(data) {
-    when {
-      data.redirecttitle != null ->
-        context.getString(R.string.searchResultRedirectTitle, data.redirecttitle)
-      data.sectiontitle != null ->
-        context.getString(R.string.searchResultSectionTitle, keyword)
-      data.categorysnippet != null ->
-        "${context.getString(R.string.searchResultFromPageCategories)}：${data.categorysnippet}"
-      else -> ""
-    }
-  }
+//  val subInfoText = remember(data) {
+//    when {
+//      data.redirecttitle != null ->
+//        context.getString(R.string.searchResultRedirectTitle, data.redirecttitle)
+//      data.sectiontitle != null ->
+//        context.getString(R.string.searchResultSectionTitle, keyword)
+//      data.categorysnippet != null ->
+//        "${context.getString(R.string.searchResultFromPageCategories)}：${data.categorysnippet}"
+//      else -> null
+//    }
+//  }
 
-  Card(
+  Box(
     modifier = Modifier
-      .padding(top = 10.dp, start = 10.dp, end = 10.dp)
-      .fillMaxWidth(),
-    backgroundColor = themeColors.surface,
-    elevation = 1.dp,
-    onClick = { onClick(data.title) }
+      .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
+      .fillMaxWidth()
+      .height(144.dp)
+      .clip(RoundedCornerShape(5.dp))
+      .background(themeColors.surface)
+      .clickable { onClick(data.title) },
   ) {
+    Box(
+      modifier = Modifier
+        .offset(0.dp, 0.dp)
+        .width(100.dp)
+        .fillMaxHeight(),
+      contentAlignment = Alignment.Center
+    ) {
+      if (data.imageUrl != null) {
+        var imageLoadFailed by remember { mutableStateOf(false) }
+        AsyncImage(
+          modifier = Modifier
+            .fillMaxSize(),
+          model = rememberImageRequest(data.imageUrl.source),
+          contentDescription = null,
+          contentScale = if (imageLoadFailed) ContentScale.Fit else ContentScale.Crop,
+          alignment = if (imageLoadFailed) Alignment.Center else Alignment.TopCenter,
+          onError = { imageLoadFailed = true }
+        )
+      } else {
+        Center(
+          modifier = Modifier
+            .fillMaxSize()
+        ) {
+          StyledText(
+            text = stringResource(id = R.string.noImage),
+            color = themeColors.text.secondary,
+          )
+        }
+      }
+    }
+
     Column(
       modifier = Modifier
-        .padding(5.dp)
+        .padding(start = 100.dp)
+        .fillMaxWidth()
+        .padding(vertical = 5.dp, horizontal = 10.dp)
     ) {
-      ComposedHeader(
-        title = data.title,
-        subInfoText = subInfoText
+      StyledText(
+        text = data.title,
+        fontSize = 18.sp,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        fontWeight = FontWeight.Bold
       )
 
-      Box(
-        modifier = Modifier
-          .padding(top = 5.dp)
-          .fillMaxWidth()
-          .sideBorder(BorderSide.TOP, 2.dp, themeColors.primaryVariant)
-          .sideBorder(BorderSide.BOTTOM, 2.dp, themeColors.primaryVariant.copy(alpha = 0.15f))
-          .padding(vertical = 5.dp)
-      ) {
-        SearchContent(
-          html = data.snippet,
-          imageSource = data.imageUrl
-        )
-      }
+//      if (subInfoText != null) {
+//        StyledText(
+//          modifier = Modifier
+//            .padding(top = 3.dp),
+//          text = subInfoText,
+//          maxLines = 1,
+//          overflow = TextOverflow.Ellipsis,
+//          textAlign = TextAlign.Right,
+//          color = themeColors.primaryVariant,
+//          style = TextStyle(
+//            textGeometricTransform = remember { TextGeometricTransform.Italic() }
+//          )
+//        )
+//      }
 
+      SearchContent(html = data.snippet)
       ComposedFooter(
         date = LocalDate.parse(data.timestamp, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"))
       )
@@ -106,44 +150,10 @@ fun SearchResultItem(
   }
 }
 
-@Composable
-private fun ComposedHeader(
-  title: String,
-  subInfoText: String
-) {
-  val themeColors = MaterialTheme.colors
-
-  Row(
-    horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically,
-  ) {
-    StyledText(
-      text = title,
-      fontSize = 16.sp,
-      fontWeight = FontWeight.Bold
-    )
-
-    StyledText(
-      modifier = Modifier
-        .padding(start = 5.dp, end = 3.dp)
-        .weight(1f),
-      text = subInfoText,
-      maxLines = 1,
-      overflow = TextOverflow.Ellipsis,
-      textAlign = TextAlign.Right,
-      color = themeColors.primaryVariant,
-      style = TextStyle(
-        textGeometricTransform = remember { TextGeometricTransform.Italic() }
-      )
-    )
-  }
-}
-
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-private fun SearchContent(
+private fun ColumnScope.SearchContent(
   html: String,
-  imageSource: SearchResultBean.Query.MapValue.Thumbnail?
 ) {
   val themeColors = MaterialTheme.colors
 
@@ -151,55 +161,57 @@ private fun SearchContent(
     val htmlDoc = remember(html) { Jsoup.parse(html) }
     val elements = htmlDoc.body().childNodes()
 
-    Row(
-      verticalAlignment = Alignment.CenterVertically
+    Box(
+      modifier = Modifier
+        .padding(vertical = 3.dp)
+        .weight(1f),
+      contentAlignment = Alignment.BottomCenter
     ) {
-      StyledText(
-        modifier = Modifier
-          .weight(1f),
-        text = buildAnnotatedString {
-          elements.forEach {
-            withStyle(
-              style = SpanStyle(
-                fontSize = 15.sp
-              )
-            ) {
-              if (it is Element && it.hasClass("searchmatch")) {
-                withStyle(
-                  style = SpanStyle(
-                    background = themeColors.primaryVariant.copy(alpha = 0.2f)
-                  )
-                ) {
-                  append(it.text())
+      Row(
+        modifier = Modifier,
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        StyledText(
+          modifier = Modifier
+            .fillMaxSize(),
+          maxLines = 5,
+          overflow = TextOverflow.Ellipsis,
+          text = buildAnnotatedString {
+            elements.forEach {
+              withStyle(
+                style = SpanStyle(
+                  fontSize = 13.sp,
+                  color = themeColors.text.secondary
+                )
+              ) {
+                if (it is Element && it.hasClass("searchmatch")) {
+                  withStyle(
+                    style = SpanStyle(
+                      color = themeColors.primaryVariant,
+                      fontWeight = FontWeight.Bold
+                    )
+                  ) {
+                    append(it.text())
+                  }
+                } else {
+                  append((it as TextNode).text())
                 }
-              } else {
-                append((it as TextNode).text())
               }
             }
           }
-        }
-      )
-
-      if (imageSource != null) {
-        Box(
-          modifier = Modifier
-            .width(100.dp)
-            .fillMaxHeight(),
-          contentAlignment = Alignment.Center
-        ) {
-          AsyncImage(
-            modifier = Modifier
-              .width(80.dp),
-//              .padding(start = 5.dp, end = 3.dp)
-//              .fillMaxWidth()
-//              .height(min(120f, (100f / imageSource.width * imageSource.height)).dp),
-            model = rememberImageRequest(imageSource.source),
-            contentDescription = null,
-            alignment = Alignment.TopCenter,
-            contentScale = ContentScale.FillWidth
-          )
-        }
+        )
       }
+
+//      Spacer(modifier = Modifier
+//        .fillMaxWidth()
+//        .height(30.dp)
+//        .background(
+//          Brush.verticalGradient(listOf(
+//            Color.Transparent,
+//            themeColors.surface
+//          ))
+//        )
+//      )
     }
   } else {
     StyledText(
@@ -218,16 +230,16 @@ private fun ComposedFooter(
     stringResource(id = R.string.pageLastUpdateDate)
   )
 
-  Box(
+  Row(
     modifier = Modifier
       .padding(top = 1.dp)
       .fillMaxWidth(),
-    contentAlignment = Alignment.CenterEnd
+    horizontalArrangement = Arrangement.End
   ) {
     StyledText(
       color = themeColors.text.secondary,
       text = date.format(formatter),
-      fontSize = 15.sp
+      fontSize = 13.sp
     )
   }
 }

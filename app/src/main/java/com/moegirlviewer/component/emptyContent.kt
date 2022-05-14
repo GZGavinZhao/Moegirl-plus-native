@@ -85,8 +85,8 @@ private val moegirlEmptyContentImageSizes = EmptyContentImageSizes(
 private val hmoeEmptyContentImageSizes = EmptyContentImageSizes(
   originalWidth = 500f,
   originalHeight = 300f,
-  normalSizeFraction = 0.6f,
-  smallSizeFraction = 0.5f
+  normalSizeFraction = 0.5f,
+  smallSizeFraction = 0.4f
 )
 
 enum class EmptyContentImageSizeType {

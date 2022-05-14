@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,6 +30,7 @@ import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.searchResult.component.SearchResultItem
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
@@ -46,7 +48,7 @@ fun SearchResultScreen(
   val model: SearchResultScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
   val themeColors = MaterialTheme.colors
-  val bgColor = if (themeColors.isLight) Color.White else themeColors.primary
+//  val bgColor = if (themeColors.isLight) Color.White else themeColors.primary
 
   LaunchedEffect(true) {
     model.routeArguments = arguments
@@ -60,12 +62,11 @@ fun SearchResultScreen(
   Scaffold(
     topBar = {
       StyledTopAppBar(
-        backgroundColor = bgColor,
-        elevation = 3.dp,
-        statusBarDarkIcons = themeColors.isLight,
+        backgroundColor = themeColors.primary,
         title = {
           StyledText(
             text = stringResource(id = R.string.search) + "：" + arguments.keyword,
+            color = themeColors.onPrimary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
           )
@@ -76,7 +77,8 @@ fun SearchResultScreen(
     RippleColorScope(color = themeColors.primaryVariant) {
       LazyColumn(
         modifier = Modifier
-          .fillMaxSize(),
+          .fillMaxSize()
+          .background(themeColors.background2),
         state = model.listState
       ) {
         item {
@@ -87,7 +89,7 @@ fun SearchResultScreen(
           ) {
             StyledText(
               modifier = Modifier
-                .padding(top = 10.dp, bottom = 3.dp, start = 10.dp, end = 10.dp),
+                .padding(top = 10.dp, bottom = 10.dp, start = 10.dp, end = 10.dp),
               text = stringResource(id = R.string.searchResultTotal, model.resultTotal),
               color = themeColors.text.secondary
             )
