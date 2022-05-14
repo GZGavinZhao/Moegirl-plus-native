@@ -29,6 +29,7 @@ import com.moegirlviewer.screen.edit.EditScreenModel
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.noRippleClickable
+import com.moegirlviewer.util.printDebugLog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

@@ -16,6 +16,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.R
+import com.moegirlviewer.component.HoverBgColorButton
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.BorderSide

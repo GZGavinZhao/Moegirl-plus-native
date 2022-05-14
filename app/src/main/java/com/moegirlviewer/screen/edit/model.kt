@@ -153,7 +153,7 @@ class EditScreenModel @Inject constructor() : ViewModel() {
     val backupRecord = backupRoom.getItem(BackupRecordType.EDIT_CONTENT, backupId).first() ?: return
 
     val lastEditDate = if (baseDateISOForEdit != null) {
-      parseMoegirlNormalTimestamp(baseDateISOForEdit!!).plusHours(8)
+      parseMoegirlNormalTimestamp(baseDateISOForEdit!!)
     } else {
       LocalDateTime.MIN
     }

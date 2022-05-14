@@ -5,6 +5,7 @@ import com.moegirlviewer.request.MoeRequestMethod
 import com.moegirlviewer.request.moeRequest
 import com.moegirlviewer.util.moegirlNormalTimestampDateFormatter
 import com.moegirlviewer.util.parseMoegirlNormalTimestamp
+import com.moegirlviewer.util.printDebugLog
 
 object EditApi {
   suspend fun getCsrfToken(): String {
@@ -69,7 +70,7 @@ object EditApi {
     content: String? = null,  // 非撤销操作必传
     summary: String,
     baseDateISO: String?,
-    minor: Boolean? = null,
+    minor: Boolean = false,
     undoRevId: Int? = null // 传入该参数时，会执行撤销
   ): EditResultBean {
     val token = getCsrfToken()
@@ -85,7 +86,7 @@ object EditApi {
         this["token"] = token
         if (content != null) this["text"] = content
         if (section != null) this["section"] = section
-        if (minor != null) this["minor"] = 1
+        this[if (minor) "minor" else "notminor"] = 1
         if (undoRevId != null) this["undo"] = undoRevId
         if (baseDateISO != null) this["basetimestamp"] = baseDateISO
       }
