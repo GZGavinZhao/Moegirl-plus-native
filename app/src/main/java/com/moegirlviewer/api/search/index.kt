@@ -9,6 +9,7 @@ object SearchApi {
   suspend fun getHint(
     keyword: String,
     limit: Int = 50,
+//    offset: Int = 0,    // 不知为何设置这个后，返回的搜索结果就会为空
     namespace: MediaWikiNamespace? = null
   )  = moeRequest(
     entity = SearchHintBean::class.java,
@@ -17,11 +18,13 @@ object SearchApi {
       this["list"] = "prefixsearch"
       this["pssearch"] = keyword
       this["pslimit"] = limit
+//      this["psoffset"] = offset
       if (namespace != null) this["psnamespace"] = namespace.code
 
       this["gpssearch"] = keyword
       this["gpslimit"] = limit
       this["pithumbsize"] = 500
+//      this["gpsoffset"] = offset
       this["prop"] = "pageimages"
       this["generator"] = "prefixsearch"
     }

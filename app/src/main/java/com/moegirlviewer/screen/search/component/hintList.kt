@@ -4,11 +4,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
@@ -24,12 +27,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.SearchApi
+import com.moegirlviewer.compable.OnSwipeLoading
 import com.moegirlviewer.compable.remember.rememberImageRequest
+import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyleLinearProgressIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.search.SearchScreenModel
 import com.moegirlviewer.store.SearchRecord
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.launch
@@ -37,23 +43,36 @@ import kotlinx.coroutines.launch
 @Composable
 fun ColumnScope.SearchScreenHintList() {
   val model: SearchScreenModel = hiltViewModel()
+  val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
+  val lazyState = rememberLazyListState()
   var list by rememberSaveable { mutableStateOf(listOf<SearchHintItem>()) }
   var status by rememberSaveable { mutableStateOf(LoadStatus.INITIAL) }
   var prevSearchKeyword by rememberSaveable { mutableStateOf("") }
 
-  suspend fun loadHintList() = scope.launch {
-    if (model.keywordInputValue.trim() == "" || model.keywordInputValue == prevSearchKeyword) { return@launch }
+  suspend fun load() = scope.launch {
+    if (model.keywordInputValue.trim() == "") { return@launch }
     status = LoadStatus.LOADING
     prevSearchKeyword = model.keywordInputValue
     try {
       status = LoadStatus.LOADING
-      val res = SearchApi.getHint(model.keywordInputValue)
-      list = res.query.prefixsearch.map { SearchHintItem(
+      val res = SearchApi.getHint(
+        keyword = model.keywordInputValue,
+        limit = 100
+      )
+      val nextList = res.query.prefixsearch.map { SearchHintItem(
         title = it.title,
         imageUrl = res.query.pages[it.pageid]?.thumbnail?.source
       ) }
-      status = if (list.isEmpty()) LoadStatus.EMPTY else LoadStatus.SUCCESS
+
+      status = if (nextList.isEmpty()) LoadStatus.EMPTY else LoadStatus.SUCCESS
+//      status = when {
+//        list.isEmpty() && nextList.isEmpty() -> LoadStatus.EMPTY
+//        list.isNotEmpty() && nextList.isEmpty() -> LoadStatus.ALL_LOADED
+//        else -> LoadStatus.SUCCESS
+//      }
+
+      list = nextList
     } catch (e: MoeRequestException) {
       status = LoadStatus.FAIL
       toast(Globals.context.getString(R.string.netErr))
@@ -62,44 +81,42 @@ fun ColumnScope.SearchScreenHintList() {
   }
 
   LaunchedEffect(model.keywordInputValue) {
-    loadHintList()
+    load()
   }
 
-  Column(
+  LazyColumn(
     modifier = Modifier
-      .weight(1f)
-      .verticalScroll(rememberScrollState())
+      .weight(1f),
+    state = lazyState
   ) {
-    AnimatedVisibility(
-      visible = status == LoadStatus.LOADING,
-      enter = expandVertically(
-        expandFrom = Alignment.Top,
-        animationSpec = tween(
-          durationMillis = 200
+    item {
+      AnimatedVisibility(
+        visible = status == LoadStatus.LOADING,
+        enter = expandVertically(
+          expandFrom = Alignment.Top,
+          animationSpec = tween(
+            durationMillis = 200
+          )
+        ),
+        exit = shrinkVertically(
+          shrinkTowards = Alignment.Top,
+          animationSpec = tween(
+            durationMillis = 200
+          )
         )
-      ),
-      exit = shrinkVertically(
-        shrinkTowards = Alignment.Top,
-        animationSpec = tween(
-          durationMillis = 200
-        )
-      )
-    ) {
-      StyleLinearProgressIndicator()
+      ) {
+        StyleLinearProgressIndicator()
+      }
     }
 
-    for (item in list) {
+    itemsIndexed(
+      items = list,
+      key = { _, item -> item.title }
+    ) { _, item ->
       Item(
         text = item.title,
         imageUrl = item.imageUrl,
         onClick = { model.searchByRecord(SearchRecord(item.title, true)) }
-      )
-    }
-
-    if (status == LoadStatus.FAIL) {
-      Item(
-        text = stringResource(id = R.string.netErr),
-        visibleImageUrl = false,
       )
     }
   }
