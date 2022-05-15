@@ -15,6 +15,7 @@ import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.component.htmlWebView.utils.createHtmlDocument
 import com.moegirlviewer.component.htmlWebView.utils.createWebViewTrackDrawable
 import com.moegirlviewer.util.LocalCachedWebViews
+import com.moegirlviewer.util.printDebugLog
 import com.moegirlviewer.util.toUnicodeForInjectScriptInWebView
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
 import com.tencent.smtt.export.external.interfaces.WebResourceResponse

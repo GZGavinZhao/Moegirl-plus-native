@@ -18,6 +18,12 @@ object SearchApi {
       this["pssearch"] = keyword
       this["pslimit"] = limit
       if (namespace != null) this["psnamespace"] = namespace.code
+
+      this["gpssearch"] = keyword
+      this["gpslimit"] = limit
+      this["pithumbsize"] = 500
+      this["prop"] = "pageimages"
+      this["generator"] = "prefixsearch"
     }
   )
 

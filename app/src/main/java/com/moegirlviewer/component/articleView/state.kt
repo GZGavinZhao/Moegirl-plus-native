@@ -1,17 +1,13 @@
 package com.moegirlviewer.component.articleView
 
-import android.os.Parcelable
-import androidx.compose.material.Colors
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.node.Ref
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.Constants
+import com.moegirlviewer.DataSource
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.api.page.bean.PageContentResBean
 import com.moegirlviewer.api.page.bean.PageInfoResBean
@@ -39,9 +35,11 @@ import com.tencent.smtt.sdk.CookieManager
 import com.tencent.smtt.sdk.WebView
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.parcelize.Parcelize
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import java.net.URLEncoder
 
 typealias ArticleData = PageContentResBean
 typealias ArticleInfo = PageInfoResBean.Query.MapValue
@@ -208,9 +206,10 @@ class ArticleViewStateCore() {
       *(injectedScripts ?: emptyList()).toTypedArray(),
     )
 
+    val imageProxyArticleHtml = articleHtml.imageProxy()
     htmlWebViewRef.value?.updateContent?.invoke {
       HtmlWebViewContent(
-        body = articleHtml,
+        body = imageProxyArticleHtml,
         title = pageName,
         injectedStyles = injectedStyles,
         injectedScripts = injectedScripts,
@@ -434,3 +433,24 @@ const val pauseAllAudioJsStr = """
     audioList.forEach(item => item.pause())
   })()
 """
+
+private val commonUrlRegex = if (Constants.source == DataSource.MOEGIRL)
+  Regex("""https://img\.moegirl\.org\.cn/common/\S+""") else
+  Regex("""https://www\.hmoegirl\.com/thumb\.php\S+""")
+private suspend fun String.imageProxy(): String = withContext(Dispatchers.Default) {
+  val doc = Jsoup.parse(this@imageProxy)
+  fun replaceToProxyUrl(url: String) = url.replace(commonUrlRegex) { "/commonRes/" + URLEncoder.encode(it.value, "UTF-8") }
+  fun Element.replaceSourceUrl() {
+    val src = attr("src")
+    val srcset = attr("srcset")
+    val srcTestResult = src.contains(commonUrlRegex)
+    val srcsetTestResult = srcset.contains(commonUrlRegex)
+    if (!srcTestResult && !srcsetTestResult) return
+    if (src != "") attr("src", replaceToProxyUrl(src))
+    if (srcset != "") attr("srcset", replaceToProxyUrl(srcset))
+  }
+
+  doc.getElementsByTag("img").forEach { it.replaceSourceUrl() }
+  doc.getElementsByTag("source").forEach { it.replaceSourceUrl() }
+  doc.html()
+}

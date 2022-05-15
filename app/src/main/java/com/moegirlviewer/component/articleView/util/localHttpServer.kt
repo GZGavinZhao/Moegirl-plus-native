@@ -13,6 +13,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
+import kotlinx.coroutines.*
 import okhttp3.Request
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -32,26 +33,29 @@ object LocalHttpServer {
     ) {
       routing {
         get ("/") {
-          call.respondText("hello")
+          call.respondText("")
         }
 
         get("/main.js") {
-          val inputStream = Globals.context.assets.open("main.js")
-          val result: String = BufferedReader(InputStreamReader(inputStream))
-            .lines().parallel().collect(Collectors.joining("\n"))
-          call.respondText(result, ContentType.parse("text/javascript"))
+          val fileContent = mainJsCompletableDeferred.await()
+          call.respondText(fileContent, ContentType.parse("text/javascript"))
         }
 
         get("/main.css") {
-          val inputStream = Globals.context.assets.open("main.css")
-          val result: String = BufferedReader(InputStreamReader(inputStream))
-            .lines().parallel().collect(Collectors.joining("\n"))
-          call.respondText(result, ContentType.parse("text/css"))
+          val fileContent = mainCssCompletableDeferred.await()
+          call.respondText(fileContent, ContentType.parse("text/css"))
         }
 
+//        get("/mmd-previewer-worker.js") {
+//          val inputStream = Globals.context.assets.open("mmd-previewer-worker.js")
+//          val result: String = BufferedReader(InputStreamReader(inputStream))
+//            .lines().parallel().collect(Collectors.joining("\n"))
+//          call.respondText(result, ContentType.parse("text/javascript"))
+//        }
+
         get("/font/nospz_gothic_moe.ttf") {
-          val inputStream = Globals.context.resources.openRawResource(R.font.nospz_gothic_moe)
-          call.respondBytes(inputStream.readAllBytes())
+          val fileContent = nospz_gothic_moeFontCompletableDeferred.await()
+          call.respondBytes(fileContent)
         }
 
         get("/commonRes/{path}") {
@@ -72,5 +76,32 @@ object LocalHttpServer {
         }
       }
     }.start(false)
+  }
+}
+
+private val coroutineScope = CoroutineScope(Dispatchers.Default)
+private val mainJsCompletableDeferred = CompletableDeferred<String>().apply {
+  coroutineScope.launch {
+    val inputStream = Globals.context.assets.open("main.js")
+    val result: String = BufferedReader(InputStreamReader(inputStream))
+      .lines().parallel().collect(Collectors.joining("\n"))
+    complete(result)
+  }
+}
+
+private val mainCssCompletableDeferred = CompletableDeferred<String>().apply {
+  coroutineScope.launch {
+    val inputStream = Globals.context.assets.open("main.css")
+    val result: String = BufferedReader(InputStreamReader(inputStream))
+      .lines().parallel().collect(Collectors.joining("\n"))
+    complete(result)
+  }
+}
+
+@SuppressLint("ResourceType")
+private val nospz_gothic_moeFontCompletableDeferred = CompletableDeferred<ByteArray>().apply {
+  coroutineScope.launch {
+    val inputStream = Globals.context.resources.openRawResource(R.font.nospz_gothic_moe)
+     complete(inputStream.readAllBytes())
   }
 }

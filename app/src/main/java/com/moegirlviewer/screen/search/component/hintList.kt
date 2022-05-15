@@ -15,13 +15,16 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.moegirlviewer.R
 import com.moegirlviewer.api.search.SearchApi
+import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.styled.StyleLinearProgressIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
@@ -35,7 +38,7 @@ import kotlinx.coroutines.launch
 fun ColumnScope.SearchScreenHintList() {
   val model: SearchScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
-  var list by rememberSaveable { mutableStateOf(listOf<String>()) }
+  var list by rememberSaveable { mutableStateOf(listOf<SearchHintItem>()) }
   var status by rememberSaveable { mutableStateOf(LoadStatus.INITIAL) }
   var prevSearchKeyword by rememberSaveable { mutableStateOf("") }
 
@@ -45,7 +48,11 @@ fun ColumnScope.SearchScreenHintList() {
     prevSearchKeyword = model.keywordInputValue
     try {
       status = LoadStatus.LOADING
-      list = SearchApi.getHint(model.keywordInputValue).query.prefixsearch.map { it.title }
+      val res = SearchApi.getHint(model.keywordInputValue)
+      list = res.query.prefixsearch.map { SearchHintItem(
+        title = it.title,
+        imageUrl = res.query.pages[it.pageid]?.thumbnail?.source
+      ) }
       status = if (list.isEmpty()) LoadStatus.EMPTY else LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {
       status = LoadStatus.FAIL
@@ -83,13 +90,17 @@ fun ColumnScope.SearchScreenHintList() {
 
     for (item in list) {
       Item(
-        text = item,
-        onClick = { model.searchByRecord(SearchRecord(item, true)) }
+        text = item.title,
+        imageUrl = item.imageUrl,
+        onClick = { model.searchByRecord(SearchRecord(item.title, true)) }
       )
     }
 
     if (status == LoadStatus.FAIL) {
-      Item(text = stringResource(id = R.string.netErr))
+      Item(
+        text = stringResource(id = R.string.netErr),
+        visibleImageUrl = false,
+      )
     }
   }
 }
@@ -97,6 +108,8 @@ fun ColumnScope.SearchScreenHintList() {
 @Composable
 private fun Item(
   text: String,
+  imageUrl: String? = null,
+  visibleImageUrl: Boolean = true,
   onClick: (() -> Unit)? = null
 ) {
   val themeColors = MaterialTheme.colors
@@ -105,16 +118,45 @@ private fun Item(
   Surface(
     contentColor = themeColors.text.primary
   ) {
-    Box(
+    Row(
       modifier = Modifier
-        .height(45.dp)
+        .height(60.dp)
         .fillMaxWidth()
         .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.text.tertiary)
         .clickable { onClick?.invoke() }
-        .padding(horizontal = 10.dp),
-      contentAlignment = Alignment.CenterStart
+        .padding(end = 10.dp),
+      verticalAlignment = Alignment.CenterVertically
     ) {
+      if (visibleImageUrl) {
+        Box(
+          modifier = Modifier
+            .width(60.dp)
+            .fillMaxHeight()
+        ) {
+          if (imageUrl != null) {
+            AsyncImage(
+              modifier = Modifier
+                .fillMaxSize(),
+              model = rememberImageRequest(data = imageUrl),
+              contentDescription = null,
+              contentScale = ContentScale.Crop,
+              alignment = Alignment.TopCenter
+            )
+          } else {
+            AsyncImage(
+              modifier = Modifier
+                .fillMaxSize(),
+              model = rememberImageRequest(data = R.drawable.placeholder),
+              contentDescription = null,
+              contentScale = ContentScale.Fit,
+            )
+          }
+        }
+      }
+
       StyledText(
+        modifier = Modifier
+          .padding(start = 10.dp),
         text = text,
         color = themeColors.text.secondary,
         maxLines = 1,
@@ -123,3 +165,8 @@ private fun Item(
     }
   }
 }
+
+class SearchHintItem(
+  val title: String,
+  val imageUrl: String?
+)

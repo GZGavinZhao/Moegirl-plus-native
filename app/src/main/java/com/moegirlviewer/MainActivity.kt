@@ -265,7 +265,7 @@ private suspend fun ComponentActivity.withSplashScreen(
   statusBarLocked = true
 
   val usingSplashImage = if (isMoegirl()) {
-    val imageList = MoegirlSplashImageManager.getImageList()
+    val imageList = withContext(Dispatchers.IO) { MoegirlSplashImageManager.getImageList() }
     when(splashImageMode) {
       SplashImageMode.NEW -> MoegirlSplashImageManager.getLatestImage()
       SplashImageMode.RANDOM -> MoegirlSplashImageManager.getRandomImage()

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,12 +20,13 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.screen.article.ReadingRecord
 import com.moegirlviewer.util.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun ArticleView(
   modifier: Modifier = Modifier,
-  state: ArticleViewState = ArticleViewState(),
+  state: ArticleViewState = remember { ArticleViewState() },
   pageKey: PageKey? = null, // 不传html时，pageKey必传
   html: String? = null,
   revId: Int? = null,
@@ -41,6 +43,7 @@ fun ArticleView(
   cacheEnabled: Boolean = false,
   previewMode: Boolean = false,   // 这个参数对应的就是api的preview参数，没有其他功能，使用这个会获得不带缓存的渲染结果
   visibleEditButton: Boolean = true,
+  initialUpdateView: Boolean = true,
   contentTopPadding: Dp = 0.dp,
   renderDelay: Long = 0,
   messageHandlers: HtmlWebViewMessageHandlers? = null,
@@ -91,6 +94,7 @@ fun ArticleView(
     coreState.revId,
     coreState.html
   ) {
+    if (!initialUpdateView) return@LaunchedEffect
     if (coreState.status == LoadStatus.LOADING || coreState.status == LoadStatus.INITIAL) {
       if (coreState.html.isNullOrEmpty()) {
         if (coreState.pageKey != null || coreState.revId != null) coreState.coroutineScope.launch { coreState.loadArticleContent() }
@@ -131,7 +135,7 @@ fun ArticleView(
       .then(modifier)
   ) {
     HtmlWebView(
-      url = LocalHttpServer.rootUrl,
+      baseUrl = LocalHttpServer.rootUrl,
       messageHandlers = coreState.defaultMessageHandlers + (coreState.messageHandlers ?: emptyMap()),
       onScrollChanged = coreState.onScrollChanged,
       ref = coreState.htmlWebViewRef,

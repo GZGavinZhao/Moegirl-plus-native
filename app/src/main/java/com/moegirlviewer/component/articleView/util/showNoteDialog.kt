@@ -3,6 +3,7 @@ package com.moegirlviewer.component.articleView.util
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -10,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.MemoryStore
 import com.moegirlviewer.component.articleView.ArticleView
+import com.moegirlviewer.component.articleView.ArticleViewState
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.util.CachedWebViews
 import com.moegirlviewer.util.Globals
@@ -23,6 +25,7 @@ fun showNoteDialog(
       val configuration = LocalConfiguration.current
       val memoryStore = remember { MemoryStore() }
       val cachedWebViews = remember { CachedWebViews() }
+      val articleViewState = remember { ArticleViewState() }
 
       DisposableEffect(true) {
         onDispose { cachedWebViews.destroyAllInstance() }
@@ -35,6 +38,7 @@ fun showNoteDialog(
               .height((configuration.screenHeightDp * 0.2).dp)
           ) {
             ArticleView(
+              state = articleViewState,
               inDialogMode = true,
               html = content,
             )
