@@ -42,31 +42,36 @@ object HmoeSplashImageManager {
     }
   }
 
-  fun getRandomImage(): Drawable {
+  suspend fun getRandomImage(): SplashImage = withContext(Dispatchers.IO) {
     val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
     val localImagesMap = localImages.associateBy { it.name }
     val fallbackImage = Globals.context.getDrawable(R.mipmap.splash_fallback)!!
+    val pathPlaceholderOfFallbackImage = "FALLBACK"
 
-    val images = if (this::config.isInitialized) {
+    val imagePaths = if (this@HmoeSplashImageManager::config.isInitialized) {
       config.checkFestivalImages(localImagesMap)
-        ?.map { DrawableWrapper.createFromPath(it) }
         ?: (
           config.images
             .asSequence()
             .filter { !it.disabled }
             .map { it.imageUrl.localImageFileName() }
             .filter { localImagesMap.containsKey(it) }
-            .map { DrawableWrapper.createFromPath(localImagesMap[it]!!.path) }
-            .toList() + listOf(fallbackImage)
-        )
+            .map { localImagesMap[it]!!.path }
+            .toList() + listOf(pathPlaceholderOfFallbackImage)
+          )
     } else {
-      localImagesMap.values.map { DrawableWrapper.createFromPath(it.path) }
+      localImagesMap.values.map { it.path }
     }
 
-    return if (images.isNotEmpty()) images.random()!! else fallbackImage
+    val randomImagePath = if (imagePaths.isNotEmpty()) imagePaths.random() else pathPlaceholderOfFallbackImage
+    val randomImageDrawable = if (randomImagePath == pathPlaceholderOfFallbackImage)
+      fallbackImage else
+      Drawable.createFromPath(randomImagePath)!!
+
+    SplashImage.onlyUseInSplashScreen(randomImageDrawable)
   }
 
-  suspend fun loadConfig() {
+  suspend fun loadConfig() = withContext(Dispatchers.IO) {
     try {
       config = AppApi.getHmoeSplashImageConfig()
       configFile.writeText(Gson().toJson(config))
@@ -75,41 +80,42 @@ object HmoeSplashImageManager {
     }
   }
 
-  suspend fun syncImagesByConfig() {
-    if (this::config.isInitialized.not()) {
+  suspend fun syncImagesByConfig() = withContext(Dispatchers.IO) {
+    if (this@HmoeSplashImageManager::config.isInitialized.not()) {
       printPlainLog("H萌娘：同步启动屏图片，但没有找到config")
-      return
+      return@withContext
     }
 
     val allReferencedImageUrls = config.images.map { it.imageUrl } +
       config.festivals.flatMap { it.imageUrls }
 
     // 下载线上配置新增的图片
-    withContext(Dispatchers.IO) {
-      allReferencedImageUrls.forEach { imageUrl ->
-        if (rootDir.existsChild(imageUrl.localImageFileName()).not()) {
-          launch {
-            val request = Request.Builder()
-              .url(imageUrl)
-              .build()
-            val res = try {
-              moeOkHttpClient.newCall(request).execute()
-            } catch (e: CommonRequestException) {
-              printRequestErr(e, "H萌娘：启动屏图片下载失败：$imageUrl")
-              return@launch
-            }
-
-            if (!res.isSuccessful) return@launch
-            val imageByteArray = res.body!!.bytes()
-
-            val file = File(rootDir, imageUrl.localImageFileName())
-            file.createNewFile()
-            file.writeBytes(imageByteArray)
-            printPlainLog("H萌娘：启动屏图片下载完毕：$imageUrl")
+    allReferencedImageUrls
+      .filter { imageUrl -> rootDir.existsChild(imageUrl.localImageFileName()).not() }
+      .map { imageUrl ->
+        launch {
+          val request = Request.Builder()
+            .url(imageUrl)
+            .build()
+          val res = try {
+            moeOkHttpClient.newCall(request).execute()
+          } catch (e: CommonRequestException) {
+            printRequestErr(e, "H萌娘：启动屏图片下载失败：$imageUrl")
+            return@launch
           }
+
+          if (!res.isSuccessful) return@launch
+          val imageByteArray = res.body!!.bytes()
+
+          val file = File(rootDir, imageUrl.localImageFileName())
+          file.createNewFile()
+          file.writeBytes(imageByteArray)
+          printPlainLog("H萌娘：启动屏图片下载完毕：$imageUrl")
         }
       }
-    }
+      .forEach { it.join() }
+
+    printPlainLog("H萌娘：启动屏图片全部下载完毕")
 
     // 清除线上配置已经不存在的图片
     val allReferencedImageNames = allReferencedImageUrls.map { it.localImageFileName() }
@@ -117,6 +123,8 @@ object HmoeSplashImageManager {
     localImages
       .filter { allReferencedImageNames.contains(it.name).not() }
       .forEach { it.deleteOnExit() }
+
+    printPlainLog("H萌娘：无用启动屏图片清理完毕")
   }
 }
 

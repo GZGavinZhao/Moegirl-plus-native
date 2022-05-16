@@ -3,6 +3,8 @@ package com.moegirlviewer
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.view.ActionMode
+import android.view.Menu
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,6 +24,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.moegirlviewer.compable.statusBarLocked
 import com.moegirlviewer.component.Center
+import com.moegirlviewer.component.articleView.util.LocalHttpServer
 import com.moegirlviewer.initialization.OnComposeWillCreate
 import com.moegirlviewer.initialization.initializeOnCreate
 import com.moegirlviewer.screen.article.ArticleRouteArguments
@@ -128,6 +131,23 @@ class MainActivity : ComponentActivity() {
         }
       }
     }
+  }
+
+  override fun onActionModeStarted(mode: ActionMode?) {
+    mode?.menu?.add(getString(R.string.searchInSite))?.apply {
+      setOnMenuItemClickListener {
+        printDebugLog(true)
+        mode.finish()
+        true
+      }
+    }
+
+    super.onActionModeStarted(mode)
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    LocalHttpServer.stop()
   }
 }
 
@@ -265,7 +285,7 @@ private suspend fun ComponentActivity.withSplashScreen(
   statusBarLocked = true
 
   val usingSplashImage = if (isMoegirl()) {
-    val imageList = withContext(Dispatchers.IO) { MoegirlSplashImageManager.getImageList() }
+    val imageList = MoegirlSplashImageManager.getImageList()
     when(splashImageMode) {
       SplashImageMode.NEW -> MoegirlSplashImageManager.getLatestImage()
       SplashImageMode.RANDOM -> MoegirlSplashImageManager.getRandomImage()
@@ -277,8 +297,7 @@ private suspend fun ComponentActivity.withSplashScreen(
       else -> null
     }!!
   } else {
-    val image = HmoeSplashImageManager.getRandomImage()
-    SplashImage.onlyUseInSplashScreen(image)
+    HmoeSplashImageManager.getRandomImage()
   }
 
   val mainWithSplashView = ComposeWithSplashScreenView(

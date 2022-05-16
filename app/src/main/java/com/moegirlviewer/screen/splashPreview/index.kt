@@ -40,9 +40,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
   val model: SplashPreviewScreenModel = hiltViewModel()
-  val reversedSplashImageList = remember { MoegirlSplashImageManager.getImageList() }
+  val splashImageList = rememberMoegirlSplashImageList()
+  if (splashImageList.isEmpty()) return
   val pagerState = rememberPagerState(
-    initialPage = reversedSplashImageList.indexOfFirst { it.key == arguments.intiialSplashImageKey }
+    initialPage = splashImageList.indexOfFirst { it.key == arguments.intiialSplashImageKey }
   )
   var visibleInfoBar by remember { mutableStateOf(true) }
 
@@ -71,7 +72,7 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
         .fillMaxSize()
     ) {
       HorizontalPager(
-        count = reversedSplashImageList.size,
+        count = splashImageList.size,
         state = pagerState,
       ) { currentPage ->
         Box(
@@ -85,7 +86,7 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
             modifier = Modifier
               .fillMaxSize()
               .scale(model.imageScale.value),
-            model = rememberImageRequest(data = reversedSplashImageList[currentPage].imageData),
+            model = rememberImageRequest(data = splashImageList[currentPage].imageData),
             contentDescription = null,
             contentScale = ContentScale.Crop
           )
@@ -123,7 +124,7 @@ fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
         }
       }
 
-      if (visibleInfoBar) ComposedHeader(reversedSplashImageList[pagerState.currentPage])
+      if (visibleInfoBar) ComposedHeader(splashImageList[pagerState.currentPage])
     }
   }
 }
@@ -180,7 +181,7 @@ private fun ComposedHeader(
 @Composable
 private fun ComposedFooter() {
   val themeColors = MaterialTheme.colors
-  val splashImagesSize = remember { MoegirlSplashImageManager.getImageList().size }
+  val splashImagesSize = rememberMoegirlSplashImageList().size
   val selectedSplashImagesSize by SettingsStore.common.getValue { this.selectedSplashImages.size }.collectAsState(
     initial = 0
   )

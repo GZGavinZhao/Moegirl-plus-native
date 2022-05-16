@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.DrawableWrapper
 import android.os.Environment
+import androidx.compose.runtime.*
 import com.google.gson.Gson
 import com.moegirlviewer.R
 import com.moegirlviewer.api.app.AppApi
@@ -12,10 +13,8 @@ import com.moegirlviewer.api.app.bean.MoegirlSplashImageBean
 import com.moegirlviewer.request.CommonRequestException
 import com.moegirlviewer.request.commonOkHttpClient
 import com.moegirlviewer.request.moeOkHttpClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.moegirlviewer.request.send
+import kotlinx.coroutines.*
 import okhttp3.Request
 import java.io.File
 import java.time.LocalDate
@@ -46,23 +45,27 @@ object MoegirlSplashImageManager {
     }
   }
 
-  fun getRandomImage(): SplashImage {
+  suspend fun getRandomImage(): SplashImage = withContext(Dispatchers.IO) {
     val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
     val localImagesMap = localImages.associateBy { it.name }
+    val pathPlaceholderOfFallbackImage = "FALLBACK"
 
-    val images = if (this::config.isInitialized) {
+    val imagePaths = if (this@MoegirlSplashImageManager::config.isInitialized) {
       config
         .asSequence()
         .map { it.url.localImageFileName() }
         .filter { localImagesMap.containsKey(it) }
-        .map { DrawableWrapper.createFromPath(localImagesMap[it]!!.path) }
-        .toList() + listOf(fallbackImage)
+        .toList() + listOf(pathPlaceholderOfFallbackImage)
     } else {
-      localImagesMap.values.map { DrawableWrapper.createFromPath(it.path) }
+      localImagesMap.values.map { it.path }
     }
 
-    val drawable = if (images.isNotEmpty()) images.random()!! else fallbackImage
-    return SplashImage.onlyUseInSplashScreen(drawable)
+    val randomImagePath = if (imagePaths.isNotEmpty()) imagePaths.random() else pathPlaceholderOfFallbackImage
+    val randomImageDrawable = if (randomImagePath == pathPlaceholderOfFallbackImage)
+      fallbackImage else
+      Drawable.createFromPath(randomImagePath)!!
+
+    SplashImage.onlyUseInSplashScreen(randomImageDrawable)
   }
 
   fun getLatestImage(): SplashImage {
@@ -79,22 +82,28 @@ object MoegirlSplashImageManager {
     return SplashImage.onlyUseInSplashScreen(drawable)
   }
 
-  fun getImageList(): List<MoegirlSplashImage> {
-    if (!this::config.isInitialized) return emptyList()
+  private var imageList: List<MoegirlSplashImage>? = null
+  suspend fun getImageList(): List<MoegirlSplashImage> = withContext(Dispatchers.IO) {
+    if (!this@MoegirlSplashImageManager::config.isInitialized) return@withContext emptyList()
+    if (imageList != null) return@withContext imageList!!
     val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
     val localImagesMap = localImages.associateBy { it.name }
-    return config
+    config
       .filter { localImagesMap.containsKey(it.url.localImageFileName()) }
       .map {
         val imageName = it.url.localImageFileName()
-        MoegirlSplashImage(
-          imageData = DrawableWrapper.createFromPath(localImagesMap[imageName]!!.path)!!,
-          title = it.title,
-          author = it.author,
-          key = it.key,
-          season = it.season
-        )
+        async {
+          MoegirlSplashImage(
+            imageData = DrawableWrapper.createFromPath(localImagesMap[imageName]!!.path)!!,
+            title = it.title,
+            author = it.author,
+            key = it.key,
+            season = it.season
+          )
+        }
       }
+      .map { it.await() }
+      .also { imageList = it }
   }
 
   // 判断配置中的图片是否已经全部下载完毕
@@ -105,7 +114,7 @@ object MoegirlSplashImageManager {
     return config.all { localImagesMap.containsKey(it.url.localImageFileName()) }
   }
 
-  suspend fun loadConfig() {
+  suspend fun loadConfig() = withContext(Dispatchers.IO) {
     try {
       config = AppApi.getMoegirlSplashImageConfig()
       configFile.writeText(Gson().toJson(config))
@@ -114,40 +123,42 @@ object MoegirlSplashImageManager {
     }
   }
 
-  suspend fun syncImagesByConfig() {
-    if (this::config.isInitialized.not()) {
+  suspend fun syncImagesByConfig() = withContext(Dispatchers.IO) {
+    if (this@MoegirlSplashImageManager::config.isInitialized.not()) {
       printPlainLog("萌百：同步启动屏图片，但没有找到config")
-      return
+      return@withContext
     }
 
     val allReferencedImageUrls = config.map { it.url }
 
     // 下载线上配置新增的图片
-    withContext(Dispatchers.IO)  {
-      allReferencedImageUrls.forEach { imageUrl ->
-        if (rootDir.existsChild(imageUrl.localImageFileName()).not()) {
-          launch {
-            val request = Request.Builder()
-              .url(imageUrl)
-              .build()
-            val res = try {
-              commonOkHttpClient.newCall(request).execute()
-            } catch (e: CommonRequestException) {
-              printRequestErr(e, "萌百：启动屏图片下载失败：$imageUrl")
-              return@launch
-            }
-
-            if (!res.isSuccessful) return@launch
-            val imageByteArray = res.body!!.bytes()
-
-            val file = File(rootDir, imageUrl.localImageFileName())
-            file.createNewFile()
-            file.writeBytes(imageByteArray)
-            printPlainLog("萌百：启动屏图片下载完毕：$imageUrl")
+    allReferencedImageUrls
+      .filter { imageUrl -> rootDir.existsChild(imageUrl.localImageFileName()).not() }
+      .map { imageUrl ->
+        printDebugLog(imageUrl)
+        launch {
+          val request = Request.Builder()
+            .url(imageUrl)
+            .build()
+          val res = try {
+            commonOkHttpClient.newCall(request).execute()
+          } catch (e: Exception) {
+            printRequestErr(e, "萌百：启动屏图片下载失败：$imageUrl")
+            return@launch
           }
+
+          if (!res.isSuccessful) return@launch
+          val imageByteArray = res.body!!.bytes()
+
+          val file = File(rootDir, imageUrl.localImageFileName())
+          file.createNewFile()
+          file.writeBytes(imageByteArray)
+          printPlainLog("萌百：启动屏图片下载完毕：$imageUrl")
         }
       }
-    }
+      .forEach { it.join() }
+
+    printPlainLog("萌百：启动屏图片全部下载完毕")
 
     // 清除线上配置已经不存在的图片
     val allReferencedImageNames = allReferencedImageUrls.map { it.localImageFileName() }
@@ -155,7 +166,19 @@ object MoegirlSplashImageManager {
     localImages
       .filter { allReferencedImageNames.contains(it.name).not() }
       .forEach { it.deleteOnExit() }
+    printPlainLog("萌百：无用启动屏图片清理完毕")
   }
 }
 
 private fun String.localImageFileName() = computeMd5(this)
+
+@Composable
+fun rememberMoegirlSplashImageList(): List<MoegirlSplashImage> {
+  var reversedSplashImageList by remember { mutableStateOf(emptyList<MoegirlSplashImage>()) }
+
+  LaunchedEffect(true) {
+    reversedSplashImageList = MoegirlSplashImageManager.getImageList()
+  }
+
+  return reversedSplashImageList
+}
