@@ -1,14 +1,9 @@
 package com.moegirlviewer.util
 
 import android.os.Bundle
-import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.navigation.*
-import com.moegirlviewer.screen.article.ArticleRouteArguments
-import com.moegirlviewer.util.RouteArguments.Companion.formattedRouteName
 import com.moegirlviewer.util.RouteArguments.Companion.getRouteArgumentFields
 import java.lang.reflect.Field
-import java.util.*
 
 // 路由跳转来时会收到一个bundle，其中是路由的参数，这个方法将其转化为实体类实例
 inline fun <reified T : RouteArguments> Bundle.toRouteArguments(): T {
@@ -34,7 +29,7 @@ inline fun <reified T : RouteArguments> Bundle.toRouteArguments(): T {
 
 abstract class RouteArguments {
   private var argumentNameMapToInPoolId = emptyMap<String, String>()
-  val argumentQueryStr: String get() {
+  private fun createArgumentQueryStr(): String {
     if (argumentNameMapToInPoolId.isEmpty()) {
       argumentNameMapToInPoolId = this::class.java.getRouteArgumentFields()
         .map {
@@ -48,6 +43,11 @@ abstract class RouteArguments {
     }
 
     return argumentNameMapToInPoolId.entries.joinToString("&") { "${it.key}=${it.value}" }
+  }
+
+  fun createRouteNameWithArguments(): String {
+    val routeName = this::class.java.declaredAnnotations.filterIsInstance<RouteName>()[0].name
+    return "${routeName}?${createArgumentQueryStr()}"
   }
 
   // 必须在ViewModel.onCleared中调用，从参数池中清除数据，防止内存泄漏
@@ -134,9 +134,7 @@ fun NavHostController.navigate(
   arguments: RouteArguments,
   builder: (NavOptionsBuilder.() -> Unit) = {}
 ) {
-  val routeName = arguments::class.java.declaredAnnotations.filterIsInstance<RouteName>()[0].name
-  val routeNameWithArguments = "${routeName}?${arguments.argumentQueryStr}"
-  this.navigate(routeNameWithArguments, builder)
+  this.navigate(arguments.createRouteNameWithArguments(), builder)
 }
 
 fun NavHostController.replace(

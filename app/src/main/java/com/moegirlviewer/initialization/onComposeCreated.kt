@@ -47,12 +47,17 @@ private fun checkDeepLink() {
 
   when(deepLink) {
     is PageIdDeepLink -> {
-      Globals.navController.navigate(ArticleRouteArguments(
-        pageKey = PageIdKey(deepLink.pageId)
+      printDebugLog(deepLink.pageId)
+      Globals.navController.replace(ArticleRouteArguments(
+        pageKey = PageIdKey(deepLink.pageId),
+        deepLinkMode = true
       ))
     }
     is PageNameDeepLink -> {
-      if (!deepLink.isMainPage) gotoArticlePage(deepLink.pageName)
+      if (!deepLink.isMainPage) Globals.navController.replace(ArticleRouteArguments(
+        pageKey = PageNameKey(deepLink.pageName),
+        deepLinkMode = true
+      ))
     }
   }
 }

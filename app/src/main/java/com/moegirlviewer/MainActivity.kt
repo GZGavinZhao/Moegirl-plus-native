@@ -133,17 +133,17 @@ class MainActivity : ComponentActivity() {
     }
   }
 
-  override fun onActionModeStarted(mode: ActionMode?) {
-    mode?.menu?.add(getString(R.string.searchInSite))?.apply {
-      setOnMenuItemClickListener {
-        printDebugLog(true)
-        mode.finish()
-        true
-      }
-    }
-
-    super.onActionModeStarted(mode)
-  }
+//  override fun onActionModeStarted(mode: ActionMode?) {
+//    mode?.menu?.add(getString(R.string.searchInSite))?.apply {
+//      setOnMenuItemClickListener {
+////        Globals.navController.navigate(SearchResultRouteArguments())
+//        mode.finish()
+//        true
+//      }
+//    }
+//
+//    super.onActionModeStarted(mode)
+//  }
 
   override fun onDestroy() {
     super.onDestroy()

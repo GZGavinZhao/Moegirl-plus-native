@@ -8,6 +8,7 @@ import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
@@ -32,6 +33,7 @@ import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.replace
 
 @Suppress("UpdateTransitionLabel", "TransitionPropertiesLabel")
 @Composable
@@ -39,6 +41,7 @@ fun ArticleScreenHeader(
   modifier: Modifier = Modifier,
   title: String,
   visible: Boolean,
+  deepLinkMode: Boolean,
   onAction: (action: MoreMenuAction) -> Unit,
 ) {
   val themeColors = MaterialTheme.colors
@@ -71,10 +74,21 @@ fun ArticleScreenHeader(
         .absoluteOffset(0.dp, topOffset)
       ,
       navigationIcon = {
-        BackButton(
-          modifier = Modifier
-            .alpha(contentAlpha)
-        )
+        if (deepLinkMode) {
+          AppHeaderIcon(
+            modifier = Modifier
+              .alpha(contentAlpha),
+            image = Icons.Filled.Home,
+            onClick = {
+              Globals.navController.replace("home")
+            }
+          )
+        } else {
+          BackButton(
+            modifier = Modifier
+              .alpha(contentAlpha)
+          )
+        }
       },
       title = {
         StyledText(

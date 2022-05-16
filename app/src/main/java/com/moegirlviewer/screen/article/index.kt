@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.rememberDebouncedManualEffector
+import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.request.MoeRequestException
@@ -102,6 +103,10 @@ fun ArticleScreen(
     }
   }
 
+  BackHandler(arguments.deepLinkMode) {
+    Globals.activity.finishAndRemoveTask()
+  }
+
   CommonDrawer {
     model.memoryStore.Provider {
       model.cachedWebViews.Provider {
@@ -122,7 +127,9 @@ fun ArticleScreen(
                   .absoluteOffset()
                   .zIndex(1f)
               ) {
-                ComposedHeader()
+                ComposedHeader(
+                  deepLinkMode = arguments.deepLinkMode
+                )
               }
 
               ComposedArticleView(
@@ -156,13 +163,16 @@ fun ArticleScreen(
 }
 
 @Composable
-private fun ComposedHeader() {
+private fun ComposedHeader(
+  deepLinkMode: Boolean,
+) {
   val model: ArticleScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
 
   ArticleScreenHeader(
     title = model.displayPageName,
     visible = model.visibleHeader,
+    deepLinkMode = deepLinkMode,
     onAction = {
       when(it) {
         REFRESH -> {

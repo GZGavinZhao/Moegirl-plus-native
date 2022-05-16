@@ -24,15 +24,17 @@ object LocalHttpServer {
   val port = 8080
   val host = "0.0.0.0"
   val rootUrl = "http://$host:$port"
-  private lateinit var server: ApplicationEngine
+  private var server: ApplicationEngine? = null
 
   fun stop() {
-    server.stop(1000, 1000)
+    server?.stop(1000, 1000)
+    server = null
   }
 
   @OptIn(EngineAPI::class)
   @SuppressLint("ResourceType")
   fun start() {
+    if (server != null) return
     server = embeddedServer(CIO,
       host = host,
       port = port

@@ -30,13 +30,15 @@ object PageApi {
     entity = PageContentResBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "parse"
-      this["redirects"] = "1"
       this["prop"] = "text|categories|templates|sections|images|displaytitle"
       if (previewMode) this["preview"] = "1"
       if (revId == null) {
         when (pageKey) {
           is PageIdKey -> this["pageid"] = pageKey.triedPageIdOrNull!!
-          is PageNameKey -> this["page"] = pageKey.triedPageNameOrNull!!
+          is PageNameKey -> {
+            this["page"] = pageKey.triedPageNameOrNull!!
+            this["redirects"] = "1"
+          }
         }
       } else {
         this["oldid"] = revId
