@@ -3,10 +3,7 @@ package com.moegirlviewer.component.articleView.util
 import android.annotation.SuppressLint
 import com.moegirlviewer.R
 import com.moegirlviewer.request.moeOkHttpClient
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.printDebugLog
-import com.moegirlviewer.util.printRequestErr
-import com.moegirlviewer.util.readAllBytes
+import com.moegirlviewer.util.*
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.response.*
@@ -22,7 +19,7 @@ import java.net.URLDecoder
 import java.util.stream.Collectors
 
 object LocalHttpServer {
-  var port = (10000..87167).random()
+  var port = isMoegirl(12986, 26715)
   val host = "0.0.0.0"
   val rootUrl get() = "http://$host:$port"
   private var server: ApplicationEngine? = null
@@ -34,10 +31,9 @@ object LocalHttpServer {
 
   @OptIn(EngineAPI::class)
   @SuppressLint("ResourceType")
-  fun start(port: Int = (10000..87167).random()) {
+  fun start() {
     if (server != null) return
-    this.port = port
-    fun startEmbeddedServer() = embeddedServer(CIO,
+    server = embeddedServer(CIO,
       host = host,
       port = port
     ) {
@@ -86,13 +82,6 @@ object LocalHttpServer {
         }
       }
     }.start(false)
-
-    // 防止端口冲突
-    try {
-      server = startEmbeddedServer()
-    } catch (e: BindException) {
-      start()
-    }
   }
 }
 

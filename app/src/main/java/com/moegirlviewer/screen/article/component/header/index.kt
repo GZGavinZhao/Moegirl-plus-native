@@ -33,6 +33,7 @@ import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.categoryPageNamePrefixRegex
 import com.moegirlviewer.util.replace
 
 @Suppress("UpdateTransitionLabel", "TransitionPropertiesLabel")
@@ -97,7 +98,7 @@ fun ArticleScreenHeader(
           text = title,
           overflow = TextOverflow.Ellipsis,
           maxLines = 2,
-          fontSize = 18.sp,
+          fontSize = if (title.contains(Regex("^([Cc]ategory|分类|分類)[:：]"))) 20.sp else 18.sp,
           color = themeColors.onPrimary
         )
       },
