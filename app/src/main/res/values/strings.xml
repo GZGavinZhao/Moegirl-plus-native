@@ -320,6 +320,7 @@
     <string name="lightRequestModeHelpText">如果你近期经常被防火墙拦截，可以尝试这个选项，开启后极少数条目可能出现BUG。注意：该选项本身并不能解除被拦截状态</string>
     <string name="focusModeHelpText">浏览条目时状态栏将隐藏，头栏和评论按钮隐藏后不会因向上滑动而重新出现，变为双击屏幕后显示</string>
     <string name="splashImagesPreparingHint">启动屏图片准备中，请稍候</string>
+    <string name="searchInPagesContent">在页面内容中搜索</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤销[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|讨论]]）的版本%2$s</string>

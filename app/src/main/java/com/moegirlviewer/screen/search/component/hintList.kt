@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.search.component
 
+import android.inputmethodservice.Keyboard
 import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -15,6 +16,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FindInPage
 import androidx.compose.material.icons.filled.TextSnippet
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,6 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +41,7 @@ import com.moegirlviewer.component.styled.StyleLinearProgressIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.search.SearchScreenModel
+import com.moegirlviewer.screen.searchResult.SearchResultRouteArguments
 import com.moegirlviewer.store.SearchRecord
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
@@ -121,8 +127,10 @@ fun ColumnScope.SearchScreenHintList() {
       }
     }
 
-    item {
-
+    if (model.keywordInputValue != "") {
+      item {
+        SearchInPagesContentHint()
+      }
     }
 
     itemsIndexed(
@@ -163,7 +171,7 @@ private fun Item(
   ) {
     Row(
       modifier = Modifier
-        .height(60.dp)
+        .height(70.dp)
         .fillMaxWidth()
         .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.text.tertiary)
         .clickable { onClick?.invoke() }
@@ -227,6 +235,40 @@ private fun Item(
         }
       }
     }
+  }
+}
+
+@Composable
+private fun SearchInPagesContentHint() {
+  val themeColors = MaterialTheme.colors
+  val model: SearchScreenModel = hiltViewModel()
+
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(70.dp)
+      .padding(end = 10.dp)
+      .clickable {
+         Globals.navController.navigate(SearchResultRouteArguments(model.keywordInputValue))
+      },
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Icon(
+      modifier = Modifier
+        .size(60.dp),
+      imageVector = Icons.Filled.FindInPage,
+      contentDescription = null,
+      tint = themeColors.primaryVariant
+    )
+
+    StyledText(
+      modifier = Modifier
+        .padding(start = 10.dp),
+      text = stringResource(id = R.string.searchInPagesContent),
+      fontWeight = FontWeight.Bold,
+      textDecoration = TextDecoration.Underline,
+      color = themeColors.primaryVariant
+    )
   }
 }
 
