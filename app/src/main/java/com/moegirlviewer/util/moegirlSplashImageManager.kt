@@ -85,8 +85,8 @@ object MoegirlSplashImageManager {
   private var imageList: List<MoegirlSplashImage>? = null
   suspend fun getImageList(): List<MoegirlSplashImage> = withContext(Dispatchers.IO) {
     if (!this@MoegirlSplashImageManager::config.isInitialized) return@withContext emptyList()
-    if (imageList != null) return@withContext imageList!!
     val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
+    if (imageList != null) return@withContext imageList!!
     val localImagesMap = localImages.associateBy { it.name }
     config
       .filter { localImagesMap.containsKey(it.url.localImageFileName()) }
@@ -103,15 +103,15 @@ object MoegirlSplashImageManager {
         }
       }
       .map { it.await() }
-      .also { imageList = it }
+      .also { if (config.size == it.size) imageList = it }
   }
 
-  // 判断配置中的图片是否已经全部下载完毕
+  // 判断是否至少有一张已下载的图片
   fun isImagesReady(): Boolean {
     if (!this::config.isInitialized) return false
     val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
     val localImagesMap = localImages.associateBy { it.name }
-    return config.all { localImagesMap.containsKey(it.url.localImageFileName()) }
+    return localImagesMap.isNotEmpty()
   }
 
   suspend fun loadConfig() = withContext(Dispatchers.IO) {

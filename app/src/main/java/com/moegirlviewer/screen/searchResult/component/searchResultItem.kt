@@ -77,7 +77,7 @@ fun SearchResultItem(
     modifier = Modifier
       .padding(bottom = 15.dp, start = 10.dp, end = 10.dp)
       .fillMaxWidth()
-      .height(146.dp)
+      .height(150.dp)
       .clip(RoundedCornerShape(5.dp))
       .background(themeColors.surface)
       .clickable { onClick(data.title) },
@@ -163,7 +163,7 @@ private fun ColumnScope.SearchContent(
 
     Box(
       modifier = Modifier
-        .padding(top = 3.dp)
+        .padding(top = 5.dp)
         .weight(1f),
       contentAlignment = Alignment.BottomCenter
     ) {
@@ -232,7 +232,7 @@ private fun ComposedFooter(
 
   Row(
     modifier = Modifier
-      .padding(top = 3.dp)
+      .padding(top = 5.dp)
       .fillMaxWidth(),
     horizontalArrangement = Arrangement.End
   ) {

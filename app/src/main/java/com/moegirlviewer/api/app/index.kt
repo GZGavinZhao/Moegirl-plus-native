@@ -43,11 +43,10 @@ object AppApi {
 
   suspend fun getMoegirlSplashImageConfig(): List<MoegirlSplashImageBean> {
     val request = Request.Builder()
-      .url("https://cdn.jsdelivr.net/gh/koharubiyori/Moegirl-plus-assets/splashImageList.json")
+      .url("https://mzh.moegirl.org.cn/index.php?curid=519007&action=raw")
       .build()
     return request.send(
       entity = Array<MoegirlSplashImageBean>::class.java,
-      client = commonOkHttpClient
     ).toList()
   }
 
