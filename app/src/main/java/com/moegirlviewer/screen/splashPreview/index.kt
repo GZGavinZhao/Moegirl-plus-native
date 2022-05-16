@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SplashPreviewScreen(arguments: SplashPreviewRouteArguments) {
   val model: SplashPreviewScreenModel = hiltViewModel()
-  val splashImageList = rememberMoegirlSplashImageList()
+  val splashImageList = rememberMoegirlSplashImageList().reversed()
   if (splashImageList.isEmpty()) return
   val pagerState = rememberPagerState(
     initialPage = splashImageList.indexOfFirst { it.key == arguments.intiialSplashImageKey }
