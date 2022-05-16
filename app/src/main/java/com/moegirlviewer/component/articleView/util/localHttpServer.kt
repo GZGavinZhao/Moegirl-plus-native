@@ -17,13 +17,14 @@ import kotlinx.coroutines.*
 import okhttp3.Request
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.net.BindException
 import java.net.URLDecoder
 import java.util.stream.Collectors
 
 object LocalHttpServer {
-  val port = 17456
+  var port = (10000..87167).random()
   val host = "0.0.0.0"
-  val rootUrl = "http://$host:$port"
+  val rootUrl get() = "http://$host:$port"
   private var server: ApplicationEngine? = null
 
   fun stop() {
@@ -33,9 +34,10 @@ object LocalHttpServer {
 
   @OptIn(EngineAPI::class)
   @SuppressLint("ResourceType")
-  fun start() {
+  fun start(port: Int = (10000..87167).random()) {
     if (server != null) return
-    server = embeddedServer(CIO,
+    this.port = port
+    fun startEmbeddedServer() = embeddedServer(CIO,
       host = host,
       port = port
     ) {
@@ -84,6 +86,13 @@ object LocalHttpServer {
         }
       }
     }.start(false)
+
+    // 防止端口冲突
+    try {
+      server = startEmbeddedServer()
+    } catch (e: BindException) {
+      start()
+    }
   }
 }
 

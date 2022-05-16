@@ -11,8 +11,10 @@ import kotlinx.coroutines.launch
 
 fun Application.initializeOnCreate() {
   Globals.room = initRoom(applicationContext)
-  LocalHttpServer.start()
-  QbSdk.forceSysWebView()
+  coroutineScope.launch {
+    LocalHttpServer.start()
+    QbSdk.forceSysWebView()
+  }
 }
 
 private val coroutineScope = CoroutineScope(Dispatchers.Default)

@@ -22,9 +22,12 @@ class CommonRequestException(
   cause = cause
 )
 
-suspend fun <T> Request.send(entity: Class<T>): T = withContext(Dispatchers.IO) {
+suspend fun <T> Request.send(
+  entity: Class<T>,
+  client: OkHttpClient = moeOkHttpClient
+): T = withContext(Dispatchers.IO) {
   val res = try {
-    moeOkHttpClient.newCall(this@send).execute()
+    client.newCall(this@send).execute()
   } catch (e: Exception) {
     throw CommonRequestException(
       message = e.message,

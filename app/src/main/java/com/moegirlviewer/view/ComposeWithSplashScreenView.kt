@@ -41,7 +41,7 @@ class ComposeWithSplashScreenView(
   suspend fun hideSplashScreen() {
     if (splashHid) return
     composeContentView.alpha = 1f
-    splashScreenView.splashScreenState.showTransparentAnimation()
+//    splashScreenView.splashScreenState.showTransparentAnimation()
     this.removeView(splashScreenView)
     splashHid = true
   }
@@ -67,9 +67,9 @@ class SplashScreenView(
   private fun fillContent() {
     composeView.setContent {
       val coroutineScope = rememberCoroutineScope()
-      splashScreenState = remember { SplashScreenState(coroutineScope, splashImage) }
+//      splashScreenState = remember { SplashScreenState(coroutineScope, splashImage) }
 
-      SplashScreen(splashScreenState)
+//      SplashScreen(splashScreenState)
     }
   }
 }

@@ -135,7 +135,6 @@ object MoegirlSplashImageManager {
     allReferencedImageUrls
       .filter { imageUrl -> rootDir.existsChild(imageUrl.localImageFileName()).not() }
       .map { imageUrl ->
-        printDebugLog(imageUrl)
         launch {
           val request = Request.Builder()
             .url(imageUrl)

@@ -12,6 +12,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,6 +62,7 @@ import com.moegirlviewer.screen.search.SearchScreen
 import com.moegirlviewer.screen.searchResult.SearchResultRouteArguments
 import com.moegirlviewer.screen.searchResult.SearchResultScreen
 import com.moegirlviewer.screen.settings.SettingsScreen
+import com.moegirlviewer.screen.splash.SplashScreen
 import com.moegirlviewer.screen.splashPreview.SplashPreviewRouteArguments
 import com.moegirlviewer.screen.splashPreview.SplashPreviewScreen
 import com.moegirlviewer.screen.splashSetting.SplashImageMode
@@ -97,55 +100,29 @@ class MainActivity : ComponentActivity() {
       window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
     }
 
+    application.initializeOnCreate()
+    initializeOnCreate()
+    useFullScreenLayout()
+
     @Composable
     fun ContentBody() {
       MoegirlPlusTheme {
         OnComposeWillCreate {
           ProvideWindowInsets {
-            Routes(it)
+            Box(
+              modifier = Modifier
+                .fillMaxSize()
+            ) {
+              Routes(it)
+              SplashScreen()
+            }
           }
         }
       }
     }
 
-    coroutineScope.launch(
-      start = CoroutineStart.UNDISPATCHED
-    ) {
-      val hasDeepLink = intent.dataString != null
-      val hasShortcutAction = intent.shortcutAction != null
-      val splashImageMode = SettingsStore.common.getValue { this.splashImageMode }.first()
-      val isShowSplashScreen = !hasDeepLink &&
-        !hasShortcutAction &&
-        splashImageMode != SplashImageMode.OFF
-
-      if (isShowSplashScreen) {
-        withSplashScreen(
-          splashImageMode = splashImageMode,
-          content = { ContentBody() }
-        )
-      } else {
-        application.initializeOnCreate()
-        initializeOnCreate()
-        useFreeStatusBarLayout()
-
-        setContent {
-          ContentBody()
-        }
-      }
-    }
+    setContent { ContentBody() }
   }
-
-//  override fun onActionModeStarted(mode: ActionMode?) {
-//    mode?.menu?.add(getString(R.string.searchInSite))?.apply {
-//      setOnMenuItemClickListener {
-////        Globals.navController.navigate(SearchResultRouteArguments())
-//        mode.finish()
-//        true
-//      }
-//    }
-//
-//    super.onActionModeStarted(mode)
-//  }
 
   override fun onDestroy() {
     super.onDestroy()
@@ -277,77 +254,6 @@ private fun Routes(navController: NavHostController) {
       route = "randomPages",
     ) { RandomPagesScreen() }
   }
-}
-
-private suspend fun ComponentActivity.withSplashScreen(
-  splashImageMode: SplashImageMode,
-  content: @Composable () -> Unit
-) = coroutineScope {
-  useFullScreenLayout()
-  statusBarLocked = true
-
-  val usingSplashImage = if (isMoegirl()) {
-    when(splashImageMode) {
-      SplashImageMode.NEW -> MoegirlSplashImageManager.getLatestImage()
-      SplashImageMode.RANDOM -> MoegirlSplashImageManager.getRandomImage()
-      SplashImageMode.CUSTOM_RANDOM -> {
-        val imageList = MoegirlSplashImageManager.getImageList()
-        SettingsStore.common.getValue { this.selectedSplashImages }
-          .map { it.ifEmpty { imageList.map { it.key } } }
-          .map { splashImageKeys -> imageList.filter { splashImageKeys.contains(it.key) } }
-          .first()
-          .randomOrNull() ?: SplashImage.onlyUseInSplashScreen(MoegirlSplashImageManager.fallbackImage)
-      }
-      else -> null
-    }!!
-  } else {
-    HmoeSplashImageManager.getRandomImage()
-  }
-
-  val mainWithSplashView = ComposeWithSplashScreenView(
-    context = this@withSplashScreen,
-    splashImage = usingSplashImage
-  )
-
-  setContentView(mainWithSplashView)
-  mainWithSplashView.setContent(content)
-
-  launch(start = CoroutineStart.UNDISPATCHED) {
-    mainWithSplashView.appearSplashScreen()
-  }
-
-  suspend fun complete() {
-    mainWithSplashView.hideSplashScreen()
-    useFreeStatusBarLayout()
-    statusBarLocked = false
-  }
-
-  launch {
-    delay(3000)
-    complete()
-  }
-
-  application.initializeOnCreate()
-  initializeOnCreate()
-}
-
-@Composable
-private fun AppDefaultEnterAnimation(
-  content: @Composable () -> Unit
-) {
-  val alpha = remember { Animatable(0f) }
-
-  LaunchedEffect(true) {
-    alpha.animateTo(
-      targetValue = 1f,
-      animationSpec = tween(durationMillis = 500)
-    )
-  }
-
-  Center(
-    modifier = Modifier.alpha(alpha.value),
-    content = { content() }
-  )
 }
 
 private fun Context.getHttpUserAgent(): String {

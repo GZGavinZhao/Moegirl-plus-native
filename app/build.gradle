@@ -132,7 +132,7 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
 
-    implementation "com.squareup.okhttp3:okhttp:4.9.3"   // 不能升级到4.9.3，会导致更容易被萌百的waf拦截，具体原因不明
+    implementation "com.squareup.okhttp3:okhttp:4.9.3"
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
     implementation "com.google.dagger:hilt-android:2.35"
