@@ -108,7 +108,9 @@ class MainActivity : ComponentActivity() {
       }
     }
 
-    coroutineScope.launch {
+    coroutineScope.launch(
+      start = CoroutineStart.UNDISPATCHED
+    ) {
       val hasDeepLink = intent.dataString != null
       val hasShortcutAction = intent.shortcutAction != null
       val splashImageMode = SettingsStore.common.getValue { this.splashImageMode }.first()
@@ -127,7 +129,7 @@ class MainActivity : ComponentActivity() {
         useFreeStatusBarLayout()
 
         setContent {
-          AppDefaultEnterAnimation { ContentBody() }
+          ContentBody()
         }
       }
     }
@@ -285,15 +287,17 @@ private suspend fun ComponentActivity.withSplashScreen(
   statusBarLocked = true
 
   val usingSplashImage = if (isMoegirl()) {
-    val imageList = MoegirlSplashImageManager.getImageList()
     when(splashImageMode) {
       SplashImageMode.NEW -> MoegirlSplashImageManager.getLatestImage()
       SplashImageMode.RANDOM -> MoegirlSplashImageManager.getRandomImage()
-      SplashImageMode.CUSTOM_RANDOM -> SettingsStore.common.getValue { this.selectedSplashImages }
-        .map { it.ifEmpty { imageList.map { it.key } } }
-        .map { splashImageKeys -> imageList.filter { splashImageKeys.contains(it.key) } }
-        .first()
-        .randomOrNull() ?: SplashImage.onlyUseInSplashScreen(MoegirlSplashImageManager.fallbackImage)
+      SplashImageMode.CUSTOM_RANDOM -> {
+        val imageList = MoegirlSplashImageManager.getImageList()
+        SettingsStore.common.getValue { this.selectedSplashImages }
+          .map { it.ifEmpty { imageList.map { it.key } } }
+          .map { splashImageKeys -> imageList.filter { splashImageKeys.contains(it.key) } }
+          .first()
+          .randomOrNull() ?: SplashImage.onlyUseInSplashScreen(MoegirlSplashImageManager.fallbackImage)
+      }
       else -> null
     }!!
   } else {
@@ -306,15 +310,16 @@ private suspend fun ComponentActivity.withSplashScreen(
   )
 
   setContentView(mainWithSplashView)
+  mainWithSplashView.setContent(content)
+
+  launch(start = CoroutineStart.UNDISPATCHED) {
+    mainWithSplashView.appearSplashScreen()
+  }
 
   suspend fun complete() {
     mainWithSplashView.hideSplashScreen()
     useFreeStatusBarLayout()
     statusBarLocked = false
-  }
-
-  launch {
-    mainWithSplashView.appearSplashScreen()
   }
 
   launch {
@@ -324,8 +329,6 @@ private suspend fun ComponentActivity.withSplashScreen(
 
   application.initializeOnCreate()
   initializeOnCreate()
-
-  mainWithSplashView.setContent(content)
 }
 
 @Composable
@@ -337,7 +340,7 @@ private fun AppDefaultEnterAnimation(
   LaunchedEffect(true) {
     alpha.animateTo(
       targetValue = 1f,
-      animationSpec = tween(durationMillis = 700)
+      animationSpec = tween(durationMillis = 500)
     )
   }
 

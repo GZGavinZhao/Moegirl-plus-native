@@ -8,8 +8,8 @@ import com.moegirlviewer.util.MediaWikiNamespace
 object SearchApi {
   suspend fun getHint(
     keyword: String,
-    limit: Int = 50,
-//    offset: Int = 0,    // 不知为何设置这个后，返回的搜索结果就会为空
+    limit: Int = 20,
+    offset: Int = 0,    // 不知为何设置这个后，返回的搜索结果就会为空
     namespace: MediaWikiNamespace? = null
   )  = moeRequest(
     entity = SearchHintBean::class.java,
@@ -18,15 +18,22 @@ object SearchApi {
       this["list"] = "prefixsearch"
       this["pssearch"] = keyword
       this["pslimit"] = limit
-//      this["psoffset"] = offset
+      this["psoffset"] = offset
       if (namespace != null) this["psnamespace"] = namespace.code
 
       this["gpssearch"] = keyword
       this["gpslimit"] = limit
       this["pithumbsize"] = 500
-//      this["gpsoffset"] = offset
-      this["prop"] = "pageimages"
+      this["gpsoffset"] = offset
+      this["prop"] = "pageimages|extracts"
       this["generator"] = "prefixsearch"
+
+      this["exsentences"] = 1
+      this["exlimit"] = limit
+      this["exintro"] = 1
+      this["explaintext"] = 1
+      this["exsectionformat"] = 1
+      this["exsectionformat"] = "plain"
     }
   )
 

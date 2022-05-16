@@ -14,7 +14,8 @@ data class SearchHintBean(
       val pageid: Int,
       val pageimage: String,
       val thumbnail: Thumbnail?,
-      val title: String
+      val title: String,
+      val extract: String
     ) {
       data class Thumbnail(
         val height: Int,

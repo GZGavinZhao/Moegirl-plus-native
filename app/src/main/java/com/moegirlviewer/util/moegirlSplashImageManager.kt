@@ -68,18 +68,18 @@ object MoegirlSplashImageManager {
     SplashImage.onlyUseInSplashScreen(randomImageDrawable)
   }
 
-  fun getLatestImage(): SplashImage {
+  suspend fun getLatestImage(): SplashImage = withContext(Dispatchers.IO) {
     val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
     val localImagesMap = localImages.associateBy { it.name }
 
-    val drawable = if (this::config.isInitialized) {
+    val drawable = if (this@MoegirlSplashImageManager::config.isInitialized) {
       val latestImageName = config.last().url.localImageFileName()
       localImagesMap[latestImageName]?.let { DrawableWrapper.createFromPath(it.path) } ?: fallbackImage
     } else {
       fallbackImage
     }
 
-    return SplashImage.onlyUseInSplashScreen(drawable)
+    SplashImage.onlyUseInSplashScreen(drawable)
   }
 
   private var imageList: List<MoegirlSplashImage>? = null

@@ -21,7 +21,7 @@ class SplashScreenState(
         targetValue = 1f,
         animationSpec = tween(
           delayMillis = 1000,
-          durationMillis = 300
+          durationMillis = 200
         )
       )
 
@@ -35,7 +35,7 @@ class SplashScreenState(
       contentAlpha.animateTo(
         targetValue = 1f,
         animationSpec = tween(
-          durationMillis = 350
+          durationMillis = 200
         )
       )
 
@@ -52,7 +52,7 @@ class SplashScreenState(
     contentAlpha.animateTo(
       targetValue = 0f,
       animationSpec = tween(
-        durationMillis = 350
+        durationMillis = 200
       )
     )
   }

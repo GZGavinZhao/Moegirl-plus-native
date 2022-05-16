@@ -21,7 +21,7 @@ import java.net.URLDecoder
 import java.util.stream.Collectors
 
 object LocalHttpServer {
-  val port = 8080
+  val port = 17456
   val host = "0.0.0.0"
   val rootUrl = "http://$host:$port"
   private var server: ApplicationEngine? = null
