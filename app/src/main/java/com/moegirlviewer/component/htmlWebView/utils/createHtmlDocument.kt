@@ -51,12 +51,12 @@ suspend fun createHtmlUnicodeDocument(
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
       <title>$title</title>
       $injectedCssFileTagsStr
-      $injectedStyleTagsStr
       </head>
     """.trimIndent(),
       "<body>$body</body>",
       """
       $injectedJsFileTagsStr
+      $injectedStyleTagsStr
       $injectedScriptTagsStr
       </html>  
     """.trimIndent()

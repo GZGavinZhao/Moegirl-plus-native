@@ -72,7 +72,7 @@ fun HtmlWebView(
     } else {
       createHtmlUnicodeDocument(content.value!!.body,
         title = contentValue.title,
-        injectedAssetFiles = contentValue.injectedFiles ?: emptyList(),
+        injectedFilePaths = contentValue.injectedFiles ?: emptyList(),
         injectedStyles = listOf(
           *contentValue.injectedStyles?.toTypedArray() ?: emptyArray()
         ),
