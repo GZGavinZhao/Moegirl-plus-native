@@ -43,20 +43,22 @@ suspend fun createHtmlUnicodeDocument(
   val unicodeDocumentChunks = withContext(Dispatchers.Default) {
     listOf(
       """
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <title>$title</title>
-      $injectedCssFileTagsStr
-      </head>
-    """.trimIndent(),
-      "<body>$body</body>",
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>$title</title>
+        $injectedCssFileTagsStr
+      """.trimIndent(),
+      """
+        $injectedStyleTagsStr
+        </head>
+        <body>$body</body>
+      """.trimIndent(),
       """
       $injectedJsFileTagsStr
-      $injectedStyleTagsStr
       $injectedScriptTagsStr
       </html>  
     """.trimIndent()
@@ -66,7 +68,10 @@ suspend fun createHtmlUnicodeDocument(
   }
 
   return unicodeDocumentChunks.toMutableList()
-    .apply { addAll(2, listOf(injectedCssFiles, injectedJsFiles)) }
+    .apply {
+      add(1, injectedCssFiles)
+      add(3, injectedJsFiles)
+    }
     .joinToString("")
 //  return """
 //    <!DOCTYPE html>

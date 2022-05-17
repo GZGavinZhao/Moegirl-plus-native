@@ -82,6 +82,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     return if (isLightRequestMode) {
       if (truePageName != null)
         truePageName!!.contains(disabledShowCommentButtonRegexForLightRequestMode).not()
+          && isMoegirl(true, hmoeCommentDisabledTitles.contains(truePageName).not())
         else false
     } else {
       listOf(
