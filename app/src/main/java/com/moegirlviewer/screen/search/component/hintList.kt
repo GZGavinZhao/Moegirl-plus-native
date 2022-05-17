@@ -2,10 +2,8 @@ package com.moegirlviewer.screen.search.component
 
 import android.inputmethodservice.Keyboard
 import android.os.Parcelable
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -246,16 +244,16 @@ private fun SearchInPagesContentHint() {
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .height(70.dp)
-      .padding(end = 10.dp)
+      .height(50.dp)
       .clickable {
          Globals.navController.navigate(SearchResultRouteArguments(model.keywordInputValue))
-      },
+      }
+      .padding(start = 10.dp, end = 10.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
     Icon(
       modifier = Modifier
-        .size(60.dp),
+        .size(30.dp),
       imageVector = Icons.Filled.FindInPage,
       contentDescription = null,
       tint = themeColors.primaryVariant
