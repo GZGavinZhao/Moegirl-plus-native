@@ -20,8 +20,10 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.screen.article.ReadingRecord
 import com.moegirlviewer.util.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.stream.Collectors
 
 @Composable
 fun ArticleView(
@@ -135,11 +137,11 @@ fun ArticleView(
       .then(modifier)
   ) {
     HtmlWebView(
-      baseUrl = LocalHttpServer.rootUrl,
+//      baseUrl = LocalHttpServer.rootUrl,
       messageHandlers = coreState.defaultMessageHandlers + (coreState.messageHandlers ?: emptyMap()),
       onScrollChanged = coreState.onScrollChanged,
       ref = coreState.htmlWebViewRef,
-//      shouldInterceptRequest = { webView, request -> coreState.shouldInterceptRequest(webView, request) }
+      shouldInterceptRequest = { webView, request -> coreState.shouldInterceptRequest(webView, request) }
     )
 
     if (coreState.visibleLoadStatusIndicator && state.status != LoadStatus.SUCCESS) {

@@ -53,12 +53,9 @@ fun openHttpUrl(url: String) {
 }
 
 // 主要用于在向webView注入脚本之前，将脚本内容转义
-suspend fun String.toUnicodeForInjectScriptInWebView(): String {
-  val text = this
-  return withContext(Dispatchers.Default) {
-    fun encode(char: Char) = "\\u" + char.code.toHexString().padStart(4, '0')
-    text.toCharArray().joinToString("") { encode(it) }
-  }
+fun String.toUnicodeForInjectScriptInWebView(): String {
+  fun encode(char: Char) = "\\u" + char.code.toHexString().padStart(4, '0')
+  return this.toCharArray().joinToString("") { encode(it) }
 }
 
 fun shareText(content: String) {

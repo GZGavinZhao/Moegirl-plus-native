@@ -16,7 +16,9 @@ import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.ProguardIgnore
 import com.moegirlviewer.util.toCssRgbaString
 import com.moegirlviewer.util.toUnicodeForInjectScriptInWebView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun WikiEditor(
@@ -113,12 +115,12 @@ class WikiEditorState {
 
   internal suspend fun setTextContent(text: String) {
     lastSettingContent = text
-    val escapedText = text.toUnicodeForInjectScriptInWebView()
+    val escapedText = withContext(Dispatchers.Default) { text.toUnicodeForInjectScriptInWebView() }
     htmlWebViewRef.value!!.injectScript("editor.setValue('$escapedText')")
   }
 
   internal suspend fun insertTextAtCursor(text: String) {
-    val escapedText = text.toUnicodeForInjectScriptInWebView()
+    val escapedText = withContext(Dispatchers.Default) { text.toUnicodeForInjectScriptInWebView() }
     htmlWebViewRef.value!!.injectScript("editor.replaceSelection('$escapedText')")
   }
 

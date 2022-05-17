@@ -18,6 +18,7 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.OneTimeLaunchedEffect
 import com.moegirlviewer.compable.remember.rememberDebouncedManualEffector
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.Center
@@ -51,6 +52,15 @@ fun ArticleScreen(
 
   SideEffect {
     model.routeArguments = arguments
+  }
+
+  OneTimeLaunchedEffect(model.articleViewState.status) {
+    if (model.articleViewState.status == LoadStatus.SUCCESS) {
+      model.handleOnArticleLoaded()
+      return@OneTimeLaunchedEffect true
+    }
+
+    false
   }
 
   LaunchedEffect(isLightRequestMode) {
@@ -309,7 +319,9 @@ private fun ComposedArticleView(
         contentTopPadding = (Constants.topAppBarHeight + Globals.statusBarHeight).dp,
         addCategories = model.truePageName != "H萌娘:官方群组",
         onScrollChanged = handleOnScrollChanged,
-        onArticleRendered = { model.handleOnArticleRendered() },
+        onArticleRendered = {
+          scope.launch { model.handleOnArticleRendered() }
+        },
         onPreGotoEdit = { model.handleOnPreGotoEdit() },
         onArticleMissed = { model.handleOnArticleMissed() },
         emitCatalogData = { model.catalogData = it },

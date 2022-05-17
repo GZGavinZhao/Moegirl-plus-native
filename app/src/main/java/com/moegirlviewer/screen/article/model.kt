@@ -104,51 +104,45 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   // 用于记录页面刚进入时是否为轻请求模式，如果是的话那么在轻请求选项关闭时，该页面需要刷新
   var isLightRequestModeWhenOpened: Boolean? = null
 
-  init {
-    coroutineScope.launch {
-      snapshotFlow { articleViewState.status }
-        .filter { it == LoadStatus.SUCCESS }
-        .collect { handleOnArticleLoaded() }
-    }
-  }
-
-  fun handleOnArticleLoaded() {
-    coroutineScope.launch {
-      isWatched = Globals.room.watchingPage().exists(truePageName!!)
-    }
+  suspend fun handleOnArticleLoaded() = coroutineScope {
+    listOf(
+      launch {
+        isWatched = Globals.room.watchingPage().exists(truePageName!!)
+      },
 //    isWatched = articleInfo?.watched != null
 
-    coroutineScope.launch {
-      delay(500)
-      visibleCommentButton = true
-    }
+      launch {
+        delay(500)
+        visibleCommentButton = true
+      },
 
-    coroutineScope.launch {
-      CommentStore.loadNext(pageId!!)
-    }
+      launch {
+        CommentStore.loadNext(pageId!!)
+      },
 
-    coroutineScope.launch {
-      val mainPageUrl = try {
-        PageApi.getMainImageAndIntroduction(routeArguments.pageKey!!, size = 250).query.pages.values.first().thumbnail?.source
-      } catch (e: MoeRequestException) { null }
+      launch {
+        val mainPageUrl = try {
+          PageApi.getMainImageAndIntroduction(routeArguments.pageKey!!, size = 250).query.pages.values.first().thumbnail?.source
+        } catch (e: MoeRequestException) { null }
 
-      Globals.room.browsingRecord().insertItem(BrowsingRecord(
-        pageName = truePageName!!,
-        displayName = displayPageName,
-        imgUrl = mainPageUrl
-      ))
-    }
+        Globals.room.browsingRecord().insertItem(BrowsingRecord(
+          pageName = truePageName!!,
+          displayName = displayPageName,
+          imgUrl = mainPageUrl
+        ))
+      },
 
-    coroutineScope.launch {
+      launch {
 //      val isLightRequestMode = SettingsStore.common.getValue { lightRequestMode }.first()
-      val isLightRequestMode = true
-      if (isLightRequestMode) {
-        // 轻请求模式直接允许，之后再点击编辑时检查权限
-        editAllowed = EditAllowedStatus.ALLOWED_FULL
-      } else {
-        checkEditAllowed()
+        val isLightRequestMode = true
+        if (isLightRequestMode) {
+          // 轻请求模式直接允许，之后再点击编辑时检查权限
+          editAllowed = EditAllowedStatus.ALLOWED_FULL
+        } else {
+          checkEditAllowed()
+        }
       }
-    }
+    ).forEach { it.join() }
   }
 
   fun handleOnArticleMissed() {
@@ -167,20 +161,17 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     ))
   }
 
-  fun handleOnArticleRendered() {
+  suspend fun handleOnArticleRendered() {
     if (routeArguments.anchor != null) {
-      coroutineScope.launch {
-        val minusOffset = Constants.topAppBarHeight + Globals.statusBarHeight
-        articleViewState.injectScript("""
+      val minusOffset = Constants.topAppBarHeight + Globals.statusBarHeight
+      articleViewState.injectScript("""
           document.getElementById('${routeArguments.anchor}').scrollIntoView()
           window.scrollTo(0, window.scrollY - $minusOffset)
         """.trimIndent())
-      }
     }
 
     if (truePageName == "H萌娘:官方群组") {
-      coroutineScope.launch {
-        articleViewState.injectScript("""
+      articleViewState.injectScript("""
           document.getElementById('app-background').style.display = 'block'
           document.getElementById('app-background-top-padding').style.height = '${Constants.topAppBarHeight + Globals.statusBarHeight}px'
           document.body.style.maxHeight = '100%'
@@ -191,15 +182,12 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
           styleTag.innerHTML = '.mw-headline::after { display: none }'
           document.head.append(styleTag)          
         """.trimIndent())
-      }
     }
 
     if (routeArguments.readingRecord != null) {
-      coroutineScope.launch {
-        articleViewState.injectScript("""
+      articleViewState.injectScript("""
           window.scrollTo(0, ${routeArguments.readingRecord!!.scrollY})
         """.trimIndent())
-      }
     }
   }
 
@@ -377,11 +365,9 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 //    }
 
     val minusOffset = Constants.topAppBarHeight + Globals.statusBarHeight
-    coroutineScope.launch {
-      articleViewState.injectScript(
-        "moegirl.method.link.gotoAnchor('$anchor', -$minusOffset)"
-      )
-    }
+    articleViewState.injectScript(
+      "moegirl.method.link.gotoAnchor('$anchor', -$minusOffset)"
+    )
   }
 
   fun share() {
@@ -395,10 +381,10 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   }
 
   override fun onCleared() {
-    super.onCleared()
-    coroutineScope.cancel()
     cachedWebViews.destroyAllInstance()
+    coroutineScope.cancel()
     routeArguments.removeReferencesFromArgumentPool()
+    super.onCleared()
   }
 }
 

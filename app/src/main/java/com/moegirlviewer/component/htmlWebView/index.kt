@@ -12,10 +12,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.moegirlviewer.compable.remember.rememberFromMemory
-import com.moegirlviewer.component.htmlWebView.utils.createHtmlDocument
+import com.moegirlviewer.component.htmlWebView.utils.createHtmlUnicodeDocument
 import com.moegirlviewer.component.htmlWebView.utils.createWebViewTrackDrawable
 import com.moegirlviewer.util.LocalCachedWebViews
-import com.moegirlviewer.util.printDebugLog
 import com.moegirlviewer.util.toUnicodeForInjectScriptInWebView
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
 import com.tencent.smtt.export.external.interfaces.WebResourceResponse
@@ -65,15 +64,15 @@ fun HtmlWebView(
     }
   }
 
-  fun reloadWebView() {
+  fun reloadWebView() = scope.launch {
     val contentValue = content.value!!
 
     val htmlDocument = if (contentValue.fullBody) {
       contentValue.body
     } else {
-      createHtmlDocument(content.value!!.body,
+      createHtmlUnicodeDocument(content.value!!.body,
         title = contentValue.title,
-        injectedFiles = contentValue.injectedFiles ?: emptyList(),
+        injectedAssetFiles = contentValue.injectedFiles ?: emptyList(),
         injectedStyles = listOf(
           *contentValue.injectedStyles?.toTypedArray() ?: emptyArray()
         ),
@@ -84,17 +83,14 @@ fun HtmlWebView(
       )
     }
 
-    // html内容转unicode，防止误解析。因为计算量大这里使用协程
-    scope.launch {
-      withContext(Dispatchers.Default) {
-        val willExecJavascript = """
+    withContext(Dispatchers.Default) {
+      val willExecJavascript = """
           document.open()
-          document.write("${htmlDocument.toUnicodeForInjectScriptInWebView()}")
+          document.write("$htmlDocument")
           document.close()
           document.title = "${content.value!!.title}"
         """.trimIndent()
-        injectScript(willExecJavascript)
-      }
+      injectScript(willExecJavascript)
     }
   }
 

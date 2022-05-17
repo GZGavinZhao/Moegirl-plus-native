@@ -39,7 +39,10 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.net.URLEncoder
+import java.util.stream.Collectors
 
 typealias ArticleData = PageContentResBean
 typealias ArticleInfo = PageInfoResBean.Query.MapValue
@@ -187,10 +190,8 @@ class ArticleViewStateCore() {
     coroutineScope {
       for (cookie in cookies) {
         launch {
-          val completableDeferred = CompletableDeferred<Unit>()
-          cookieManager.setCookie(Constants.domain, cookie.toString()) {
-            completableDeferred.complete(Unit)
-          }
+//          val completableDeferred = CompletableDeferred<Unit>()
+          cookieManager.setCookie(Constants.domain, cookie.toString())
         }
       }
     }
@@ -206,10 +207,10 @@ class ArticleViewStateCore() {
       *(injectedScripts ?: emptyList()).toTypedArray(),
     )
 
-    val imageProxyArticleHtml = articleHtml.imageProxy()
+//    val imageProxyArticleHtml = articleHtml.imageProxy()
     htmlWebViewRef.value?.updateContent?.invoke {
       HtmlWebViewContent(
-        body = imageProxyArticleHtml,
+        body = articleHtml,
         title = pageName,
         injectedStyles = injectedStyles,
         injectedScripts = injectedScripts,

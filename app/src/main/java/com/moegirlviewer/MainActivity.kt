@@ -126,7 +126,7 @@ class MainActivity : ComponentActivity() {
 
   override fun onDestroy() {
     super.onDestroy()
-    LocalHttpServer.stop()
+//    LocalHttpServer.stop()
   }
 }
 
