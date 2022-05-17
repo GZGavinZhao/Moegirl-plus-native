@@ -1,6 +1,8 @@
 package com.moegirlviewer.api.app
 
+import androidx.compose.ui.unit.Constraints
 import com.google.gson.Gson
+import com.moegirlviewer.Constants
 import com.moegirlviewer.api.app.bean.AppLastVersionBean
 import com.moegirlviewer.api.app.bean.HmoeSplashImageConfigBean
 import com.moegirlviewer.api.app.bean.MoegirlSplashImageBean
@@ -43,7 +45,7 @@ object AppApi {
 
   suspend fun getMoegirlSplashImageConfig(): List<MoegirlSplashImageBean> {
     val request = Request.Builder()
-      .url("https://mzh.moegirl.org.cn/index.php?curid=519007&action=raw")
+      .url("${Constants.mainUrl}/index.php?curid=519007&action=raw")
       .build()
     return request.send(
       entity = Array<MoegirlSplashImageBean>::class.java,
@@ -52,7 +54,7 @@ object AppApi {
 
   suspend fun getHmoeSplashImageConfig(): HmoeSplashImageConfigBean {
     val request = Request.Builder()
-      .url("https://www.hmoegirl.com/index.php?title=User:%E6%9D%B1%E6%9D%B1%E5%90%9B/app/splashImages&action=raw")
+      .url("${Constants.mainUrl}/index.php?title=User:%E6%9D%B1%E6%9D%B1%E5%90%9B/app/splashImages&action=raw")
       .build()
     return request.send(HmoeSplashImageConfigBean::class.java)
   }

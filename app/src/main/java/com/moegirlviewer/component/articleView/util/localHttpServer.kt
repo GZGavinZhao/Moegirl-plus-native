@@ -19,8 +19,8 @@ import java.net.URLDecoder
 import java.util.stream.Collectors
 
 object LocalHttpServer {
-  var port = isMoegirl(12986, 26715)
-  val host = "0.0.0.0"
+  var port = isMoegirl(12986, 12987)
+  val host = "127.0.0.1"
   val rootUrl get() = "http://$host:$port"
   private var server: ApplicationEngine? = null
 
@@ -52,13 +52,6 @@ object LocalHttpServer {
           call.respondText(fileContent, ContentType.parse("text/css"))
         }
 
-//        get("/mmd-previewer-worker.js") {
-//          val inputStream = Globals.context.assets.open("mmd-previewer-worker.js")
-//          val result: String = BufferedReader(InputStreamReader(inputStream))
-//            .lines().parallel().collect(Collectors.joining("\n"))
-//          call.respondText(result, ContentType.parse("text/javascript"))
-//        }
-
         get("/font/nospz_gothic_moe.ttf") {
           val fileContent = nospz_gothic_moeFontCompletableDeferred.await()
           call.respondBytes(fileContent)
@@ -85,7 +78,7 @@ object LocalHttpServer {
   }
 }
 
-private val coroutineScope = CoroutineScope(Dispatchers.Default)
+private val coroutineScope = CoroutineScope(Dispatchers.IO)
 private val mainJsCompletableDeferred = CompletableDeferred<String>().apply {
   coroutineScope.launch {
     val inputStream = Globals.context.assets.open("main.js")
