@@ -11,13 +11,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
+import com.moegirlviewer.api.page.bean.PageProfileBean
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.util.gotoArticlePage
 import kotlin.math.min
 
 @Composable
 fun TextLayoutNewPages(
-  pageList: List<NewPagesBean.Query.MapValue>
+  pageList: List<PageProfileBean.Query.MapValue>
 ) {
   val themeColors = MaterialTheme.colors
 

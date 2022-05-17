@@ -7,24 +7,50 @@ data class NewPagesBean(
 ) {
   data class Continue(
     val `continue`: String,
-    val grccontinue: String
+    val rccontinue: String
   )
 
   data class Query(
-    val pages: Map<Int,MapValue>
+    val recentchanges: List<Recentchange>
   ) {
-    data class MapValue(
-      val extract: String,
+    data class Recentchange(
       val ns: Int,
+      val old_revid: Int,
       val pageid: Int,
-      val thumbnail: Thumbnail? = null,
+      val rcid: Int,
+      val revid: Int,
+      val timestamp: String,
       val title: String,
-    ) {
-      data class Thumbnail(
-        val height: Int,
-        val source: String,
-        val width: Int
-      )
-    }
+      val type: String
+    )
   }
 }
+
+//data class NewPagesBean(
+//  val batchcomplete: String,
+//  val `continue`: Continue,
+//  val query: Query
+//) {
+//  data class Continue(
+//    val `continue`: String,
+//    val grccontinue: String
+//  )
+//
+//  data class Query(
+//    val pages: Map<Int,MapValue>
+//  ) {
+//    data class MapValue(
+//      val extract: String,
+//      val ns: Int,
+//      val pageid: Int,
+//      val thumbnail: Thumbnail? = null,
+//      val title: String,
+//    ) {
+//      data class Thumbnail(
+//        val height: Int,
+//        val source: String,
+//        val width: Int
+//      )
+//    }
+//  }
+//}

@@ -1,6 +1,7 @@
 package com.moegirlviewer.api.page
 
 import com.moegirlviewer.Constants
+import com.moegirlviewer.api.page.bean.PageProfileBean
 import com.moegirlviewer.api.page.bean.*
 import com.moegirlviewer.request.MoeRequestMethod
 import com.moegirlviewer.request.moeRequest
@@ -130,6 +131,20 @@ object PageApi {
         this["continue"] = "grncontinue||"
         this["grncontinue"] = continueKey
       }
+    }
+  )
+
+  suspend fun getPageProfile(pageKey: PageKey) = moeRequest(
+    entity = PageProfileBean::class.java,
+    params = mutableMapOf<String, Any>().apply {
+      this["action"] = "query"
+      this["prop"] = "pageimages|extracts"
+      addQueryApiParamsByPageKey(pageKey)
+      this["pithumbsize"] = 500
+      this["exsentences"] = 10
+      this["exlimit"] = 20
+      this["exintro"] = 1
+      this["explaintext"] = 1
     }
   )
 }

@@ -43,9 +43,9 @@ fun SplashScreen(
       state.splashImage = state.getUsingSplashImage()
       state.showAppearAnimation()
       state.visible = false
-      statusBarLocked = false
       delay(200)
       Globals.activity.useFreeStatusBarLayout()
+      statusBarLocked = false
     } else {
       Globals.activity.useFreeStatusBarLayout()
       state.visible = false

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
+import com.moegirlviewer.api.page.bean.PageProfileBean
 import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.RippleColorScope
@@ -28,7 +29,7 @@ import com.moegirlviewer.util.gotoArticlePage
 
 @Composable
 fun ColumnLayoutNewPages(
-  pageList: List<NewPagesBean.Query.MapValue>
+  pageList: List<PageProfileBean.Query.MapValue>
 ) {
   val themeColors = MaterialTheme.colors
   val scrollState = rememberFromMemory("scrollState") { ScrollState(0) }

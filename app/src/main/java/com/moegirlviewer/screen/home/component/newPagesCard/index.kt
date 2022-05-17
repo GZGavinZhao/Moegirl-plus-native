@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
+import com.moegirlviewer.api.page.PageApi
+import com.moegirlviewer.api.page.bean.PageProfileBean
 import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.screen.home.HomeScreenCardState
 import com.moegirlviewer.screen.home.component.HomeCardContainer
@@ -27,6 +29,7 @@ import com.moegirlviewer.screen.home.component.newPagesCard.component.TextLayout
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.PageIdKey
 import com.moegirlviewer.util.noRippleClickable
 import com.moegirlviewer.util.printRequestErr
 import kotlinx.coroutines.launch
@@ -90,24 +93,25 @@ class NewPagesCardState : HomeScreenCardState() {
     NewPagesCardViewMode.LIST to Icons.Filled.ViewList,
     NewPagesCardViewMode.COLUMN to Icons.Filled.ViewColumn
   )
-  var newPageList by mutableStateOf(emptyList<NewPagesBean.Query.MapValue>())
+  var newPageList by mutableStateOf(emptyList<PageProfileBean.Query.MapValue>())
   var status by mutableStateOf(LoadStatus.INITIAL)
-  var continueKey: String? = null
+//  var continueKey: String? = null
 
   suspend fun loadNext(reload: Boolean = false) {
     if (LoadStatus.isCannotLoad(status)) return
     if (reload) {
       status = LoadStatus.INITIAL
-      continueKey = null
+//      continueKey = null
     }
     status = if (status == LoadStatus.INITIAL) LoadStatus.INIT_LOADING else LoadStatus.LOADING
     try {
-      val res = EditingRecordApi.getNewPages(continueKey)
-      newPageList = (if (reload) emptyList() else newPageList) + res.query.pages
-        .filter { it.key > -1 }
+      val newPagesIds = EditingRecordApi.getNewPages().query.recentchanges.map { it.pageid }
+      val pageIdKey = PageIdKey(*newPagesIds.toIntArray())
+      val newPagesWithProfileRes = PageApi.getPageProfile(pageIdKey)
+      newPageList = (if (reload) emptyList() else newPageList) + newPagesWithProfileRes.query.pages
         .values.sortedBy { it.pageid }
         .reversed()
-      continueKey = res.`continue`.grccontinue
+//      continueKey = res.`continue`.grccontinue
       status = LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {
       printRequestErr(e, "加载最新页面卡片数据失败")

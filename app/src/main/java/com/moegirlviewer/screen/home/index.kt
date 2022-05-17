@@ -238,55 +238,32 @@ private fun ComposedArticleView() {
   val model: HomeScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
 
-  SwipeRefresh(
-    state = model.swipeRefreshState,
-    swipeEnabled = model.articleViewState.status != LoadStatus.LOADING,
-    onRefresh = {
-      scope.launch { model.articleViewState.reload(true) }
-    },
-    indicator = { state, refreshTriggerDistance ->
-      StyledSwipeRefreshIndicator(
-        state = state,
-        refreshTriggerDistance = refreshTriggerDistance
-      )
-    }
+  ArticleView(
+    state = model.articleViewState,
+    pageKey = PageNameKey("Mainpage"),
+    fullHeight = true,
+    visibleLoadStatusIndicator = false,
+  )
+
+  AnimatedVisibility(
+    visible = model.articleViewState.status == LoadStatus.LOADING,
+    enter = fadeIn(),
+    exit = fadeOut()
   ) {
-    Center {
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .verticalScroll(rememberScrollState()),
-        contentAlignment = Alignment.Center
-      ) {
-        ArticleView(
-          state = model.articleViewState,
-          pageKey = PageNameKey("Mainpage"),
-          fullHeight = true,
-          visibleLoadStatusIndicator = false,
-        )
-      }
-    }
+    ArticleLoadingMask()
+  }
 
-    AnimatedVisibility(
-      visible = model.articleViewState.status == LoadStatus.LOADING,
-      enter = fadeIn(),
-      exit = fadeOut()
-    ) {
-      ArticleLoadingMask()
-    }
-
-    AnimatedVisibility(
-      visible = model.articleViewState.status == LoadStatus.FAIL,
-      enter = fadeIn(),
-      exit = fadeOut()
-    ) {
-      ArticleErrorMask(
-        onClick = {
-          scope.launch {
-            model.articleViewState.reload(true)
-          }
+  AnimatedVisibility(
+    visible = model.articleViewState.status == LoadStatus.FAIL,
+    enter = fadeIn(),
+    exit = fadeOut()
+  ) {
+    ArticleErrorMask(
+      onClick = {
+        scope.launch {
+          model.articleViewState.reload(true)
         }
-      )
-    }
+      }
+    )
   }
 }

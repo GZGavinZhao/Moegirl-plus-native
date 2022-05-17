@@ -23,6 +23,7 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
+import com.moegirlviewer.api.page.bean.PageProfileBean
 import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.RippleColorScope
@@ -33,7 +34,7 @@ import com.moegirlviewer.util.gotoArticlePage
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ListLayoutNewPages(
-  pageList: List<NewPagesBean.Query.MapValue>
+  pageList: List<PageProfileBean.Query.MapValue>
 ) {
   val pagerState = rememberFromMemory("pagerState") { PagerState(0) }
   val chunkedPageList = remember(pageList) { pageList.chunked(3) }

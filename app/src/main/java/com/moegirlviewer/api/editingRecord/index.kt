@@ -98,28 +98,40 @@ object EditingRecordApi {
     }
   )
   
-  suspend fun getNewPages(
-    continueKey: String?
-  ) = moeRequest(
+//  suspend fun getNewPages(
+//    continueKey: String?
+//  ) = moeRequest(
+//    entity = NewPagesBean::class.java,
+//    params = mutableMapOf<String, Any>().apply {
+//      this["action"] = "query"
+//      this["format"] = "json"
+//      this["prop"] = "pageimages|extracts"
+//      this["continue"] = "grccontinue||"
+//      this["generator"] = "recentchanges"
+//      this["piprop"] = "thumbnail"
+//      this["pithumbsize"] = "500"
+//      this["pilimit"] = "20"
+//      this["exsentences"] = "10"
+//      this["exlimit"] = "20"
+//      this["exintro"] = 1
+//      this["explaintext"] = 1
+//      this["grcnamespace"] = "0"
+//      this["grclimit"] = "20"
+//      this["grctype"] = "new"
+//      this["grcshow"] = "!redirect"
+//      if (continueKey != null) this["grccontinue"] = continueKey
+//    }
+//  )
+
+  suspend fun getNewPages() = moeRequest(
     entity = NewPagesBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
-      this["format"] = "json"
-      this["prop"] = "pageimages|extracts"
-      this["continue"] = "grccontinue||"
-      this["generator"] = "recentchanges"
-      this["piprop"] = "thumbnail"
-      this["pithumbsize"] = "500"
-      this["pilimit"] = "20"
-      this["exsentences"] = "10"
-      this["exlimit"] = "20"
-      this["exintro"] = 1
-      this["explaintext"] = 1
-      this["grcnamespace"] = "0"
-      this["grclimit"] = "20"
-      this["grctype"] = "new"
-      this["grcshow"] = "!redirect"
-      if (continueKey != null) this["grccontinue"] = continueKey
+      this["list"] = "recentchanges"
+      this["rcnamespace"] = 0
+      this["rcshow"] = "!redirect"
+      this["rclimit"] = "20"
+      this["rctype"] = "new"
     }
   )
 }
