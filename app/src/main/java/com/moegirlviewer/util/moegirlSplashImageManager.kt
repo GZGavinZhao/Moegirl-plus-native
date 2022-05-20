@@ -55,6 +55,7 @@ object MoegirlSplashImageManager {
         .asSequence()
         .map { it.url.localImageFileName() }
         .filter { localImagesMap.containsKey(it) }
+        .map { localImagesMap[it]!!.path }
         .toList() + listOf(pathPlaceholderOfFallbackImage)
     } else {
       localImagesMap.values.map { it.path }
