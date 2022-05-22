@@ -130,7 +130,7 @@ object EditingRecordApi {
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
       this["list"] = "recentchanges"
-      this["rcnamespace"] = 0
+      this["rcnamespace"] = "0"
       this["rcshow"] = "!redirect"
       this["rclimit"] = "20"
       this["rctype"] = "new"

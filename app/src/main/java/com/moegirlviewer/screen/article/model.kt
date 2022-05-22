@@ -427,10 +427,12 @@ object BodyDoubleClickJs {
     val model: ArticleScreenModel = hiltViewModel()
     val isFocusMode by SettingsStore.common.getValue { focusMode }.collectAsState(initial = false)
 
-    return messageName to {
-      if (isFocusMode) {
-        model.visibleHeader = !model.visibleHeader
-        model.visibleCommentButton = model.visibleHeader
+    return remember(isFocusMode) {
+      messageName to {
+        if (isFocusMode) {
+          model.visibleHeader = !model.visibleHeader
+          model.visibleCommentButton = model.visibleHeader
+        }
       }
     }
   }

@@ -46,7 +46,11 @@ fun ListLayoutNewPages(
     modifier = Modifier
       .height(235.dp),
     state = pagerState,
-    count = chunkedPageList.size,
+    // 因为有可能出现被过滤掉的非条目页（原因见loadList函数中注释），所以可能不是20个，所以还要在条目数等于3倍时再多加一页
+    // 否则“查看更多”按钮就无法显示了
+    count = if (chunkedPageList.last().size < 3)
+      chunkedPageList.size else
+      chunkedPageList.size + 1,
     itemSpacing = (-20).dp
   ) { currentPage ->
     Column(
@@ -54,7 +58,7 @@ fun ListLayoutNewPages(
         .fillMaxHeight()
         .padding(top = 5.dp, bottom = 5.dp, end = 10.dp)
     ) {
-      for (item in chunkedPageList[currentPage]) {
+      for (item in chunkedPageList.getOrElse(currentPage) { emptyList() }) {
         Item(
           title = item.title,
           introduction = if (item.extract == "") null else item.extract,
@@ -63,7 +67,10 @@ fun ListLayoutNewPages(
         )
       }
 
-      if (currentPage == chunkedPageList.size - 1) {
+      if (
+        (chunkedPageList.last().size < 3 && currentPage == chunkedPageList.size - 1) ||
+        (chunkedPageList.last().size == 3 && currentPage == chunkedPageList.size)
+      ) {
         ViewMoreItem()
       }
     }
