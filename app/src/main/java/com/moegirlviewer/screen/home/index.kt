@@ -7,9 +7,11 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BadgedBox
 import androidx.compose.material.ExperimentalMaterialApi
@@ -27,12 +29,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
-import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
@@ -197,6 +199,7 @@ fun ComposedTopAppBar(
 @Composable
 private fun ComposedCardsHomePage() {
   val model: HomeScreenModel = hiltViewModel()
+  val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
 
   SwipeRefresh(
@@ -213,7 +216,8 @@ private fun ComposedCardsHomePage() {
   ) {
     Column(
       modifier = Modifier
-        .verticalScroll(rememberScrollState())
+        .verticalScroll(rememberScrollState()),
+      horizontalAlignment = Alignment.CenterHorizontally
     ) {
       if (model.cardsDataStatus == LoadStatus.LOADING) {
         CardPlaceholder(true)
@@ -221,13 +225,32 @@ private fun ComposedCardsHomePage() {
         CardPlaceholder()
       } else {
         if (isMoegirl()) {
-          TopCard(model.topCardState)
+          ArticleViewCard(
+            state = model.moegirlHomeTopArticleCardState,
+            pageKey = PageNameKey("User:東東君/app/homeTopCard"),
+          )
         } else {
           CarouseCard(model.carouseCard)
         }
         NewPagesCard(model.newPagesCardState)
         RandomPageCard(model.randomPageCardState)
         RecommendationCard(model.recommendationCardState)
+        if (!isMoegirl()) {
+          Box(
+            modifier = Modifier
+              .padding(top = 15.dp, bottom = 25.dp)
+              .clip(RoundedCornerShape(50))
+              .clickable { gotoArticlePage("H萌娘:主题板块导航") }
+              .background(themeColors.primaryVariant)
+              .padding(vertical = 10.dp, horizontal = 20.dp)
+          ) {
+            StyledText(
+              text = stringResource(id = R.string.moreTopicBlock),
+              color = themeColors.onSecondary,
+              fontSize = 18.sp
+            )
+          }
+        }
       }
     }
   }

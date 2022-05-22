@@ -123,7 +123,9 @@ object EditingRecordApi {
 //    }
 //  )
 
-  suspend fun getNewPages() = moeRequest(
+  suspend fun getNewPages(
+    continueKey: String? = null
+  ) = moeRequest(
     entity = NewPagesBean::class.java,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "query"
@@ -132,6 +134,7 @@ object EditingRecordApi {
       this["rcshow"] = "!redirect"
       this["rclimit"] = "20"
       this["rctype"] = "new"
+      if (continueKey != null) this["rccontinue"] = continueKey
     }
   )
 }

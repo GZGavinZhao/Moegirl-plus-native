@@ -1,6 +1,7 @@
-package com.moegirlviewer.screen.notification
+package com.moegirlviewer.screen.newPages
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -22,17 +23,17 @@ import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.screen.newPages.component.NewPageItem
 import com.moegirlviewer.screen.notification.component.NotificationScreenItem
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.gotoArticlePage
 import kotlinx.coroutines.launch
 
-
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun NotificationScreen() {
-  val model: NotificationScreenModel = hiltViewModel()
+fun NewPagesScreen() {
+  val model: NewPagesScreenModel = hiltViewModel()
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
 
@@ -51,7 +52,14 @@ fun NotificationScreen() {
   Scaffold(
     backgroundColor = themeColors.background2,
     topBar = {
-      ComposedHeader()
+      StyledTopAppBar(
+        title = {
+          StyledText(
+            text = stringResource(id = R.string.newArticles),
+            color = themeColors.onPrimary
+          )
+        },
+      )
     }
   ) {
     SwipeRefresh(
@@ -69,16 +77,14 @@ fun NotificationScreen() {
         state = model.lazyListState,
       ) {
         itemsIndexed(
-          items = model.notificationList,
-          key = { _, item -> item.id + (item.read ?: "") }
+          items = model.newPageList,
+          key = { _, item -> item.pageid }
         ) { _, item ->
-          NotificationScreenItem(
-            notification = item,
-            onClick = {
-              if (item.title != null) {
-                gotoArticlePage(item.title.full)
-              }
-            }
+          NewPageItem(
+            text = item.title,
+            subtext = item.extract,
+            imageUrl = item.thumbnail?.source,
+            onClick = { gotoArticlePage(item.title) }
           )
         }
 
@@ -93,28 +99,4 @@ fun NotificationScreen() {
       }
     }
   }
-}
-
-@Composable
-private fun ComposedHeader() {
-  val model: NotificationScreenModel = hiltViewModel()
-  val scope = rememberCoroutineScope()
-  val themeColors = MaterialTheme.colors
-
-  StyledTopAppBar(
-    title = {
-      StyledText(
-        text = stringResource(id = R.string.notification),
-        color = themeColors.onPrimary
-      )
-    },
-    actions = {
-      AppHeaderIcon(
-        image = Icons.Filled.DoneAll,
-        onClick = {
-          scope.launch { model.markAllAsRead() }
-        }
-      )
-    }
-  )
 }

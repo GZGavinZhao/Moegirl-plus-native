@@ -102,6 +102,7 @@ fun HomeCardContainer(
 fun HomeCard(
   modifier: Modifier = Modifier,
   minHeight: Dp = 300.dp,
+  elevation: Dp = 2.dp,
   loadStatus: LoadStatus? = null,
   onClick: (() -> Unit)? = null,
   onReload: (() -> Unit)? = null,
@@ -117,7 +118,7 @@ fun HomeCard(
       )
       .padding(top = 15.dp)
       .fillMaxWidth(),
-    elevation = 2.dp,
+    elevation = elevation,
     shape = RoundedCornerShape(10.dp),
     enabled = onClick != null,
     onClick = { onClick?.invoke() }

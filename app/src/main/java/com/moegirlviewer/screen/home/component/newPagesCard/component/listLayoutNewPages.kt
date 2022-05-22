@@ -3,12 +3,16 @@ package com.moegirlviewer.screen.home.component.newPagesCard.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesomeMotion
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,15 +24,14 @@ import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import com.moegirlviewer.R
-import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
 import com.moegirlviewer.api.page.bean.PageProfileBean
 import com.moegirlviewer.compable.remember.rememberFromMemory
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.gotoArticlePage
 
 @OptIn(ExperimentalPagerApi::class)
@@ -59,6 +62,10 @@ fun ListLayoutNewPages(
           onClick = { gotoArticlePage(item.title) }
         )
       }
+
+      if (currentPage == chunkedPageList.size - 1) {
+        ViewMoreItem()
+      }
     }
   }
 }
@@ -67,7 +74,7 @@ fun ListLayoutNewPages(
 private fun Item(
   title: String,
   introduction: String? = null,
-  imageUrl: String? = null,
+  imageUrl: Any? = null,
   onClick: () -> Unit,
 ) {
   val themeColors = MaterialTheme.colors
@@ -80,6 +87,16 @@ private fun Item(
         .height(60.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
+      if (imageUrl is ImageVector) {
+        Icon(
+          modifier = Modifier
+            .size(60.dp),
+          imageVector = imageUrl,
+          tint = themeColors.primaryVariant,
+          contentDescription = null
+        )
+      }
+
       AsyncImage(
         modifier = Modifier
           .size(60.dp)
@@ -111,6 +128,45 @@ private fun Item(
           color = if (introduction != null) themeColors.text.secondary else themeColors.text.tertiary,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,
+        )
+      }
+    }
+  }
+}
+
+@Composable
+private fun ViewMoreItem() {
+  val themeColors = MaterialTheme.colors
+
+  RippleColorScope(color = themeColors.primaryVariant) {
+    Row(
+      modifier = Modifier
+        .clickable { Globals.navController.navigate("newPages") }
+        .padding(horizontal = 10.dp, vertical = 7.5.dp)
+        .height(60.dp),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Icon(
+        modifier = Modifier
+          .size(60.dp),
+        imageVector = Icons.Filled.AutoAwesomeMotion,
+        tint = themeColors.primaryVariant,
+        contentDescription = null
+      )
+
+      Column(
+        modifier = Modifier
+          .padding(start = 10.dp)
+          .weight(1f)
+          .height(60.dp),
+        verticalArrangement = Arrangement.SpaceEvenly
+      ) {
+        StyledText(
+          text = stringResource(id = R.string.viewMore),
+          fontWeight = FontWeight.Bold,
+          color = themeColors.primaryVariant,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis
         )
       }
     }

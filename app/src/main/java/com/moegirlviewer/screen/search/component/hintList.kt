@@ -34,6 +34,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.api.search.SearchApi
 import com.moegirlviewer.compable.OnSwipeLoading
 import com.moegirlviewer.compable.remember.rememberImageRequest
+import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyleLinearProgressIndicator
 import com.moegirlviewer.component.styled.StyledText
@@ -164,72 +165,74 @@ private fun Item(
   val themeColors = MaterialTheme.colors
   val density = LocalDensity.current.density
 
-  Surface(
-    contentColor = themeColors.text.primary
-  ) {
-    Row(
-      modifier = Modifier
-        .height(70.dp)
-        .fillMaxWidth()
-        .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.text.tertiary)
-        .clickable { onClick?.invoke() }
-        .padding(end = 10.dp),
-      verticalAlignment = Alignment.CenterVertically
+  RippleColorScope(color = themeColors.primaryVariant) {
+    Surface(
+      contentColor = themeColors.text.primary
     ) {
-      Box(
+      Row(
         modifier = Modifier
-          .width(60.dp)
-          .fillMaxHeight()
+          .height(70.dp)
+          .fillMaxWidth()
+          .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.text.tertiary)
+          .clickable { onClick?.invoke() }
+          .padding(end = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
       ) {
-        if (imageUrl != null) {
-          AsyncImage(
-            modifier = Modifier
-              .fillMaxSize(),
-            model = rememberImageRequest(data = imageUrl),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.TopCenter
-          )
-        } else {
-          Box(
-            modifier = Modifier
-              .fillMaxSize()
-              .background(themeColors.background2),
-            contentAlignment = Alignment.Center
-          ) {
-            Icon(
+        Box(
+          modifier = Modifier
+            .width(60.dp)
+            .fillMaxHeight()
+        ) {
+          if (imageUrl != null) {
+            AsyncImage(
               modifier = Modifier
-                .fillMaxSize(0.8f),
-              imageVector = Icons.Filled.TextSnippet,
+                .fillMaxSize(),
+              model = rememberImageRequest(data = imageUrl),
               contentDescription = null,
-              tint = themeColors.text.tertiary
+              contentScale = ContentScale.Crop,
+              alignment = Alignment.TopCenter
             )
+          } else {
+            Box(
+              modifier = Modifier
+                .fillMaxSize()
+                .background(themeColors.background2),
+              contentAlignment = Alignment.Center
+            ) {
+              Icon(
+                modifier = Modifier
+                  .fillMaxSize(0.8f),
+                imageVector = Icons.Filled.TextSnippet,
+                contentDescription = null,
+                tint = themeColors.text.tertiary
+              )
+            }
           }
         }
-      }
 
-      Column(
-        modifier = Modifier
-          .padding(start = 10.dp),
-        verticalArrangement = Arrangement.Center
-      ) {
-        StyledText(
-          text = text,
-          color = themeColors.text.secondary,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis
-        )
-
-        if (subtext != null) {
+        Column(
+          modifier = Modifier
+            .padding(start = 10.dp),
+          verticalArrangement = Arrangement.Center
+        ) {
           StyledText(
-            modifier = Modifier
-              .padding(top = 3.dp),
-            text = subtext,
+            text = text,
+            color = themeColors.text.secondary,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = themeColors.text.secondary.copy(0.8f),
-            fontSize = 13.sp
+            overflow = TextOverflow.Ellipsis
           )
+
+          if (subtext != null) {
+            StyledText(
+              modifier = Modifier
+                .padding(top = 3.dp),
+              text = subtext,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+              color = themeColors.text.secondary.copy(0.8f),
+              fontSize = 13.sp
+            )
+          }
         }
       }
     }
@@ -241,32 +244,34 @@ private fun SearchInPagesContentHint() {
   val themeColors = MaterialTheme.colors
   val model: SearchScreenModel = hiltViewModel()
 
-  Row(
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(50.dp)
-      .clickable {
-         Globals.navController.navigate(SearchResultRouteArguments(model.keywordInputValue))
-      }
-      .padding(start = 10.dp, end = 10.dp),
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    Icon(
+  RippleColorScope(color = themeColors.primaryVariant) {
+    Row(
       modifier = Modifier
-        .size(30.dp),
-      imageVector = Icons.Filled.FindInPage,
-      contentDescription = null,
-      tint = themeColors.primaryVariant
-    )
+        .fillMaxWidth()
+        .height(50.dp)
+        .clickable {
+          Globals.navController.navigate(SearchResultRouteArguments(model.keywordInputValue))
+        }
+        .padding(start = 10.dp, end = 10.dp),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Icon(
+        modifier = Modifier
+          .size(30.dp),
+        imageVector = Icons.Filled.FindInPage,
+        contentDescription = null,
+        tint = themeColors.primaryVariant
+      )
 
-    StyledText(
-      modifier = Modifier
-        .padding(start = 10.dp),
-      text = stringResource(id = R.string.searchInPagesContent),
-      fontWeight = FontWeight.Bold,
-      textDecoration = TextDecoration.Underline,
-      color = themeColors.primaryVariant
-    )
+      StyledText(
+        modifier = Modifier
+          .padding(start = 10.dp),
+        text = stringResource(id = R.string.searchInPagesContent),
+        fontWeight = FontWeight.Bold,
+        textDecoration = TextDecoration.Underline,
+        color = themeColors.primaryVariant
+      )
+    }
   }
 }
 

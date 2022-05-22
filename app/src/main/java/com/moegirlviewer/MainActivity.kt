@@ -53,6 +53,7 @@ import com.moegirlviewer.screen.home.HomeScreen
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.screen.imageViewer.ImageViewerScreen
 import com.moegirlviewer.screen.login.LoginScreen
+import com.moegirlviewer.screen.newPages.NewPagesScreen
 import com.moegirlviewer.screen.notification.NotificationScreen
 import com.moegirlviewer.screen.pageRevisions.PageRevisionsRouteArguments
 import com.moegirlviewer.screen.pageRevisions.PageVersionHistoryScreen
@@ -253,6 +254,10 @@ private fun Routes(navController: NavHostController) {
     animatedComposable(
       route = "randomPages",
     ) { RandomPagesScreen() }
+
+    animatedComposable(
+      route = "newPages"
+    ) { NewPagesScreen() }
   }
 }
 

@@ -12,22 +12,25 @@ import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.articleView.ArticleViewState
 import com.moegirlviewer.screen.home.HomeScreenCardState
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.PageKey
 import com.moegirlviewer.util.PageNameKey
 import kotlinx.coroutines.launch
 
 @Composable
-fun TopCard(
-  state: TopCardState
+fun ArticleViewCard(
+  state: ArticleViewCardState,
+  pageKey: PageKey,
 ) {
   val scope = rememberCoroutineScope()
 
   HomeCard(
-    modifier = Modifier
-      .padding(15.dp),
+//    modifier = Modifier
+//      .padding(15.dp),
+    elevation = 0.dp,
     loadStatus = state.articleViewState.status,
     onReload = {
       scope.launch { state.reload() }
-    }
+    },
   ) {
     Box(
       modifier = Modifier
@@ -36,7 +39,7 @@ fun TopCard(
     ) {
       ArticleView(
         state = state.articleViewState,
-        pageKey = PageNameKey(Constants.topCardContentPageName),
+        pageKey = pageKey,
         visibleLoadStatusIndicator = false,
         previewMode = true,
         injectedStyles = state.injectedStyles,
@@ -47,7 +50,7 @@ fun TopCard(
   }
 }
 
-class TopCardState : HomeScreenCardState() {
+class ArticleViewCardState : HomeScreenCardState() {
   val articleViewState = ArticleViewState()
   val injectedStyles = listOf("""
     body { 

@@ -211,6 +211,7 @@
     <string name="focusMode">专注模式</string>
     <string name="editFullTextDisabling">禁止编辑全文</string>
     <string name="searchInSite">站内搜索</string>
+    <string name="moreTopicBlock">更多主题板块</string>
 
     <!-- 其他（变量名与文字不对等，需要先确认内容） -->
     <string name="colorTextPlaceholder">颜色|文字</string>

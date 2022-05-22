@@ -3,7 +3,11 @@ package com.moegirlviewer.screen.home.component.newPagesCard.component
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesomeMotion
+import androidx.compose.material.icons.filled.NavigateNext
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -25,6 +30,7 @@ import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.gotoArticlePage
 
 @Composable
@@ -40,7 +46,6 @@ fun ColumnLayoutNewPages(
         .height(235.dp)
         .padding(top = 15.dp, bottom = 10.dp, start = 10.dp, end = 10.dp)
         .horizontalScroll(scrollState),
-      verticalAlignment = Alignment.CenterVertically
     ) {
       for ((index, item) in pageList.withIndex()) {
         Item(
@@ -49,6 +54,35 @@ fun ColumnLayoutNewPages(
           isFirstItem = index == 0,
           onClick = { gotoArticlePage(item.title) }
         )
+
+        if (index == pageList.size - 1) {
+          Column(
+            modifier = Modifier
+              .padding(start = 10.dp)
+              .width(122.dp)
+              .height(175.dp)
+              .clip(RoundedCornerShape(10.dp))
+              .clickable { Globals.navController.navigate("newPages") },
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+          ) {
+            Icon(
+              modifier = Modifier
+                .size(26.dp),
+              imageVector = Icons.Filled.AutoAwesomeMotion,
+              contentDescription = null,
+              tint = themeColors.primaryVariant
+            )
+
+            StyledText(
+              modifier = Modifier
+                .padding(top = 5.dp),
+              text = stringResource(id = R.string.viewMore),
+              color = themeColors.primaryVariant,
+              fontWeight = FontWeight.Bold
+            )
+          }
+        }
       }
     }
   }
