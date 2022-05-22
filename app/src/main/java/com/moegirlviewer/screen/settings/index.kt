@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.moegirlviewer.BuildConfig
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
 import com.moegirlviewer.component.styled.StyledText
@@ -292,12 +293,14 @@ fun SettingsScreen() {
           gotoArticlePage(Constants.disclaimerPageName)
         }
       )
-      SettingsScreenItem(
-        title = stringResource(id = R.string.checkNewVersion),
-        onClick = {
-          scope.launch { model.checkNewVersion() }
-        }
-      )
+      if (BuildConfig.FLAVOR_targetStore == "common") {
+        SettingsScreenItem(
+          title = stringResource(id = R.string.checkNewVersion),
+          onClick = {
+            scope.launch { model.checkNewVersion() }
+          }
+        )
+      }
 
       Title(R.string.about)
       SettingsScreenItem(
