@@ -3,6 +3,7 @@ package com.moegirlviewer.component.articleView
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import com.moegirlviewer.screen.article.ReadingRecord
 import com.moegirlviewer.screen.category.CategoryRouteArguments
 import com.moegirlviewer.store.CommonSettings
 import com.moegirlviewer.store.SettingsStore
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.currentIsUseDarkTheme
 import com.moegirlviewer.theme.currentThemeColors
 import com.moegirlviewer.util.*
@@ -82,6 +84,7 @@ class ArticleViewStateCore() {
   var visibleEditButton: Boolean = true
   var contentTopPadding: Dp = 0.dp
   var renderDelay: Long = 0
+  var themeBackground2: Color = Color.Transparent
   var messageHandlers: HtmlWebViewMessageHandlers? = null
   var emitCatalogData: ((data: List<ArticleCatalog>) -> Unit)? = null
   var onArticleLoaded: ((articleData: ArticleData, articleInfo: ArticleInfo?) -> Unit)? = null
@@ -177,6 +180,7 @@ class ArticleViewStateCore() {
         --color-primary: ${themeColors.primaryVariant.toCssRgbaString()};
         --color-dark: ${themeColors.primaryVariant.darken(0.3F).toCssRgbaString()};
         --color-light: ${themeColors.primaryVariant.lighten(0.3F).toCssRgbaString()};
+        --color-background2: ${themeBackground2.toCssRgbaString()};
       }
       
       ::selection {

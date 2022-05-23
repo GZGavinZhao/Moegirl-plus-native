@@ -19,6 +19,7 @@ import com.moegirlviewer.component.htmlWebView.HtmlWebViewMessageHandlers
 import com.moegirlviewer.component.htmlWebView.HtmlWebViewScrollChangeHandler
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.screen.article.ReadingRecord
+import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.*
 import kotlinx.coroutines.*
 import java.io.BufferedReader
@@ -59,6 +60,7 @@ fun ArticleView(
 ) {
   val scope = rememberCoroutineScope()
   val themeColors = MaterialTheme.colors
+  val themeBackgroundColor2 = themeColors.background2
   val coreState = state.core
 
   DoSideEffect {
@@ -80,6 +82,7 @@ fun ArticleView(
     coreState.visibleEditButton = visibleEditButton
     coreState.contentTopPadding = contentTopPadding
     coreState.renderDelay = renderDelay
+    coreState.themeBackground2 = themeBackgroundColor2
     coreState.messageHandlers = messageHandlers
     coreState.emitCatalogData = emitCatalogData
     coreState.onArticleLoaded = onArticleLoaded
