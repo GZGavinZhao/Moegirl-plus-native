@@ -171,7 +171,7 @@ private fun Item(
     ) {
       Row(
         modifier = Modifier
-          .height(70.dp)
+          .height(80.dp)
           .fillMaxWidth()
           .sideBorder(BorderSide.BOTTOM, (1 / density).dp, themeColors.text.tertiary)
           .clickable { onClick?.invoke() }
@@ -212,7 +212,8 @@ private fun Item(
 
         Column(
           modifier = Modifier
-            .padding(start = 10.dp),
+            .padding(start = 10.dp)
+            .fillMaxHeight(),
           verticalArrangement = Arrangement.Center
         ) {
           StyledText(
@@ -227,7 +228,7 @@ private fun Item(
               modifier = Modifier
                 .padding(top = 3.dp),
               text = subtext,
-              maxLines = 1,
+              maxLines = 2,
               overflow = TextOverflow.Ellipsis,
               color = themeColors.text.secondary.copy(0.8f),
               fontSize = 13.sp
