@@ -1,6 +1,7 @@
 package com.moegirlviewer.component.styled
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -28,7 +29,7 @@ fun StyledTopAppBar(
   statusBarMode: StatusBarMode = StatusBarMode.VISIBLE,
   statusBarSticky: Boolean = false,
   statusBarBackgroundColor: Color = backgroundColor,
-  statusBarDarkIcons: Boolean = isUsePureTheme(),
+  statusBarDarkIcons: Boolean = isUsePureTheme() || isSystemInDarkTheme(),
   title: @Composable () -> Unit,
   navigationIcon: (@Composable () -> Unit) = { BackButton() },
   actions: (@Composable (RowScope.() -> Unit))? = null,
