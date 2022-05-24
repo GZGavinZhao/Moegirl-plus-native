@@ -108,6 +108,8 @@ class NewPagesCardState : HomeScreenCardState() {
       val newPagesWithProfileRes = PageApi.getPageProfile(pageIdKey)
       newPageList = (if (reload) emptyList() else newPageList) + newPagesWithProfileRes.query.pages.values
         .filter { it.ns == 0 }   // 如果其中有条目被打回用户页，会出现newPages接口返回页面为条目，pagesProfile返回页面为用户页的情况，这里需要额外过滤
+        .sortedBy { it.pageid }
+        .reversed()
       status = LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {
       printRequestErr(e, "加载最新页面卡片数据失败")

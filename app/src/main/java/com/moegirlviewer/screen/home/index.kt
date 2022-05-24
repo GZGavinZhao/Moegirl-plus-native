@@ -259,7 +259,7 @@ private fun ComposedCardsHomePage() {
             }
             Box(
               modifier = Modifier
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 15.dp)
                 .weight(2f)
                 .clip(RoundedCornerShape(50))
                 .clickable { gotoArticlePage("H萌娘:主题板块导航") }

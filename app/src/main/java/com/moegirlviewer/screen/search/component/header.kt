@@ -25,6 +25,7 @@ import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.search.SearchScreenModel
 import com.moegirlviewer.store.SearchRecord
 import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.isMoegirl
 import com.moegirlviewer.util.toast
 
 @Composable
@@ -57,6 +58,7 @@ fun SearchScreenHeader() {
         ),
         keyboardActions = KeyboardActions(
           onAny = {
+            if (!isMoegirl()) return@KeyboardActions
             if (model.keywordInputValue.trim() == "") {
               toast(context.getString(R.string.emptySearchKeywordHint))
             } else {

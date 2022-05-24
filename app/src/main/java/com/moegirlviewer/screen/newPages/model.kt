@@ -38,6 +38,8 @@ class NewPagesScreenModel @Inject constructor() : ViewModel() {
       val pagesProfileRes = PageApi.getPageProfile(PageIdKey(*newPageIds))
       val resultList = pagesProfileRes.query.pages.values.toList()
         .filter { it.ns == 0 }   // 如果其中有条目被打回用户页，会出现newPages接口返回页面为条目，pagesProfile返回页面为用户页的情况，这里需要额外过滤
+        .sortedBy { it.pageid }
+        .reversed()
       newPageList = if (reload) resultList else newPageList + resultList
       continueKey = newPagesRes.`continue`.rccontinue
       status = LoadStatus.SUCCESS
