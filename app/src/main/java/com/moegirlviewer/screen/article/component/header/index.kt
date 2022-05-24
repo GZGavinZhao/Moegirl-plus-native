@@ -91,7 +91,7 @@ fun ArticleScreenHeader(
       },
       title = {
         val isCategoryPage = title.contains(Regex("^([Cc]ategory|分类|分類)[:：]"))
-        val useTwoRow = isCategoryPage && isMoegirl()
+        val useTwoRow = !isCategoryPage && isMoegirl()
         StyledText(
           modifier = Modifier
             .alpha(contentAlpha),
