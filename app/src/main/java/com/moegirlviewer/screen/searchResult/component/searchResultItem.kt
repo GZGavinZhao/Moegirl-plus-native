@@ -5,25 +5,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -35,11 +28,7 @@ import com.moegirlviewer.api.search.bean.SearchResultBean
 import com.moegirlviewer.compable.remember.rememberImageRequest
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.styled.StyledText
-import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.text
-import com.moegirlviewer.util.BorderSide
-import com.moegirlviewer.util.Italic
-import com.moegirlviewer.util.sideBorder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
@@ -48,7 +37,6 @@ import java.time.format.DateTimeFormatter
 import kotlin.OptIn
 import kotlin.String
 import kotlin.Unit
-import kotlin.math.min
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -215,8 +203,12 @@ private fun ColumnScope.SearchContent(
     }
   } else {
     StyledText(
-      text = stringResource(id = R.string.pageNoContent),
-      color = themeColors.text.secondary
+      modifier = Modifier
+        .padding(top = 5.dp)
+        .weight(1f),
+      text = stringResource(id = R.string.pageNoRelatedContent),
+      color = themeColors.text.secondary,
+      fontSize = 13.sp
     )
   }
 }

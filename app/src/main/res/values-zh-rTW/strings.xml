@@ -241,7 +241,7 @@
     <string name="searchResultRedirectTitle">「%1$s」指向該頁面</string>
     <string name="searchResultSectionTitle">該頁面有名為“%1$s”的章節</string>
     <string name="searchResultFromPageCategories">匹配自頁面分類</string>
-    <string name="pageNoContent">頁面內貌似沒有內容呢…</string>
+    <string name="pageNoRelatedContent">頁面內貌似沒有相關內容呢…</string>
     <string name="restoredToClipboard">已恢復至剪下板</string>
     <string name="backupRestored">已恢復備份</string>
     <string name="permissionsChecking">檢查許可權中</string>
