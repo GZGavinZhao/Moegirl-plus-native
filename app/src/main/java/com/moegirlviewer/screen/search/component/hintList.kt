@@ -59,11 +59,9 @@ fun ColumnScope.SearchScreenHintList() {
   var lastReloadSearchKeyword by rememberSaveable { mutableStateOf("") }
 
   suspend fun loadNext(reload: Boolean = false) = scope.launch {
-    if (
-      (lastReloadSearchKeyword == model.keywordInputValue && reload) ||
-      model.keywordInputValue.trim() == "" ||
-      LoadStatus.isCannotLoad(status)
-    ) return@launch
+    if (model.keywordInputValue.trim() == "") return@launch
+    if (LoadStatus.isCannotLoad(status) && !reload) return@launch
+    if (lastReloadSearchKeyword == model.keywordInputValue && !reload) return@launch
 
     lastReloadSearchKeyword = model.keywordInputValue
     status = if (reload) LoadStatus.INIT_LOADING else LoadStatus.LOADING
