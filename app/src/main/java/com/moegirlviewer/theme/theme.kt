@@ -102,7 +102,7 @@ val Colors.text
 val Colors.background2
   @Composable get() =
     if (!isUseDarkMode())
-      Color(0xfff8f8f8) else
+      Color(0xfff0f0f0) else
       this.background
 
 enum class ColorThemes {

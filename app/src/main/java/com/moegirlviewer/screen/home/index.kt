@@ -6,13 +6,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BadgedBox
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -35,6 +32,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackHandler
+import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.articleView.ArticleView
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
@@ -236,19 +234,49 @@ private fun ComposedCardsHomePage() {
         RandomPageCard(model.randomPageCardState)
         RecommendationCard(model.recommendationCardState)
         if (!isMoegirl()) {
-          Box(
+          Row(
             modifier = Modifier
-              .padding(top = 15.dp, bottom = 25.dp)
-              .clip(RoundedCornerShape(50))
-              .clickable { gotoArticlePage("H萌娘:主题板块导航") }
-              .background(themeColors.primaryVariant)
-              .padding(vertical = 10.dp, horizontal = 20.dp)
+              .padding(top = 10.dp, bottom = 20.dp)
+              .fillMaxWidth()
+              .padding(horizontal = 15.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
           ) {
-            StyledText(
-              text = stringResource(id = R.string.moreTopicBlock),
-              color = themeColors.onSecondary,
-              fontSize = 18.sp
-            )
+            RippleColorScope(color = themeColors.primaryVariant) {
+              StyledText(
+                modifier = Modifier
+                  .border(2.dp, themeColors.primaryVariant, RoundedCornerShape(50))
+                  .padding(vertical = 7.5.dp, horizontal = 10.dp)
+                  .clickable { gotoArticlePage("活动:文段解读大赛") },
+                text = "活动",
+                color = themeColors.primaryVariant,
+                fontWeight = FontWeight.Bold
+              )
+            }
+            Box(
+              modifier = Modifier
+                .clip(RoundedCornerShape(50))
+                .clickable { gotoArticlePage("H萌娘:主题板块导航") }
+                .background(themeColors.primaryVariant)
+                .padding(vertical = 7.5.dp, horizontal = 10.dp)
+            ) {
+              StyledText(
+                text = stringResource(id = R.string.moreTopicBlock),
+                color = themeColors.onSecondary,
+                fontSize = 16.sp
+              )
+            }
+            RippleColorScope(color = themeColors.primaryVariant) {
+              StyledText(
+                modifier = Modifier
+                  .border(2.dp, themeColors.primaryVariant, RoundedCornerShape(50))
+                  .padding(vertical = 7.5.dp, horizontal = 10.dp)
+                  .clickable { gotoArticlePage("Help:沙盒") },
+                text = "沙盒",
+                color = themeColors.primaryVariant,
+                fontWeight = FontWeight.Bold
+              )
+            }
           }
         }
       }

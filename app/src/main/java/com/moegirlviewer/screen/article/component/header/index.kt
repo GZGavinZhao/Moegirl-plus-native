@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,10 +32,7 @@ import com.moegirlviewer.screen.article.ArticleScreenModel
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
-import com.moegirlviewer.util.Globals
-import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.categoryPageNamePrefixRegex
-import com.moegirlviewer.util.replace
+import com.moegirlviewer.util.*
 
 @Suppress("UpdateTransitionLabel", "TransitionPropertiesLabel")
 @Composable
@@ -92,13 +90,16 @@ fun ArticleScreenHeader(
         }
       },
       title = {
+        val isCategoryPage = title.contains(Regex("^([Cc]ategory|分类|分類)[:：]"))
+        val useTwoRow = isCategoryPage && isMoegirl()
         StyledText(
           modifier = Modifier
             .alpha(contentAlpha),
           text = title,
           overflow = TextOverflow.Ellipsis,
-          maxLines = 2,
-          fontSize = if (title.contains(Regex("^([Cc]ategory|分类|分類)[:：]"))) 20.sp else 18.sp,
+          maxLines = if (!useTwoRow) 1 else 2,
+          fontSize = if (!useTwoRow) 20.sp else 18.sp,
+          lineHeight = if (!useTwoRow) TextUnit.Unspecified else 19.sp,
           color = themeColors.onPrimary
         )
       },
