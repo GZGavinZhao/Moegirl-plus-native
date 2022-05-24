@@ -110,10 +110,7 @@ class ArticleViewStateCore() {
   val htmlWebViewRef = Ref<HtmlWebViewRef>()
 
   val articleHtml: String
-    get() = when {
-      html != null -> html!!
-      else -> (articleData?.parse?.text?._asterisk) ?: ""
-    }
+    get() = html ?: articleData?.parse?.text?._asterisk ?: ""
 
   val pageName get() = articleData?.parse?.title ?: run {
     (pageKey as? PageNameKey)?.pageName?.firstOrNull()

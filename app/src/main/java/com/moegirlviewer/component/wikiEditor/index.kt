@@ -30,11 +30,11 @@ fun WikiEditor(
   val themeTextColors = themeColors.text
   val scope = rememberCoroutineScope()
 
-  LaunchedEffect(true) {
-    if (!state.isInitialized) {
-      state.init(themeColors, themeTextColors)
-    }
-  }
+//  LaunchedEffect(true) {
+//    if (!state.isInitialized) {
+//      state.init(themeColors, themeTextColors)
+//    }
+//  }
 
   LaunchedEffect(themeColors.isLight) {
     state.htmlWebViewRef.value!!.injectScript("""

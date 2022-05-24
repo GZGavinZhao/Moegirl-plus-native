@@ -35,7 +35,7 @@ fun EditScreenPreview() {
   val articleViewState = remember { ArticleViewState() }
 
   LaunchedEffect(model.previewHtml) {
-    articleViewState.updateHtmlView()
+    articleViewState.updateHtmlView(true)
   }
 
   Center {
@@ -56,6 +56,8 @@ fun EditScreenPreview() {
         pageKey = PageNameKey(model.routeArguments.pageName),
         linkDisabled = true,
         addCopyright = false,
+        addCategories = model.routeArguments.section == null,
+        visibleLoadStatusIndicator = false,
         emitCatalogData = { catalogData = it }
       )
     }
