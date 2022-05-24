@@ -57,7 +57,10 @@ fun WikiEditor(
         val textContent = it!!.get("text").asString
         onTextChange?.invoke(textContent)
       }
-    )
+    ),
+    onPageFinished = {
+      if (!state.isInitialized) state.init(themeColors, themeTextColors)
+    }
   )
 }
 

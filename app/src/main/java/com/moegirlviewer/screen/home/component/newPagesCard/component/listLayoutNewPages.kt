@@ -48,7 +48,7 @@ fun ListLayoutNewPages(
     state = pagerState,
     // 因为有可能出现被过滤掉的非条目页（原因见loadList函数中注释），所以可能不是20个，所以还要在条目数等于3倍时再多加一页
     // 否则“查看更多”按钮就无法显示了
-    count = if (chunkedPageList.last().size < 3)
+    count = if (chunkedPageList.lastOrNull()?.size ?: 0 < 3)
       chunkedPageList.size else
       chunkedPageList.size + 1,
     itemSpacing = (-20).dp

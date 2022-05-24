@@ -2,12 +2,14 @@ package com.moegirlviewer.component.htmlWebView
 
 import android.annotation.SuppressLint
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -45,6 +47,7 @@ fun HtmlWebView(
   messageHandlers: HtmlWebViewMessageHandlers? = null,
   ref: Ref<HtmlWebViewRef>,
   shouldInterceptRequest: ((webView: WebView, request: WebResourceRequest) -> WebResourceResponse?)? = null,
+  onPageFinished: (() -> Unit)? = null,
   onScrollChanged: HtmlWebViewScrollChangeHandler? = null
 ) {
   val isInDarkTheme = false
@@ -127,6 +130,11 @@ fun HtmlWebView(
       override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
         return shouldInterceptRequest?.invoke(view, request)
       }
+
+      override fun onPageFinished(p0: WebView?, p1: String?) {
+        onPageFinished?.invoke()
+        super.onPageFinished(p0, p1)
+      }
     }
 
     /*
@@ -170,6 +178,7 @@ fun HtmlWebView(
       .then(modifier)
     ,
     factory = {
+      (cachedWebView.webViewInstance?.parent as? ViewGroup)?.removeView(cachedWebView.webViewInstance)
       (cachedWebView.webViewInstance ?: WebView(it)).apply { webViewRef.value = this }
     }
   )
