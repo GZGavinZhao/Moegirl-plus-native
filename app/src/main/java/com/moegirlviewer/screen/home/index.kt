@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -245,20 +246,26 @@ private fun ComposedCardsHomePage() {
             RippleColorScope(color = themeColors.primaryVariant) {
               StyledText(
                 modifier = Modifier
-                  .border(2.dp, themeColors.primaryVariant, RoundedCornerShape(50))
-                  .padding(vertical = 7.5.dp, horizontal = 10.dp)
-                  .clickable { gotoArticlePage("活动:文段解读大赛") },
+                  .clip(CircleShape)
+                  .clickable { gotoArticlePage("活动:文段解读大赛") }
+                  .weight(1f)
+                  .border(2.dp, themeColors.primaryVariant, CircleShape)
+                  .padding(vertical = 7.5.dp),
                 text = "活动",
                 color = themeColors.primaryVariant,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
               )
             }
             Box(
               modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .weight(2f)
                 .clip(RoundedCornerShape(50))
                 .clickable { gotoArticlePage("H萌娘:主题板块导航") }
                 .background(themeColors.primaryVariant)
-                .padding(vertical = 7.5.dp, horizontal = 10.dp)
+                .padding(vertical = 7.5.dp, horizontal = 10.dp),
+              contentAlignment = Alignment.Center
             ) {
               StyledText(
                 text = stringResource(id = R.string.moreTopicBlock),
@@ -269,12 +276,15 @@ private fun ComposedCardsHomePage() {
             RippleColorScope(color = themeColors.primaryVariant) {
               StyledText(
                 modifier = Modifier
-                  .border(2.dp, themeColors.primaryVariant, RoundedCornerShape(50))
-                  .padding(vertical = 7.5.dp, horizontal = 10.dp)
-                  .clickable { gotoArticlePage("Help:沙盒") },
+                  .clip(CircleShape)
+                  .clickable { gotoArticlePage("Help:沙盒") }
+                  .weight(1f)
+                  .border(2.dp, themeColors.primaryVariant, CircleShape)
+                  .padding(vertical = 7.5.dp, horizontal = 10.dp),
                 text = "沙盒",
                 color = themeColors.primaryVariant,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
               )
             }
           }
