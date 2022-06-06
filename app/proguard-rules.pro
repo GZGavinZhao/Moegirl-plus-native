@@ -79,3 +79,11 @@
 
 # 保留腾讯x5 webView不被混淆
 -keep class com.tencent.smtt.** { *; }
+
+#保留源文件名称以及行号
+-keepattributes SourceFile,LineNumberTable
+#保留自定义异常
+-keep public class * extends java.lang.Exception
+
+-keep class com.uc.crashsdk.** { *; }
+-keep interface com.uc.crashsdk.** { *; }

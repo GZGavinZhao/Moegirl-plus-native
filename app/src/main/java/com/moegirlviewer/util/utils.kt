@@ -1,5 +1,6 @@
 package com.moegirlviewer.util
 
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -215,4 +216,11 @@ fun closeKeyboard() {
   if (windowToken != null) {
     inputMethodService.hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
   }
+}
+
+fun showDebugAlert(message: String) {
+  AlertDialog.Builder(Globals.activity)
+    .setTitle("debug")
+    .setMessage(message)
+    .show()
 }
