@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
-import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.api.page.bean.PageProfileBean
 import com.moegirlviewer.request.MoeRequestException
@@ -96,17 +95,13 @@ class NewPagesCardState : HomeScreenCardState() {
   var newPageList by mutableStateOf(emptyList<PageProfileBean.Query.MapValue>())
   var status by mutableStateOf(LoadStatus.INITIAL)
 
-  suspend fun loadNext(reload: Boolean = false) {
-    if (LoadStatus.isCannotLoad(status)) return
-    if (reload) {
-      status = LoadStatus.INITIAL
-    }
+  suspend fun load() {
     status = if (status == LoadStatus.INITIAL) LoadStatus.INIT_LOADING else LoadStatus.LOADING
     try {
       val newPagesIds = EditingRecordApi.getNewPages().query.recentchanges.map { it.pageid }
       val pageIdKey = PageIdKey(*newPagesIds.toIntArray())
       val newPagesWithProfileRes = PageApi.getPageProfile(pageIdKey)
-      newPageList = (if (reload) emptyList() else newPageList) + newPagesWithProfileRes.query.pages.values
+      newPageList = newPagesWithProfileRes.query.pages.values
         .filter { it.ns == 0 }   // 如果其中有条目被打回用户页，会出现newPages接口返回页面为条目，pagesProfile返回页面为用户页的情况，这里需要额外过滤
         .sortedBy { it.pageid }
         .reversed()
@@ -117,7 +112,7 @@ class NewPagesCardState : HomeScreenCardState() {
     }
   }
 
-  override suspend fun reload() = loadNext(true)
+  override suspend fun reload() = load()
 }
 
 enum class NewPagesCardViewMode {
