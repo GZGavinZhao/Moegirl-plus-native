@@ -1,6 +1,7 @@
 package com.moegirlviewer.screen.splashSetting
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
@@ -47,7 +48,7 @@ fun SplashSettingScreen() {
   val selectedSplashImages by SettingsStore.common.getValue { this.selectedSplashImages }.collectAsState(
     initial = remember { emptyList() }
   )
-  val reversedSplashImageList = rememberMoegirlSplashImageList().reversed()
+  val reversedSplashImageList = rememberMoegirlSplashImageList()
 
   BackHandler(selectedSplashImageMode == SplashImageMode.CUSTOM_RANDOM && selectedSplashImages.isEmpty()) {
     Globals.commonAlertDialog.show(CommonAlertDialogProps(

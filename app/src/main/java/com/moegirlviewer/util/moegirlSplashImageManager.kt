@@ -2,23 +2,17 @@ package com.moegirlviewer.util
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.DrawableWrapper
 import android.os.Environment
 import androidx.compose.runtime.*
 import com.google.gson.Gson
 import com.moegirlviewer.R
 import com.moegirlviewer.api.app.AppApi
-import com.moegirlviewer.api.app.bean.HmoeSplashImageConfigBean
 import com.moegirlviewer.api.app.bean.MoegirlSplashImageBean
 import com.moegirlviewer.request.CommonRequestException
 import com.moegirlviewer.request.commonOkHttpClient
-import com.moegirlviewer.request.moeOkHttpClient
-import com.moegirlviewer.request.send
 import kotlinx.coroutines.*
 import okhttp3.Request
 import java.io.File
-import java.time.LocalDate
-import kotlin.math.absoluteValue
 
 private const val configFileName = "config.json"
 
@@ -31,7 +25,7 @@ object MoegirlSplashImageManager {
   private val configFile = File(rootDir, configFileName)
   private lateinit var config: List<MoegirlSplashImageBean>
 
-  val fallbackImage = Globals.context.getDrawable(R.mipmap.splash_fallback)!!
+  val fallbackImage = R.mipmap.splash_fallback
 
   init {
     if (rootDir.exists().not()) rootDir.mkdirs()
@@ -46,41 +40,29 @@ object MoegirlSplashImageManager {
   }
 
   suspend fun getRandomImage(): SplashImage = withContext(Dispatchers.IO) {
-    val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
-    val localImagesMap = localImages.associateBy { it.name }
-    val pathPlaceholderOfFallbackImage = "FALLBACK"
-
-    val imagePaths = if (this@MoegirlSplashImageManager::config.isInitialized) {
+    val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!.toList()
+    val usableImages: List<Any> = if (this@MoegirlSplashImageManager::config.isInitialized) {
       config
         .asSequence()
         .map { it.url.localImageFileName() }
-        .filter { localImagesMap.containsKey(it) }
-        .map { localImagesMap[it]!!.path }
-        .toList() + listOf(pathPlaceholderOfFallbackImage)
+        .filter { imageNameInOnlineConfig -> localImages.any { it.name == imageNameInOnlineConfig } }
+        .toList() + listOf(fallbackImage)
     } else {
-      localImagesMap.values.map { it.path }
+      localImages
     }
 
-    val randomImagePath = if (imagePaths.isNotEmpty()) imagePaths.random() else pathPlaceholderOfFallbackImage
-    val randomImageDrawable = if (randomImagePath == pathPlaceholderOfFallbackImage)
-      fallbackImage else
-      Drawable.createFromPath(randomImagePath)!!
-
-    SplashImage.onlyUseInSplashScreen(randomImageDrawable)
+    val randomImage = usableImages.randomOrNull() ?: fallbackImage
+    SplashImage.onlyUseInSplashScreen(randomImage)
   }
 
   suspend fun getLatestImage(): SplashImage = withContext(Dispatchers.IO) {
     val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
-    val localImagesMap = localImages.associateBy { it.name }
+    val latestImageName = if (this@MoegirlSplashImageManager::config.isInitialized) {
+      config.last().url.localImageFileName()
+    } else ""
+    val latestImage = localImages.firstOrNull { it.name == latestImageName } ?: fallbackImage
 
-    val drawable = if (this@MoegirlSplashImageManager::config.isInitialized) {
-      val latestImageName = config.last().url.localImageFileName()
-      localImagesMap[latestImageName]?.let { DrawableWrapper.createFromPath(it.path) } ?: fallbackImage
-    } else {
-      fallbackImage
-    }
-
-    SplashImage.onlyUseInSplashScreen(drawable)
+    SplashImage.onlyUseInSplashScreen(latestImage)
   }
 
   private var imageList: List<MoegirlSplashImage>? = null
@@ -95,7 +77,7 @@ object MoegirlSplashImageManager {
         val imageName = it.url.localImageFileName()
         async {
           MoegirlSplashImage(
-            imageData = DrawableWrapper.createFromPath(localImagesMap[imageName]!!.path)!!,
+            imageData = localImagesMap[imageName]!!,
             title = it.title,
             author = it.author,
             key = it.key,
@@ -177,7 +159,7 @@ fun rememberMoegirlSplashImageList(): List<MoegirlSplashImage> {
   var reversedSplashImageList by remember { mutableStateOf(emptyList<MoegirlSplashImage>()) }
 
   LaunchedEffect(true) {
-    reversedSplashImageList = MoegirlSplashImageManager.getImageList()
+    reversedSplashImageList = MoegirlSplashImageManager.getImageList().reversed()
   }
 
   return reversedSplashImageList

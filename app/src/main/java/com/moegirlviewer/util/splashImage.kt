@@ -2,6 +2,7 @@ package com.moegirlviewer.util
 
 import android.graphics.drawable.Drawable
 import com.moegirlviewer.R
+import java.io.File
 
 open class SplashImage(
   val imageData: Any,
@@ -20,7 +21,7 @@ open class SplashImage(
 }
 
 class MoegirlSplashImage(
-  imageData: Drawable,
+  imageData: File,
   title: String,
   author: String,
   val key: String,

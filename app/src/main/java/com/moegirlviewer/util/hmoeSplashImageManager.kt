@@ -45,10 +45,9 @@ object HmoeSplashImageManager {
   suspend fun getRandomImage(): SplashImage = withContext(Dispatchers.IO) {
     val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
     val localImagesMap = localImages.associateBy { it.name }
-    val fallbackImage = Globals.context.getDrawable(R.mipmap.splash_fallback)!!
-    val pathPlaceholderOfFallbackImage = "FALLBACK"
+    val fallbackImage = R.mipmap.splash_fallback
 
-    val imagePaths = if (this@HmoeSplashImageManager::config.isInitialized) {
+    val usableImages = if (this@HmoeSplashImageManager::config.isInitialized) {
       config.checkFestivalImages(localImagesMap)
         ?: (
           config.images
@@ -56,19 +55,15 @@ object HmoeSplashImageManager {
             .filter { !it.disabled }
             .map { it.imageUrl.localImageFileName() }
             .filter { localImagesMap.containsKey(it) }
-            .map { localImagesMap[it]!!.path }
-            .toList() + listOf(pathPlaceholderOfFallbackImage)
+            .map { localImagesMap[it] }
+            .toList() + listOf(fallbackImage)
           )
     } else {
-      localImagesMap.values.map { it.path }
+      localImagesMap.values
     }
 
-    val randomImagePath = if (imagePaths.isNotEmpty()) imagePaths.random() else pathPlaceholderOfFallbackImage
-    val randomImageDrawable = if (randomImagePath == pathPlaceholderOfFallbackImage)
-      fallbackImage else
-      Drawable.createFromPath(randomImagePath)!!
-
-    SplashImage.onlyUseInSplashScreen(randomImageDrawable)
+    val randomImage = usableImages.randomOrNull() ?: fallbackImage
+    SplashImage.onlyUseInSplashScreen(randomImage)
   }
 
   suspend fun loadConfig() = withContext(Dispatchers.IO) {
