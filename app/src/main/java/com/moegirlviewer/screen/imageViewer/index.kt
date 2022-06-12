@@ -132,9 +132,7 @@ fun ImageViewerScreen(
       if (arguments.images[model.pagerState.currentPage].title != "") {
         StyledText(
           text = arguments.images[model.pagerState.currentPage].title,
-          color = Color(0xffcccccc),
-          maxLines = 2,
-          overflow = TextOverflow.Ellipsis
+          color = Color(0xffcccccc)
         )
       }
     }
