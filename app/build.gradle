@@ -22,14 +22,14 @@ android {
         }
     }
 
-//    splits {
-//        abi {
-//            reset()
-//            enable true
-//            universalApk false  // If true, also generate a universal APK
-//            include "arm64-v8a"
-//        }
-//    }
+    splits {
+        abi {
+            reset()
+            enable true
+            universalApk false  // If true, also generate a universal APK
+            include "arm64-v8a"
+        }
+    }
 
     signingConfigs {
         def keystorePropertiesFile = rootProject.file("key.properties")

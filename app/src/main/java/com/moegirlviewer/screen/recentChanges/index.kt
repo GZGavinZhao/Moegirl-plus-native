@@ -143,7 +143,7 @@ fun RecentChangesScreen() {
                   newLength = data.newlen,
                   oldLength = data.oldlen,
                   revId = data.revid,
-                  oldRevId = data.old_revid,
+                  oldRevId = data.details.lastOrNull()?.old_revid ?: data.old_revid,
                   dateISO = data.timestamp,
                   editDetails = data.details,
                   pageWatched = if (isWatchListMode && isLoggedIn) false else watchList.any { it.pageName == data.title }
