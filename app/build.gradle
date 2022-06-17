@@ -107,7 +107,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+//    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.navigation:navigation-compose:2.4.1"
@@ -144,7 +144,7 @@ dependencies {
 //    implementation "io.github.vanpra.compose-material-dialogs:datetime:0.7.0"
     implementation 'com.tencent.tbs:tbssdk:44176'
 
-    def coilVersion = "2.0.0"
+    def coilVersion = "2.1.0"
     implementation "io.coil-kt:coil-compose:$coilVersion"
     implementation "io.coil-kt:coil-svg:$coilVersion"
     implementation "io.coil-kt:coil-gif:$coilVersion"

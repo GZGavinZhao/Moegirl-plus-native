@@ -71,6 +71,8 @@ fun EditScreenPreview() {
       ) {
         if (model.previewStatus == LoadStatus.FAIL) {
           ReloadButton(
+            modifier = Modifier
+              .matchParentSize(),
             onClick = {
               scope.launch { model.loadPreview() }
             }

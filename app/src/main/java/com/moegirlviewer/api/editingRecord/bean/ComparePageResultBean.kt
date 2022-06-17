@@ -2,12 +2,12 @@ package com.moegirlviewer.api.editingRecord.bean
 
 import com.google.gson.annotations.SerializedName
 
-data class ComparePageResult(
+data class ComparePageResultBean(
   val compare: Compare
 ) {
   data class Compare(
     @SerializedName("*")
-    val _asterisk: String,
+    val _asterisk: String? = null,
     val diffsize: Int,
     val fromcomment: String,
     val fromuser: String,

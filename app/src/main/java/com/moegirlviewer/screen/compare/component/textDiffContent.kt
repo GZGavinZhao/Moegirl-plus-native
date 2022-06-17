@@ -41,7 +41,7 @@ import com.moegirlviewer.util.noRippleClickable
 import com.moegirlviewer.util.sideBorder
 
 @Composable
-fun CompareScreenDiffContent(
+fun CompareScreenTextDiffContent(
   diffLines: List<DiffLine>,
   userName: String? = null,
   comment: String? = null,
@@ -55,7 +55,7 @@ fun CompareScreenDiffContent(
       .verticalScroll(rememberScrollState())
     ) {
       if (!isCompareText) {
-        ComposedHeader(
+        DiffInfo(
           userName = userName!!,
           comment = comment
         )
@@ -63,57 +63,6 @@ fun CompareScreenDiffContent(
 
       DiffContentBody(diffLines = diffLines)
     }
-}
-
-@Composable
-private fun ComposedHeader(
-  userName: String,
-  comment: String?,
-) {
-  val themeColors = MaterialTheme.colors
-
-  Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(top = 10.dp),
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Row(
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      UserAvatar(
-        modifier = Modifier
-          .size(30.dp),
-        userName = userName,
-      )
-
-      StyledText(
-        modifier = Modifier
-          .padding(start = 5.dp)
-          .noRippleClickable { gotoUserPage(userName) },
-        text = userName,
-        fontSize = 16.sp,
-        color = themeColors.primaryVariant
-      )
-
-      UserTail(userName)
-    }
-
-    Box(
-      modifier = Modifier
-        .padding(10.dp)
-    ) {
-      StyledText(
-        text = if (comment != null)
-          "${stringResource(id = R.string.summary)}：$comment" else
-          "（${stringResource(id = R.string.noSummary)}）",
-        color = if (comment != null)
-          LocalTextStyle.current.color else
-          themeColors.text.secondary,
-        fontSize = 14.sp
-      )
-    }
-  }
 }
 
 @Composable

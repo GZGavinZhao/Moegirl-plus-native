@@ -2,14 +2,13 @@ package com.moegirlviewer.screen.compare
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LowPriority
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.sharp.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.DoSideEffect
 import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.Center
@@ -27,7 +27,9 @@ import com.moegirlviewer.component.ReloadButton
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
-import com.moegirlviewer.screen.compare.component.CompareScreenDiffContent
+import com.moegirlviewer.screen.compare.component.CompareScreenPageDiffRows
+import com.moegirlviewer.screen.compare.component.CompareScreenTextDiffContent
+import com.moegirlviewer.screen.compare.component.DiffInfo
 import com.moegirlviewer.screen.compare.util.showUndoDialog
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.theme.isUseDarkMode
@@ -45,7 +47,7 @@ fun CompareScreen(
   val model: CompareScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
 
-  SideEffect {
+  DoSideEffect {
     model.routeArguments = arguments
   }
 
@@ -73,24 +75,21 @@ fun CompareScreen(
   ) {
     when(model.status) {
       LoadStatus.SUCCESS -> {
-        HorizontalPager(
-          count = 2,
-          state = model.pagerState,
-        ) { currentIndex ->
-          if (currentIndex == 0) {
-            CompareScreenDiffContent(
+        if (model.isCompareTextMode) {
+          TextDiffContentTabs()
+        } else {
+          Column(
+            modifier = Modifier
+              .verticalScroll(rememberScrollState())
+          ) {
+            DiffInfo(
               userName = model.compareData!!.fromuser,
-              comment = if (model.compareData!!.fromcomment != "") model.compareData!!.fromcomment else null,
-              diffLines = model.leftLines,
-              isCompareText = model.isCompareTextMode
+              comment = model.compareData!!.fromcomment
             )
-          } else {
-            CompareScreenDiffContent(
-              userName = model.compareData!!.touser,
-              comment = if (model.compareData!!.tocomment != "") model.compareData!!.tocomment else null,
-              diffLines = model.rightLines,
-              isCompareText = model.isCompareTextMode
-            )
+
+            for (item in model.linearDiff) {
+              CompareScreenPageDiffRows(item)
+            }
           }
         }
       }
@@ -104,6 +103,8 @@ fun CompareScreen(
       LoadStatus.FAIL -> {
         Center {
           ReloadButton(
+            modifier = Modifier
+              .matchParentSize(),
             onClick = {
               scope.launch { model.loadCompareData() }
             }
@@ -166,29 +167,57 @@ private fun ComposedHeader(
         }
       )
 
-      TabRow(
-        selectedTabIndex = model.selectedTabIndex,
-        indicator = { tabPositions ->
-          TabRowDefaults.Indicator(
-            modifier = Modifier.tabIndicatorOffset(tabPositions[model.selectedTabIndex]),
-            color = if (!isUsePureTheme() && !isUseDarkMode()) Color.White else themeColors.primaryVariant,
-            height = 3.dp
-          )
-        }
-      ) {
-        titles.forEachIndexed { index, title ->
-          Tab(
-            text = {
-              StyledText(
-                text = title,
-                color = Color.Unspecified
-              )
-            },
-            selected = model.selectedTabIndex == index,
-            onClick = { model.selectedTabIndex = index }
-          )
+      if (model.isCompareTextMode) {
+        TabRow(
+          selectedTabIndex = model.selectedTabIndex,
+          indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+              modifier = Modifier.tabIndicatorOffset(tabPositions[model.selectedTabIndex]),
+              color = if (!isUsePureTheme() && !isUseDarkMode()) Color.White else themeColors.primaryVariant,
+              height = 3.dp
+            )
+          }
+        ) {
+          titles.forEachIndexed { index, title ->
+            Tab(
+              text = {
+                StyledText(
+                  text = title,
+                  color = Color.Unspecified
+                )
+              },
+              selected = model.selectedTabIndex == index,
+              onClick = { model.selectedTabIndex = index }
+            )
+          }
         }
       }
+    }
+  }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun TextDiffContentTabs() {
+  val model: CompareScreenModel = hiltViewModel()
+  HorizontalPager(
+    count = 2,
+    state = model.pagerState,
+  ) { currentIndex ->
+    if (currentIndex == 0) {
+      CompareScreenTextDiffContent(
+        userName = model.compareData!!.fromuser,
+        comment = if (model.compareData!!.fromcomment != "") model.compareData!!.fromcomment else null,
+        diffLines = model.leftLines,
+        isCompareText = model.isCompareTextMode
+      )
+    } else {
+      CompareScreenTextDiffContent(
+        userName = model.compareData!!.touser,
+        comment = if (model.compareData!!.tocomment != "") model.compareData!!.tocomment else null,
+        diffLines = model.rightLines,
+        isCompareText = model.isCompareTextMode
+      )
     }
   }
 }

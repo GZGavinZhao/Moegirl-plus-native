@@ -1,10 +1,13 @@
 package com.moegirlviewer.api.editingRecord
 
+import com.moegirlviewer.Constants
 import com.moegirlviewer.api.editingRecord.bean.*
 import com.moegirlviewer.request.MoeRequestMethod
 import com.moegirlviewer.request.moeRequest
 import com.moegirlviewer.util.PageKey
 import com.moegirlviewer.util.addQueryApiParamsByPageKey
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 
 object EditingRecordApi {
   suspend fun getRecentChanges(
@@ -45,13 +48,14 @@ object EditingRecordApi {
     toTitle: String? = null,
     toRev: Int? = null,
     fromText: String? = null,
-    toText: String? = null
+    toText: String? = null,
+    withDiffHtml: Boolean = true,
   ) = moeRequest(
-    entity = ComparePageResult::class.java,
+    entity = ComparePageResultBean::class.java,
     method = MoeRequestMethod.POST,
     params = mutableMapOf<String, Any>().apply {
       this["action"] = "compare"
-      this["prop"] = "diff|diffsize|rel|user|comment"
+      this["prop"] = (if (withDiffHtml) "diff|" else "") + "diffsize|rel|user|comment"
       if (fromTitle != null) this["fromtitle"] = fromTitle
       if (fromRev != null) this["fromrev"] = fromRev
       if (toTitle != null) this["totitle"] = toTitle
@@ -60,6 +64,20 @@ object EditingRecordApi {
       if (toText != null) this["totext"] = toText
     }
   )
+
+  suspend fun getMobileComparePageHtml(
+    fromRev: Int,
+    toRev: Int?
+  ): Element {
+    val params = if (toRev != null) "$fromRev...$toRev" else fromRev
+    val rawHtml = moeRequest(
+      entity = String::class.java,
+      baseUrl = Constants.mainUrl + "/Special:移动版差异/$params",
+    )
+
+    val htmlDoc = Jsoup.parse(rawHtml)
+    return htmlDoc.getElementById("mw-mf-minidiff")!!
+  }
 
   suspend fun getPageRevisions(
     pageKey: PageKey,

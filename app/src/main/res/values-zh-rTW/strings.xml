@@ -327,6 +327,7 @@
     <string name="comparesummaryPrefix">撤銷[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|討論]]）的版本%2$s</string>
     <string name="pageLastUpdateDate">最後更新於：yyyy年MM月dd日</string>
     <string name="yearMonthDateWeek">%1$s年%2$s月%3$s日（%4$s）</string>
+    <string name="lineNumber">第%1$s行</string>
 
     <string name="jsonArray_chineseWeeks">["", "一", "二", "三", "四", "五", "六", "日"]</string>
     <string name="jsonArray_quickSummaryListOfUndo">["進行破壞", "新增不實內容", "內容過於主觀", "新增廣告", "排版發生錯亂"]</string>

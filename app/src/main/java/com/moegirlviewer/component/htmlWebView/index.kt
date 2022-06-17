@@ -113,7 +113,7 @@ fun HtmlWebView(
 
   LaunchedEffect(true) {
     val webView = webViewRef.value!!
-    webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+//    webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
     webView.setBackgroundColor(android.graphics.Color.TRANSPARENT)
     val trackDrawable = createWebViewTrackDrawable(density)
     webView.x5WebViewExtension?.setVerticalTrackDrawable(trackDrawable)

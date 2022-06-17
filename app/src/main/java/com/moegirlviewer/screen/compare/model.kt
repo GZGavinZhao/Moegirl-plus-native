@@ -19,13 +19,12 @@ import com.moegirlviewer.R
 import com.moegirlviewer.api.account.AccountApi
 import com.moegirlviewer.api.edit.EditApi
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
-import com.moegirlviewer.api.editingRecord.bean.ComparePageResult
+import com.moegirlviewer.api.editingRecord.bean.ComparePageResultBean
 import com.moegirlviewer.component.commonDialog.ButtonConfig
 import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.request.MoeRequestException
-import com.moegirlviewer.screen.compare.util.DiffLine
-import com.moegirlviewer.screen.compare.util.collectDiffBlocksFormHtml
+import com.moegirlviewer.screen.compare.util.*
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.printRequestErr
@@ -40,9 +39,12 @@ class CompareScreenModel @Inject constructor() : ViewModel() {
   lateinit var routeArguments: CompareRouteArguments
   val coroutineScope = CoroutineScope(Dispatchers.Main)
   val pagerState = PagerState(0)
-  var compareData by mutableStateOf<ComparePageResult.Compare?>(null)
+  var compareData by mutableStateOf<ComparePageResultBean.Compare?>(null)
   var leftLines by mutableStateOf(emptyList<DiffLine>())
   var rightLines by mutableStateOf(emptyList<DiffLine>())
+
+  var linearDiff by mutableStateOf(emptyList<LinearDiffRows>())
+
   var status by mutableStateOf(LoadStatus.INITIAL)
   var selectedTabIndex by mutableStateOf(0)
 
@@ -53,28 +55,35 @@ class CompareScreenModel @Inject constructor() : ViewModel() {
   suspend fun loadCompareData() {
     status = LoadStatus.LOADING
     try {
-      val res = if (isCompareTextMode) {
-        EditingRecordApi.comparePage(
+      if (isCompareTextMode) {
+        val res = EditingRecordApi.comparePage(
           fromText = routeArgumentsOfTextCompare.formText,
           toText = routeArgumentsOfTextCompare.toText
         )
+
+        val diffBlocks = withContext(Dispatchers.Default) {
+          collectDiffBlocksFormHtml("<table>${res.compare._asterisk}</table>")
+        }
+
+        compareData = res.compare
+        leftLines = diffBlocks.map { it.left }
+        rightLines = diffBlocks.map { it.right }
+        status = LoadStatus.SUCCESS
       } else {
-        EditingRecordApi.comparePage(
-          fromTitle = routeArgumentsOfPageCompare.pageName,
+        val pageCompareHtml = EditingRecordApi.getMobileComparePageHtml(
           fromRev = routeArgumentsOfPageCompare.fromRevId,
-          toTitle = routeArgumentsOfPageCompare.pageName,
           toRev = routeArgumentsOfPageCompare.toRevId
         )
-      }
+        val comparePageRes = EditingRecordApi.comparePage(
+          fromRev = routeArgumentsOfPageCompare.fromRevId,
+          toRev = routeArgumentsOfPageCompare.toRevId,
+          withDiffHtml = false
+        )
 
-      val diffBlocks = withContext(Dispatchers.Default) {
-        collectDiffBlocksFormHtml("<table>${res.compare._asterisk}</table>")
+        linearDiff = pageCompareHtml.parseLinearDiff()
+        compareData = comparePageRes.compare
+        status = LoadStatus.SUCCESS
       }
-
-      compareData = res.compare
-      leftLines = diffBlocks.map { it.left }
-      rightLines = diffBlocks.map { it.right }
-      status = LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {
       printRequestErr(e, "加载页面差异数据失败")
       status = LoadStatus.FAIL
