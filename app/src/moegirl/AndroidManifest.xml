@@ -24,6 +24,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" android:host="zh.moegirl.org.cn" />
                 <data android:scheme="https" android:host="mzh.moegirl.org.cn" />
+                <data android:scheme="moegirl" android:host="detail" />
+                <data android:scheme="moegirl-plus" android:host="detail" />
             </intent-filter>
         </activity>
 
