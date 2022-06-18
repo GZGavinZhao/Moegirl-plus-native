@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonObject
 import com.moegirlviewer.Constants
+import com.moegirlviewer.DataSource
 import com.moegirlviewer.R
 import com.moegirlviewer.api.editingRecord.EditingRecordApi
 import com.moegirlviewer.api.page.PageApi
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.forEach
+import org.jsoup.Jsoup
 import javax.inject.Inject
 
 @HiltViewModel
@@ -142,6 +144,12 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
         } else {
           checkEditAllowed()
         }
+      },
+
+      launch {
+        if (Constants.source != DataSource.HMOE) return@launch
+        val isLoggedIn = AccountStore.isLoggedIn.first()
+        if (!isLoggedIn) checkIsUnfairPage()
       }
     ).forEach { it.join() }
   }
@@ -374,6 +382,21 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   fun share() {
     val siteName = Globals.context.getString(R.string.siteName)
     shareText("$siteName - $truePageName ${Constants.shareUrl}$pageId")
+  }
+
+  suspend fun checkIsUnfairPage() = withContext(Dispatchers.Default) {
+    val articleDoc = Jsoup.parse(articleData!!.parse.text._asterisk)
+    val isUnfairPage = articleDoc.getElementById("EditUnfairWarning") != null
+    if (isUnfairPage) {
+      Globals.commonAlertDialog.show(
+        CommonAlertDialogProps(
+          title = Globals.context.getString(R.string.hmoeUnfairHintTitle),
+          content = {
+            StyledText(text = Globals.context.getString(R.string.hmoeUnfairHintBody))
+          }
+        )
+      )
+    }
   }
 
   companion object {

@@ -322,6 +322,12 @@
     <string name="focusModeHelpText">浏览条目时状态栏将隐藏，头栏和评论按钮隐藏后不会因向上滑动而重新出现，变为双击屏幕后显示</string>
     <string name="splashImagesPreparingHint">启动屏图片准备中，请稍候</string>
     <string name="searchInPagesContent">在页面内容中搜索</string>
+    <string name="hmoeUnfairHintTitle">H萌娘提醒您：本条目内容并不中立！</string>
+    <string name="hmoeUnfairHintBody">
+        条目中可能含有对人身/种族攻击等要素，请不要以当前任何内容作为依据。
+        此条目内容与H萌娘管理人员及编辑者无关，任何人都可以修改条目，使之正确和公正。
+        如果您有更好的意见或建议，欢迎前往条目讨论页讨论。
+    </string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤销[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|讨论]]）的版本%2$s</string>
