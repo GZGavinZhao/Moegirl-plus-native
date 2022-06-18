@@ -2,7 +2,7 @@ package com.moegirlviewer.api.editingRecord.bean
 
 data class NewPagesBean(
   val batchcomplete: String,
-  val `continue`: Continue,
+  val `continue`: Continue? = null,
   val query: Query
 ) {
   data class Continue(

@@ -41,8 +41,8 @@ class NewPagesScreenModel @Inject constructor() : ViewModel() {
         .sortedBy { it.pageid }
         .reversed()
       newPageList = if (reload) resultList else newPageList + resultList
-      continueKey = newPagesRes.`continue`.rccontinue
-      status = LoadStatus.SUCCESS
+      continueKey = newPagesRes.`continue`?.rccontinue
+      status = if (continueKey != null) LoadStatus.SUCCESS else LoadStatus.ALL_LOADED
     } catch (e: MoeRequestException) {
       printRequestErr(e, "加载最新条目列表失败")
       status = LoadStatus.FAIL
