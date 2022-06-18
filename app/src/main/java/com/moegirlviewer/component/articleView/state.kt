@@ -8,6 +8,7 @@ import androidx.compose.ui.node.Ref
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.moegirlviewer.Constants
+import com.moegirlviewer.CrossWikiUrlPrefix
 import com.moegirlviewer.DataSource
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.api.page.bean.PageContentResBean
@@ -305,12 +306,25 @@ class ArticleViewStateCore() {
             }
           }
         }
-        if (e is MoeRequestWikiException && e.code == "missingtitle") {
-          onArticleMissed?.invoke()
-        } else {
-          onArticleError?.invoke()
-          status = LoadStatus.FAIL
+
+        val crossWikiMoegirlMsgRegex = Regex("""^Bad title "zhmoe:([\s\S]+)"\.$""")
+        if (e is MoeRequestWikiException) {
+          when {
+            e.code == "missingtitle" -> {
+              onArticleMissed?.invoke()
+              return@launch
+            }
+            e.code == "invalidtitle" && e.message.contains(crossWikiMoegirlMsgRegex) -> {
+              val moegirlPageName = crossWikiMoegirlMsgRegex.find(e.message)!!.groupValues[1]
+              openHttpUrl(CrossWikiUrlPrefix.moegirl + moegirlPageName)
+              Globals.navController.popBackStack()
+              return@launch
+            }
+          }
         }
+
+        onArticleError?.invoke()
+        status = LoadStatus.FAIL
       }
     }
   }

@@ -14,11 +14,17 @@ class SourceConstants(
   val privacyPageName: String
 )
 
+private const val moegirlMainUrl = "https://mzh.moegirl.org.cn"
+
+object CrossWikiUrlPrefix {
+  const val moegirl = "$moegirlMainUrl/"
+}
+
 private val sourceConstants = when (BuildConfig.FLAVOR_source) {
   "moegirl" -> SourceConstants(
     source = DataSource.MOEGIRL,
     domain = "https://moegirl.org.cn",
-    mainUrl = "https://mzh.moegirl.org.cn",
+    mainUrl = moegirlMainUrl,
     mainPageUrl = "https://mzh.moegirl.org.cn/Mainpage",
     apiUrl = "https://mzh.moegirl.org.cn/api.php",
     avatarUrl = "https://commons.moegirl.org.cn/extensions/Avatar/avatar.php?user=",

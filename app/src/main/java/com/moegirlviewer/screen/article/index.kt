@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
+import com.moegirlviewer.CrossWikiUrlPrefix
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.OneTimeLaunchedEffect
 import com.moegirlviewer.compable.remember.rememberDebouncedManualEffector
