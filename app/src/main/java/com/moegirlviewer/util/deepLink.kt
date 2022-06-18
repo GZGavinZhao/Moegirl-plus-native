@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.core.net.toUri
 import com.moegirlviewer.Constants
 import com.moegirlviewer.DataSource
+import java.net.URLDecoder
 
 private val plainNameRegex = if (Constants.source == DataSource.MOEGIRL)
   Regex("""moegirl\.org\.cn/(.+)$""") else
@@ -19,7 +20,7 @@ val Intent.deepLink get(): DeepLink? {
       PageIdDeepLink(pageId)
     }
     deepLinkStr.contains(plainNameRegex) -> {
-      val pageName = plainNameRegex.find(deepLinkStr)!!.groupValues[1].let { if (it == "") "mainpage" else it }
+      val pageName = URLDecoder.decode(plainNameRegex.find(deepLinkStr)!!.groupValues[1].let { if (it == "") "mainpage" else it }, "utf-8")
       PageNameDeepLink(
         pageName = pageName,
         isMainPage = pageName.lowercase() == "mainpage"

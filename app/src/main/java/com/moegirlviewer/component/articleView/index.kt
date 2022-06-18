@@ -144,7 +144,7 @@ fun ArticleView(
       messageHandlers = coreState.defaultMessageHandlers + (coreState.messageHandlers ?: emptyMap()),
       onScrollChanged = coreState.onScrollChanged,
       ref = coreState.htmlWebViewRef,
-      shouldInterceptRequest = { webView, request -> coreState.shouldInterceptRequest(webView, request) }
+//      shouldInterceptRequest = { webView, request -> coreState.shouldInterceptRequest(webView, request) }
     )
 
     if (coreState.visibleLoadStatusIndicator && state.status != LoadStatus.SUCCESS) {
