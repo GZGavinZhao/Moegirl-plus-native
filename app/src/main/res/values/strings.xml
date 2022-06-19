@@ -108,6 +108,7 @@
     <string name="noIntroduction">暂无简介</string>
     <string name="moreOptions">更多选项</string>
     <string name="showCatalog">打开目录</string>
+    <string name="showDrawer">打开抽屉</string>
     <string name="findNext">查找下一个</string>
     <string name="categorySearch">分类搜索</string>
     <string name="loadMore">加载更多</string>

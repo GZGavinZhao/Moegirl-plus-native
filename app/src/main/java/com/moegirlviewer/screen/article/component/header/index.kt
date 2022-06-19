@@ -236,6 +236,10 @@ private fun MoreMenu(
       action = MoreMenuAction.SHOW_CATALOG,
       text = stringResource(id = R.string.showCatalog)
     )
+    MoreMenuItem(
+      action = MoreMenuAction.SHOW_DRAWER,
+      text = stringResource(id = R.string.showDrawer)
+    )
   }
 }
 
@@ -245,6 +249,7 @@ enum class MoreMenuAction {
   GOTO_LOGIN,
   TOGGLE_WATCH_LIST,
   SHOW_CATALOG,
+  SHOW_DRAWER,
   SHARE,
   GOTO_ADD_SECTION,
   GOTO_TALK,

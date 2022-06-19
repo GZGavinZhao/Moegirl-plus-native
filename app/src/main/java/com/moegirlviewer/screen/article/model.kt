@@ -22,6 +22,7 @@ import com.moegirlviewer.request.MoeRequestException
 import com.moegirlviewer.room.browsingRecord.BrowsingRecord
 import com.moegirlviewer.room.watchingPage.WatchingPage
 import com.moegirlviewer.screen.article.component.header.EditAllowedStatus
+import com.moegirlviewer.screen.drawer.CommonDrawerState
 import com.moegirlviewer.screen.edit.EditRouteArguments
 import com.moegirlviewer.screen.edit.EditType
 import com.moegirlviewer.store.AccountStore
@@ -43,6 +44,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
   val coroutineScope = CoroutineScope(Dispatchers.Main)
   val cachedWebViews = CachedWebViews()
   val memoryStore = MemoryStore()
+  val commonDrawerState = CommonDrawerState()
   val catalogDrawerState = CustomDrawerState()
   val articleViewState = ArticleViewState()
   lateinit var routeArguments: ArticleRouteArguments

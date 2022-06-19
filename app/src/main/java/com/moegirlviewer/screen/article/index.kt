@@ -118,7 +118,9 @@ fun ArticleScreen(
     Globals.activity.finishAndRemoveTask()
   }
 
-  CommonDrawer {
+  CommonDrawer(
+    state = model.commonDrawerState
+  ) {
     model.memoryStore.Provider {
       model.cachedWebViews.Provider {
         ArticleScreenCatalog(
@@ -217,6 +219,9 @@ private fun ComposedHeader(
         }
         SHOW_FIND_BAR -> {
           model.visibleFindBar = true
+        }
+        SHOW_DRAWER -> {
+          scope.launch { model.commonDrawerState.open() }
         }
       }
     }
