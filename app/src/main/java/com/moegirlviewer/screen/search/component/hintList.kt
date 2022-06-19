@@ -61,7 +61,7 @@ fun ColumnScope.SearchScreenHintList() {
   suspend fun loadNext(reload: Boolean = false) = scope.launch {
     if (model.keywordInputValue.trim() == "") return@launch
     if (LoadStatus.isCannotLoad(status) && !reload) return@launch
-    if (lastReloadSearchKeyword == model.keywordInputValue && !reload) return@launch
+    if (lastReloadSearchKeyword == model.keywordInputValue && reload && status != LoadStatus.FAIL) return@launch
 
     lastReloadSearchKeyword = model.keywordInputValue
     status = if (reload) LoadStatus.INIT_LOADING else LoadStatus.LOADING
@@ -249,7 +249,7 @@ private fun SearchInPagesContentHint() {
         .fillMaxWidth()
         .height(50.dp)
         .clickable {
-          Globals.navController.navigate(SearchResultRouteArguments(model.keywordInputValue))
+          model.searchByRecord(SearchRecord(model.keywordInputValue, false))
         }
         .padding(start = 10.dp, end = 10.dp),
       verticalAlignment = Alignment.CenterVertically
