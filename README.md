@@ -4,7 +4,7 @@
 
 [H萌娘，万物皆可H的百科全书！](https://www.hmoegirl.com/Mainpage)
 
-该项目是萌娘百科与H萌娘的第三方安卓客户端，使用Jetpack Compose单Activity模式开发。
+该项目是萌娘百科第三方与H萌娘官方的安卓客户端，使用Jetpack Compose单Activity模式开发。
 
 条目排版与渲染器：[moegirlRenderer](https://github.com/koharubiyori/moegirlRenderer)
 
