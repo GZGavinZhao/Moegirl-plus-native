@@ -48,7 +48,7 @@ fun ArticleScreenCatalog(
 
   CustomDrawer(
     state = customDrawerState,
-    width = (LocalConfiguration.current.screenWidthDp * 0.55).dp,
+    width = (LocalConfiguration.current.screenWidthDp * 0.65).dp,
     side = CustomDrawerSide.RIGHT,
     alwaysDelayInitialize = true,
     drawerContent = {

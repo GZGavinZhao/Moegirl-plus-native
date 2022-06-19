@@ -152,6 +152,12 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
         if (Constants.source != DataSource.HMOE) return@launch
         val isLoggedIn = AccountStore.isLoggedIn.first()
         if (!isLoggedIn) checkIsUnfairPage()
+      },
+
+      launch {
+        if (truePageName != "萌娘百科 talk:讨论版" && isTalkPage(truePageName ?: "")) {
+          articleViewState.injectScript("window.scrollTo(0, 999999999)")
+        }
       }
     ).forEach { it.join() }
   }

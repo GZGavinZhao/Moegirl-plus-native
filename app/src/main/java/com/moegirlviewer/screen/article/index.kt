@@ -236,6 +236,7 @@ private fun ComposedArticleView(
   val model: ArticleScreenModel = hiltViewModel()
   val scope = rememberCoroutineScope()
   val isFocusMode by SettingsStore.common.getValue { focusMode }.collectAsState(initial = false)
+  val isHideTopTemplates by SettingsStore.common.getValue { hideTopTemplates }.collectAsState(initial = false)
 
   val debouncedManualEffector = rememberDebouncedManualEffector<ReadingRecord>(1000) {
     scope.launch {
@@ -324,6 +325,7 @@ private fun ComposedArticleView(
         visibleLoadStatusIndicator = false,
         contentTopPadding = (Constants.topAppBarHeight + Globals.statusBarHeight).dp,
         addCategories = model.truePageName != "H萌娘:官方群组",
+        renderDelay = if (isHideTopTemplates) 500 else 0,
         onScrollChanged = handleOnScrollChanged,
         onArticleRendered = {
           scope.launch { model.handleOnArticleRendered() }

@@ -200,7 +200,7 @@ fun CommentScreenCommentItem(
               copyContentToClipboard(getTextFromHtml(commentData.text.eraseTargetUserName()))
               vibrate()
               toast(Globals.context.getString(R.string.commentContentCopiedHint))
-              event.consumeDownChange()
+              if (event.pressed != event.previousPressed) event.consume()
             }
           }
         }
