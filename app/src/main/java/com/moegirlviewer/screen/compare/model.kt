@@ -75,7 +75,9 @@ class CompareScreenModel @Inject constructor() : ViewModel() {
           toRev = routeArgumentsOfPageCompare.toRevId
         )
         val comparePageRes = EditingRecordApi.comparePage(
+          fromTitle = routeArgumentsOfPageCompare.pageName,
           fromRev = routeArgumentsOfPageCompare.fromRevId,
+          toTitle = routeArgumentsOfPageCompare.pageName,
           toRev = routeArgumentsOfPageCompare.toRevId,
           withDiffHtml = false
         )
