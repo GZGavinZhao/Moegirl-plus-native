@@ -2,9 +2,9 @@ package com.moegirlviewer.initialization
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.OverscrollConfiguration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
-import androidx.compose.foundation.gestures.OverScrollConfiguration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
@@ -19,11 +19,10 @@ import androidx.navigation.NavHostController
 import coil.compose.LocalImageLoader
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
-import my.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.moegirlviewer.component.commonDialog.*
 import com.moegirlviewer.request.imageOkHttpClient
-import com.moegirlviewer.request.moeOkHttpClient
 import com.moegirlviewer.util.Globals
+import my.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
@@ -36,10 +35,12 @@ fun OnComposeWillCreate(
   val defaultImageLoader = LocalImageLoader.current
   val navController = rememberAnimatedNavController()
   val overScrollConfig = remember {
-    OverScrollConfiguration(
+    OverscrollConfiguration(
       glowColor = themeColors.primaryVariant
     )
   }
+
+
   val imageLoader = remember {
     defaultImageLoader.newBuilder()
       .components {
@@ -66,7 +67,7 @@ fun OnComposeWillCreate(
 
   CompositionLocalProvider(
     LocalImageLoader provides imageLoader,
-    LocalOverScrollConfiguration provides overScrollConfig,
+    LocalOverscrollConfiguration provides overScrollConfig,
   ) {
     Box(
       modifier = Modifier
