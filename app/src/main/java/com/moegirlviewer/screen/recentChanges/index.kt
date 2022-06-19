@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
@@ -24,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
-import com.moegirlviewer.component.AppHeaderIcon
+import com.moegirlviewer.component.TopAppBarIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.EmptyContent
 import com.moegirlviewer.component.ScrollLoadListFooter
@@ -81,7 +80,7 @@ fun RecentChangesScreen() {
         },
         actions = {
           if (isLoggedIn) {
-            AppHeaderIcon(
+            TopAppBarIcon(
               image = if (isWatchListMode)
                 ImageVector.vectorResource(id = R.drawable.eye) else
                 Icons.Filled.FormatIndentDecrease,
@@ -91,7 +90,7 @@ fun RecentChangesScreen() {
             )
           }
 
-          AppHeaderIcon(
+          TopAppBarIcon(
             image = Icons.Filled.Tune,
             onClick = {
               scope.launch { model.showSettingsDialog() }

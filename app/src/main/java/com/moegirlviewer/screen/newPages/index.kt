@@ -1,14 +1,11 @@
 package com.moegirlviewer.screen.newPages
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -18,13 +15,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.OnSwipeLoading
-import com.moegirlviewer.component.AppHeaderIcon
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
 import com.moegirlviewer.screen.newPages.component.NewPageItem
-import com.moegirlviewer.screen.notification.component.NotificationScreenItem
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.gotoArticlePage

@@ -1,13 +1,10 @@
 package com.moegirlviewer.screen.edit
 
 import android.annotation.SuppressLint
-import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Autorenew
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
@@ -22,12 +19,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.moegirlviewer.R
-import com.moegirlviewer.component.AppHeaderIcon
-import com.moegirlviewer.component.BackHandler
-import com.moegirlviewer.component.commonDialog.ButtonConfig
-import com.moegirlviewer.component.commonDialog.CommonAlertDialogProps
+import com.moegirlviewer.component.TopAppBarIcon
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.component.styled.TopAppBarTitle
 import com.moegirlviewer.screen.edit.tabs.preview.EditScreenPreview
 import com.moegirlviewer.screen.edit.tabs.wikitextEditor.EditScreenWikitextEditor
 import com.moegirlviewer.screen.edit.util.showSubmitDialogOfEdit
@@ -39,7 +34,6 @@ import com.moegirlviewer.util.computeMd5
 import com.moegirlviewer.util.imeBottomPadding
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(FlowPreview::class)
@@ -152,22 +146,20 @@ private fun ComposedHeader(
     Column() {
       StyledTopAppBar(
         title = {
-          StyledText(
+          TopAppBarTitle(
             text = "$actionName：$pageName",
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = themeColors.onPrimary
+            twoRows = true
           )
         },
         actions = {
-          AppHeaderIcon(
+          TopAppBarIcon(
             image = Icons.Filled.Search,
             onClick = {
               Globals.navController.navigate("search")
             }
           )
 
-          AppHeaderIcon(
+          TopAppBarIcon(
             image = Icons.Filled.Done,
             onClick = {
               showSubmitDialogOfEdit(model)

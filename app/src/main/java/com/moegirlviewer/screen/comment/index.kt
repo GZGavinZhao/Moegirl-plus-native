@@ -25,13 +25,14 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.OnSwipeLoading
-import com.moegirlviewer.component.AppHeaderIcon
+import com.moegirlviewer.component.TopAppBarIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.EmptyContent
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.component.styled.TopAppBarTitle
 import com.moegirlviewer.screen.comment.component.commentEditor.showCommentEditor
 import com.moegirlviewer.screen.comment.component.commentEditor.showReplyEditor
 import com.moegirlviewer.screen.comment.component.commentEditor.useCommentEditor
@@ -209,15 +210,13 @@ private fun ComposedHeader(
       BackButton()
     },
     title = {
-      StyledText(
+      TopAppBarTitle(
         text = "${stringResource(id = R.string.comment)}：${title}",
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        color = themeColors.onPrimary,
+        twoRows = true
       )
     },
     actions = {
-      AppHeaderIcon(
+      TopAppBarIcon(
         image = Icons.Filled.AddComment,
         onClick = onShowCommentEditor
       )

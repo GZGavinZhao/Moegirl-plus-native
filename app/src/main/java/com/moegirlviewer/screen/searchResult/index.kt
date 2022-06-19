@@ -28,6 +28,7 @@ import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.component.styled.TopAppBarTitle
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.searchResult.component.SearchResultItem
 import com.moegirlviewer.theme.background2
@@ -64,11 +65,9 @@ fun SearchResultScreen(
       StyledTopAppBar(
         backgroundColor = themeColors.primary,
         title = {
-          StyledText(
+          TopAppBarTitle(
             text = stringResource(id = R.string.search) + "：" + arguments.keyword,
-            color = themeColors.onPrimary,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            twoRows = true,
           )
         }
       )

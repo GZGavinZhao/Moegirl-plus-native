@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.OnSwipeLoading
-import com.moegirlviewer.component.AppHeaderIcon
+import com.moegirlviewer.component.TopAppBarIcon
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
@@ -109,7 +109,7 @@ private fun ComposedHeader() {
       )
     },
     actions = {
-      AppHeaderIcon(
+      TopAppBarIcon(
         image = Icons.Filled.DoneAll,
         onClick = {
           scope.launch { model.markAllAsRead() }

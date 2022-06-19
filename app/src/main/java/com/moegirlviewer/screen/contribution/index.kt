@@ -30,6 +30,7 @@ import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.component.styled.TopAppBarTitle
 import com.moegirlviewer.screen.contribution.component.ContributionItem
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.theme.elevation
@@ -126,11 +127,9 @@ private fun ComposedHeader(
       StyledTopAppBar(
         elevation = 0.dp,
         title = {
-          StyledText(
+          TopAppBarTitle(
             text = stringResource(id = R.string.userContribution) + "：" + userName,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = themeColors.onPrimary
+            twoRows = true
           )
         }
       )

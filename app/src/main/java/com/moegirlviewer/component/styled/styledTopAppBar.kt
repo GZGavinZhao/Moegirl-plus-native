@@ -8,10 +8,15 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.moegirlviewer.R
 import com.moegirlviewer.compable.StatusBar
 import com.moegirlviewer.compable.StatusBarMode
 import com.moegirlviewer.component.BackButton
@@ -81,4 +86,22 @@ fun StyledTopAppBar(
       },
     )
   }
+}
+
+@Composable
+fun TopAppBarTitle(
+  modifier: Modifier = Modifier,
+  text: String,
+  color: Color = MaterialTheme.colors.onPrimary,
+  twoRows: Boolean = false
+) {
+  StyledText(
+    modifier = modifier,
+    text = text,
+    overflow = TextOverflow.Ellipsis,
+    color = color,
+    maxLines = if (twoRows) 2 else 1,
+    fontSize = if (twoRows) 18.sp else TextUnit.Unspecified,
+    lineHeight = if (twoRows) 19.sp else TextUnit.Unspecified,
+  )
 }

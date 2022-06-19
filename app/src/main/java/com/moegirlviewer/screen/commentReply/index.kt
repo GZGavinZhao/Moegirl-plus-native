@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.commentReply
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,11 +23,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.moegirlviewer.R
-import com.moegirlviewer.component.AppHeaderIcon
+import com.moegirlviewer.component.TopAppBarIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.component.styled.TopAppBarTitle
 import com.moegirlviewer.screen.comment.component.commentEditor.showReplyEditor
 import com.moegirlviewer.screen.comment.component.commentEditor.useCommentEditor
 import com.moegirlviewer.screen.comment.component.commentItem.CommentScreenCommentItem
@@ -40,6 +42,7 @@ import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.selector
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -168,15 +171,13 @@ private fun ComposedHeader(
       BackButton()
     },
     title = {
-      StyledText(
+      TopAppBarTitle(
         text = "${stringResource(id = R.string.reply)}：$userName",
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        color = themeColors.onPrimary
+        twoRows = true
       )
     },
     actions = {
-      AppHeaderIcon(
+      TopAppBarIcon(
         image = Icons.Filled.Reply,
         onClick = { onReply() }
       )

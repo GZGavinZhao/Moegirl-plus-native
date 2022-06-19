@@ -14,13 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.DoSideEffect
-import com.moegirlviewer.component.AppHeaderIcon
+import com.moegirlviewer.component.TopAppBarIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.Center
 import com.moegirlviewer.component.ReloadButton
@@ -142,13 +144,15 @@ private fun ComposedHeader(
             text = if (model.isCompareTextMode)
               stringResource(id = R.string.diffCompare) else
               "${stringResource(id = R.string.diff)}：$pageName",
-            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = themeColors.onPrimary
+            color = themeColors.onPrimary,
+            maxLines = if (model.isCompareTextMode) 1 else 2,
+            fontSize = if (model.isCompareTextMode) TextUnit.Unspecified else 18.sp,
+            lineHeight = if (model.isCompareTextMode) TextUnit.Unspecified else 19.sp,
           )
         },
         actions = {
-          AppHeaderIcon(
+          TopAppBarIcon(
             image = Icons.Filled.FavoriteBorder,
             iconSize = 27.dp,
             onClick = {
@@ -157,7 +161,7 @@ private fun ComposedHeader(
           )
 
           if (isLoggedIn && !model.isCompareTextMode) {
-            AppHeaderIcon(
+            TopAppBarIcon(
               image = Icons.Filled.LowPriority,
               onClick = {
                 showUndoDialog(model)

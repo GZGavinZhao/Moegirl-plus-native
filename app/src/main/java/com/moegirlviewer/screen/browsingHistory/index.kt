@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.R
-import com.moegirlviewer.component.AppHeaderIcon
+import com.moegirlviewer.component.TopAppBarIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.EmptyContent
 import com.moegirlviewer.component.styled.StyledCircularProgressIndicator
@@ -135,13 +135,13 @@ private fun ComposedHeader() {
       )
     },
     actions = {
-      AppHeaderIcon(
+      TopAppBarIcon(
         image = Icons.Filled.Search,
         onClick = {
           Globals.navController.navigate("browsingHistorySearch")
         }
       )
-      AppHeaderIcon(
+      TopAppBarIcon(
         image = Icons.Filled.Delete,
         onClick = {
           model.deleteAllRecords()

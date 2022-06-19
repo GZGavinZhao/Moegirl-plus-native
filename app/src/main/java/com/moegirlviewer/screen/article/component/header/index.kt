@@ -15,19 +15,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moegirlviewer.Constants
 import com.moegirlviewer.R
-import com.moegirlviewer.compable.CachedStatusBarConfig
 import com.moegirlviewer.compable.StatusBarMode
-import com.moegirlviewer.component.AppHeaderIcon
+import com.moegirlviewer.component.TopAppBarIcon
 import com.moegirlviewer.component.BackButton
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.component.styled.TopAppBarTitle
 import com.moegirlviewer.screen.article.ArticleScreenModel
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.SettingsStore
@@ -74,7 +71,7 @@ fun ArticleScreenHeader(
       ,
       navigationIcon = {
         if (deepLinkMode) {
-          AppHeaderIcon(
+          TopAppBarIcon(
             modifier = Modifier
               .alpha(contentAlpha),
             image = Icons.Filled.Home,
@@ -90,21 +87,15 @@ fun ArticleScreenHeader(
         }
       },
       title = {
-        val isCategoryPage = title.contains(Regex("^([Cc]ategory|分类|分類)[:：]"))
-        val useTwoRow = !isCategoryPage && isMoegirl()
-        StyledText(
+        TopAppBarTitle(
           modifier = Modifier
             .alpha(contentAlpha),
           text = title,
-          overflow = TextOverflow.Ellipsis,
-          maxLines = if (!useTwoRow) 1 else 2,
-          fontSize = if (!useTwoRow) 20.sp else 18.sp,
-          lineHeight = if (!useTwoRow) TextUnit.Unspecified else 19.sp,
-          color = themeColors.onPrimary
+          twoRows = true
         )
       },
       actions = {
-        AppHeaderIcon(
+        TopAppBarIcon(
           modifier = Modifier
             .alpha(contentAlpha),
           image = Icons.Filled.Search,
@@ -114,7 +105,7 @@ fun ArticleScreenHeader(
         )
 
         Box() {
-          AppHeaderIcon(
+          TopAppBarIcon(
             modifier = Modifier
               .alpha(contentAlpha),
             image = Icons.Filled.MoreVert,

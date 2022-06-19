@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.pageRevisions
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -20,11 +21,13 @@ import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.component.styled.TopAppBarTitle
 import com.moegirlviewer.screen.pageRevisions.component.RevisionItem
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.LoadStatus
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun PageVersionHistoryScreen(arguments: PageRevisionsRouteArguments) {
   val model: PageRevisionsScreenModel = hiltViewModel()
@@ -49,11 +52,9 @@ fun PageVersionHistoryScreen(arguments: PageRevisionsRouteArguments) {
     topBar = {
       StyledTopAppBar(
         title = {
-          StyledText(
+          TopAppBarTitle(
             text = stringResource(id = R.string.versionHistory) + "：" + arguments.pageName,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = themeColors.onPrimary
+            twoRows = true,
           )
         }
       )

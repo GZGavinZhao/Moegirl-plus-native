@@ -18,13 +18,11 @@ import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +33,7 @@ import com.moegirlviewer.compable.OnSwipeLoading
 import com.moegirlviewer.component.*
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.component.styled.TopAppBarTitle
 import com.moegirlviewer.screen.article.ArticleRouteArguments
 import com.moegirlviewer.screen.category.component.CategoryScreenItem
 import com.moegirlviewer.screen.category.component.SubCategoryList
@@ -192,15 +191,13 @@ private fun ComposedHeader(
           BackButton()
         },
         title = {
-          StyledText(
+          TopAppBarTitle(
             text = "${stringResource(id = R.string.category)}：${categoryName}",
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = themeColors.onPrimary
+            twoRows = true
           )
         },
         actions = {
-          AppHeaderIcon(
+          TopAppBarIcon(
             image = Icons.Filled.Sort,
             onClick = {
               visibleSortMenu = true

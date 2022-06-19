@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.moegirlviewer.util.Globals
 
 @Composable
-fun AppHeaderIcon(
+fun TopAppBarIcon(
   modifier: Modifier = Modifier,
   image: ImageVector,
   iconSize: Dp = 29.dp,
@@ -44,7 +43,7 @@ fun BackButton(
   modifier: Modifier = Modifier,
   iconColor: Color = LocalContentColor.current,
 ) {
-  AppHeaderIcon(
+  TopAppBarIcon(
     modifier = Modifier
       .then(modifier),
     image = Icons.Filled.ArrowBack,

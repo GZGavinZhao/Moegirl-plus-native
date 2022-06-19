@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
-import com.moegirlviewer.component.AppHeaderIcon
+import com.moegirlviewer.component.TopAppBarIcon
 import com.moegirlviewer.component.BackHandler
 import com.moegirlviewer.component.RippleColorScope
 import com.moegirlviewer.component.articleView.ArticleView
@@ -136,7 +136,7 @@ fun ComposedTopAppBar(
           }
         }
       ) {
-        AppHeaderIcon(
+        TopAppBarIcon(
           image = Icons.Filled.Menu,
           onClick = {
             scope.launch { commonDrawerState.open() }
@@ -172,7 +172,7 @@ fun ComposedTopAppBar(
       }
     },
     actions = {
-      AppHeaderIcon(
+      TopAppBarIcon(
         image = if (isUseCardsHome) Icons.Filled.Layers else Icons.Filled.TextSnippet,
         onClick = {
           scope.launch {
@@ -185,7 +185,7 @@ fun ComposedTopAppBar(
         }
       )
 
-      AppHeaderIcon(
+      TopAppBarIcon(
         image = Icons.Filled.Search,
         onClick = {
           Globals.navController.navigate("search")
