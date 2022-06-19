@@ -1,9 +1,6 @@
 package com.moegirlviewer.screen.home.component
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,6 +35,8 @@ fun ArticleViewCard(
         .then(if (state.articleViewState.status != LoadStatus.SUCCESS) Modifier.height(300.dp) else Modifier)
     ) {
       ArticleView(
+        modifier = Modifier
+          .heightIn(max = 1000.dp),
         state = state.articleViewState,
         pageKey = pageKey,
         visibleLoadStatusIndicator = false,

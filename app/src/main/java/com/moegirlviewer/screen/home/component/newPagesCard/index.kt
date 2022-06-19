@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Subject
 import androidx.compose.material.icons.filled.ViewColumn
 import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.PageIdKey
 import com.moegirlviewer.util.noRippleClickable
 import com.moegirlviewer.util.printRequestErr
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,9 +41,13 @@ fun NewPagesCard(
 ) {
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
-  val viewMode by SettingsStore.cardsHomePage.getValue { newPagesCardViewMode }.collectAsState(
-    initial = null
-  )
+  var viewMode by rememberSaveable { mutableStateOf<NewPagesCardViewMode?>(null) }
+
+  LaunchedEffect(true) {
+    SettingsStore.cardsHomePage.getValue { newPagesCardViewMode }
+      .collect { viewMode = it }
+  }
+
   if (viewMode == null) return
 
   HomeCardContainer(
