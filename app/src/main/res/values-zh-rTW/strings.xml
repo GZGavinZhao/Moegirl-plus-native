@@ -213,6 +213,7 @@
     <string name="editFullTextDisabling">禁止編輯全文</string>
     <string name="searchInSite">站內搜尋</string>
     <string name="moreTopicBlock">更多主題板塊</string>
+    <string name="hideTopTemplates">隱藏置頂模板</string>
 
     <!-- 其他（變數名與文字不對等，需要先確認內容） -->
     <string name="colorTextPlaceholder">顏色|文字</string>
@@ -329,6 +330,7 @@
         此條目內容與H萌娘管理人員及編輯者無關，任何人都可以修改條目，使之正確和公正。
         如果您有更好的意見或建議，歡迎前往條目討論頁討論。
     </string>
+    <string name="hideTopTemplatesHint">開門見山直入正題</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤銷[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|討論]]）的版本%2$s</string>

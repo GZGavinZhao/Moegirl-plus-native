@@ -11,7 +11,9 @@ fun createMoegirlRendererConfig(
   enabledHeightObserver: Boolean,
   heimu: Boolean,
   nightMode: Boolean,
-  addCopyright: Boolean
+  addCopyright: Boolean,
+  isTalkPage: Boolean,
+  hideTopInfoBox: Boolean,
 ): String {
   val categoriesStr = Gson().toJson(categories)
 
@@ -46,9 +48,11 @@ fun createMoegirlRendererConfig(
     moegirl.data.pageName = ${Gson().toJson(pageName)}
     moegirl.data.language = '$language'
     moegirl.data.site = '$site'
+    moegirl.data.pageType = '${if (isTalkPage) "talk" else "article"}'
     moegirl.config.heimu.${'$'}enabled = $heimu
     moegirl.config.addCopyright.enabled = $addCopyright
     moegirl.config.nightTheme.${'$'}enabled = $nightMode
+    moegirl.config.tops.${'$'}hideTopInfoBox = $hideTopInfoBox
   
     moegirl.config.link.onClick = (data) => _postMessage('link', data)
     moegirl.config.biliPlayer.onClick = (data) => _postMessage('biliPlayer', data)

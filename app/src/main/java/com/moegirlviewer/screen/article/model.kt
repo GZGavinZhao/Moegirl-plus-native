@@ -85,7 +85,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     val isLightRequestMode = true
     return if (isLightRequestMode) {
       if (truePageName != null)
-        truePageName!!.contains(disabledShowCommentButtonRegexForLightRequestMode).not()
+        isTalkPage(truePageName!!).not()
           && isMoegirl(true, hmoeCommentDisabledTitles.contains(truePageName).not())
         else false
     } else {
@@ -413,10 +413,6 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
     super.onCleared()
   }
 }
-
-private val disabledShowCommentButtonRegexForLightRequestMode = Regex("""
-  ^([Tt]alk|讨论|討論|[Tt]emplate( talk|)|模板(讨论|討論|)|[Mm]odule( talk|)|模块(讨论|討論|)|[Cc]ategory( talk|)|分[类類](讨论|討論|)|[Uu]ser talk|用户讨论|用戶討論|萌娘百科 talk|H萌娘讨论):
-""".trimIndent())
 
 private val hmoeCommentDisabledTitles = listOf(
   "H萌娘:免责声明",

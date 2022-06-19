@@ -120,6 +120,7 @@ class ArticleViewStateCore() {
   suspend fun updateHtmlView(force: Boolean = false) {
     if (isInitialized && !force) { return }
 
+    printDebugLog(SettingsStore.common.getValue { this.hideTopTemplates }.first())
     val moegirlRendererConfig = createMoegirlRendererConfig(
       pageName = pageName,
       language = if(isTraditionalChineseEnv()) "zh-hant" else "zh-hans",
@@ -131,7 +132,9 @@ class ArticleViewStateCore() {
       nightMode = isDarkTheme,
       categories = articleData?.parse?.categories
         ?.filter { it.hidden == null }
-        ?.map { it._asterisk } ?: emptyList()
+        ?.map { it._asterisk } ?: emptyList(),
+      isTalkPage = isTalkPage(pageName ?: ""),
+      hideTopInfoBox = SettingsStore.common.getValue { this.hideTopTemplates }.first()
     )
 
     val useSpecialCharSupportedFont = SettingsStore.common.getValue { this.useSpecialCharSupportedFontInArticle }.first()
@@ -354,6 +357,7 @@ class ArticleViewStateCore() {
     """.trimIndent())
   }
 
+  // 暂不使用了，移动版接口可以绕过waf
   // h萌娘在被waf拦截后所有资源需要带cookie，由于不同源cookie没法带过去，这里需要代理加载资源
   fun shouldInterceptRequest(webView: WebView, request: WebResourceRequest): WebResourceResponse? {
     if (request.url.toString().contains(Constants.domain.replace("https://", "")).not()) return null
@@ -390,6 +394,7 @@ class ArticleViewStateCore() {
     val heimu = SettingsStore.common.getValue { this.heimu }.first()
     val useSpecialCharSupportedFont = SettingsStore.common.getValue { this.useSpecialCharSupportedFontInArticle }.first()
     val userSerifFont = SettingsStore.common.getValue { this.useSerifFontInArticle }.first()
+    val hideTopTemplates = SettingsStore.common.getValue { this.hideTopTemplates }.first()
     // stopMediaOnLeave没法在这里处理，articleView不知道什么时候离开页面，这部分逻辑写在了articleScreen
 
     if (heimu != userConfig.heimu) {
@@ -405,6 +410,10 @@ class ArticleViewStateCore() {
       userConfig.useSpecialCharSupportedFont = useSpecialCharSupportedFont
       userConfig.userSerifFont = userSerifFont
     }
+
+    if (hideTopTemplates != userConfig.hideTopTemplates) {
+      htmlWebViewRef.value!!.injectScript("moegirl.config.tops.\$hideTopInfoBox = $hideTopTemplates")
+    }
   }
 
   val defaultMessageHandlers = createDefaultMessageHandlers()
@@ -413,7 +422,8 @@ class ArticleViewStateCore() {
 class ArticleViewUserConfig(
   var heimu: Boolean = CommonSettings().heimu,
   var useSpecialCharSupportedFont: Boolean = CommonSettings().useSpecialCharSupportedFontInArticle,
-  var userSerifFont: Boolean = CommonSettings().useSerifFontInArticle
+  var userSerifFont: Boolean = CommonSettings().useSerifFontInArticle,
+  var hideTopTemplates: Boolean = CommonSettings().hideTopTemplates
 )
 
 @ProguardIgnore

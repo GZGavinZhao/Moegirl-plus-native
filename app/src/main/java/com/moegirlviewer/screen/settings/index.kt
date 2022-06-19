@@ -152,6 +152,22 @@ fun SettingsScreen() {
         )
       }
 
+      SettingsScreenItem(
+        title = stringResource(id = R.string.hideTopTemplates),
+        subtext = stringResource(id = R.string.hideTopTemplatesHint),
+        onClick = {
+          setSettingItem { this.hideTopTemplates = !this.hideTopTemplates }
+        }
+      ) {
+        Switch(
+          checked = commonSettings.hideTopTemplates,
+          colors = switchColors,
+          onCheckedChange = {
+            setSettingItem { this.hideTopTemplates = it }
+          }
+        )
+      }
+
       Title(R.string._interface)
       if (isMoegirl()) {
         SettingsScreenItem(
