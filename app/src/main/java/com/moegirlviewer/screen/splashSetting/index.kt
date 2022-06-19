@@ -1,7 +1,6 @@
 package com.moegirlviewer.screen.splashSetting
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
@@ -19,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 fun SplashSettingScreen() {
   val model: SplashSettingScreenModel = hiltViewModel()
   val themeColors = MaterialTheme.colors
-  val coroutineScope = rememberCoroutineScope()
+  val scope = rememberCoroutineScope()
   val selectedSplashImageMode by SettingsStore.common.getValue { this.splashImageMode }.collectAsState(
     initial = SplashImageMode.NEW
   )
@@ -57,7 +57,7 @@ fun SplashSettingScreen() {
       },
       secondaryButton = ButtonConfig.cancelButton(),
       onPrimaryButtonClick = {
-        coroutineScope.launch {
+        scope.launch {
           SettingsStore.common.setValue { this.splashImageMode = SplashImageMode.RANDOM }
           Globals.navController.popBackStack()
         }
@@ -86,7 +86,7 @@ fun SplashSettingScreen() {
         title = stringResource(id = R.string.latest),
         innerVerticalPadding = false,
         onClick = {
-          coroutineScope.launch {
+          scope.launch {
             SettingsStore.common.setValue { this.splashImageMode = SplashImageMode.NEW }
           }
         }
@@ -94,7 +94,7 @@ fun SplashSettingScreen() {
         RadioButton(
           selected = selectedSplashImageMode == SplashImageMode.NEW,
           onClick = {
-            coroutineScope.launch {
+            scope.launch {
               SettingsStore.common.setValue { this.splashImageMode = SplashImageMode.NEW }
             }
           }
@@ -105,7 +105,7 @@ fun SplashSettingScreen() {
         title = stringResource(id = R.string._off),
         innerVerticalPadding = false,
         onClick = {
-          coroutineScope.launch {
+          scope.launch {
             SettingsStore.common.setValue { this.splashImageMode = SplashImageMode.OFF }
           }
         }
@@ -113,7 +113,7 @@ fun SplashSettingScreen() {
         RadioButton(
           selected = selectedSplashImageMode == SplashImageMode.OFF,
           onClick = {
-            coroutineScope.launch {
+            scope.launch {
               SettingsStore.common.setValue { this.splashImageMode = SplashImageMode.OFF }
             }
           }
@@ -124,7 +124,7 @@ fun SplashSettingScreen() {
         title = stringResource(id = R.string.random),
         innerVerticalPadding = false,
         onClick = {
-          coroutineScope.launch {
+          scope.launch {
             SettingsStore.common.setValue { this.splashImageMode = SplashImageMode.RANDOM }
           }
         }
@@ -132,7 +132,7 @@ fun SplashSettingScreen() {
         RadioButton(
           selected = selectedSplashImageMode == SplashImageMode.RANDOM,
           onClick = {
-            coroutineScope.launch {
+            scope.launch {
               SettingsStore.common.setValue { this.splashImageMode = SplashImageMode.RANDOM }
             }
           }
@@ -144,7 +144,7 @@ fun SplashSettingScreen() {
         innerVerticalPadding = false,
         visibleBorder = false,
         onClick = {
-          coroutineScope.launch {
+          scope.launch {
             SettingsStore.common.setValue { this.splashImageMode = SplashImageMode.CUSTOM_RANDOM }
           }
         }
@@ -152,7 +152,7 @@ fun SplashSettingScreen() {
         RadioButton(
           selected = selectedSplashImageMode == SplashImageMode.CUSTOM_RANDOM,
           onClick = {
-            coroutineScope.launch {
+            scope.launch {
               SettingsStore.common.setValue { this.splashImageMode = SplashImageMode.CUSTOM_RANDOM }
             }
           }
@@ -168,6 +168,36 @@ fun SplashSettingScreen() {
         mainAxisSpacing = 5.dp,
         crossAxisSpacing = 5.dp
       ) {
+        Column(
+          modifier = Modifier
+            .width(120.dp)
+            .height(200.dp)
+            .alpha(if (model.isImageSyncing) 0.5f else 1f)
+            .background(themeColors.primaryVariant.copy(0.1f))
+            .border(
+              width = 1.dp,
+              color = themeColors.primaryVariant
+            )
+            .clickable(enabled = !model.isImageSyncing) {
+              scope.launch { model.syncSplashImages() }
+            },
+          verticalArrangement = Arrangement.Center,
+          horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          StyledText(
+            text = "同步图集",
+            fontSize = 18.sp,
+            color = themeColors.primaryVariant
+          )
+          StyledText(
+            modifier = Modifier
+              .padding(top = 5.dp),
+            text = "${MoegirlSplashImageManager.imageTotal} / ${MoegirlSplashImageManager.readyImageTotal}",
+            fontSize = 13.sp,
+            color = themeColors.primaryVariant
+          )
+        }
+
         for (item in reversedSplashImageList) {
           ImageItem(
             splashImage = item,
@@ -179,7 +209,7 @@ fun SplashSettingScreen() {
               ))
             },
             onClick = {
-              coroutineScope.launch {
+              scope.launch {
                 SettingsStore.common.setValue {
                   if (this.splashImageMode != SplashImageMode.CUSTOM_RANDOM) {
                     this.splashImageMode = SplashImageMode.CUSTOM_RANDOM
@@ -214,7 +244,7 @@ private fun ImageItem(
 ) {
   val themeColors = MaterialTheme.colors
   val animatedBorderWidth by animateDpAsState(
-    if (selected && visiblePreviewButton) 4.dp else 0.dp
+    if (selected && visiblePreviewButton) 4.dp else 1.dp
   )
 
   Box(

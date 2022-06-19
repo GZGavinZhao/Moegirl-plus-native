@@ -175,11 +175,7 @@ fun SettingsScreen() {
         SettingsScreenItem(
           title = stringResource(id = R.string.selectSplashScreenImage),
           onClick = {
-            if (MoegirlSplashImageManager.isImagesReady()) {
-              Globals.navController.navigate("splashSetting")
-            } else {
-              toast(Globals.context.getString(R.string.splashImagesPreparingHint))
-            }
+            Globals.navController.navigate("splashSetting")
           }
         )
       } else {

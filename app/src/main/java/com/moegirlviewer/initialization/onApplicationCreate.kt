@@ -20,8 +20,6 @@ fun Application.initializeOnCreate() {
   }
 
   if (!BuildConfig.DEBUG) {
-//    val args = Bundle()
-//    args.putBoolean("mDebug", true)
     CrashApi.createInstanceEx(applicationContext, "jks0183i-2qdc35hf", false)
   }
 }

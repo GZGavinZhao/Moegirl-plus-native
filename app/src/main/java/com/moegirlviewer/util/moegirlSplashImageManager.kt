@@ -15,6 +15,7 @@ import okhttp3.Request
 import java.io.File
 
 private const val configFileName = "config.json"
+private var localImages by mutableStateOf(emptyList<File>())
 
 @SuppressLint("UseCompatLoadingForDrawables")
 object MoegirlSplashImageManager {
@@ -23,11 +24,18 @@ object MoegirlSplashImageManager {
     "splashImages"
   )
   private val configFile = File(rootDir, configFileName)
-  private lateinit var config: List<MoegirlSplashImageBean>
+  private var config: List<MoegirlSplashImageBean>? = null
+  const val fallbackImage = R.mipmap.splash_fallback
 
-  val fallbackImage = R.mipmap.splash_fallback
+  val imageTotal get() = config?.size ?: 0
+  var readyImageTotal by mutableStateOf(0)
 
   init {
+    initConfig()
+    reloadLocalImages()
+  }
+
+  private fun initConfig() {
     if (rootDir.exists().not()) rootDir.mkdirs()
     if (configFile.exists()) {
       val configJson = configFile.readText()
@@ -39,10 +47,21 @@ object MoegirlSplashImageManager {
     }
   }
 
+  private fun reloadLocalImages() {
+    localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!.toList()
+  }
+
+  fun checkImageSyncStatus() {
+    if (localImages.isEmpty() || config == null) return
+    readyImageTotal = config!!.fold(0) { result, item ->
+      val localImageFileName = item.url.localImageFileName()
+      result + if (localImages.any { it.name == localImageFileName }) 1 else 0
+    }
+  }
+
   suspend fun getRandomImage(): SplashImage = withContext(Dispatchers.IO) {
-    val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!.toList()
-    val usableImages: List<Any> = if (this@MoegirlSplashImageManager::config.isInitialized) {
-      config
+    val usableImages: List<Any> = if (config != null) {
+      config!!
         .asSequence()
         .map { it.url.localImageFileName() }
         .filter { imageNameInOnlineConfig -> localImages.any { it.name == imageNameInOnlineConfig } }
@@ -56,45 +75,29 @@ object MoegirlSplashImageManager {
   }
 
   suspend fun getLatestImage(): SplashImage = withContext(Dispatchers.IO) {
-    val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
-    val latestImageName = if (this@MoegirlSplashImageManager::config.isInitialized) {
-      config.last().url.localImageFileName()
+    val latestImageName = if (config != null) {
+      config!!.last().url.localImageFileName()
     } else ""
     val latestImage = localImages.firstOrNull { it.name == latestImageName } ?: fallbackImage
 
     SplashImage.onlyUseInSplashScreen(latestImage)
   }
 
-  private var imageList: List<MoegirlSplashImage>? = null
   suspend fun getImageList(): List<MoegirlSplashImage> = withContext(Dispatchers.IO) {
-    if (!this@MoegirlSplashImageManager::config.isInitialized) return@withContext emptyList()
-    val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
-    if (imageList != null) return@withContext imageList!!
+    if (config == null) return@withContext emptyList()
     val localImagesMap = localImages.associateBy { it.name }
-    config
+    config!!
       .filter { localImagesMap.containsKey(it.url.localImageFileName()) }
       .map {
         val imageName = it.url.localImageFileName()
-        async {
-          MoegirlSplashImage(
-            imageData = localImagesMap[imageName]!!,
-            title = it.title,
-            author = it.author,
-            key = it.key,
-            season = it.season
-          )
-        }
+        MoegirlSplashImage(
+          imageData = localImagesMap[imageName]!!,
+          title = it.title,
+          author = it.author,
+          key = it.key,
+          season = it.season
+        )
       }
-      .map { it.await() }
-      .also { if (config.size == it.size) imageList = it }
-  }
-
-  // 判断是否至少有一张已下载的图片
-  fun isImagesReady(): Boolean {
-    if (!this::config.isInitialized) return false
-    val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
-    val localImagesMap = localImages.associateBy { it.name }
-    return localImagesMap.isNotEmpty()
   }
 
   suspend fun loadConfig() = withContext(Dispatchers.IO) {
@@ -107,12 +110,12 @@ object MoegirlSplashImageManager {
   }
 
   suspend fun syncImagesByConfig() = withContext(Dispatchers.IO) {
-    if (this@MoegirlSplashImageManager::config.isInitialized.not()) {
+    if (config == null) {
       printPlainLog("萌百：同步启动屏图片，但没有找到config")
       return@withContext
     }
 
-    val allReferencedImageUrls = config.map { it.url }
+    val allReferencedImageUrls = config!!.map { it.url }
 
     // 下载线上配置新增的图片
     allReferencedImageUrls
@@ -135,6 +138,8 @@ object MoegirlSplashImageManager {
           val file = File(rootDir, imageUrl.localImageFileName())
           file.createNewFile()
           file.writeBytes(imageByteArray)
+          readyImageTotal++
+          reloadLocalImages()
           printPlainLog("萌百：启动屏图片下载完毕：$imageUrl")
         }
       }
@@ -144,11 +149,12 @@ object MoegirlSplashImageManager {
 
     // 清除线上配置已经不存在的图片
     val allReferencedImageNames = allReferencedImageUrls.map { it.localImageFileName() }
-    val localImages = rootDir.listFiles { _, fileName -> fileName != configFileName }!!
     localImages
       .filter { allReferencedImageNames.contains(it.name).not() }
       .forEach { it.deleteOnExit() }
     printPlainLog("萌百：无用启动屏图片清理完毕")
+
+    checkImageSyncStatus()
   }
 }
 
@@ -158,7 +164,7 @@ private fun String.localImageFileName() = computeMd5(this)
 fun rememberMoegirlSplashImageList(): List<MoegirlSplashImage> {
   var reversedSplashImageList by remember { mutableStateOf(emptyList<MoegirlSplashImage>()) }
 
-  LaunchedEffect(true) {
+  LaunchedEffect(localImages) {
     reversedSplashImageList = MoegirlSplashImageManager.getImageList().reversed()
   }
 
