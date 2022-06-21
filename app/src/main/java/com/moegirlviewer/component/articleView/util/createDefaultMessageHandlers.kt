@@ -163,6 +163,11 @@ fun ArticleViewStateCore.createDefaultMessageHandlers(): HtmlWebViewMessageHandl
         if (!linkDisabled) openHttpUrl(url)
       }
 
+      if (linkType == "externalImg") {
+        val url = linkData.get("url").asString
+        Globals.navController.navigate(ImageViewerRouteArguments(listOf(MoegirlImage(fileUrl = url))))
+      }
+
       if (linkType == "unparsed") {}
     },
 

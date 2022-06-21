@@ -7,7 +7,7 @@ import com.moegirlviewer.util.RouteName
 @RouteName("imageViewer")
 class ImageViewerRouteArguments (
   val images: List<MoegirlImage>,
-  val initialIndex: Int = 1,
+  val initialIndex: Int = 0,
 ) : RouteArguments() {
   constructor() : this(
     images = emptyList()

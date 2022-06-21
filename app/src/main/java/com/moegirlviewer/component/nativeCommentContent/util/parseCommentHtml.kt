@@ -16,8 +16,12 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.remember.rememberImageRequest
+import com.moegirlviewer.component.articleView.MoegirlImage
+import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.util.Globals
 import com.moegirlviewer.util.commentEmotionList.getHmoeEmotionByName
+import com.moegirlviewer.util.navigate
+import com.moegirlviewer.util.noRippleClickable
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
 import org.jsoup.Jsoup
@@ -220,18 +224,16 @@ private fun createImageInlineContent(
       placeholderVerticalAlign = PlaceholderVerticalAlign.Bottom
     ),
     children = {
-      Box(
+      AsyncImage(
         modifier = Modifier
           .fillMaxSize()
-      ) {
-        AsyncImage(
-          modifier = Modifier
-            .fillMaxSize(),
-          model = rememberImageRequest(imageUrl),
-          contentDescription = null,
-          placeholder = painterResource(R.drawable.placeholder)
-        )
-      }
+          .noRippleClickable {
+            Globals.navController.navigate(ImageViewerRouteArguments(listOf(MoegirlImage(fileUrl = imageUrl))))
+          },
+        model = rememberImageRequest(imageUrl),
+        contentDescription = null,
+        placeholder = painterResource(R.drawable.placeholder)
+      )
     }
   )
 

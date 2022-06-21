@@ -428,9 +428,9 @@ class ArticleViewUserConfig(
 
 @ProguardIgnore
 class MoegirlImage(
-  val fileName: String,
-  val title: String,
-  var fileUrl: String = ""
+  val fileName: String = "",
+  val title: String = "",
+  var fileUrl: String,
 )
 
 const val disableAllIframeJsStr = """
