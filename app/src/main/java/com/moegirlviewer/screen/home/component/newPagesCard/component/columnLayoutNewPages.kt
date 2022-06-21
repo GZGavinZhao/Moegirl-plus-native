@@ -35,7 +35,8 @@ import com.moegirlviewer.util.gotoArticlePage
 
 @Composable
 fun ColumnLayoutNewPages(
-  pageList: List<PageProfileBean.Query.MapValue>
+  pageList: List<PageProfileBean.Query.MapValue>,
+  onMoreButtonClick: () -> Unit
 ) {
   val themeColors = MaterialTheme.colors
   val scrollState = rememberFromMemory("scrollState") { ScrollState(0) }
@@ -62,7 +63,7 @@ fun ColumnLayoutNewPages(
               .width(122.dp)
               .height(175.dp)
               .clip(RoundedCornerShape(10.dp))
-              .clickable { Globals.navController.navigate("newPages") },
+              .clickable { onMoreButtonClick() },
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
           ) {

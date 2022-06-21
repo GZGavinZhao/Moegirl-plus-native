@@ -26,12 +26,10 @@ import com.moegirlviewer.screen.home.component.HomeCardContainer
 import com.moegirlviewer.screen.home.component.newPagesCard.component.ColumnLayoutNewPages
 import com.moegirlviewer.screen.home.component.newPagesCard.component.ListLayoutNewPages
 import com.moegirlviewer.screen.home.component.newPagesCard.component.TextLayoutNewPages
+import com.moegirlviewer.screen.newPages.NewPagesRouteArguments
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.text
-import com.moegirlviewer.util.LoadStatus
-import com.moegirlviewer.util.PageIdKey
-import com.moegirlviewer.util.noRippleClickable
-import com.moegirlviewer.util.printRequestErr
+import com.moegirlviewer.util.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -46,6 +44,10 @@ fun NewPagesCard(
   LaunchedEffect(true) {
     SettingsStore.cardsHomePage.getValue { newPagesCardViewMode }
       .collect { viewMode = it }
+  }
+
+  val gotoNewPagesListPage = {
+    Globals.navController.navigate(NewPagesRouteArguments(state.continueKey))
   }
 
   if (viewMode == null) return
@@ -82,11 +84,11 @@ fun NewPagesCard(
       }
     }
   ) {
-    Crossfade(targetState = viewMode) {
+    Crossfade(targetState = viewMode!!) {
       when(it) {
-        NewPagesCardViewMode.TEXT -> TextLayoutNewPages(pageList = state.newPageList)
-        NewPagesCardViewMode.LIST -> ListLayoutNewPages(pageList = state.newPageList)
-        NewPagesCardViewMode.COLUMN -> ColumnLayoutNewPages(pageList = state.newPageList)
+        NewPagesCardViewMode.TEXT -> TextLayoutNewPages(pageList = state.newPageList, onMoreButtonClick = gotoNewPagesListPage)
+        NewPagesCardViewMode.LIST -> ListLayoutNewPages(pageList = state.newPageList, onMoreButtonClick = gotoNewPagesListPage)
+        NewPagesCardViewMode.COLUMN -> ColumnLayoutNewPages(pageList = state.newPageList, onMoreButtonClick = gotoNewPagesListPage)
       }
     }
   }
@@ -100,17 +102,20 @@ class NewPagesCardState : HomeScreenCardState() {
   )
   var newPageList by mutableStateOf(emptyList<PageProfileBean.Query.MapValue>())
   var status by mutableStateOf(LoadStatus.INITIAL)
+  var continueKey: String? = null
 
   suspend fun load() {
     status = if (status == LoadStatus.INITIAL) LoadStatus.INIT_LOADING else LoadStatus.LOADING
     try {
-      val newPagesIds = EditingRecordApi.getNewPages().query.recentchanges.map { it.pageid }
+      val newPagesRes = EditingRecordApi.getNewPages()
+      val newPagesIds = newPagesRes.query.recentchanges.map { it.pageid }
       val pageIdKey = PageIdKey(*newPagesIds.toIntArray())
       val newPagesWithProfileRes = PageApi.getPageProfile(pageIdKey)
       newPageList = newPagesWithProfileRes.query.pages.values
         .filter { it.ns == 0 }   // 如果其中有条目被打回用户页，会出现newPages接口返回页面为条目，pagesProfile返回页面为用户页的情况，这里需要额外过滤
         .sortedBy { it.pageid }
         .reversed()
+      continueKey = newPagesRes.`continue`?.rccontinue
       status = LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {
       printRequestErr(e, "加载最新页面卡片数据失败")

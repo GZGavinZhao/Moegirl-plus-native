@@ -317,6 +317,7 @@ private fun ComposedArticleView(
 //        .verticalScroll(model.scrollState),
 //      contentAlignment = Alignment.Center
 //    ) {
+      val isShowCategories = !listOf("H萌娘:官方群组", "帮助:沙盒").contains(model.truePageName) && !isTalkPage(model.truePageName)
       ArticleView(
         state = model.articleViewState,
         pageKey = arguments.pageKey,
@@ -324,7 +325,7 @@ private fun ComposedArticleView(
         editAllowed = model.editAllowed.allowed,
         visibleLoadStatusIndicator = false,
         contentTopPadding = (Constants.topAppBarHeight + Globals.statusBarHeight).dp,
-        addCategories = model.truePageName != "H萌娘:官方群组",
+        addCategories = isShowCategories,
         renderDelay = if (isHideTopTemplates) 500 else 0,
         onScrollChanged = handleOnScrollChanged,
         onArticleRendered = {

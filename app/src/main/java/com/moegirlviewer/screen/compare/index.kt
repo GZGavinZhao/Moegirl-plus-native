@@ -84,10 +84,12 @@ fun CompareScreen(
             modifier = Modifier
               .verticalScroll(rememberScrollState())
           ) {
-            DiffInfo(
-              userName = model.compareData!!.fromuser,
-              comment = model.compareData!!.fromcomment
-            )
+            if (arguments is ComparePageRouteArguments && !arguments.hasMultiEditors) {
+              DiffInfo(
+                userName = model.compareData!!.touser,
+                comment = model.compareData!!.tocomment
+              )
+            }
 
             for (item in model.linearDiff) {
               CompareScreenPageDiffRows(item)

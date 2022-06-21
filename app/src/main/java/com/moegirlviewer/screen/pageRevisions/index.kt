@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
 import com.moegirlviewer.compable.OnSwipeLoading
+import com.moegirlviewer.compable.OneTimeLaunchedEffect
 import com.moegirlviewer.component.EmptyContent
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
@@ -25,6 +26,8 @@ import com.moegirlviewer.component.styled.TopAppBarTitle
 import com.moegirlviewer.screen.pageRevisions.component.RevisionItem
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.LoadStatus
+import com.moegirlviewer.util.printDebugLog
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

@@ -156,6 +156,7 @@ class ArticleScreenModel @Inject constructor() : ViewModel() {
 
       launch {
         if (truePageName != "萌娘百科 talk:讨论版" && isTalkPage(truePageName ?: "")) {
+          delay(500)
           articleViewState.injectScript("window.scrollTo(0, 999999999)")
         }
       }

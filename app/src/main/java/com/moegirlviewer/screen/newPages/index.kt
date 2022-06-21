@@ -3,18 +3,22 @@ package com.moegirlviewer.screen.newPages
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.moegirlviewer.R
+import com.moegirlviewer.compable.DoSideEffect
 import com.moegirlviewer.compable.OnSwipeLoading
+import com.moegirlviewer.compable.OneTimeLaunchedEffect
 import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
@@ -23,14 +27,19 @@ import com.moegirlviewer.screen.newPages.component.NewPageItem
 import com.moegirlviewer.theme.background2
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.gotoArticlePage
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun NewPagesScreen() {
+fun NewPagesScreen(arguments: NewPagesRouteArguments) {
   val model: NewPagesScreenModel = hiltViewModel()
   val themeColors = MaterialTheme.colors
   val scope = rememberCoroutineScope()
+
+  SideEffect {
+    model.routeArguments = arguments
+  }
 
   LaunchedEffect(true) {
     if (model.status == LoadStatus.INITIAL) model.loadList(true)

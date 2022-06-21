@@ -53,6 +53,7 @@ import com.moegirlviewer.screen.home.HomeScreen
 import com.moegirlviewer.screen.imageViewer.ImageViewerRouteArguments
 import com.moegirlviewer.screen.imageViewer.ImageViewerScreen
 import com.moegirlviewer.screen.login.LoginScreen
+import com.moegirlviewer.screen.newPages.NewPagesRouteArguments
 import com.moegirlviewer.screen.newPages.NewPagesScreen
 import com.moegirlviewer.screen.notification.NotificationScreen
 import com.moegirlviewer.screen.pageRevisions.PageRevisionsRouteArguments
@@ -255,8 +256,9 @@ private fun Routes(navController: NavHostController) {
     ) { RandomPagesScreen() }
 
     animatedComposable(
-      route = "newPages"
-    ) { NewPagesScreen() }
+      route = NewPagesRouteArguments::class.java.formattedRouteName,
+      arguments = NewPagesRouteArguments::class.java.formattedArguments,
+    ) { NewPagesScreen(it.arguments!!.toRouteArguments()) }
   }
 }
 

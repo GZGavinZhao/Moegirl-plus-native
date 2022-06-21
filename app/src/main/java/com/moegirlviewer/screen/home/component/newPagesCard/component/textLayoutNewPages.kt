@@ -21,7 +21,8 @@ import kotlin.math.min
 
 @Composable
 fun TextLayoutNewPages(
-  pageList: List<PageProfileBean.Query.MapValue>
+  pageList: List<PageProfileBean.Query.MapValue>,
+  onMoreButtonClick: () -> Unit
 ) {
   val themeColors = MaterialTheme.colors
 
@@ -59,7 +60,7 @@ fun TextLayoutNewPages(
         gotoArticlePage(it.item)
       }
       annotatedString.getStringAnnotations("viewMore", offset, offset).firstOrNull()?.let {
-        Globals.navController.navigate("newPages")
+        onMoreButtonClick()
       }
     }
   )

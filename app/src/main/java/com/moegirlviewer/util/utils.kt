@@ -40,7 +40,7 @@ annotation class ProguardIgnore
 val globalCoroutineScope = CoroutineScope(Dispatchers.Main)
 
 fun isMoegirl() = Constants.source == DataSource.MOEGIRL
-fun isTalkPage(pageName: String) = pageName.contains(Regex("""
+fun isTalkPage(pageName: String?) = (pageName ?: "").contains(Regex("""
   ^([Tt]alk|讨论|討論|[Tt]emplate( talk|)|模板(讨论|討論|)|[Mm]odule( talk|)|模块(讨论|討論|)|[Cc]ategory( talk|)|分[类類](讨论|討論|)|[Uu]ser talk|用户讨论|用戶討論|萌娘百科 talk|H萌娘讨论):
 """.trimIndent()))
 

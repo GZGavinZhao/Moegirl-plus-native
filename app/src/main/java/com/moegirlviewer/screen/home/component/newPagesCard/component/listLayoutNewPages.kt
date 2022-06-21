@@ -37,7 +37,8 @@ import com.moegirlviewer.util.gotoArticlePage
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ListLayoutNewPages(
-  pageList: List<PageProfileBean.Query.MapValue>
+  pageList: List<PageProfileBean.Query.MapValue>,
+  onMoreButtonClick: () -> Unit
 ) {
   val pagerState = rememberFromMemory("pagerState") { PagerState(0) }
   val chunkedPageList = remember(pageList) { pageList.chunked(3) }
@@ -71,7 +72,7 @@ fun ListLayoutNewPages(
         (chunkedPageList.last().size < 3 && currentPage == chunkedPageList.size - 1) ||
         (chunkedPageList.last().size == 3 && currentPage == chunkedPageList.size)
       ) {
-        ViewMoreItem()
+        ViewMoreItem(onMoreButtonClick)
       }
     }
   }
@@ -142,13 +143,15 @@ private fun Item(
 }
 
 @Composable
-private fun ViewMoreItem() {
+private fun ViewMoreItem(
+  onMoreButtonClick: () -> Unit
+) {
   val themeColors = MaterialTheme.colors
 
   RippleColorScope(color = themeColors.primaryVariant) {
     Row(
       modifier = Modifier
-        .clickable { Globals.navController.navigate("newPages") }
+        .clickable { onMoreButtonClick() }
         .padding(horizontal = 10.dp, vertical = 7.5.dp)
         .height(60.dp),
       verticalAlignment = Alignment.CenterVertically

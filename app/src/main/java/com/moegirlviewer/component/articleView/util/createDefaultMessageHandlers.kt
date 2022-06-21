@@ -114,8 +114,8 @@ fun ArticleViewStateCore.createDefaultMessageHandlers(): HtmlWebViewMessageHandl
         coroutineScope.launch {
           if (onPreGotoEdit?.invoke() == false) return@launch
 
-          val section = linkData.get("section").asString
           val pageName = linkData.get("pageName").asString
+          val section = if (linkData.has("section")) linkData.get("section").asString else null
           val preload = if (linkData.has("preload")) linkData.get("preload").asString else null
 
           if (linkDisabled) return@launch

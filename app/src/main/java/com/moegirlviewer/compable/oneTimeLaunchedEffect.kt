@@ -1,8 +1,7 @@
 package com.moegirlviewer.compable
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import com.moegirlviewer.util.InitRef
 import kotlinx.coroutines.CoroutineScope
 
@@ -11,11 +10,11 @@ fun OneTimeLaunchedEffect(
   vararg key: Any,
   block: suspend CoroutineScope.() -> Boolean,
 ) {
-  val runFlag = remember { InitRef(false) }
+  var runFlag by rememberSaveable { mutableStateOf(false) }
 
   LaunchedEffect(*key) {
-    if (!runFlag.value) {
-      if (block()) runFlag.value = true
+    if (!runFlag) {
+      if (block()) runFlag = true
     }
   }
 }

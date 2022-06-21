@@ -35,9 +35,13 @@ import com.moegirlviewer.screen.compare.util.LinearDiffType
 import com.moegirlviewer.theme.GreenPrimary
 import com.moegirlviewer.theme.RedAccent
 import com.moegirlviewer.theme.text
+import com.moegirlviewer.util.isMoegirl
 
 @Composable
-fun CompareScreenPageDiffRows(data: LinearDiffRows) {
+fun CompareScreenPageDiffRows(
+  data: LinearDiffRows,
+  hmoeMode: Boolean = !isMoegirl()
+) {
   val themeColors = MaterialTheme.colors
   var isExpanded by rememberSaveable { mutableStateOf(true) }
 
@@ -45,7 +49,9 @@ fun CompareScreenPageDiffRows(data: LinearDiffRows) {
     // header
     Row(
       modifier = Modifier
-        .clickable { isExpanded = !isExpanded }
+        .clickable(enabled = !hmoeMode) {
+          isExpanded = !isExpanded
+        }
         .height(40.dp)
         .fillMaxWidth()
         .background(themeColors.primaryVariant.copy(0.1f))
@@ -56,22 +62,30 @@ fun CompareScreenPageDiffRows(data: LinearDiffRows) {
     ) {
       @Composable
       fun lineNumberText(line: Int) = stringResource(id = R.string.lineNumber, line.toString())
+      val headerTitle = if (hmoeMode) {
+        stringResource(id = R.string.change)
+      } else {
+        lineNumberText(data.range.first) +
+          if (data.range.first != data.range.last) " ~ ${lineNumberText(data.range.last)}" else ""
+      }
+
       StyledText(
-        text = lineNumberText(data.range.first) +
-          if (data.range.first != data.range.last) " ~ ${lineNumberText(data.range.last)}" else "",
+        text = headerTitle,
         color = themeColors.primaryVariant,
         fontSize = 18.sp,
       )
 
-      Icon(
-        modifier = Modifier
-          .size(24.dp),
-        imageVector = if (isExpanded)
-          Icons.Filled.ExpandLess else
-          Icons.Filled.ExpandMore,
-        contentDescription = null,
-        tint = themeColors.primaryVariant
-      )
+      if (!hmoeMode) {
+        Icon(
+          modifier = Modifier
+            .size(24.dp),
+          imageVector = if (isExpanded)
+            Icons.Filled.ExpandLess else
+            Icons.Filled.ExpandMore,
+          contentDescription = null,
+          tint = themeColors.primaryVariant
+        )
+      }
     }
 
     // list

@@ -173,6 +173,7 @@ class RecommendationCardState : HomeScreenCardState() {
       status = LoadStatus.SUCCESS
     } catch (e: MoeRequestException) {
       status = LoadStatus.FAIL
+      recommendationPages = null
       printRequestErr(e, "加载推荐卡片数据失败")
     }
   }

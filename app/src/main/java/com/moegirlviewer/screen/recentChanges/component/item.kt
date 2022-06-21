@@ -59,7 +59,8 @@ fun RecentChangesItem(
   oldRevId: Int,
   dateISO: String,
   editDetails: List<RawRecentChanges>,
-  pageWatched: Boolean
+  pageWatched: Boolean,
+  hasMultiEditors: Boolean = false,
 ) {
   val themeColors = MaterialTheme.colors
   var visibleDetails by rememberSaveable { mutableStateOf(false) }
@@ -142,7 +143,8 @@ fun RecentChangesItem(
         type = type,
         pageName = pageName,
         revId = revId,
-        oldRevId = oldRevId
+        oldRevId = oldRevId,
+        hasMultiEditors = hasMultiEditors,
       )
     }
   }
@@ -411,6 +413,7 @@ private fun RightFloatedButtons(
   pageName: String,
   revId: Int,
   oldRevId: Int,
+  hasMultiEditors: Boolean,
 ) {
   val themeColors = MaterialTheme.colors
 
@@ -424,7 +427,8 @@ private fun RightFloatedButtons(
             Globals.navController.navigate(ComparePageRouteArguments(
               fromRevId = oldRevId,
               toRevId = revId,
-              pageName = pageName
+              pageName = pageName,
+              hasMultiEditors = hasMultiEditors,
             ))
           },
         imageVector = Icons.Filled.CompareArrows,

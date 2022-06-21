@@ -11,12 +11,14 @@ import com.moegirlviewer.api.editingRecord.bean.NewPagesBean
 import com.moegirlviewer.api.page.PageApi
 import com.moegirlviewer.api.page.bean.PageProfileBean
 import com.moegirlviewer.request.MoeRequestException
+import com.moegirlviewer.screen.pageRevisions.PageRevisionsRouteArguments
 import com.moegirlviewer.util.LoadStatus
 import com.moegirlviewer.util.PageIdKey
 import com.moegirlviewer.util.printRequestErr
 import javax.inject.Inject
 
 class NewPagesScreenModel @Inject constructor() : ViewModel() {
+  lateinit var routeArguments: NewPagesRouteArguments
   var newPageList by mutableStateOf(emptyList<PageProfileBean.Query.MapValue>())
   var status by mutableStateOf(LoadStatus.INITIAL)
   var continueKey: String? = null
@@ -26,7 +28,7 @@ class NewPagesScreenModel @Inject constructor() : ViewModel() {
   suspend fun loadList(reload: Boolean = false) {
     if (LoadStatus.isCannotLoad(status)) { return }
     status = if (reload) LoadStatus.INIT_LOADING else LoadStatus.LOADING
-    if (reload) continueKey = null
+    if (reload) continueKey = routeArguments.continueKey
     try {
       val newPagesRes = EditingRecordApi.getNewPages(continueKey)
       val newPageIds = newPagesRes.query.recentchanges.map { it.pageid }.toIntArray()

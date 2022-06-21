@@ -142,9 +142,10 @@ fun RecentChangesScreen() {
                   newLength = data.newlen,
                   oldLength = data.oldlen,
                   revId = data.revid,
-                  oldRevId = data.details.lastOrNull()?.old_revid ?: data.old_revid,
+                  oldRevId = if (data.details.size > 1) data.details.last().revid else data.old_revid,
                   dateISO = data.timestamp,
                   editDetails = data.details,
+                  hasMultiEditors = data.details.size > 1,
                   pageWatched = if (isWatchListMode && isLoggedIn) false else watchList.any { it.pageName == data.title }
                 )
               }

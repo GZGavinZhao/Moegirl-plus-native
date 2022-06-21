@@ -10,8 +10,9 @@ class ComparePageRouteArguments(
   val fromRevId: Int,
   val toRevId: Int? = null,
   val pageName: String,
+  val hasMultiEditors: Boolean = false,
 ) : CompareRouteArguments() {
-  constructor() : this(-1, -1, "")
+  constructor() : this(-1, -1, "", false)
 }
 
 @RouteName("compareText")
