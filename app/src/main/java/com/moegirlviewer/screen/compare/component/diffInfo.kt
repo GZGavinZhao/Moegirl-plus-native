@@ -13,6 +13,7 @@ import com.moegirlviewer.R
 import com.moegirlviewer.component.UserAvatar
 import com.moegirlviewer.component.UserTail
 import com.moegirlviewer.component.styled.StyledText
+import com.moegirlviewer.screen.recentChanges.component.MultiRevisionHint
 import com.moegirlviewer.theme.text
 import com.moegirlviewer.util.gotoUserPage
 import com.moegirlviewer.util.noRippleClickable
@@ -21,6 +22,7 @@ import com.moegirlviewer.util.noRippleClickable
 fun DiffInfo(
   userName: String,
   comment: String?,
+  multiRevisionHint: MultiRevisionHint? = null
 ) {
   val themeColors = MaterialTheme.colors
 
@@ -51,19 +53,34 @@ fun DiffInfo(
       UserTail(userName)
     }
 
-    Box(
+    Column(
       modifier = Modifier
-        .padding(top = 5.dp, start = 10.dp, end = 10.dp, bottom = 15.dp)
+        .padding(top = 5.dp, start = 10.dp, end = 10.dp, bottom = 15.dp),
+      horizontalAlignment = Alignment.CenterHorizontally
     ) {
       StyledText(
         text = if (comment != null && comment != "")
           "${stringResource(id = R.string.summary)}：$comment" else
           "（${stringResource(id = R.string.noSummary)}）",
-        color = if (comment != null)
+        color = if (comment != null && comment != "")
           LocalTextStyle.current.color else
           themeColors.text.secondary,
         fontSize = 14.sp
       )
+
+      if (multiRevisionHint != null) {
+        val editorTotalText = if (multiRevisionHint.editorTotal == 1)
+          stringResource(id = R.string.multiRevisionHint_same) else
+          stringResource(id = R.string.multiRevisionHint_number, multiRevisionHint.editorTotal)
+
+        StyledText(
+          modifier = Modifier
+            .padding(top = 5.dp),
+          text = "（${stringResource(id = R.string.multiRevisionHint, editorTotalText, multiRevisionHint.revisionTotal)}）",
+          color = themeColors.text.secondary,
+          fontSize = 14.sp
+        )
+      }
     }
   }
 }

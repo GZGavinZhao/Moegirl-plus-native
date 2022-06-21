@@ -256,6 +256,7 @@
     <string name="darkThemeBySystemHelpText">部分條目會有文字看不清的情況</string>
     <string name="selectSplashScreenImage">啟動屏設定</string>
     <string name="usePureTheme">使用淺色主題</string>
+    <string name="changeOfParagraphNumber">第%1$s段更改</string>
 
     <!-- 長提示（基本上只會在一個地方使用） -->
     <string name="noSummaryOnCurrentEdit">該編輯未填寫摘要</string>
@@ -332,6 +333,9 @@
         如果您有更好的意見或建議，歡迎前往條目討論頁討論。
     </string>
     <string name="hideTopTemplatesHint">開門見山直入正題</string>
+    <string name="multiRevisionHint">未顯示%1$s編輯者的%2$s箇中間版本</string>
+    <string name="multiRevisionHint_same">同一</string>
+    <string name="multiRevisionHint_number">%1$s位</string>
 
     <!-- 特殊 -->
     <string name="comparesummaryPrefix">撤銷[[Special:Contributions/%1$s|%1$s]]（[[User_talk:%1$s|討論]]）的版本%2$s</string>

@@ -60,7 +60,7 @@ fun RecentChangesItem(
   dateISO: String,
   editDetails: List<RawRecentChanges>,
   pageWatched: Boolean,
-  hasMultiEditors: Boolean = false,
+  multiRevisionHint: MultiRevisionHint?,
 ) {
   val themeColors = MaterialTheme.colors
   var visibleDetails by rememberSaveable { mutableStateOf(false) }
@@ -144,7 +144,7 @@ fun RecentChangesItem(
         pageName = pageName,
         revId = revId,
         oldRevId = oldRevId,
-        hasMultiEditors = hasMultiEditors,
+        multiRevisionHint = multiRevisionHint,
       )
     }
   }
@@ -413,7 +413,7 @@ private fun RightFloatedButtons(
   pageName: String,
   revId: Int,
   oldRevId: Int,
-  hasMultiEditors: Boolean,
+  multiRevisionHint: MultiRevisionHint?,
 ) {
   val themeColors = MaterialTheme.colors
 
@@ -428,7 +428,7 @@ private fun RightFloatedButtons(
               fromRevId = oldRevId,
               toRevId = revId,
               pageName = pageName,
-              hasMultiEditors = hasMultiEditors,
+              multiRevisionHint = multiRevisionHint,
             ))
           },
         imageVector = Icons.Filled.CompareArrows,
@@ -451,3 +451,8 @@ private fun RightFloatedButtons(
     )
   }
 }
+
+class MultiRevisionHint(
+  val editorTotal: Int,
+  val revisionTotal: Int
+)

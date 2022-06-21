@@ -33,6 +33,7 @@ import com.moegirlviewer.screen.compare.component.CompareScreenPageDiffRows
 import com.moegirlviewer.screen.compare.component.CompareScreenTextDiffContent
 import com.moegirlviewer.screen.compare.component.DiffInfo
 import com.moegirlviewer.screen.compare.util.showUndoDialog
+import com.moegirlviewer.screen.recentChanges.component.MultiRevisionHint
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.theme.isUseDarkMode
 import com.moegirlviewer.theme.isUsePureTheme
@@ -84,15 +85,14 @@ fun CompareScreen(
             modifier = Modifier
               .verticalScroll(rememberScrollState())
           ) {
-            if (arguments is ComparePageRouteArguments && !arguments.hasMultiEditors) {
-              DiffInfo(
-                userName = model.compareData!!.touser,
-                comment = model.compareData!!.tocomment
-              )
-            }
+            DiffInfo(
+              userName = model.compareData!!.touser,
+              comment = model.compareData!!.tocomment,
+              multiRevisionHint = (arguments as ComparePageRouteArguments).multiRevisionHint
+            )
 
-            for (item in model.linearDiff) {
-              CompareScreenPageDiffRows(item)
+            for ((index, item) in model.linearDiff.withIndex()) {
+              CompareScreenPageDiffRows(item, index + 1)
             }
           }
         }

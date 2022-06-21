@@ -40,6 +40,7 @@ import com.moegirlviewer.util.isMoegirl
 @Composable
 fun CompareScreenPageDiffRows(
   data: LinearDiffRows,
+  serialNumber: Int,
   hmoeMode: Boolean = !isMoegirl()
 ) {
   val themeColors = MaterialTheme.colors
@@ -49,7 +50,7 @@ fun CompareScreenPageDiffRows(
     // header
     Row(
       modifier = Modifier
-        .clickable(enabled = !hmoeMode) {
+        .clickable {
           isExpanded = !isExpanded
         }
         .height(40.dp)
@@ -63,7 +64,7 @@ fun CompareScreenPageDiffRows(
       @Composable
       fun lineNumberText(line: Int) = stringResource(id = R.string.lineNumber, line.toString())
       val headerTitle = if (hmoeMode) {
-        stringResource(id = R.string.change)
+        stringResource(id = R.string.changeOfParagraphNumber, serialNumber)
       } else {
         lineNumberText(data.range.first) +
           if (data.range.first != data.range.last) " ~ ${lineNumberText(data.range.last)}" else ""
@@ -75,17 +76,15 @@ fun CompareScreenPageDiffRows(
         fontSize = 18.sp,
       )
 
-      if (!hmoeMode) {
-        Icon(
-          modifier = Modifier
-            .size(24.dp),
-          imageVector = if (isExpanded)
-            Icons.Filled.ExpandLess else
-            Icons.Filled.ExpandMore,
-          contentDescription = null,
-          tint = themeColors.primaryVariant
-        )
-      }
+      Icon(
+        modifier = Modifier
+          .size(24.dp),
+        imageVector = if (isExpanded)
+          Icons.Filled.ExpandLess else
+          Icons.Filled.ExpandMore,
+        contentDescription = null,
+        tint = themeColors.primaryVariant
+      )
     }
 
     // list

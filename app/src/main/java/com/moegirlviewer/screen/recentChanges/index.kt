@@ -30,6 +30,7 @@ import com.moegirlviewer.component.ScrollLoadListFooter
 import com.moegirlviewer.component.styled.StyledSwipeRefreshIndicator
 import com.moegirlviewer.component.styled.StyledText
 import com.moegirlviewer.component.styled.StyledTopAppBar
+import com.moegirlviewer.screen.recentChanges.component.MultiRevisionHint
 import com.moegirlviewer.screen.recentChanges.component.RecentChangesItem
 import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.SettingsStore
@@ -145,7 +146,10 @@ fun RecentChangesScreen() {
                   oldRevId = if (data.details.size > 1) data.details.last().revid else data.old_revid,
                   dateISO = data.timestamp,
                   editDetails = data.details,
-                  hasMultiEditors = data.details.size > 1,
+                  multiRevisionHint = if (data.details.size > 1) MultiRevisionHint(
+                    editorTotal = data.users.size,
+                    revisionTotal = data.details.size - 1
+                  ) else null,
                   pageWatched = if (isWatchListMode && isLoggedIn) false else watchList.any { it.pageName == data.title }
                 )
               }

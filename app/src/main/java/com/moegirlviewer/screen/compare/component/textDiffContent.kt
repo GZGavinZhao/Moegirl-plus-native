@@ -57,7 +57,7 @@ fun CompareScreenTextDiffContent(
       if (!isCompareText) {
         DiffInfo(
           userName = userName!!,
-          comment = comment
+          comment = comment,
         )
       }
 
