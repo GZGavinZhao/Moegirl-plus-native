@@ -3,7 +3,7 @@ package com.moegirlviewer.util
 import android.util.Log
 
 fun printRequestErr(error: Exception, message: String = "") {
-  Log.w("--- 请求错误 ---", message)
+  Log.e("--- 请求错误 ---", message)
   error.printStackTrace()
 }
 

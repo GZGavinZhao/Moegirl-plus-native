@@ -82,7 +82,7 @@ fun SearchResultScreen(
       ) {
         item {
           AnimatedVisibility(
-            visible = model.resultList.size != 0,
+            visible = model.resultList.isNotEmpty(),
             enter = fadeIn(),
             exit = fadeOut()
           ) {

@@ -1,5 +1,6 @@
 package com.moegirlviewer.screen.randomPages
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -25,6 +26,7 @@ import com.moegirlviewer.util.printDebugLog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun RandomPagesScreen() {
   val model: RandomPagesScreenModal = hiltViewModel()
