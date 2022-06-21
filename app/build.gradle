@@ -13,8 +13,8 @@ android {
         applicationId "com.moegirlviewer"
         minSdk 24
         targetSdk 32
-        versionCode 2231
-        versionName "2.5.7"
+        versionCode 2232
+        versionName "2.5.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
