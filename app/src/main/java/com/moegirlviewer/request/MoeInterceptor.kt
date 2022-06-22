@@ -17,7 +17,9 @@ class MoeInterceptor : Interceptor {
 
     if (originalRequest.method == MoeRequestMethod.GET.name) {
       val newUrlBuilder = originalRequest.url.newBuilder()
-      for ((name, value) in extraParams) newUrlBuilder.addQueryParameter(name, value)
+      if (originalRequest.url.queryParameterNames.contains("action")) {
+        for ((name, value) in extraParams) newUrlBuilder.addQueryParameter(name, value)
+      }
       newRequestBuilder.url(newUrlBuilder.build())
     } else {
       if (originalRequest.body is FormBody) {

@@ -69,7 +69,7 @@ object EditingRecordApi {
     fromRev: Int,
     toRev: Int?
   ): Element {
-    val params = if (toRev != null) "$fromRev...$toRev" else fromRev
+    val params = if (toRev != null && fromRev != toRev) "$fromRev...$toRev" else fromRev
     val rawHtml = moeRequest(
       entity = String::class.java,
       baseUrl = Constants.mainUrl + "/Special:移动版差异/$params",

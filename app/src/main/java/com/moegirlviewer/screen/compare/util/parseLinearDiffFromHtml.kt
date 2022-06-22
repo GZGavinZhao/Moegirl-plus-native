@@ -3,6 +3,7 @@ package com.moegirlviewer.screen.compare.util
 import com.moegirlviewer.util.isMoegirl
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.TextNode
 
 fun Element.parseLinearDiff(): List<LinearDiffRows> {
   return this.children().fold<Element, MutableList<LinearDiffRows>>(mutableListOf()) { result, item ->
@@ -31,10 +32,21 @@ fun Element.parseLinearDiff(): List<LinearDiffRows> {
 
 private fun Element.toLinearDiffSentence(): List<LinearDiffSentence> {
   if (this.hasClass("mw-diff-inline-changed")) {
-    return this.children().map {
-      val type = if (it.tagName() == "del") LinearDiffType.DELETED else LinearDiffType.ADDED
-      val text = it.text()
-      return@map LinearDiffSentence(type, text)
+    return this.childNodes()
+      .filter { it is Element || it is TextNode }
+      .map {
+        when (it) {
+          is Element -> {
+            val type = if (it.tagName() == "del") LinearDiffType.DELETED else LinearDiffType.ADDED
+            val text = it.text()
+            return@map LinearDiffSentence(type, text)
+          }
+          is TextNode -> {
+            val text = it.text()
+            return@map LinearDiffSentence(LinearDiffType.CONTEXT, text)
+          }
+          else -> LinearDiffSentence(LinearDiffType.CONTEXT, "")
+        }
     }
   } else {
     val type = when {
@@ -42,8 +54,8 @@ private fun Element.toLinearDiffSentence(): List<LinearDiffSentence> {
       this.hasClass("mw-diff-inline-deleted") -> LinearDiffType.DELETED
       else -> LinearDiffType.CONTEXT
     }
-    val text = this.text()
-    if (text == "") return emptyList()
+    var text = this.text()
+    if (text == "") text = " "
     return listOf(LinearDiffSentence(type, text + "\n"))
   }
 }

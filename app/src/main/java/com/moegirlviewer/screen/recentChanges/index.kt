@@ -143,7 +143,12 @@ fun RecentChangesScreen() {
                   newLength = data.newlen,
                   oldLength = data.oldlen,
                   revId = data.revid,
-                  oldRevId = if (data.details.size > 1) data.details.last().revid else data.old_revid,
+                  oldRevId = if (data.details.size > 1) {
+                    val lastEdit = data.details.last()
+                    if (lastEdit.old_revid == 0) lastEdit.revid else lastEdit.old_revid
+                  } else {
+                    if (data.old_revid == 0) data.revid else data.revid
+                  },
                   dateISO = data.timestamp,
                   editDetails = data.details,
                   multiRevisionHint = if (data.details.size > 1) MultiRevisionHint(

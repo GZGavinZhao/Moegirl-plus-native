@@ -47,6 +47,7 @@ import com.moegirlviewer.store.AccountStore
 import com.moegirlviewer.store.SettingsStore
 import com.moegirlviewer.theme.isUsePureTheme
 import com.moegirlviewer.util.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -60,7 +61,9 @@ fun HomeScreen() {
   if (isUseCardsHome == null) return
   LaunchedEffect(isUseCardsHome) {
     if (isUseCardsHome!!) {
-      if (model.cardsDataStatus != LoadStatus.SUCCESS) model.loadCardsData()
+      if (model.cardsDataStatus != LoadStatus.SUCCESS) {
+        model.loadCardsData()
+      }
     } else {
       if (HomeScreenModel.needReload || model.articleViewState.status == LoadStatus.LOADING) {
         model.articleViewState.reload(true)
