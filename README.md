@@ -1,5 +1,7 @@
 # Moegirl+ & HMoegirl
 
+注：该项目是以前为了改进翻译从原作者fork下来，但后来原作者应该是出于某些原因不再把代码公开了（毕竟官方APP都出来了）。我个人不会用Kotlin，因此不会维护该项目。如果您想要继续改进，欢迎fork。
+
 [萌娘百科，万物皆可萌的百科全书！](https://zh.moegirl.org/Mainpage)
 
 [H萌娘，万物皆可H的百科全书！](https://www.hmoegirl.com/Mainpage)
